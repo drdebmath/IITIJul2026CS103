@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 3: Expressions, Scope & Program State">
+    <title>Lecture 3: Expressions, Scope & Program State</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 3: Expressions, Scope & Program State
+## Names, values, visibility, and lifetime
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Operators build expressions
+
+~~~cpp
+int total = 5 + 3 * 2;       // 11
+int grouped = (5 + 3) * 2;   // 16
+bool safe = total < 20 && grouped > 0;
+~~~
+
+Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A namespace prevents name collisions
+
+~~~cpp
+namespace laboratory {
+int completed = 0;
+}
+
+int main() {
+    laboratory::completed = 1;
+}
+~~~
+
+The scope-resolution operator <code>::</code> selects a name from a namespace.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Scope controls where a name is visible
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int outer = 10;
+    {
+        int inner = 3;
+        outer += inner;
+    }
+    // inner is not visible here
+    std::cout << outer << '\n';  // 13
+}
+~~~
+
+Keep names in the smallest scope that contains every required use.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Scope and lifetime are different
+
+- **Scope:** where source code may use a name.
+- **Storage duration:** how long the corresponding object exists.
+- **Linkage:** whether declarations in different files name the same entity.
+
+A local static object has block scope but program-long storage duration.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A static local remembers between calls
+
+~~~cpp
+#include <iostream>
+
+int nextExperimentNumber() {
+    static int completed = 0;
+    return ++completed;
+}
+
+int main() {
+    std::cout << nextExperimentNumber() << ' ';
+    std::cout << nextExperimentNumber();  // 1 2
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: one definition shared by two files
+
+~~~cpp
+// data.cpp
+int sharedCount = 0;
+
+// report.cpp
+extern int sharedCount;
+~~~
+
+<code>extern</code> declares an entity defined elsewhere. A complete executable must still contain <code>main</code> and link every required definition.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Expressions compute values or effects.
+- Parentheses make precedence explicit.
+- Namespaces organize declarations.
+- Scope, storage duration, and linkage answer different questions.
+- Avoid global mutable state unless one clearly identified part of the program is responsible for it.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

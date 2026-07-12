@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 16: Recursive Decomposition in Practice">
+    <title>Lecture 16: Recursive Decomposition in Practice</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 16: Recursive Decomposition in Practice
+## Prove a smaller call reaches a base case
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Trace the call stack
+
+For <code>factorial(3)</code>:
+
+1. <code>factorial(3)</code> waits for <code>factorial(2)</code>.
+2. <code>factorial(2)</code> waits for <code>factorial(1)</code>.
+3. The base case returns 1.
+4. Waiting frames finish in reverse order.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## State base case and progress together
+
+~~~cpp
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+~~~
+
+The argument decreases, so a non-negative input reaches the base case.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reverse a linked list recursively
+
+~~~cpp
+Node* reverse(Node* head) {
+    if (head == nullptr || head->next == nullptr) return head;
+    Node* newHead = reverse(head->next);
+    head->next->next = head;
+    head->next = nullptr;
+    return newHead;
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Backtracking generates permutations
+
+Choose one value for the current position, recursively arrange the remainder, then undo the choice.
+
+The data structure is an array; recursion supplies the search order.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: longest common subsequence
+
+For two strings, an LCS recurrence compares their final characters and reduces one or both prefixes.
+
+The direct recursive version repeats subproblems. Memoization stores results so identical states are solved once.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Account for time and space
+
+- Recursive list reversal: O(n) time, O(n) call-stack space.
+- Iterative reversal: O(n) time, O(1) auxiliary space.
+- Permutation generation: at least proportional to the number of produced permutations.
+
+Complexity describes growth, not stopwatch seconds.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A recursive call must receive a smaller problem.
+- A base case handles the smallest problem directly.
+- Stack frames consume space.
+- Recursion can expose natural structure, while iteration may use less memory.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

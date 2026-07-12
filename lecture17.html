@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 17: Search Trees, Heaps & Sorting">
+    <title>Lecture 17: Search Trees, Heaps & Sorting</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 17: Search Trees, Heaps & Sorting
+## Preserve an invariant to obtain efficient operations
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Binary search requires sorted data
+
+~~~cpp
+while (left <= right) {
+    int middle = left + (right - left) / 2;
+    if (values[middle] == target) return middle;
+    if (values[middle] < target) left = middle + 1;
+    else right = middle - 1;
+}
+~~~
+
+Each comparison discards one impossible half.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A binary search tree stores the same ordering structurally
+
+For every node:
+
+- keys in the left subtree are smaller;
+- keys in the right subtree are larger;
+- both subtrees obey the same invariant.
+
+Choose and document one policy for duplicate keys.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Insert by following the invariant
+
+~~~cpp
+struct Node { int key; Node* left; Node* right; };
+
+Node* insert(Node* root, int key) {
+    if (root == nullptr) return new Node{key, nullptr, nullptr};
+    if (key < root->key) root->left = insert(root->left, key);
+    else if (key > root->key) root->right = insert(root->right, key);
+    return root;
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A binary heap exposes the highest priority
+
+A max heap is a complete binary tree where every parent is at least its children.
+
+In a zero-based array, children of index <code>i</code> are <code>2*i+1</code> and <code>2*i+2</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## heapify restores heap order
+
+~~~cpp
+void heapify(std::vector<int>& a, int size, int root) {
+    int largest = root;
+    int left = 2 * root + 1, right = left + 1;
+    if (left < size && a[left] > a[largest]) largest = left;
+    if (right < size && a[right] > a[largest]) largest = right;
+    if (largest != root) { std::swap(a[root], a[largest]); heapify(a, size, largest); }
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Merge sort divides, solves, and combines
+
+1. Divide the range into two halves.
+2. Recursively sort each half.
+3. Merge two sorted sequences into temporary storage.
+
+Merge sort is stable and O(n log n); its array implementation uses additional storage. Heap sort is in-place but not stable.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Binary search exploits sorted-array order.
+- A BST encodes ordering in links.
+- A heap encodes priority in a complete tree.
+- heapify repairs a local invariant.
+- Merge sort applies recursive decomposition to sequences.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 14: Dynamic Memory & Linked Structures">
+    <title>Lecture 14: Dynamic Memory & Linked Structures</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 14: Dynamic Memory & Linked Structures
+## Make ownership and lifetime explicit
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Automatic and dynamic storage solve different needs
+
+Automatic local objects are destroyed when their scope ends. Dynamic storage can outlive the creating scope, so ownership must state who releases it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Raw new and delete must match
+
+~~~cpp
+int* value = new int{42};
+std::cout << *value << '\n';
+delete value;
+value = nullptr;
+~~~
+
+Use <code>delete[]</code> only for storage obtained with <code>new[]</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Prefer ownership in a smart pointer
+
+~~~cpp
+auto value = std::make_unique<int>(42);
+std::cout << *value << '\n';
+~~~
+
+A smart pointer releases its owned resource automatically. It prevents ownership leaks, but unrelated non-owning pointers can still dangle.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Name the failure modes
+
+- Memory leak: owned storage becomes unreachable without release.
+- Dangling pointer: an address remains after the object has died.
+- Double deletion: the same allocation is released twice.
+- Allocation failure: <code>new</code> normally throws <code>std::bad_alloc</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A linked list connects separately stored nodes
+
+~~~cpp
+struct Node {
+    int value;
+    std::unique_ptr<Node> next;
+};
+
+auto head = std::make_unique<Node>(Node{42, nullptr});
+head->next = std::make_unique<Node>(Node{57, nullptr});
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Traverse links until the end
+
+~~~cpp
+for (Node* current = head.get(); current != nullptr;
+     current = current->next.get()) {
+    std::cout << current->value << ' ';
+}
+~~~
+
+The invariant states that every node before <code>current</code> has been processed.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: the C allocation interface
+
+<code>malloc</code>, <code>calloc</code>, and <code>realloc</code> manage untyped bytes and must be paired with <code>free</code>.
+
+They do not construct or destroy C++ objects. Use them only when a C interface requires them.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Dynamic storage requires an ownership rule.
+- Prefer RAII and <code>unique_ptr</code> for exclusive ownership.
+- Smart ownership prevents leaks, not every possible dangling observer.
+- Linked lists trade contiguous access for explicit links.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

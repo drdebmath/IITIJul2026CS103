@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 5: Iteration I · while & Input Validation">
+    <title>Lecture 5: Iteration I · while & Input Validation</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 5: Iteration I
+## while, do-while, progress, and stopping
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Trace a while loop before running it
+
+~~~cpp
+int remaining = 3;
+while (remaining > 0) {
+    std::cout << remaining << ' ';
+    --remaining;
+}
+~~~
+
+Trace: 3 → 2 → 1 → stop at 0.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Every loop needs progress
+
+Before each iteration, ask:
+
+1. What state does the condition inspect?
+2. What must remain true?
+3. Which statement moves toward stopping?
+
+If no state moves toward a false condition, the loop may never terminate.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sentinel input handles an unknown count
+
+~~~cpp
+int value = 0;
+int total = 0;
+std::cin >> value;
+while (value != -1) {
+    total += value;
+    std::cin >> value;
+}
+~~~
+
+The sentinel <code>-1</code> ends input and is not added.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## do-while validates after the first attempt
+
+~~~cpp
+double height = 0.0;
+do {
+    std::cout << "Positive height: ";
+    std::cin >> height;
+} while (height <= 0.0);
+~~~
+
+The body runs once before the condition is tested.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Three common loop failures
+
+- No update: the condition never changes.
+- Wrong direction: the update moves away from stopping.
+- Off-by-one: <code>&lt;</code> and <code>&lt;=</code> describe different valid ranges.
+
+Write the intended values beside the loop before choosing the comparison.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Practical pattern: scan until enough defects
+
+~~~cpp
+while (tested < available && defects < 3) {
+    double diameter;
+    std::cin >> diameter;
+    if (diameter < 9.95 || diameter > 10.05) ++defects;
+    ++tested;
+}
+~~~
+
+Both stopping reasons remain visible in the condition.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- <code>while</code> may execute zero times.
+- <code>do-while</code> executes at least once.
+- A sentinel can terminate unknown-length input.
+- State must make measurable progress.
+- Trace normal, boundary, and invalid cases.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

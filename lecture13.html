@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 13: Records, Pointers & Memory Layout">
+    <title>Lecture 13: Records, Pointers & Memory Layout</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 13: Records, Pointers & Memory Layout
+## Group related state and inspect addresses safely
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A struct models one record
+
+~~~cpp
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+Reading sample{7, 31.5, true};
+~~~
+
+Member names keep related values coherent.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Arrays of records support repeated domain data
+
+~~~cpp
+std::array<Reading, 3> samples{{
+    {1, 30.1, true}, {2, 29.8, true}, {3, 0.0, false}
+}};
+
+for (const Reading& reading : samples) {
+    if (reading.valid) std::cout << reading.value << '\n';
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A pointer stores an address
+
+~~~cpp
+int score = 95;
+int* scorePointer = &score;
+~~~
+
+The pointer is a separate object. <code>&score</code> obtains the address of <code>score</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Dereference only a valid pointer
+
+~~~cpp
+if (scorePointer != nullptr) {
+    *scorePointer += 5;
+}
+~~~
+
+Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Dot and arrow select record members
+
+~~~cpp
+Reading reading{7, 31.5, true};
+Reading* pointer = &reading;
+
+reading.value = 32.0;
+pointer->value = 32.5;  // same as (*pointer).value
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: layout, alignment, and pointer arithmetic
+
+Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
+
+Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A struct creates one coherent record type.
+- An array of records stores repeated entities.
+- A pointer stores an address; dereferencing requires validity.
+- Check for <code>nullptr</code> before access.
+- Layout is implementation-specific and pointer arithmetic has strict bounds.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

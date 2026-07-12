@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IC151 laboratory setup, GitHub Classroom workflow, local C++ instructions, and Autumn 2026 batch schedule at IIT Indore.">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>IC151 · Programming Laboratory</title>
+    <link rel="stylesheet" href="ic151.css">
+    <script>
+        try {
+            const savedTheme = localStorage.getItem('cs103-theme');
+            const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.dataset.theme = savedTheme || preferredTheme;
+        } catch (error) {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
+    <script defer src="ic151.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to lab instructions</a>
+
+    <header class="site-header">
+        <nav class="nav shell" aria-label="Primary navigation">
+            <a class="brand" href="index.html" aria-label="CS103 course home">
+                <span class="brand-mark" aria-hidden="true">IC</span>
+                <span class="brand-copy"><strong>IC151</strong><span>Programming Laboratory</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#schedule">Schedule</a>
+                <a href="#setup">Lab setup</a>
+                <a href="#classroom">GitHub Classroom</a>
+                <a href="#local-run">Run locally</a>
+                <a href="index.html">CS103 home</a>
+            </div>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme"><span id="theme-icon" aria-hidden="true">◐</span></button>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section class="hero shell">
+            <div>
+                <p class="eyebrow">IIT Indore · Autumn 2026</p>
+                <h1>Programming <span>Laboratory.</span></h1>
+                <p class="hero-copy">Everything needed to enter the CITC lab, set up the assigned computer, submit through GitHub Classroom, and test C++ code locally.</p>
+                <div class="hero-actions">
+                    <a class="primary-action" href="#setup">Start the setup checklist <span aria-hidden="true">→</span></a>
+                    <a class="secondary-action" href="#schedule">Find your batch time</a>
+                </div>
+            </div>
+            <aside class="room-card" aria-label="Lab location">
+                <span class="room-kicker">Lab location</span>
+                <strong>CITC building</strong>
+                <span>First floor · computers 1–72</span>
+                <dl>
+                    <div><dt>First lab</dt><dd>6 Aug · B3</dd></div>
+                    <div><dt>Duration</dt><dd>2 h 55 min</dd></div>
+                    <div><dt>Environment</dt><dd>Ubuntu · g++</dd></div>
+                </dl>
+            </aside>
+        </section>
+
+        <section class="next-lab-strip" aria-live="polite">
+            <div class="shell next-lab-inner">
+                <div>
+                    <span class="live-label">Upcoming IC151 lab</span>
+                    <strong id="next-lab-title">Checking the Autumn 2026 schedule…</strong>
+                    <span id="next-lab-meta">Network time · Asia/Kolkata</span>
+                </div>
+                <label class="batch-picker">Your batch
+                    <select id="batch-picker" aria-label="Choose your IC151 batch">
+                        <option value="ALL">All batches</option>
+                        <option value="B1">Batch B1</option>
+                        <option value="B2">Batch B2</option>
+                        <option value="B3">Batch B3</option>
+                        <option value="B4">Batch B4</option>
+                    </select>
+                </label>
+            </div>
+        </section>
+
+        <section class="section shell" id="schedule" aria-labelledby="schedule-title">
+            <div class="section-heading">
+                <div><p class="section-kicker">Batch timetable</p><h2 id="schedule-title">B3 starts 6 August, B4 on 8 August, and B1–B2 on 10 August.</h2></div>
+                <p>12 regular labs per batch · midsemester break 27 September–4 October · final lab examinations 16–21 November.</p>
+            </div>
+
+            <div class="batch-grid" aria-label="Weekly batch slots">
+                <article><span>B1</span><strong>Monday</strong><p>08:30–11:25</p><small>First lab · 10 Aug</small></article>
+                <article><span>B2</span><strong>Monday</strong><p>13:30–16:25</p><small>First lab · 10 Aug</small></article>
+                <article><span>B3</span><strong>Thursday</strong><p>08:30–11:25</p><small>First lab · 6 Aug</small></article>
+                <article><span>B4</span><strong>Saturday</strong><p>13:30–16:25</p><small>First lab · 8 Aug</small></article>
+            </div>
+
+            <div class="table-card">
+                <div class="table-scroll">
+                    <table>
+                        <thead><tr><th scope="col">Lab</th><th scope="col">B1 · Mon AM</th><th scope="col">B2 · Mon PM</th><th scope="col">B3 · Thu AM</th><th scope="col">B4 · Sat PM</th></tr></thead>
+                        <tbody id="lab-schedule-body"><tr><td colspan="5">Loading batch dates…</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="final-exam-card" aria-labelledby="final-exam-title">
+                <div><span>IC151 final lab examination</span><strong id="final-exam-title">Common exam week · 16–21 November 2026 · before 23 November</strong></div>
+                <ul>
+                    <li><b>B1</b><span>Mon 16 Nov · 08:30–11:25</span></li>
+                    <li><b>B2</b><span>Mon 16 Nov · 13:30–16:25</span></li>
+                    <li><b>B3</b><span>Thu 19 Nov · 08:30–11:25</span></li>
+                    <li><b>B4</b><span>Sat 21 Nov · 13:30–16:25</span></li>
+                </ul>
+            </div>
+            <p class="schedule-disclaimer">No labs: 15 August and 27 September–4 October. Saturday timetable: Thursday, 17 September. Official announcements supersede this schedule.</p>
+        </section>
+
+        <section class="section section-soft" id="setup" aria-labelledby="setup-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <div><p class="section-kicker">Before coding</p><h2 id="setup-title">Set up the lab computer safely.</h2></div>
+                    <p>Check off each step as you complete it. This checklist is stored only in a first-party cookie in this browser.</p>
+                </div>
+                <ol class="checklist" data-checklist="setup">
+                    <li><label><input type="checkbox" data-step="seat"><span><strong>Take an assigned computer</strong>Use computers numbered 1 through 72 in the CITC first-floor lab.</span></label></li>
+                    <li><label><input type="checkbox" data-step="power"><span><strong>Power on the CPU</strong>Press the long vertical power button below the LED.</span></label></li>
+                    <li><label><input type="checkbox" data-step="ubuntu"><span><strong>Boot Ubuntu</strong>Select Ubuntu at startup. For example, the password for CITC-43 is <code>citc123</code>.</span></label></li>
+                    <li><label><input type="checkbox" data-step="network"><span><strong>Check the network</strong>If needed, connect to <code>IITI_Secure</code>. If connectivity still fails, move to another available computer.</span></label></li>
+                    <li><label><input type="checkbox" data-step="private"><span><strong>Open a private browser window</strong>Firefox: Menu → New Private Window. Chrome: Menu → New Incognito Window.</span></label></li>
+                    <li><label><input type="checkbox" data-step="gmail"><span><strong>Sign in with the official Gmail account</strong>Open the course email again inside the private window before continuing.</span></label></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section shell" id="classroom" aria-labelledby="classroom-title">
+            <div class="section-heading">
+                <div><p class="section-kicker">Submission workflow</p><h2 id="classroom-title">Join GitHub Classroom correctly.</h2></div>
+                <p>Your official email and roll-number identity are used to match the repository to the class roster.</p>
+            </div>
+            <div class="workflow">
+                <ol>
+                    <li><span>01</span><div><strong>Open the assignment link</strong><p>Use the link shared by the instructor or TA, while signed in to your official Google account.</p></div></li>
+                    <li><span>02</span><div><strong>Create or sign in to GitHub</strong><p>Choose “Continue with Google” and use the official institute email, not a personal address.</p></div></li>
+                    <li><span>03</span><div><strong>Use a recognizable username</strong><p>Your GitHub username must include your roll number. Complete any verification puzzle carefully.</p></div></li>
+                    <li><span>04</span><div><strong>Authorize Classroom</strong><p>Allow GitHub Classroom access, then select your roll number from the roster.</p></div></li>
+                    <li><span>05</span><div><strong>Check the roster match</strong><p>If the roll number is missing—or you selected the wrong one—contact the TA or instructor immediately.</p></div></li>
+                    <li><span>06</span><div><strong>Accept and open the repository</strong><p>Accept the assignment, wait for repository creation, and open the blue repository link.</p></div></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section section-soft" id="edit-submit" aria-labelledby="edit-title">
+            <div class="shell split-grid">
+                <article>
+                    <p class="section-kicker">Edit and submit</p>
+                    <h2 id="edit-title">Change only <code>hello.cpp</code>.</h2>
+                    <ol class="numbered-steps">
+                        <li>Open <code>hello.cpp</code> in the assignment repository.</li>
+                        <li>Select the pencil icon labeled “Edit this file”.</li>
+                        <li>Make the changes described in the assignment.</li>
+                        <li>Scroll down and enter a clear commit message, for example <code>Edited hello.cpp for assignment</code>.</li>
+                        <li>Select “Commit changes”. Do not create or upload extra files.</li>
+                    </ol>
+                </article>
+                <article class="status-card">
+                    <p class="section-kicker">Testing and resubmitting</p>
+                    <h2>Read the test result.</h2>
+                    <div class="status-row success"><span aria-hidden="true">✓</span><div><strong>Green tick</strong><p>The automated checks passed.</p></div></div>
+                    <div class="status-row failure"><span aria-hidden="true">×</span><div><strong>Red cross</strong><p>A test failed. Edit <code>hello.cpp</code>, commit again, and repeat until it passes.</p></div></div>
+                    <p class="temporary-note"><strong>Current lab note:</strong> automated GitHub Classroom tests may be unavailable during the introductory session. Follow the instructor or TA’s live direction.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section shell" id="local-run" aria-labelledby="local-title">
+            <div class="section-heading">
+                <div><p class="section-kicker">Run before committing</p><h2 id="local-title">Compile locally with g++.</h2></div>
+                <p>Local testing gives faster feedback and makes compiler errors easier to understand.</p>
+            </div>
+            <div class="terminal-grid">
+                <article class="terminal-card">
+                    <header><span></span><span></span><span></span><strong>Ubuntu terminal</strong></header>
+                    <pre><code>mkdir -p ~/yourfirstname
+cp hello.cpp ~/yourfirstname/
+cd ~/yourfirstname
+g++ hello.cpp -o hello
+./hello</code></pre>
+                </article>
+                <article class="terminal-card">
+                    <header><span></span><span></span><span></span><strong>Windows terminal</strong></header>
+                    <pre><code>g++ hello.cpp -o hello.exe
+hello.exe</code></pre>
+                </article>
+            </div>
+        </section>
+
+        <section class="section section-soft" id="linux-commands" aria-labelledby="linux-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <div><p class="section-kicker">Terminal reference</p><h2 id="linux-title">Basic Linux commands.</h2></div>
+                    <p>Use these to inspect and move through files without guessing where your program is.</p>
+                </div>
+                <div class="command-grid">
+                    <article><code>pwd</code><span>Show the current folder.</span></article>
+                    <article><code>ls</code><span>List files in the current folder.</span></article>
+                    <article><code>cd folder</code><span>Enter a folder.</span></article>
+                    <article><code>cd ..</code><span>Move to the parent folder.</span></article>
+                    <article><code>mkdir name</code><span>Create a folder.</span></article>
+                    <article><code>cp from to</code><span>Copy a file.</span></article>
+                    <article><code>mv from to</code><span>Move or rename a file.</span></article>
+                    <article><code>clear</code><span>Clear the terminal display.</span></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section shell" id="finish" aria-labelledby="finish-title">
+            <div class="finish-card">
+                <div><p class="section-kicker">Before leaving</p><h2 id="finish-title">Leave no account behind.</h2></div>
+                <ul>
+                    <li>Log out of Gmail and GitHub.</li>
+                    <li>Confirm that the browser saved no passwords.</li>
+                    <li>Remember your passwords for the next lab.</li>
+                    <li>Ask a TA when blocked; help nearby classmates after completing your own setup.</li>
+                    <li>Expect a second assignment during the lab and follow the same workflow.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer><div class="shell"><p><strong>IC151</strong> · Programming Laboratory · IIT Indore</p><a href="index.html">Return to CS103 course home</a></div></footer>
+</body>
+</html>

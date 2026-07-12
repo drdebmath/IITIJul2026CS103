@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 1: Programming & Problem Solving">
+    <title>Lecture 1: Programming & Problem Solving</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 1: Programming & Problem Solving
+## From a problem to a running C++ program
+
+No computer or programming experience is assumed.
+
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A program follows an algorithm
+
+An **algorithm** is a finite sequence of precise steps.
+
+Use the same problem-solving workflow every time:
+
+1. State the input and expected output.
+2. Work one example by hand.
+3. Write unambiguous steps.
+4. Implement one step at a time.
+5. Test normal, boundary, and invalid input.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## What the computer does
+
+- The **CPU** executes machine instructions.
+- RAM holds active instructions and values temporarily.
+- Storage keeps files when power is off.
+- Binary encodes information using bits.
+
+**Abstraction** lets C++ express ideas without writing machine instructions directly.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Anatomy of the first program
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, CS103!\n";
+    return 0;
+}
+~~~
+
+<code>main</code> is the entry point. Output makes the program's result observable.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Edit, compile, link, run
+
+Save the source as <code>hello.cpp</code>, then use the toolchain:
+
+~~~text
+g++ -std=c++17 hello.cpp -o hello
+./hello
+~~~
+
+- A compiler checks and translates the source.
+- A linker combines required compiled parts.
+- The executable is the program you run.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: why C++ exists
+
+Programming languages evolved to make instructions safer to express and easier to reuse.
+
+C++ combines:
+
+- high-level functions and standard-library types;
+- direct control over representation and resources;
+- performance suitable for scientific and systems work.
+
+History is context—not a prerequisite for writing the first program.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Comments, identifiers, and declarations
+
+~~~cpp
+// A comment explains intent.
+int attempts = 0;          // declaration and initialization
+double distanceKm = 2.5;
+bool laboratoryOpen = true;
+~~~
+
+An identifier names something. A declaration introduces a name and its type.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Begin with input, process, and output.
+- An algorithm must be finite and precise.
+- The CPU executes the compiled instructions.
+- <code>main</code> is the C++ entry point.
+- Edit → compile → link → run → test.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

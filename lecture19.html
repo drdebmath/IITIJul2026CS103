@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 19: Friend Access & Inheritance Foundations">
+    <title>Lecture 19: Friend Access & Inheritance Foundations</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 19: Friend Access & Inheritance Foundations
+## Move from one value type to a justified is-a relationship
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Friendship should remain exceptional
+
+A friend function is a non-member granted access to private and protected members.
+
+Use it for symmetric operations such as stream insertion when a normal public interface would be less clear.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Public inheritance means substitutability
+
+If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operation promised by <code>Vehicle</code> must remain meaningful for <code>ElectricCar</code>.
+
+This is an **is-a** relationship, not merely code reuse.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A class hierarchy is a dependency tree
+
+~~~text
+Vehicle
+├── Bicycle
+└── Car
+    └── ElectricCar
+~~~
+
+The base owns common behavior; derived classes add or refine specialized behavior.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A small base and derived class
+
+~~~cpp
+class Vehicle {
+public:
+    int wheels() const { return 4; }
+};
+
+class ElectricCar : public Vehicle {
+public:
+    int batteryPercent() const { return 80; }
+};
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Construction proceeds base before derived
+
+1. Base members are initialized.
+2. The base constructor runs.
+3. Derived members are initialized.
+4. The derived constructor runs.
+
+Destruction occurs in the reverse order.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Prefer composition for has-a relationships
+
+A <code>Car</code> has an <code>Engine</code>; it is not an engine.
+
+Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Friend access is narrow and explicit.
+- Public inheritance models is-a and substitutability.
+- A hierarchy shares a justified base abstraction.
+- Base construction precedes derived construction.
+- Prefer composition for has-a relationships.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

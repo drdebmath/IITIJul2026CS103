@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Compile-ready C++ examples organized by the CS103 lecture dependency order.">
+    <title>CS103 Code Library · IIT Indore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#examples">Skip to examples</a>
+    <header class="site-header">
+        <nav class="topbar shell" aria-label="Code library navigation">
+            <a class="brand" href="../index.html"><span>CS</span><strong>CS103 <small>Code library</small></strong></a>
+            <div class="topbar-actions">
+                <a href="../speedrun.html">Dependency graph</a>
+                <button id="theme-toggle" type="button" aria-label="Toggle color theme">◐ Theme</button>
+                <a class="home-link" href="../index.html">Course home ↗</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="shell">
+        <section class="hero">
+            <p class="eyebrow">38 compile-checked programs · C++17</p>
+            <h1>Examples that follow the <em>learning path.</em></h1>
+            <p>Every filename begins with its lecture reference. Examples use only concepts available at that point in the prerequisite graph, except where a file is explicitly a preview or integration exercise.</p>
+            <label class="search" for="example-search"><span aria-hidden="true">⌕</span><input id="example-search" type="search" placeholder="Search arrays, pointers, heaps…" autocomplete="off"></label>
+            <p class="result-count" id="result-count" aria-live="polite">38 examples</p>
+        </section>
+
+        <div class="lecture-index" aria-label="Jump to lecture examples">
+            <a href="#lecture-01">01</a><a href="#lecture-02">02</a><a href="#lecture-03">03</a><a href="#lecture-04">04</a><a href="#lecture-05">05</a><a href="#lecture-06">06</a><a href="#lecture-07">07</a><a href="#lecture-08">08</a><a href="#lecture-09">09</a><a href="#lecture-10">10</a><a href="#lecture-11">11</a><a href="#lecture-12">12</a><a href="#lecture-13">13</a><a href="#lecture-14">14</a><a href="#lecture-15">15</a><a href="#lecture-16">16</a><a href="#lecture-17">17</a><a href="#lecture-18">18</a><a href="#lecture-19">19</a><a href="#lecture-20">20</a><a href="#lecture-21">21</a><a href="#lecture-22">22</a><a href="#lecture-23">23</a>
+        </div>
+
+        <section class="code-viewer" id="code-viewer" aria-labelledby="code-viewer-title" hidden>
+            <header>
+                <div>
+                    <span>Source viewer</span>
+                    <h2 id="code-viewer-title">Select an example</h2>
+                    <code id="code-viewer-file"></code>
+                </div>
+                <div class="viewer-actions">
+                    <button id="code-copy" type="button" disabled>Copy</button>
+                    <a id="code-raw-link" href="#" target="_blank" rel="noopener">Raw ↗</a>
+                    <button id="code-viewer-close" type="button" aria-label="Close source viewer">Close</button>
+                </div>
+            </header>
+            <label class="source-label" for="code-source">C++ source</label>
+            <textarea id="code-source" readonly spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="code-viewer-status"></textarea>
+            <p id="code-viewer-status" role="status" aria-live="polite">Choose an example to load its source.</p>
+        </section>
+
+        <div class="example-groups" id="examples">
+            <section class="lecture-group" id="lecture-01" data-lecture="01"><header><span>L01</span><div><h2>Programming &amp; Problem Solving</h2><p>Minimal program structure and observable output.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-01-hello-world.cpp"><strong>Hello, World</strong><span>Entry point, output stream, and successful termination.</span><code>lecture-01-hello-world.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-02" data-lecture="02"><header><span>L02</span><div><h2>Types &amp; Representation</h2><p>Range, precision, constants, inference, and conversion.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-02-types-and-conversions.cpp"><strong>Sensor packet types</strong><span>Fixed-width integers, floating point, bool, char, auto, and static_cast.</span><code>lecture-02-types-and-conversions.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-03" data-lecture="03"><header><span>L03</span><div><h2>Expressions, Scope &amp; Program State</h2><p>Names, visibility, storage duration, and linkage.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-03-expressions-and-scope.cpp"><strong>Expressions and scope</strong><span>Namespaces, precedence, nested scope, and global state.</span><code>lecture-03-expressions-and-scope.cpp</code></a>
+                <a class="example-card" href="lecture-03-storage-and-linkage.cpp"><strong>Static and extern</strong><span>Persistent local state plus an externally defined value.</span><code>lecture-03-storage-and-linkage.cpp</code></a>
+                <a class="example-card" href="lecture-03-shared-data.cpp"><strong>Shared definition</strong><span>Translation-unit definition used by the linkage example.</span><code>lecture-03-shared-data.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-04" data-lecture="04"><header><span>L04</span><div><h2>Decisions &amp; Safe Branching</h2><p>Ordered safety rules and explicit boundaries.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-04-overcurrent-controller.cpp"><strong>Overcurrent controller</strong><span>Short-circuit protection logic and ordered classification.</span><code>lecture-04-overcurrent-controller.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-05" data-lecture="05"><header><span>L05</span><div><h2>Iteration I · while &amp; Input Validation</h2><p>Condition-controlled repetition and progress.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-05-production-scan.cpp"><strong>Production quality scan</strong><span>A while-loop invariant with a defect-based stopping condition.</span><code>lecture-05-production-scan.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-06" data-lecture="06"><header><span>L06</span><div><h2>Iteration II · for, Nested Loops &amp; Invariants</h2><p>Counted ranges and row–column combinations.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-06-nested-loops.cpp"><strong>Calibration grid</strong><span>Two counted loops enumerate every row–column pair.</span><code>lecture-06-nested-loops.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-07" data-lecture="07"><header><span>L07</span><div><h2>Functions I · Contracts &amp; Calls</h2><p>Value parameters, return values, and decomposition.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-07-function-contracts.cpp"><strong>Function contracts</strong><span>Value parameters and return values for three single-purpose functions.</span><code>lecture-07-function-contracts.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-08" data-lecture="08"><header><span>L08</span><div><h2>Functions II · References &amp; Decomposition</h2><p>References, const access, and call structure.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-08-output-references.cpp"><strong>Order a pair</strong><span>Return two related results through explicit output references.</span><code>lecture-08-output-references.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-09" data-lecture="09"><header><span>L09</span><div><h2>Arrays I · Fixed Sequences &amp; Traversal</h2><p>Fixed extents, indices, bounds, and traversal.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-09-weekly-temperatures.cpp"><strong>Weekly temperatures</strong><span>A fixed array traversed with its actual size as the bound.</span><code>lecture-09-weekly-temperatures.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-10" data-lecture="10"><header><span>L10</span><div><h2>Arrays II · Matrices &amp; std::vector</h2><p>Multiple dimensions and runtime-sized sequences.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-10-matrix-vector.cpp"><strong>Score matrix</strong><span>Nested vector traversal with checked row and column access.</span><code>lecture-10-matrix-vector.cpp</code></a>
+                <a class="example-card" href="lecture-10-image-grid.cpp"><strong>Image grid</strong><span>A fixed two-dimensional array rendered through nested traversal.</span><code>lecture-10-image-grid.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-11" data-lecture="11"><header><span>L11</span><div><h2>Strings &amp; Text Processing</h2><p>Owned text, input, classification, and validation.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-11-enrollment-id.cpp"><strong>Enrollment ID validator</strong><span>Prefix, length, and digit predicates with safe cctype use.</span><code>lecture-11-enrollment-id.cpp</code></a>
+                <a class="example-card" href="lecture-11-cat-text.cpp"><strong>Text as a sequence</strong><span>A vector of strings rendered line by line.</span><code>lecture-11-cat-text.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-12" data-lecture="12"><header><span>L12</span><div><h2>Debugging &amp; Assessment Debrief</h2><p>Contracts, boundary cases, integration, and regression tests.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-12-rainfall-integration.cpp"><strong>Rainfall analyzer</strong><span>Functions, vector traversal, accumulation, and maximum-index search.</span><code>lecture-12-rainfall-integration.cpp</code></a>
+                <a class="example-card" href="lecture-12-boundary-tests.cpp"><strong>Boundary tests</strong><span>Repair average calculation and test empty and integer-division cases.</span><code>lecture-12-boundary-tests.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-13" data-lecture="13"><header><span>L13</span><div><h2>Records, Pointers &amp; Memory Layout</h2><p>Structured records, addresses, indirection, and layout.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-13-sensor-records.cpp"><strong>Sensor records</strong><span>Array of structs plus null-safe pointer member access.</span><code>lecture-13-sensor-records.cpp</code></a>
+                <a class="example-card" href="lecture-13-structure-padding.cpp"><strong>Structure padding</strong><span>Compare size, alignment, and field offsets for two layouts.</span><code>lecture-13-structure-padding.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-14" data-lecture="14"><header><span>L14</span><div><h2>Dynamic Memory &amp; Linked Structures</h2><p>Ownership, allocation, smart pointers, and links.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-14-dynamic-memory-and-lists.cpp"><strong>Memory and linked lists</strong><span>Raw allocation, smart pointers, failures, and list operations.</span><code>lecture-14-dynamic-memory-and-lists.cpp</code></a>
+                <a class="example-card" href="lecture-14-c-allocation.cpp"><strong>C allocation API</strong><span>malloc, calloc, realloc, free, and address tracing.</span><code>lecture-14-c-allocation.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-15" data-lecture="15"><header><span>L15</span><div><h2>Linear Structures &amp; Array Algorithms</h2><p>ADTs, search, sort, stacks, and queues.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-15-linear-search.cpp"><strong>Linear search</strong><span>First and all matching indices in an unsorted array.</span><code>lecture-15-linear-search.cpp</code></a>
+                <a class="example-card" href="lecture-15-array-stack.cpp"><strong>Array stack</strong><span>LIFO operations as free functions over a plain state record.</span><code>lecture-15-array-stack.cpp</code></a>
+                <a class="example-card" href="lecture-15-linked-queue.cpp"><strong>Linked queue</strong><span>FIFO free functions over dynamically linked nodes.</span><code>lecture-15-linked-queue.cpp</code></a>
+                <a class="example-card" href="lecture-15-record-queue.cpp"><strong>Record queue</strong><span>Student records in a circular-array queue without class prerequisites.</span><code>lecture-15-record-queue.cpp</code></a>
+                <a class="example-card" href="lecture-15-elementary-sorts.cpp"><strong>Elementary sorts</strong><span>Bubble, selection, and insertion sort traces.</span><code>lecture-15-elementary-sorts.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-16" data-lecture="16"><header><span>L16</span><div><h2>Recursive Decomposition in Practice</h2><p>Base cases, progress, and linked transformations.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-16-recursive-list.cpp"><strong>Recursive list reversal</strong><span>Move unique ownership while reversing a linked chain.</span><code>lecture-16-recursive-list.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-17" data-lecture="17"><header><span>L17</span><div><h2>Search Trees, Heaps &amp; Sorting</h2><p>Algorithms that preserve ordering and structural invariants.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-17-binary-search.cpp"><strong>Binary search</strong><span>Iterative, recursive, first, and last occurrence variants.</span><code>lecture-17-binary-search.cpp</code></a>
+                <a class="example-card" href="lecture-17-binary-search-tree.cpp"><strong>Binary search tree</strong><span>Insertion, search, deletion, traversals, and cleanup.</span><code>lecture-17-binary-search-tree.cpp</code></a>
+                <a class="example-card" href="lecture-17-heap-and-heapsort.cpp"><strong>Heap and heap sort</strong><span>Heapify, insertion, extraction, and phased sorting.</span><code>lecture-17-heap-and-heapsort.cpp</code></a>
+                <a class="example-card" href="lecture-17-merge-sort.cpp"><strong>Merge sort</strong><span>Recursive and bottom-up merge sort plus inversion counting.</span><code>lecture-17-merge-sort.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-18" data-lecture="18"><header><span>L18</span><div><h2>Object Design &amp; Value Semantics</h2><p>Construction, copying, invariants, and operators.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-18-complex-value.cpp"><strong>Complex number value</strong><span>Constructor, const operator+, prefix increment, and display.</span><code>lecture-18-complex-value.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-19" data-lecture="19"><header><span>L19</span><div><h2>Friend Access &amp; Inheritance Foundations</h2><p>Narrow privilege and justified is-a relationships.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-19-friend-and-inheritance.cpp"><strong>Calibrated energy meter</strong><span>Friend calibration and a simple public derived class.</span><code>lecture-19-friend-and-inheritance.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-20" data-lecture="20"><header><span>L20</span><div><h2>Inheritance &amp; Runtime Polymorphism</h2><p>Virtual interfaces, safe ownership, and factories.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-20-employee-polymorphism.cpp"><strong>Employee polymorphism</strong><span>Virtual work behavior through base-class pointers.</span><code>lecture-20-employee-polymorphism.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-21" data-lecture="21"><header><span>L21</span><div><h2>Polymorphic Data Structures</h2><p>Heterogeneous ownership behind a common interface.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-21-polymorphic-shapes.cpp"><strong>Owning shape container</strong><span>vector of unique_ptr, virtual area, and aggregation.</span><code>lecture-21-polymorphic-shapes.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-22" data-lecture="22"><header><span>L22</span><div><h2>Applied Object Systems</h2><p>Domain models, collection algorithms, graphs, and patterns.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-22-flight-booking-system.cpp"><strong>Flight booking system</strong><span>Complete OOP system with search, routing, factory, strategy, and queues.</span><code>lecture-22-flight-booking-system.cpp</code></a>
+            </div></section>
+
+            <section class="lecture-group" id="lecture-23" data-lecture="23"><header><span>L23</span><div><h2>Recursive &amp; Polymorphic Capstones</h2><p>Buckets, matrices, trees, and hierarchy applications.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-23-radix-sort.cpp"><strong>LSD radix sort</strong><span>Stable digit passes through an array of buckets.</span><code>lecture-23-radix-sort.cpp</code></a>
+                <a class="example-card" href="lecture-23-invert-tree.cpp"><strong>Invert a tree</strong><span>Recursive subtree transformation with unique ownership.</span><code>lecture-23-invert-tree.cpp</code></a>
+            </div></section>
+        </div>
+        <p class="empty" id="empty" hidden>No examples match that search.</p>
+    </main>
+
+    <footer><div class="shell"><span>CS103 · IIT Indore</span><span>Compile with <code>g++ -std=c++17 filename.cpp -o program</code></span></div></footer>
+    <script src="index.js"></script>
+</body>
+</html>

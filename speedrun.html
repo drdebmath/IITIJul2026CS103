@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore every CS103 concept as a lightweight interactive learning tree, with live slide previews and a searchable course index.">
+    <meta name="theme-color" content="#07111f">
+    <title>CS103 Dependency Graph · IIT Indore</title>
+    <link rel="stylesheet" href="speedrun.css">
+</head>
+<body>
+    <a class="skip-link" href="#concept-index-section">Skip the visual map and open the concept index</a>
+
+    <header class="site-header">
+        <nav class="topbar shell" aria-label="Speedrun navigation">
+            <a class="brand" href="index.html" aria-label="Back to the CS103 course home">
+                <span class="brand-mark" aria-hidden="true">CS</span>
+                <span class="brand-copy">
+                    <strong>CS103</strong>
+                    <span>Speedrun tree</span>
+                </span>
+            </a>
+
+            <div class="topbar-links">
+                <a href="#tree">Course tree</a>
+                <a href="#concept-index-section">Concept index</a>
+                <a class="home-link" href="index.html">Course home <span aria-hidden="true">↗</span></a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro shell" aria-labelledby="page-title">
+            <div class="intro-copy">
+                <p class="eyebrow"><span aria-hidden="true"></span> CS103 · Interactive course map</p>
+                <h1 id="page-title">The programming <em>dependency graph.</em></h1>
+                <p class="intro-lede">Follow the prerequisite edges and jump straight into the slide deck for any concept. Algorithms appear where they become useful—as applications of arrays, functions, linked structures, trees, and object models.</p>
+                <div class="intro-actions">
+                    <a class="primary-action" href="#tree">Enter the tree <span aria-hidden="true">↓</span></a>
+                    <a class="secondary-action" href="#concept-index-section">Browse the index</a>
+                    <a class="secondary-action" id="continue-learning" href="lecture1.html">Continue first unstudied lecture</a>
+                </div>
+            </div>
+
+            <div class="intro-stats" aria-label="Course tree summary">
+                <div>
+                    <strong id="concept-total">—</strong>
+                    <span>concepts</span>
+                </div>
+                <div>
+                    <strong id="module-total">9</strong>
+                    <span>branches</span>
+                </div>
+                <div>
+                    <strong>23</strong>
+                    <span>lecture decks</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="tree-section" id="tree" aria-labelledby="tree-title">
+            <div class="tree-heading shell">
+                <div>
+                    <p class="section-label">01 · Navigate</p>
+                    <h2 id="tree-title">See what each concept depends on.</h2>
+                </div>
+                <p>The graph flows vertically: prerequisites sit above the concepts they unlock. Filter by phase or module, then select any node to preview its slide.</p>
+            </div>
+
+            <div class="tree-shell shell">
+                <div class="tree-stage tree-stage--2d" id="tree-stage" aria-label="Interactive course tree of CS103 modules and concepts">
+                    <div class="tree-loading" id="tree-loading" role="status">
+                        <span class="loading-orbit" aria-hidden="true"></span>
+                        <span>Building the concept tree…</span>
+                    </div>
+
+                    <div class="map-topbar">
+                        <aside class="selection-card selection-card--2d" id="selection-card" aria-live="polite">
+                            <span class="selection-kicker" id="selection-kicker">Selected branch</span>
+                            <strong id="selection-title">Introduction to Programming</strong>
+                            <p id="selection-copy">Start with the language of computation and the anatomy of a working program.</p>
+                            <a id="selection-link" href="lecture1.html">Open lecture deck <span aria-hidden="true">↗</span></a>
+                            <div class="selection-preview" id="selection-preview">
+                                <iframe id="selection-iframe" loading="lazy" tabindex="-1" title="Selected concept slide preview"></iframe>
+                            </div>
+                        </aside>
+
+                        <div class="tree-toolbar tree-toolbar--2d" aria-label="Course tree controls">
+                            <button type="button" id="reset-view">Reset graph</button>
+                            <span class="toolbar-separator" aria-hidden="true"></span>
+                            <button type="button" class="phase-filter is-active" data-phase-filter="all" aria-pressed="true">All</button>
+                            <button type="button" class="phase-filter" data-phase-filter="pre" aria-pressed="false">Pre-mid</button>
+                            <button type="button" class="phase-filter" data-phase-filter="post" aria-pressed="false">Post-mid</button>
+                            <span class="toolbar-separator" aria-hidden="true"></span>
+                            <div class="graph-zoom-controls" role="group" aria-label="Dependency graph zoom">
+                                <button type="button" id="graph-fit" aria-pressed="true" title="Fit the complete graph in the viewport">Fit</button>
+                                <button type="button" id="graph-zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+                                <input id="graph-zoom" type="range" min="5" max="200" step="1" value="100" aria-label="Graph zoom percentage">
+                                <output id="graph-zoom-value" for="graph-zoom">100%</output>
+                                <button type="button" id="graph-zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+                            </div>
+                            <label class="module-filter-label" for="graph-module-filter">
+                                <span>Module</span>
+                                <select id="graph-module-filter">
+                                    <option value="all">All modules</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="dependency-viewport" id="dependency-viewport" tabindex="0" aria-label="Zoomable, scrollable top-to-bottom dependency graph. Use plus and minus to zoom, zero to fit, and select a concept node to inspect it.">
+                        <div class="dependency-surface" id="dependency-surface">
+                            <div class="dependency-content" id="dependency-content">
+                                <canvas id="dependency-edges" aria-hidden="true"></canvas>
+                                <div class="dependency-nodes" id="dependency-nodes"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="tree-help"><span>Fit overview</span> use the slider, +/−, Ctrl/⌘-wheel, or keyboard +/−; press 0 to fit everything again.</p>
+            </div>
+        </section>
+
+        <section class="index-section shell" id="concept-index-section" aria-labelledby="index-title">
+            <div class="index-heading">
+                <div>
+                    <p class="section-label">02 · Find anything</p>
+                    <h2 id="index-title">Complete concept index.</h2>
+                </div>
+                <p>Search every concept, locate it in the visual tree, or open its lecture deck directly.</p>
+            </div>
+
+            <div class="index-tools">
+                <label class="search-field" for="concept-search">
+                    <span aria-hidden="true">⌕</span>
+                    <input id="concept-search" type="search" placeholder="Search pointers, strings, polymorphism…" autocomplete="off">
+                </label>
+                <div class="index-filters" role="group" aria-label="Filter concepts by course phase">
+                    <button type="button" class="index-filter is-active" data-index-filter="all" aria-pressed="true">All concepts</button>
+                    <button type="button" class="index-filter" data-index-filter="pre" aria-pressed="false">Before mid-semester</button>
+                    <button type="button" class="index-filter" data-index-filter="post" aria-pressed="false">After mid-semester</button>
+                </div>
+                <p class="result-count" id="result-count" aria-live="polite">Loading index…</p>
+            </div>
+
+            <div class="concept-index" id="concept-index"></div>
+
+            <noscript>
+                <div class="noscript-index">
+                    <h3>Lecture decks</h3>
+                    <p>JavaScript is required for the interactive tree and searchable concept list. The lecture decks remain available directly:</p>
+                    <ol>
+                        <li><a href="lecture1.html">Programming &amp; Problem Solving</a></li>
+                        <li><a href="lecture2.html">Types &amp; Representation</a></li>
+                        <li><a href="lecture3.html">Expressions, Scope &amp; Program State</a></li>
+                        <li><a href="lecture4.html">Decisions &amp; Safe Branching</a></li>
+                        <li><a href="lecture5.html">Iteration I · while &amp; Input Validation</a></li>
+                        <li><a href="lecture6.html">Iteration II · for, Nested Loops &amp; Invariants</a></li>
+                        <li><a href="lecture7.html">Functions I · Contracts &amp; Calls</a></li>
+                        <li><a href="lecture8.html">Functions II · References &amp; Decomposition</a></li>
+                        <li><a href="lecture9.html">Arrays I · Fixed Sequences &amp; Traversal</a></li>
+                        <li><a href="lecture10.html">Arrays II · Matrices &amp; std::vector</a></li>
+                        <li><a href="lecture11.html">Strings &amp; Text Processing</a></li>
+                        <li><a href="lecture12.html">Debugging &amp; Assessment Debrief</a></li>
+                        <li><a href="lecture13.html">Records, Pointers &amp; Memory Layout</a></li>
+                        <li><a href="lecture14.html">Dynamic Memory &amp; Linked Structures</a></li>
+                        <li><a href="lecture15.html">Linear Structures &amp; Array Algorithms</a></li>
+                        <li><a href="lecture16.html">Recursive Decomposition in Practice</a></li>
+                        <li><a href="lecture17.html">Search Trees, Heaps &amp; Sorting</a></li>
+                        <li><a href="lecture18.html">Object Design &amp; Value Semantics</a></li>
+                        <li><a href="lecture19.html">Friend Access &amp; Inheritance Foundations</a></li>
+                        <li><a href="lecture20.html">Inheritance &amp; Runtime Polymorphism</a></li>
+                        <li><a href="lecture21.html">Polymorphic Data Structures</a></li>
+                        <li><a href="lecture22.html">Applied Object Systems</a></li>
+                        <li><a href="lecture23.html">Recursive &amp; Polymorphic Capstones</a></li>
+                    </ol>
+                </div>
+            </noscript>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner shell">
+            <p><strong>CS103 Dependency Graph</strong> · IIT Indore</p>
+            <div>
+                <a href="index.html">Course home</a>
+                <a href="ic151.html">IC151 laboratory</a>
+                <a href="codes/index.html">Code library</a>
+                <a href="https://drdebmath.github.io" target="_blank" rel="noopener noreferrer">Instructor</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+    <script src="course-map.js"></script>
+    <script src="course-concepts.js"></script>
+    <script defer src="speedrun-graph.js"></script>
+</body>
+</html>

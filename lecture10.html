@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 10: Arrays II · Matrices & std::vector">
+    <title>Lecture 10: Arrays II · Matrices & std::vector</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 10: Arrays II
+## Matrices and runtime-sized contiguous sequences
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A matrix needs one index per dimension
+
+~~~cpp
+int image[2][3]{{10, 20, 30}, {40, 50, 60}};
+int pixel = image[1][2];  // row 1, column 2
+~~~
+
+Both dimensions are zero-based.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Traverse rows and columns with matching bounds
+
+~~~cpp
+for (int row = 0; row < 2; ++row) {
+    for (int col = 0; col < 3; ++col) {
+        std::cout << image[row][col] << ' ';
+    }
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A vector owns a runtime-sized sequence
+
+~~~cpp
+#include <vector>
+
+std::vector<int> readings;
+readings.push_back(17);
+readings.push_back(21);
+~~~
+
+The vector grows while preserving contiguous element storage.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Bounds still matter
+
+~~~cpp
+for (std::size_t i = 0; i < readings.size(); ++i) {
+    std::cout << readings.at(i) << '\n';
+}
+~~~
+
+<code>at()</code> checks; <code>operator[]</code> assumes the index is valid.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Choose from the requirement
+
+| Requirement | Representation |
+|---|---|
+| exactly seven daily readings | fixed array |
+| readings until input ends | vector |
+| fixed 3 × 3 transform | 2D array |
+| rows whose lengths may differ | nested vectors |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Practical pattern: row totals
+
+~~~cpp
+std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
+for (const auto& row : scores) {
+    int total = 0;
+    for (int score : row) total += score;
+    std::cout << total << '\n';
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A matrix needs row and column bounds.
+- A vector owns a contiguous sequence whose size is known at runtime.
+- <code>size()</code> states the valid upper bound.
+- Choose fixed or dynamic storage from the requirement.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

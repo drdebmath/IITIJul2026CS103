@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 15: Linear Structures & Array Algorithms">
+    <title>Lecture 15: Linear Structures & Array Algorithms</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 15: Linear Structures & Array Algorithms
+## Choose operations before representation
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## An abstract data type is an operation contract
+
+A stack promises <code>push</code>, <code>pop</code>, and <code>top</code>. A queue promises <code>enqueue</code>, <code>dequeue</code>, and <code>front</code>.
+
+The contract does not require a class or one specific representation.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Linear search applies traversal to stored data
+
+~~~cpp
+int found = -1;
+for (std::size_t i = 0; i < values.size(); ++i) {
+    if (values[i] == target) {
+        found = static_cast<int>(i);
+        break;
+    }
+}
+~~~
+
+Worst case: inspect every element.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Bubble sort applies neighboring swaps
+
+~~~cpp
+for (std::size_t end = values.size(); end > 1; --end) {
+    for (std::size_t i = 1; i < end; ++i) {
+        if (values[i] < values[i - 1])
+            std::swap(values[i], values[i - 1]);
+    }
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A stack is last-in, first-out
+
+With an array representation, keep one integer <code>top</code>:
+
+- push: check capacity, then advance and store;
+- pop: check emptiness, read, then retreat;
+- top: inspect without removing.
+
+An undo history and function calls are stack applications.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A queue is first-in, first-out
+
+A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</code>. A linked queue keeps pointers to the first and last nodes.
+
+Print jobs and breadth-first exploration are queue applications.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Compare operations, not names
+
+| Requirement | Useful choice |
+|---|---|
+| scan unsorted readings | array + linear search |
+| undo most recent action | stack |
+| serve arrival order | queue |
+| repeatedly exchange adjacent inversions | array + bubble sort |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- An ADT is defined by valid operations and behavior.
+- Algorithms are applications of the representation's operations.
+- Linear search needs no ordering.
+- Stack means LIFO; queue means FIFO.
+- Bubble sort is simple but performs quadratic work.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

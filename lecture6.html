@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 6: Iteration II · for, Nested Loops & Invariants">
+    <title>Lecture 6: Iteration II · for, Nested Loops & Invariants</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 6: Iteration II
+## for loops, nested loops, and invariants
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Counted repetition with for
+
+~~~cpp
+for (int step = 1; step <= 5; ++step) {
+    std::cout << step << ' ';
+}
+~~~
+
+Read it as initialize → test → body → update → test again.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## State the valid counter range
+
+For five zero-based positions, valid indices are 0, 1, 2, 3, 4.
+
+~~~cpp
+for (int i = 0; i < 5; ++i) {
+    std::cout << i << ' ';
+}
+~~~
+
+The condition directly states the upper boundary is excluded.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Nested loops enumerate combinations
+
+~~~cpp
+for (int row = 0; row < 3; ++row) {
+    for (int col = 0; col < 4; ++col) {
+        std::cout << row << ',' << col << '\n';
+    }
+}
+~~~
+
+The inner loop completes every column for one row.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A loop invariant explains correctness
+
+Example invariant:
+
+> Before iteration <code>i</code>, positions 0 through <code>i - 1</code> have already been processed.
+
+Check the statement before the first iteration, after one update, and at termination.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Choose the loop from the stopping rule
+
+- <code>while</code>: stop when an event or changing condition says so.
+- <code>do-while</code>: perform once, then decide.
+- <code>for</code>: traverse a known counter range.
+
+The choice communicates intent; any loop can still be written incorrectly.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Boundary failures to diagnose
+
+~~~cpp
+for (int i = 0; i <= 5; ++i)   // six values
+for (int i = 5; i >= 0; ++i)   // moves away from stopping
+~~~
+
+These are diagnosis examples. Do not run the second loop unchanged.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Put initialization, test, and update together for counted work.
+- Nested loops traverse combinations such as rows × columns.
+- Write valid values before writing a bound.
+- Use an invariant to explain what is already correct.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

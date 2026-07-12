@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 22: Applied Object Systems">
+    <title>Lecture 22: Applied Object Systems</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 22: Applied Object Systems
+## Compose domain objects, collections, and algorithms
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Assign one responsibility to each component
+
+- <code>Flight</code>: route, capacity, and availability invariant.
+- <code>Passenger</code>: passenger identity and contact value.
+- <code>Booking</code>: association between one passenger and one flight.
+- <code>BookingSystem</code>: collection operations and policies.
+
+High cohesion keeps each responsibility local.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A domain model names relationships
+
+~~~cpp
+struct Flight { std::string code; std::string from; std::string to; int seats; };
+struct Passenger { std::string rollNumber; std::string name; };
+struct Booking { std::size_t flightIndex; std::size_t passengerIndex; };
+~~~
+
+Indices express associations without ambiguous ownership.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Search applies a predicate to the collection
+
+~~~cpp
+auto matchesRoute = [&](const Flight& flight) {
+    return flight.from == requestedFrom && flight.to == requestedTo;
+};
+
+auto result = std::find_if(flights.begin(), flights.end(), matchesRoute);
+~~~
+
+The lambda is a predicate: a callable returning true or false.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sorting applies a comparator
+
+~~~cpp
+std::sort(flights.begin(), flights.end(),
+    [](const Flight& a, const Flight& b) {
+        return a.code < b.code;
+    });
+~~~
+
+The comparator defines one consistent ordering relation.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Routing is a graph application
+
+Airports are vertices and direct flights are edges. Route optimization selects a path according to hops, time, distance, or cost.
+
+State the objective before choosing an algorithm.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Patterns separate policy from mechanism
+
+- Factory: choose which concrete service object to create.
+- Strategy: supply a pricing or ranking policy through an interface.
+
+Use a design pattern only after the recurring responsibility problem is visible.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Domain classes represent entities, values, and associations.
+- Collections expose search and sorting applications.
+- Predicates select; comparators order.
+- Routing applies graph structure to a stated objective.
+- Patterns name reusable responsibility arrangements.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

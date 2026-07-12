@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 20: Inheritance & Runtime Polymorphism">
+    <title>Lecture 20: Inheritance & Runtime Polymorphism</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 20: Inheritance & Runtime Polymorphism
+## Select behavior from the runtime object safely
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Public and private inheritance make different promises
+
+- Public inheritance preserves the base interface and models is-a.
+- Private inheritance is an implementation technique and does not promise substitutability.
+
+Composition is usually clearer than private inheritance.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: multiple and virtual inheritance
+
+Multiple inheritance gives one derived class more than one direct base.
+
+In a diamond, virtual inheritance can share one common base subobject. Use these mechanisms only when the domain model genuinely requires them; they are not the starting point for polymorphism.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A virtual function enables dynamic dispatch
+
+~~~cpp
+class Shape {
+public:
+    virtual double area() const = 0;
+    virtual ~Shape() = default;
+};
+
+class Square : public Shape {
+    double side;
+public:
+    explicit Square(double s) : side(s) {}
+    double area() const override { return side * side; }
+};
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Own polymorphic objects safely
+
+~~~cpp
+std::vector<std::unique_ptr<Shape>> shapes;
+shapes.push_back(std::make_unique<Square>(4.0));
+
+double total = 0.0;
+for (const auto& shape : shapes) total += shape->area();
+~~~
+
+The virtual destructor makes deletion through the base interface safe.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A factory centralizes concrete construction
+
+~~~cpp
+std::unique_ptr<Shape> makeSquare(double side) {
+    return std::make_unique<Square>(side);
+}
+~~~
+
+A factory returns an abstraction while choosing a concrete type in one place.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Test the substitutability contract
+
+For every derived type, test:
+
+- calls made through a base reference;
+- cleanup through base ownership;
+- invalid constructor inputs;
+- behavior added by a new derived type without changing existing callers.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Public inheritance promises substitutability.
+- Dynamic dispatch selects an override at runtime.
+- Polymorphic bases need virtual destructors.
+- Own derived objects with smart pointers.
+- Factories separate construction choice from use.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CS103: Introduction to Programming at IIT Indore — course modules, code examples, assessment details, and lecture schedule.">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>CS103 · Introduction to Programming</title>
+    <link rel="canonical" href="https://drdebmath.github.io/IITIJul2026CS103/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CS103 · Introduction to Programming">
+    <meta property="og:description" content="CS103 at IIT Indore — course modules, code examples, assessment details, and lecture schedule.">
+    <meta property="og:url" content="https://drdebmath.github.io/IITIJul2026CS103/">
+    <script defer src="course-data.js"></script>
+    <script defer src="course-progress.js"></script>
+    <script defer src="course-schedule.js"></script>
+    <script defer src="grade-curve.js"></script>
+    <script>
+        try {
+            const savedTheme = localStorage.getItem('cs103-theme');
+            const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.dataset.theme = savedTheme || preferredTheme;
+        } catch (error) {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
+    <style>
+        :root {
+            color-scheme: light;
+            --page: #f5f7fb;
+            --surface: #ffffff;
+            --surface-soft: #eef2f8;
+            --surface-strong: #e5ebf5;
+            --ink: #172033;
+            --muted: #627087;
+            --line: #dce3ee;
+            --primary: #4059c7;
+            --primary-strong: #2942ab;
+            --primary-soft: #e8ecff;
+            --teal: #087f73;
+            --teal-soft: #dff6f1;
+            --amber: #a45c06;
+            --amber-soft: #fff2d9;
+            --danger: #b43b4b;
+            --danger-soft: #ffeaed;
+            --shadow-sm: 0 1px 2px rgba(23, 32, 51, 0.05), 0 8px 24px rgba(23, 32, 51, 0.06);
+            --shadow-lg: 0 28px 70px rgba(30, 45, 82, 0.14);
+            --radius-sm: 12px;
+            --radius: 20px;
+            --radius-lg: 30px;
+            --content: 1180px;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --page: #0d1320;
+            --surface: #151e2d;
+            --surface-soft: #1b2638;
+            --surface-strong: #243248;
+            --ink: #edf2fb;
+            --muted: #a6b2c6;
+            --line: #2c3a50;
+            --primary: #9aaaff;
+            --primary-strong: #bdc7ff;
+            --primary-soft: #29345f;
+            --teal: #6fd5c7;
+            --teal-soft: #173f3d;
+            --amber: #f4bf72;
+            --amber-soft: #4b361f;
+            --danger: #ff9aa7;
+            --danger-soft: #512831;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 10px 26px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.28);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 8% 5%, color-mix(in srgb, var(--primary) 10%, transparent) 0, transparent 25rem),
+                radial-gradient(circle at 94% 20%, color-mix(in srgb, var(--teal) 8%, transparent) 0, transparent 26rem),
+                var(--page);
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 16px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus-visible {
+            outline: 3px solid color-mix(in srgb, var(--primary) 65%, var(--page));
+            outline-offset: 3px;
+        }
+
+        .skip-link {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #ffffff;
+            background: var(--primary-strong);
+            transform: translateY(-150%);
+            transition: transform 180ms ease;
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+        }
+
+        .shell {
+            width: min(calc(100% - 40px), var(--content));
+            margin-inline: auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+            background: color-mix(in srgb, var(--page) 84%, transparent);
+            backdrop-filter: blur(18px) saturate(1.4);
+        }
+
+        .nav {
+            min-height: 74px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            color: #ffffff;
+            background: linear-gradient(145deg, #4f68dc, #263fa6);
+            box-shadow: 0 8px 20px rgba(64, 89, 199, 0.28);
+            font-size: 0.78rem;
+            font-weight: 850;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-copy {
+            display: grid;
+            line-height: 1.15;
+        }
+
+        .brand-copy strong {
+            font-size: 0.96rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-copy span {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            padding: 9px 12px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 650;
+            text-decoration: none;
+            transition: color 160ms ease, background 160ms ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+            background: var(--surface-soft);
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            color: var(--ink);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            font: inherit;
+            transition: transform 160ms ease, border-color 160ms ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(330px, 0.85fr);
+            align-items: center;
+            gap: clamp(42px, 7vw, 90px);
+            padding-block: clamp(72px, 10vw, 132px) clamp(64px, 8vw, 104px);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 20px;
+            color: var(--primary-strong);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 28px;
+            height: 2px;
+            content: "";
+            border-radius: 999px;
+            background: currentColor;
+        }
+
+        .hero h1 {
+            max-width: 750px;
+            margin: 0;
+            font-size: clamp(3.15rem, 7.4vw, 6.7rem);
+            font-weight: 820;
+            letter-spacing: -0.07em;
+            line-height: 0.93;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 640px;
+            margin: 28px 0 0;
+            color: var(--muted);
+            font-size: clamp(1.05rem, 1.7vw, 1.22rem);
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .instructor-link,
+        .primary-action,
+        .secondary-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 46px;
+            padding: 10px 17px;
+            border-radius: 13px;
+            font-weight: 750;
+            text-decoration: none;
+            transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+
+        .instructor-link,
+        .primary-action {
+            color: #ffffff;
+            background: var(--primary-strong);
+            box-shadow: 0 10px 26px rgba(41, 66, 171, 0.22);
+        }
+
+        .instructor-link:hover,
+        .primary-action:hover,
+        .secondary-action:hover {
+            transform: translateY(-2px);
+        }
+
+        .secondary-action {
+            border: 1px solid var(--line);
+            color: var(--ink);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .arrow {
+            font-size: 1.05em;
+            transition: transform 160ms ease;
+        }
+
+        a:hover .arrow {
+            transform: translateX(3px);
+        }
+
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 24px;
+        }
+
+        .hero-tags span {
+            padding: 7px 11px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--muted);
+            background: color-mix(in srgb, var(--surface) 72%, transparent);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .code-window {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+            border-radius: var(--radius-lg);
+            background: #121a2b;
+            box-shadow: var(--shadow-lg);
+            transform: rotate(1.2deg);
+        }
+
+        .code-window::before {
+            position: absolute;
+            right: -70px;
+            bottom: -100px;
+            z-index: -1;
+            width: 270px;
+            height: 270px;
+            content: "";
+            border-radius: 50%;
+            background: #4f68dc;
+            filter: blur(90px);
+            opacity: 0.35;
+        }
+
+        .window-bar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            height: 52px;
+            padding-inline: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .window-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #ff6b79;
+        }
+
+        .window-dot:nth-child(2) {
+            background: #f5bd4f;
+        }
+
+        .window-dot:nth-child(3) {
+            background: #51c887;
+        }
+
+        .window-filename {
+            margin-left: 8px;
+            color: #73809b;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.72rem;
+        }
+
+        .code-window pre {
+            min-height: 295px;
+            margin: 0;
+            padding: 34px clamp(24px, 4vw, 42px) 40px;
+            color: #d8e1f2;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            line-height: 1.85;
+            white-space: pre-wrap;
+        }
+
+        .syntax-preprocessor,
+        .syntax-keyword {
+            color: #aab7ff;
+        }
+
+        .syntax-function {
+            color: #72d6c8;
+        }
+
+        .syntax-string {
+            color: #f4c477;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: clamp(92px, 11vw, 142px);
+        }
+
+        .quick-card {
+            display: flex;
+            align-items: center;
+            gap: 17px;
+            min-height: 112px;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: color-mix(in srgb, var(--surface) 92%, transparent);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .quick-card:hover {
+            border-color: color-mix(in srgb, var(--primary) 55%, var(--line));
+            box-shadow: 0 18px 38px rgba(30, 45, 82, 0.11);
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            border-radius: 15px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.86rem;
+            font-weight: 850;
+        }
+
+        .quick-card:nth-child(2) .quick-icon {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .quick-card:nth-child(3) .quick-icon {
+            color: var(--amber);
+            background: var(--amber-soft);
+        }
+
+        .quick-card:nth-child(4) .quick-icon {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .quick-copy {
+            min-width: 0;
+        }
+
+        .quick-copy strong {
+            display: block;
+            font-size: 0.97rem;
+            letter-spacing: -0.02em;
+        }
+
+        .quick-copy span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        section {
+            scroll-margin-top: 105px;
+        }
+
+        .section-heading {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 24px;
+            margin-bottom: 34px;
+        }
+
+        .section-kicker {
+            margin: 0 0 9px;
+            color: var(--primary-strong);
+            font-size: 0.76rem;
+            font-weight: 850;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: clamp(2rem, 4.7vw, 3.6rem);
+            letter-spacing: -0.055em;
+            line-height: 1.02;
+        }
+
+        .section-heading > p {
+            max-width: 440px;
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: clamp(96px, 12vw, 150px);
+        }
+
+        .roadmap-card {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .roadmap-header {
+            padding: 27px 28px 24px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(135deg, var(--primary-soft), color-mix(in srgb, var(--surface) 92%, var(--primary-soft)));
+        }
+
+        .roadmap-card:last-child .roadmap-header {
+            background: linear-gradient(135deg, var(--teal-soft), color-mix(in srgb, var(--surface) 92%, var(--teal-soft)));
+        }
+
+        .roadmap-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 9px;
+            color: var(--primary-strong);
+            font-size: 0.7rem;
+            font-weight: 850;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .roadmap-card:last-child .roadmap-phase {
+            color: var(--teal);
+        }
+
+        .roadmap-header h3 {
+            margin: 0;
+            font-size: 1.35rem;
+            letter-spacing: -0.035em;
+        }
+
+        .module-list {
+            margin: 0;
+            padding: 10px 28px 18px;
+            list-style: none;
+        }
+
+        .module {
+            position: relative;
+            padding: 22px 0 22px 45px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .module:last-child {
+            border-bottom: 0;
+        }
+
+        .module-number {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            width: 29px;
+            height: 29px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.72rem;
+            font-weight: 850;
+        }
+
+        .roadmap-card:last-child .module-number {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .module h4 {
+            margin: 0;
+            font-size: 0.98rem;
+            letter-spacing: -0.02em;
+        }
+
+        .module h4 a {
+            text-decoration: none;
+        }
+
+        .module h4 a:hover {
+            color: var(--primary);
+        }
+
+        .module-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 15px;
+            margin: 8px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .module-topics li {
+            position: relative;
+            padding-left: 11px;
+            color: var(--muted);
+            font-size: 0.79rem;
+            line-height: 1.5;
+        }
+
+        .module-topics li::before {
+            position: absolute;
+            top: 0.65em;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            content: "";
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .module-topics a {
+            text-decoration-color: color-mix(in srgb, var(--primary) 35%, transparent);
+            text-underline-offset: 3px;
+        }
+
+        .module-topics a:hover {
+            color: var(--primary-strong);
+        }
+
+        .assessment-section {
+            margin-bottom: clamp(96px, 12vw, 150px);
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 22px;
+        }
+
+        .assessment-card {
+            padding: clamp(24px, 4vw, 36px);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .assessment-card h3 {
+            margin: 0 0 5px;
+            font-size: 1.35rem;
+            letter-spacing: -0.035em;
+        }
+
+        .assessment-card > p {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .assessment-list {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .assessment-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 20px;
+            min-height: 67px;
+            padding: 13px 15px 13px 17px;
+            border-radius: 15px;
+            background: var(--surface-soft);
+        }
+
+        .assessment-item strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .assessment-item span {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 0.74rem;
+        }
+
+        .weight {
+            min-width: 58px;
+            padding: 7px 9px;
+            border-radius: 10px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.82rem;
+            font-weight: 850;
+            text-align: center;
+        }
+
+        .assessment-card:nth-child(2) .weight {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .assessment-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            margin: 18px 0 0;
+            padding: 15px 17px;
+            border: 1px solid color-mix(in srgb, var(--amber) 25%, var(--line));
+            border-radius: 15px;
+            color: var(--amber);
+            background: var(--amber-soft);
+            font-size: 0.79rem;
+        }
+
+        .assessment-note strong {
+            flex: 0 0 auto;
+        }
+
+        .score-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            color: var(--primary-strong);
+            font-size: 0.86rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .schedule-section {
+            margin-bottom: clamp(90px, 11vw, 130px);
+        }
+
+        .term-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--muted);
+            background: var(--surface);
+            font-size: 0.75rem;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .term-chip::before {
+            width: 7px;
+            height: 7px;
+            content: "";
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 0 4px var(--teal-soft);
+        }
+
+        .schedule-wrap {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.87rem;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        thead th {
+            color: var(--muted);
+            background: var(--surface-soft);
+            font-size: 0.69rem;
+            font-weight: 850;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        tbody tr:not(.lab-row, .notice-row):hover td {
+            background: color-mix(in srgb, var(--primary-soft) 38%, transparent);
+        }
+
+        td:first-child {
+            width: 205px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        td:nth-child(2) {
+            width: 98px;
+        }
+
+        td a {
+            font-weight: 720;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .module-badge,
+        .event-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            padding: 5px 8px;
+            border-radius: 9px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.72rem;
+            font-weight: 850;
+        }
+
+        .event-badge {
+            min-width: auto;
+            color: var(--teal);
+            background: var(--teal-soft);
+            font-family: inherit;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .lab-row td {
+            padding-block: 11px;
+            color: var(--teal);
+            background: color-mix(in srgb, var(--teal-soft) 55%, var(--surface));
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .notice-row td {
+            color: var(--danger);
+            background: color-mix(in srgb, var(--danger-soft) 58%, var(--surface));
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .notice-row td:first-child {
+            text-align: left;
+        }
+
+        .footer {
+            padding: 30px 0 46px;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .footer p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .footer a {
+            color: var(--primary-strong);
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .nav {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding-block: 12px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                flex-wrap: wrap;
+                margin-left: 0;
+            }
+
+            .theme-toggle {
+                margin-left: auto;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .code-window {
+                max-width: 650px;
+                transform: none;
+            }
+
+            .quick-links,
+            .assessment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .roadmap {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .shell {
+                width: min(calc(100% - 28px), var(--content));
+            }
+
+            .site-header .shell {
+                width: min(calc(100% - 22px), var(--content));
+            }
+
+            .nav {
+                min-height: 66px;
+            }
+
+            .brand-copy span {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 58px;
+            }
+
+            .hero h1 {
+                font-size: clamp(3rem, 18vw, 5rem);
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading {
+                grid-template-columns: 1fr;
+                align-items: start;
+                gap: 14px;
+            }
+
+            .roadmap-header,
+            .module-list {
+                padding-inline: 20px;
+            }
+
+            .module {
+                padding-left: 41px;
+            }
+
+            th,
+            td {
+                padding: 14px 16px;
+            }
+
+            td:first-child {
+                width: 175px;
+            }
+
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        .course-live-strip {
+            border-bottom: 1px solid var(--line);
+            background: color-mix(in srgb, var(--surface) 82%, var(--primary-soft));
+        }
+
+        .live-strip-inner {
+            min-height: 92px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) auto minmax(260px, 0.65fr);
+            align-items: center;
+            gap: 22px;
+            padding-block: 13px;
+        }
+
+        .upcoming-primary {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 13px;
+        }
+
+        .upcoming-pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 0 6px var(--teal-soft);
+        }
+
+        .upcoming-copy {
+            min-width: 0;
+        }
+
+        .upcoming-status,
+        .continue-progress {
+            display: block;
+            color: var(--primary-strong);
+            font-size: 0.65rem;
+            font-weight: 850;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .upcoming-copy a,
+        .continue-lecture {
+            text-decoration: none;
+        }
+
+        .upcoming-copy strong,
+        .continue-lecture strong {
+            display: block;
+            overflow: hidden;
+            font-size: 0.9rem;
+            letter-spacing: -0.02em;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .upcoming-meta,
+        .time-source {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 0.7rem;
+        }
+
+        .upcoming-clock {
+            min-width: 118px;
+            padding-inline: 20px;
+            border-inline: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .upcoming-clock strong {
+            display: block;
+            color: var(--teal);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.78rem;
+        }
+
+        .continue-lecture {
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .continue-progress {
+            color: var(--teal);
+        }
+
+        .instructor-byline {
+            margin: 16px 0 0;
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .instructor-byline a {
+            color: var(--primary-strong);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .instructor-byline a:hover {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .assessment-card--wide {
+            grid-column: 1 / -1;
+        }
+
+        .assessment-card--wide .assessment-list {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .assessment-card--wide .assessment-item {
+            grid-template-columns: 1fr;
+            align-content: space-between;
+            min-height: 126px;
+        }
+
+        .assessment-card--wide .weight {
+            justify-self: start;
+        }
+
+        .grade-card {
+            min-width: 0;
+        }
+
+        .grade-table {
+            display: grid;
+            gap: 5px;
+        }
+
+        .grade-table > div {
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr);
+            align-items: center;
+            gap: 10px;
+            min-height: 36px;
+            padding: 6px 9px;
+            border-radius: 10px;
+            background: var(--surface-soft);
+        }
+
+        .grade-table strong {
+            color: var(--primary-strong);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.75rem;
+        }
+
+        .grade-table span {
+            color: var(--muted);
+            font-size: 0.7rem;
+        }
+
+        .grade-curve-wrap {
+            width: 100%;
+            min-height: 250px;
+            margin-top: 8px;
+        }
+
+        .grade-curve-wrap svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            overflow: visible;
+        }
+
+        .grade-curve-area {
+            stroke: none;
+            fill-opacity: 0.72;
+        }
+
+        .grade-tone-0,
+        .grade-tone-1,
+        .grade-tone-2 { fill: var(--danger-soft); }
+        .grade-tone-3,
+        .grade-tone-4,
+        .grade-tone-5 { fill: var(--primary-soft); }
+        .grade-tone-6 { fill: var(--amber-soft); }
+        .grade-tone-7,
+        .grade-tone-8 { fill: var(--teal-soft); }
+
+        .grade-curve-outline {
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 2;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .grade-axis,
+        .grade-boundary {
+            stroke: var(--line);
+            stroke-width: 1;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .grade-boundary {
+            stroke-dasharray: 3 4;
+        }
+
+        .grade-reference {
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-dasharray: 5 4;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .grade-chart-label,
+        .grade-axis-label,
+        .grade-reference-label {
+            fill: var(--ink);
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .grade-chart-label {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .grade-axis-label {
+            fill: var(--muted);
+            font-size: 10px;
+            font-weight: 650;
+        }
+
+        .grade-reference-label {
+            fill: var(--primary-strong);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .grade-band-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .grade-band-list span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 9px;
+            color: var(--muted);
+            background: var(--surface-soft);
+            font-size: 0.65rem;
+        }
+
+        .grade-band-list strong {
+            color: var(--primary-strong);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.72rem;
+        }
+
+        .schedule-time {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .milestone-row td,
+        .timetable-row td,
+        .assessment-row td {
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .milestone-row td {
+            color: var(--teal);
+            background: color-mix(in srgb, var(--teal-soft) 58%, var(--surface));
+        }
+
+        .timetable-row td {
+            color: var(--primary-strong);
+            background: color-mix(in srgb, var(--primary-soft) 58%, var(--surface));
+        }
+
+        .assessment-row td {
+            color: var(--amber);
+            background: color-mix(in srgb, var(--amber-soft) 62%, var(--surface));
+        }
+
+        @media (max-width: 980px) {
+            .live-strip-inner {
+                grid-template-columns: minmax(0, 1fr) auto;
+            }
+
+            .continue-lecture {
+                grid-column: 1 / -1;
+            }
+
+            .assessment-card--wide .assessment-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .live-strip-inner {
+                grid-template-columns: 1fr;
+                gap: 11px;
+                padding-block: 14px;
+            }
+
+            .upcoming-clock {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 15px;
+                padding: 9px 0;
+                border-block: 1px solid var(--line);
+                border-inline: 0;
+                text-align: left;
+            }
+
+            .upcoming-clock .time-source {
+                margin: 0;
+                text-align: right;
+            }
+
+            .continue-lecture {
+                grid-column: auto;
+            }
+
+            .assessment-card--wide .assessment-list {
+                grid-template-columns: 1fr;
+            }
+
+            .assessment-card--wide .assessment-item {
+                grid-template-columns: minmax(0, 1fr) auto;
+                min-height: 67px;
+            }
+
+            .grade-band-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .schedule-wrap,
+            .table-scroll {
+                overflow: visible;
+            }
+
+            .schedule-wrap {
+                border: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            .schedule-wrap table,
+            .schedule-wrap tbody {
+                display: block;
+                width: 100%;
+            }
+
+            .schedule-wrap thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                clip-path: inset(50%);
+            }
+
+            .schedule-wrap tbody {
+                display: grid;
+                gap: 9px;
+            }
+
+            .schedule-wrap tbody tr {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr);
+                gap: 3px 11px;
+                padding: 13px 14px;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                background: var(--surface);
+                box-shadow: var(--shadow-sm);
+            }
+
+            .schedule-wrap tbody td {
+                display: block;
+                width: auto;
+                padding: 0;
+                border: 0;
+                white-space: normal;
+            }
+
+            .schedule-wrap tbody td:first-child {
+                grid-column: 1 / -1;
+                width: auto;
+                margin-bottom: 4px;
+                color: var(--muted);
+                font-size: 0.72rem;
+            }
+
+            .schedule-wrap tbody td:nth-child(2) {
+                align-self: start;
+            }
+
+            .schedule-wrap .notice-row,
+            .schedule-wrap .milestone-row,
+            .schedule-wrap .timetable-row,
+            .schedule-wrap .assessment-row {
+                display: block;
+            }
+
+            .schedule-wrap .notice-row td:last-child,
+            .schedule-wrap .milestone-row td:last-child,
+            .schedule-wrap .timetable-row td:last-child,
+            .schedule-wrap .assessment-row td:last-child {
+                margin-top: 5px;
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to course content</a>
+
+    <header class="site-header">
+        <nav class="nav shell" aria-label="Primary navigation">
+            <a class="brand" href="#top" aria-label="CS103 home">
+                <span class="brand-mark" aria-hidden="true">CS</span>
+                <span class="brand-copy">
+                    <strong>CS103</strong>
+                    <span>IIT Indore</span>
+                </span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#modules">Modules</a>
+                <a href="#assessment">Assessment</a>
+                <a href="#schedule">Schedule</a>
+                <a href="ic151.html">IC151 labs</a>
+                <a href="speedrun.html">Dependency graph</a>
+                <a href="codes/index.html">Code library</a>
+            </div>
+
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch theme">
+                <span id="theme-icon" aria-hidden="true">◐</span>
+            </button>
+        </nav>
+    </header>
+
+    <section class="course-live-strip" id="upcoming-lecture" aria-label="Upcoming course activity">
+        <div class="live-strip-inner shell">
+            <div class="upcoming-primary">
+                <span class="upcoming-pulse" aria-hidden="true"></span>
+                <div class="upcoming-copy">
+                    <span class="upcoming-status" id="upcoming-status">Checking IIT Indore time…</span>
+                    <a id="upcoming-link" href="lecture1.html">
+                        <strong id="upcoming-title">Preparing the 2026 lecture schedule</strong>
+                        <span class="upcoming-meta" id="upcoming-meta">Autumn semester · Asia/Kolkata</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="upcoming-clock">
+                <strong id="upcoming-countdown">Synchronizing…</strong>
+                <span class="time-source" id="time-source">Network time</span>
+            </div>
+
+            <a class="continue-lecture" id="continue-lecture-link" href="lecture1.html">
+                <span class="continue-progress" id="continue-progress">0 / 23 studied</span>
+                <strong id="continue-lecture-title">Lecture 01 · Introduction to Programming</strong>
+            </a>
+        </div>
+    </section>
+
+    <main id="main-content">
+        <div class="shell" id="top">
+            <section class="hero" aria-labelledby="course-title">
+                <div>
+                    <p class="eyebrow">IIT Indore · CS103</p>
+                    <h1 id="course-title">Introduction to <span>Programming.</span></h1>
+                    <p class="hero-description">Build the foundations to think computationally, write expressive C++ programs, and turn real-world problems into precise solutions.</p>
+                    <p class="instructor-byline">Instructor · <a href="https://drdebmath.github.io" target="_blank" rel="noopener noreferrer">Dr. Debasish Pattanayak</a></p>
+
+                    <div class="hero-meta">
+                        <a class="primary-action" href="speedrun.html">
+                            Explore the dependency graph <span class="arrow" aria-hidden="true">→</span>
+                        </a>
+                        <a class="secondary-action" href="lecture1.html">
+                            Start lecture 01 <span class="arrow" aria-hidden="true">→</span>
+                        </a>
+                    </div>
+
+                    <div class="hero-tags" aria-label="Course highlights">
+                        <span>C++ fundamentals</span>
+                        <span>9 core modules</span>
+                        <span>23 paced lectures</span>
+                    </div>
+                </div>
+
+                <div class="code-window" aria-label="C++ hello world example">
+                    <div class="window-bar" aria-hidden="true">
+                        <span class="window-dot"></span>
+                        <span class="window-dot"></span>
+                        <span class="window-dot"></span>
+                        <span class="window-filename">hello.cpp</span>
+                    </div>
+                    <pre><code><span class="syntax-preprocessor">#include</span> &lt;iostream&gt;
+
+<span class="syntax-keyword">int</span> <span class="syntax-function">main</span>() {
+    std::cout
+        &lt;&lt; <span class="syntax-string">"Think. Build. Learn."</span>;
+
+    <span class="syntax-keyword">return</span> 0;
+}</code></pre>
+                </div>
+            </section>
+
+            <nav class="quick-links" aria-label="Course shortcuts">
+                <a class="quick-card" href="lecture1.html">
+                    <span class="quick-icon" aria-hidden="true">01</span>
+                    <span class="quick-copy">
+                        <strong>Lecture notes</strong>
+                        <span>Begin with the foundations</span>
+                    </span>
+                </a>
+                <a class="quick-card" href="codes/index.html">
+                    <span class="quick-icon" aria-hidden="true">{ }</span>
+                    <span class="quick-copy">
+                        <strong>Code library</strong>
+                        <span>Browse working C++ examples</span>
+                    </span>
+                </a>
+                <a class="quick-card" href="#assessment">
+                    <span class="quick-icon" aria-hidden="true">%</span>
+                    <span class="quick-copy">
+                        <strong>Assessment &amp; grades</strong>
+                        <span>Weights and relative grade bands</span>
+                    </span>
+                </a>
+                <a class="quick-card" href="ic151.html">
+                    <span class="quick-icon" aria-hidden="true">IC</span>
+                    <span class="quick-copy">
+                        <strong>IC151 laboratory</strong>
+                        <span>Setup, batch times, and submissions</span>
+                    </span>
+                </a>
+            </nav>
+        </div>
+
+        <section class="shell" id="modules" aria-labelledby="modules-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Course roadmap</p>
+                    <h2 id="modules-title">From first principles to real programs.</h2>
+                </div>
+                <p>Nine connected modules move from C++ fundamentals to practical systems, with algorithms taught as applications of the structures they operate on.</p>
+            </div>
+
+            <div class="roadmap">
+                <article class="roadmap-card">
+                    <header class="roadmap-header">
+                        <span class="roadmap-phase">Phase 01 · Foundations</span>
+                        <h3>Before mid-semester</h3>
+                    </header>
+                    <ol class="module-list">
+                        <li class="module">
+                            <span class="module-number">01</span>
+                            <h4><a href="lecture1.html">Programming &amp; Problem Solving</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture1.html?concept=m1-solving">Algorithms, decomposition, and testing</a></li>
+                                <li><a href="lecture1.html?concept=m1-hello">The C++ toolchain and a first program</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">02</span>
+                            <h4><a href="lecture2.html">Types, Expressions &amp; Program State</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture2.html">Types, representations, conversions, and constants</a></li>
+                                <li><a href="lecture3.html">Expressions, scope, storage duration, and linkage</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">03</span>
+                            <h4><a href="lecture4.html">Decisions &amp; Iteration</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture4.html">Boolean conditions and safe branching</a></li>
+                                <li><a href="lecture5.html">while, do-while, and input validation</a></li>
+                                <li><a href="lecture6.html">for, nested loops, invariants, and boundaries</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">04</span>
+                            <h4><a href="lecture7.html">Functions &amp; Recursive Decomposition</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture7.html">Contracts, calls, parameters, and return values</a></li>
+                                <li><a href="lecture8.html">References, overloading, and decomposition</a></li>
+                                <li><a href="lecture16.html">Call stacks, base cases, and recursive problem solving</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">05</span>
+                            <h4><a href="lecture9.html">Sequences, Text &amp; Array Algorithms</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture9.html">Fixed arrays, traversal, and indexed state</a></li>
+                                <li><a href="lecture10.html">Matrices and dynamically sized vectors</a></li>
+                                <li><a href="lecture11.html">std::string, input, validation, and C-string reference</a></li>
+                            </ul>
+                        </li>
+                    </ol>
+                </article>
+
+                <article class="roadmap-card">
+                    <header class="roadmap-header">
+                        <span class="roadmap-phase">Phase 02 · Application</span>
+                        <h3>After mid-semester</h3>
+                    </header>
+                    <ol class="module-list" start="6">
+                        <li class="module">
+                            <span class="module-number">06</span>
+                            <h4><a href="lecture13.html">Records, Pointers &amp; Memory</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture13.html">Structures, addresses, pointers, and indirection</a></li>
+                                <li><a href="lecture14.html">Dynamic allocation, ownership, and memory safety</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">07</span>
+                            <h4><a href="lecture14.html">Linear &amp; Tree Data Structures</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture14.html">Linked lists as a dynamic-memory application</a></li>
+                                <li><a href="lecture15.html">Stacks, queues, search, and elementary sorting</a></li>
+                                <li><a href="lecture16.html">Recursive decomposition for structural algorithms</a></li>
+                                <li><a href="lecture17.html">Binary search trees, heaps, merge sort, and their invariants</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">08</span>
+                            <h4><a href="lecture18.html">Object Design &amp; Value Semantics</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture18.html">Classes, invariants, constructors, copying, and operators</a></li>
+                                <li><a href="lecture19.html">Friend access and inheritance foundations</a></li>
+                            </ul>
+                        </li>
+                        <li class="module">
+                            <span class="module-number">09</span>
+                            <h4><a href="lecture20.html">Inheritance, Polymorphism &amp; Applied Systems</a></h4>
+                            <ul class="module-topics">
+                                <li><a href="lecture20.html">Substitutability, virtual dispatch, and factories</a></li>
+                                <li><a href="lecture21.html">Polymorphic containers and object graphs</a></li>
+                                <li><a href="lecture22.html">Domain models, search, sorting, and route planning</a></li>
+                                <li><a href="lecture23.html">Recursive array, tree, matrix, and object applications</a></li>
+                            </ul>
+                        </li>
+                    </ol>
+                </article>
+            </div>
+        </section>
+
+        <section class="assessment-section shell" id="assessment" aria-labelledby="assessment-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Assessment</p>
+                    <h2 id="assessment-title">How progress is measured.</h2>
+                </div>
+                <p>Five components balance participation, two checkpoints, and comprehensive examinations.</p>
+            </div>
+
+            <div class="assessment-grid">
+                <article class="assessment-card assessment-card--wide">
+                    <h3>CS 103</h3>
+                    <p>Course assessment · total 100%</p>
+                    <ul class="assessment-list">
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Attendance</strong>
+                                <span>Consistent participation</span>
+                            </div>
+                            <b class="weight">5%</b>
+                        </li>
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Quiz 1</strong>
+                                <span id="quiz1-date">Tuesday, 25 August · before mid-semester</span>
+                            </div>
+                            <b class="weight">7%</b>
+                        </li>
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Mid-semester examination</strong>
+                                <span>Foundations and structured problem solving</span>
+                            </div>
+                            <b class="weight">30%</b>
+                        </li>
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Quiz 2</strong>
+                                <span id="quiz2-date">Tuesday, 27 October · after mid-semester</span>
+                            </div>
+                            <b class="weight">8%</b>
+                        </li>
+                        <li class="assessment-item">
+                            <div>
+                                <strong>End-semester examination</strong>
+                                <span>Comprehensive course assessment</span>
+                            </div>
+                            <b class="weight">50%</b>
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="assessment-card">
+                    <h3>IC 151</h3>
+                    <p>Laboratory course · practice and demonstration</p>
+                    <ul class="assessment-list">
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Regular labs</strong>
+                                <span>12 labs · 6% each</span>
+                            </div>
+                            <b class="weight">72%</b>
+                        </li>
+                        <li class="assessment-item">
+                            <div>
+                                <strong>Final lab examination</strong>
+                                <span>Applied programming assessment</span>
+                            </div>
+                            <b class="weight">28%</b>
+                        </li>
+                    </ul>
+                    <a class="score-link" href="ic151.html">Open lab setup &amp; batch schedule <span aria-hidden="true">→</span></a>
+                </article>
+
+                <article class="assessment-card grade-card">
+                    <h3>Relative grade percentile curve</h3>
+                    <p>AS is reserved for the top 1%; AA targets the next 15%, with μ + 2σ marked as its statistical reference.</p>
+                    <div class="grade-curve-wrap" id="grade-curve-wrap">
+                        <svg id="grade-curve" role="img" aria-labelledby="grade-curve-title grade-curve-description">
+                            <title id="grade-curve-title">Relative grade percentile curve</title>
+                            <desc id="grade-curve-description">A bell curve divided from F through DD, CD, CC, BC, BB, AB, AA, and AS. AS is the top one percent. AA is the next fifteen percent, and mean plus two standard deviations lies within AA.</desc>
+                        </svg>
+                    </div>
+                    <div class="grade-band-list" aria-label="Grade percentile bands">
+                        <span><strong>F</strong> 0–12%</span>
+                        <span><strong>DD</strong> 12–24%</span>
+                        <span><strong>CD</strong> 24–36%</span>
+                        <span><strong>CC</strong> 36–48%</span>
+                        <span><strong>BC</strong> 48–60%</span>
+                        <span><strong>BB</strong> 60–72%</span>
+                        <span><strong>AB</strong> 72–84%</span>
+                        <span><strong>AA</strong> 84–99%</span>
+                        <span><strong>AS</strong> 99–100%</span>
+                    </div>
+                    <p class="assessment-note"><strong>Grading disclaimer</strong> This distribution is provisional and not final. Grade boundaries and final letter-grade assignments remain at the instructor’s discretion, subject to institute rules.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="schedule-section shell" id="schedule" aria-labelledby="schedule-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Timeline</p>
+                    <h2 id="schedule-title">Lecture schedule.</h2>
+                </div>
+                <span class="term-chip">Autumn 2026</span>
+            </div>
+
+            <div class="schedule-wrap">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Module</th>
+                                <th scope="col">Topic</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lecture-schedule-body">
+                            <tr>
+                                <td colspan="3">Loading the Autumn 2026 schedule…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner shell">
+            <p><strong>CS103</strong> · Introduction to Programming · IIT Indore</p>
+            <p>Course by <a href="https://drdebmath.github.io" target="_blank" rel="noopener noreferrer">Dr. Debasish Pattanayak</a></p>
+        </div>
+    </footer>
+
+    <script>
+        const root = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+
+        function syncThemeControl() {
+            const isDark = root.dataset.theme === 'dark';
+            themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} theme`);
+            themeIcon.textContent = isDark ? '☀' : '◐';
+            themeColor.setAttribute('content', isDark ? '#0d1320' : '#f5f7fb');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            root.dataset.theme = nextTheme;
+            try {
+                localStorage.setItem('cs103-theme', nextTheme);
+            } catch (error) {
+                // The selected theme still applies for the current page.
+            }
+            syncThemeControl();
+        });
+
+        syncThemeControl();
+    </script>
+</body>
+</html>

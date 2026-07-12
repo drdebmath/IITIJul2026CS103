@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 8: Functions II · References & Decomposition">
+    <title>Lecture 8: Functions II · References & Decomposition</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 8: Functions II
+## References, overloading, decomposition, and the call stack
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Value or reference?
+
+~~~cpp
+void clampToZero(double& value) {
+    if (value < 0.0) value = 0.0;
+}
+~~~
+
+A reference is another name for the caller's object. Mutation must be part of the contract.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A const reference permits reading, not mutation
+
+~~~cpp
+void printReading(const double& reading) {
+    std::cout << reading << '\n';
+}
+~~~
+
+The syntax matters now; avoiding expensive copies becomes useful when records and strings arrive.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Overloads share a name, not a signature
+
+~~~cpp
+int absolute(int value);
+double absolute(double value);
+~~~
+
+The compiler selects from parameter lists. Return type alone cannot distinguish overloads.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Decomposition keeps main readable
+
+~~~cpp
+double readPositive();
+double calculateFare(double distance, double rate);
+void printFare(double fare);
+~~~
+
+<code>main</code> coordinates these tasks instead of containing every detail.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Function calls form a call stack
+
+Each active call has a stack frame containing parameters, locals, and return state.
+
+The most recent unfinished call completes first—last in, first out.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Gentle recursion preview
+
+~~~cpp
+int factorial(int n) {
+    if (n <= 1) return 1;          // base case
+    return n * factorial(n - 1);   // smaller input
+}
+~~~
+
+Every recursive call must move measurably toward a base case.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- References can expose caller state intentionally.
+- <code>const&</code> provides read-only access through an alias.
+- Overloads need distinguishable parameter lists.
+- The call stack tracks unfinished calls.
+- Recursive design requires a base case and progress.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

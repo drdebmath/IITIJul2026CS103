@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 2: Types & Representation">
+    <title>Lecture 2: Types & Representation</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 2: Types & Representation
+## Give every stored value a deliberate meaning
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Variables and static typing
+
+A **variable** is a named storage location. **Static typing** means types are checked before execution.
+
+~~~cpp
+int attempts = 0;
+double temperature = 31.5;
+char grade = 'A';
+bool submitted = false;
+~~~
+
+The initializer supplies the first value.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Primitive types answer different questions
+
+| Requirement | Suitable type | Example |
+|---|---|---|
+| whole-number count | <code>int</code> | students |
+| fractional measurement | <code>double</code> | voltage |
+| one character | <code>char</code> | grade |
+| true/false state | <code>bool</code> | connected |
+
+Sizes are implementation-dependent; inspect them with <code>sizeof</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: integer modifiers
+
+<code>signed</code> supports negative and positive values. <code>unsigned</code> represents only non-negative values but wraps at its maximum.
+
+<code>short</code>, <code>long</code>, and <code>long long</code> change minimum range requirements.
+
+Use a modifier only when its range and interaction with other types are understood.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Constants preserve an invariant
+
+~~~cpp
+const double safeLimit = 12.5;
+double reading = 11.8;
+
+// safeLimit = 13.0;  // compile-time error
+~~~
+
+<code>const</code> prevents modification through that name after initialization.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Type inference still produces one type
+
+~~~cpp
+auto samples = 12;       // int
+auto mean = 7.25;        // double
+const auto room = 103;   // const int
+~~~
+
+Use <code>auto</code> when the initializer makes the type obvious.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Convert explicitly when information may change
+
+~~~cpp
+double mean = 97.56;
+int whole = static_cast<int>(mean);  // 97
+~~~
+
+An explicit conversion documents intent. Check the destination range first: fractional information may be truncated, and an out-of-range conversion may be invalid.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A type describes values and permitted operations.
+- Choose representation from meaning, range, and precision.
+- Do not assume exact byte sizes.
+- Use <code>const</code> for values that must not change.
+- Make potentially lossy conversions explicit.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 21: Polymorphic Data Structures">
+    <title>Lecture 21: Polymorphic Data Structures</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 21: Polymorphic Data Structures
+## Store varied behavior behind one safe interface
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A heterogeneous container owns one base interface
+
+~~~cpp
+std::vector<std::unique_ptr<Shape>> shapes;
+shapes.push_back(std::make_unique<Circle>(2.0));
+shapes.push_back(std::make_unique<Square>(3.0));
+~~~
+
+Concrete types differ; ownership and the operation contract are uniform.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Algorithms use only the promised operation
+
+~~~cpp
+double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
+    double total = 0.0;
+    for (const auto& shape : shapes) total += shape->area();
+    return total;
+}
+~~~
+
+Adding a new shape does not change this traversal.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## An object graph stores entities and relationships
+
+~~~text
+[Indore] --rail--> [Ujjain]
+    |
+   road
+    v
+[Dewas]
+~~~
+
+Vertices model entities; edges model relationships. The graph is a structure, not an external visualization service.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Choose graph storage from operations
+
+- Adjacency list: store outgoing neighbors for each vertex.
+- Edge list: store relationships as records.
+- Matrix: direct pair lookup but quadratic storage.
+
+Polymorphism is useful only when vertex or edge behavior genuinely varies.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Ownership must stay unambiguous
+
+Let the graph own vertices and edges with smart pointers. Store non-owning IDs or indices for relationships when possible.
+
+Avoid cycles of shared ownership; graph connectivity is not the same as memory ownership.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Extension exercise
+
+Add a <code>WeightedEdge</code> with a cost and a <code>ScheduledEdge</code> with departure time.
+
+Write one traversal that prints every edge through the base interface, then identify which operations do not require polymorphism.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- Heterogeneous containers combine a base contract with safe ownership.
+- Algorithms depend on operations, not concrete type names.
+- Object graphs separate entities from relationships.
+- Pick adjacency representation from required operations.
+- Keep graph links separate from ownership links.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

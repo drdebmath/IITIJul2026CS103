@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 23: Recursive & Polymorphic Capstones">
+    <title>Lecture 23: Recursive & Polymorphic Capstones</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 23: Recursive & Polymorphic Capstones
+## Select structures and algorithms for integrated problems
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Begin with the required operation
+
+| Application | Structure | Algorithmic idea |
+|---|---|---|
+| process decimal digits stably | buckets | radix passes |
+| transform every tree node | binary tree | recursive traversal |
+| multiply matrix blocks | matrices | recursive decomposition |
+| vary legal behavior by piece | hierarchy | dynamic dispatch |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Block-recursive matrix multiplication
+
+Split each matrix into four blocks, recursively multiply compatible block pairs, and add partial results.
+
+The base case multiplies a sufficiently small block directly. A practical implementation must also handle dimensions that are not powers of two.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Radix sort applies stable buckets
+
+For non-negative decimal integers:
+
+1. distribute by the current digit;
+2. collect buckets without changing equal-digit order;
+3. move to the next digit.
+
+The queue-like bucket structure supplies stable collection order.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Invert a binary tree
+
+~~~cpp
+Node* invert(Node* root) {
+    if (root == nullptr) return nullptr;
+    Node* left = invert(root->left);
+    Node* right = invert(root->right);
+    root->left = right;
+    root->right = left;
+    return root;
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Chess applies runtime polymorphism
+
+A base <code>Piece</code> promises legal-move generation. <code>Rook</code>, <code>Bishop</code>, and <code>Knight</code> implement different movement rules.
+
+The board owns pieces; the caller asks through the common interface.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Integration checklist
+
+Before implementation, identify:
+
+- state and invariant;
+- ownership and lifetime;
+- required operations;
+- base case or stopping condition;
+- normal, boundary, and invalid tests;
+- expected time and space growth.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Course summary
+
+- Represent state with a structure whose operations match the problem.
+- Apply algorithms through those operations.
+- Preserve bounds, invariants, ownership, and progress.
+- Use the dependency graph to revisit the earliest uncertain prerequisite.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

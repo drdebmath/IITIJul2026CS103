@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 7: Functions I · Contracts & Calls">
+    <title>Lecture 7: Functions I · Contracts & Calls</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 7: Functions I
+## Give one operation a clear name and contract
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A function owns one task
+
+A function contract states:
+
+- required inputs;
+- any preconditions;
+- returned result or visible effect.
+
+Small contracts reduce copy-paste and can be tested independently.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Read a definition from the outside inward
+
+~~~cpp
+double rectangleArea(double length, double width) {
+    return length * width;
+}
+~~~
+
+Return type → name → parameters → body.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Declaration before use, definition once
+
+~~~cpp
+#include <iostream>
+
+double rectangleArea(double length, double width);  // declaration
+
+int main() {
+    std::cout << rectangleArea(4.0, 3.0);
+}
+
+double rectangleArea(double length, double width) {
+    return length * width;
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Value parameters are local copies
+
+~~~cpp
+int doubled(int value) {
+    value *= 2;
+    return value;
+}
+~~~
+
+Changing <code>value</code> does not change the caller's argument.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Decompose a calculation into named steps
+
+~~~cpp
+double subtotal(double price, int count) { return price * count; }
+double tax(double amount, double rate) { return amount * rate; }
+double total(double amount, double rate) { return amount + tax(amount, rate); }
+~~~
+
+Each name states one responsibility.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: unnamed callable behavior
+
+A lambda expression defines a small callable at its point of use.
+
+~~~cpp
+auto isPositive = [](int value) { return value > 0; };
+~~~
+
+Named functions remain the default for novice code. Lambdas return later as search and sorting applications.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A function contract states inputs, preconditions, and output.
+- A declaration makes a function known before its definition.
+- Value parameters are copies.
+- Prefer short functions with one explainable responsibility.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

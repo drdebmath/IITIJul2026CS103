@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 9: Arrays I · Fixed Sequences & Traversal">
+    <title>Lecture 9: Arrays I · Fixed Sequences & Traversal</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 9: Arrays I
+## Store and traverse one fixed sequence safely
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## An array has one element type and fixed extent
+
+~~~cpp
+#include <array>
+
+std::array<double, 5> voltage{2.1, 2.3, 2.0, 2.4, 2.2};
+~~~
+
+The five elements occupy a contiguous sequence.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## An index selects one element
+
+~~~cpp
+voltage[0] = 2.5;            // first element
+double last = voltage[4];    // fifth element
+~~~
+
+For size 5, valid indices are 0 through 4.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Traverse using the actual bound
+
+~~~cpp
+double sum = 0.0;
+for (std::size_t i = 0; i < voltage.size(); ++i) {
+    sum += voltage[i];
+}
+~~~
+
+The invariant is: elements before <code>i</code> are already included.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Range-for expresses whole-sequence work
+
+~~~cpp
+double maximum = voltage[0];
+for (double value : voltage) {
+    if (value > maximum) maximum = value;
+}
+~~~
+
+Use an explicit index only when the position matters.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Pass an array without hiding its size
+
+~~~cpp
+double mean(const std::array<double, 5>& values) {
+    double sum = 0.0;
+    for (double value : values) sum += value;
+    return sum / values.size();
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Out-of-bounds access is undefined behavior
+
+~~~cpp
+// voltage[5] = 0.0;  // invalid: no sixth element
+~~~
+
+C++ does not automatically protect <code>operator[]</code>. Keep the valid range visible in the loop condition.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A fixed array has one type, one extent, and contiguous elements.
+- Zero is the first index.
+- Use <code>size()</code> as the traversal bound.
+- State the invariant and test empty-boundary logic before coding.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

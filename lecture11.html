@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 11: Strings & Text Processing">
+    <title>Lecture 11: Strings & Text Processing</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 11: Strings & Text Processing
+## Prefer owned text values, then study their representation
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## std::string owns and sizes its text
+
+~~~cpp
+#include <string>
+
+std::string name = "IIT Indore";
+std::cout << name.size() << '\n';
+~~~
+
+<code>std::string</code> manages its character storage.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Read a complete line
+
+~~~cpp
+std::string sentence;
+std::getline(std::cin, sentence);
+~~~
+
+<code>getline</code> preserves spaces. When mixing formatted extraction and line input, consume the pending newline deliberately.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Search and slice with explicit positions
+
+~~~cpp
+std::size_t dash = code.find('-');
+if (dash != std::string::npos) {
+    std::string prefix = code.substr(0, dash);
+}
+~~~
+
+Always check whether a search succeeded.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Classify characters safely
+
+~~~cpp
+unsigned char ch = static_cast<unsigned char>(text[i]);
+if (std::isdigit(ch)) ++digits;
+~~~
+
+Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Validate one rule at a time
+
+~~~cpp
+bool valid = id.size() == 9;
+valid = valid && id[0] == 'B' && id[1] == 'T';
+for (std::size_t i = 2; valid && i < id.size(); ++i) {
+    valid = std::isdigit(static_cast<unsigned char>(id[i]));
+}
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: C-style strings
+
+A C-style string is a character array ending at the first null character <code>'\0'</code>.
+
+Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- <code>std::string</code> is the default owned text type.
+- Check search results and index bounds.
+- Use <code>getline</code> for complete lines.
+- Character classification requires a safe unsigned value.
+- A buffer overflow is undefined behavior, not a recoverable string operation.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

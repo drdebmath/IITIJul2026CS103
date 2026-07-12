@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 18: Object Design & Value Semantics">
+    <title>Lecture 18: Object Design & Value Semantics</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 18: Object Design & Value Semantics
+## Protect invariants and make object lifetime predictable
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A class combines state, behavior, and access control
+
+~~~cpp
+class Counter {
+private:
+    int value = 0;
+public:
+    void increment() { ++value; }
+    int current() const { return value; }
+};
+~~~
+
+The invariant is: <code>value</code> is modified only through the public interface.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Constructors establish valid state
+
+~~~cpp
+class Rectangle {
+    double length;
+    double width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    double area() const { return length * width; }
+};
+~~~
+
+Overloaded constructors may offer several distinct valid initialization paths.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Copy construction and assignment are different
+
+~~~cpp
+Rectangle first(4.0, 3.0);
+Rectangle copied = first;  // copy construction: new object
+Rectangle assigned(1.0, 1.0);
+assigned = first;          // copy assignment: existing object
+~~~
+
+Value members such as numbers and strings usually support the Rule of Zero.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Destruction and RAII bind resource lifetime to an object
+
+A destructor runs when an object's lifetime ends. RAII stores a resource in an owning object whose destructor releases it.
+
+Prefer <code>std::string</code>, <code>std::vector</code>, and smart pointers over handwritten ownership and deep-copy code.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reference: operators should preserve value meaning
+
+Useful value-type operations include:
+
+- <code>operator+</code> returning a new value;
+- <code>operator==</code> comparing observable state;
+- <code>operator&lt;&lt;</code> inserting into a stream;
+- copy assignment safely replacing an existing value.
+
+Do not change an operator's expected meaning.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A friend is narrow trusted access
+
+~~~cpp
+class Complex {
+    double real, imaginary;
+public:
+    Complex(double r, double i) : real(r), imaginary(i) {}
+    friend std::ostream& operator<<(std::ostream&, const Complex&);
+};
+~~~
+
+Friendship is explicit access, not inheritance and not a security boundary.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Session summary
+
+- A class should protect a meaningful invariant.
+- Constructors initialize; assignment replaces an existing value.
+- Destruction ends lifetime and releases owned resources.
+- Prefer Rule-of-Zero member types.
+- Overloads and friends must keep interfaces unsurprising.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="course-data.js"></script>
+<script src="course-progress.js"></script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>
