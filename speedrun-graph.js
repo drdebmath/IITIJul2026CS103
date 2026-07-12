@@ -185,6 +185,7 @@
     let activeModule = 'all';
     let activeIndexFilter = 'all';
     let selectedConceptId = null;
+    let selectedPathIds = new Set();
     let visibleIds = new Set(allConcepts.map((item) => item.id));
     let contextIds = new Set();
     let positions = new Map();
@@ -313,6 +314,7 @@
                 item.application ? 'is-application' : '',
                 contextIds.has(item.id) ? 'is-context' : '',
                 selectedConceptId === item.id ? 'is-selected' : '',
+                selectedConceptId !== item.id && selectedPathIds.has(item.id) ? 'is-on-path' : '',
                 isStudied(item) ? 'is-studied' : '',
                 query && matches ? 'is-search-match' : '',
                 query && !matches ? 'is-search-dimmed' : ''
@@ -362,7 +364,8 @@
                 const endX = targetPosition.x + nodeWidth / 2;
                 const endY = targetPosition.y - targetGap;
                 const distance = Math.max(35, (endY - startY) * 0.46);
-                const isSelectedEdge = selectedConceptId === target.id || selectedConceptId === sourceId;
+                const isSelectedEdge = selectedConceptId === target.id
+                    || (selectedPathIds.has(target.id) && selectedPathIds.has(sourceId));
 
                 context.beginPath();
                 context.moveTo(startX, startY);
@@ -466,6 +469,8 @@
     function setSelection(item) {
         const module = moduleById.get(item.moduleId);
         selectedConceptId = item.id;
+        selectedPathIds = collectAncestors([item.id]);
+        selectedPathIds.add(item.id);
         selectionKicker.textContent = `${item.reference} · Module ${module.number} · ${(dependencies.get(item.id) || []).length} prerequisite${(dependencies.get(item.id) || []).length === 1 ? '' : 's'}`;
         selectionTitle.textContent = item.title;
         selectionCopy.textContent = item.definition;
@@ -602,6 +607,7 @@
         activeModule = 'all';
         activePhase = 'all';
         selectedConceptId = null;
+        selectedPathIds = new Set();
         moduleFilter.value = 'all';
         setPhaseButtons('all');
         searchInput.value = '';
