@@ -195,10 +195,11 @@
     let contentOffsetX = 0;
     let contentOffsetY = 0;
 
-    const nodeWidth = 220;
+    let nodeWidth = 220;
     const nodeHeight = 76;
     const horizontalGap = 24;
     const verticalGap = 88;
+    const rowGap = 22;
     const graphPadding = 42;
     const zoomPadding = 12;
     const minimumZoom = 0.05;
@@ -268,22 +269,35 @@
         });
 
         levels.forEach((items) => items.sort((left, right) => left.moduleOrder - right.moduleOrder || left.conceptOrder - right.conceptOrder));
-        const widestLevel = Math.max(1, ...Array.from(levels.values()).map((items) => items.length));
-        const maxDepth = Math.max(0, ...levels.keys());
-        surfaceWidth = Math.max(viewport.clientWidth - 2, graphPadding * 2 + widestLevel * nodeWidth + (widestLevel - 1) * horizontalGap);
-        surfaceHeight = Math.max(520, graphPadding * 2 + (maxDepth + 1) * nodeHeight + maxDepth * verticalGap);
+
+        // Width-aware layout: size nodes to the viewport and wrap wide depth
+        // levels into sub-rows, so the graph stays near viewport width and the
+        // fit view remains readable instead of shrinking to a sliver.
+        nodeWidth = viewport.clientWidth < 620 ? 168 : 220;
+        const availableWidth = Math.max(nodeWidth, viewport.clientWidth - 2 - graphPadding * 2);
+        const maxColumns = Math.max(2, Math.floor((availableWidth + horizontalGap) / (nodeWidth + horizontalGap)));
+        const widestRow = Math.min(maxColumns, Math.max(1, ...Array.from(levels.values()).map((items) => items.length)));
+        surfaceWidth = Math.max(viewport.clientWidth - 2, graphPadding * 2 + widestRow * nodeWidth + (widestRow - 1) * horizontalGap);
         positions = new Map();
 
-        levels.forEach((items, depth) => {
-            const levelWidth = items.length * nodeWidth + Math.max(0, items.length - 1) * horizontalGap;
-            const startX = Math.max(graphPadding, (surfaceWidth - levelWidth) / 2);
-            items.forEach((item, column) => {
-                positions.set(item.id, {
-                    x: startX + column * (nodeWidth + horizontalGap),
-                    y: graphPadding + depth * (nodeHeight + verticalGap)
+        let y = graphPadding;
+        Array.from(levels.keys()).sort((a, b) => a - b).forEach((depth) => {
+            const items = levels.get(depth);
+            for (let start = 0; start < items.length; start += maxColumns) {
+                const row = items.slice(start, start + maxColumns);
+                const rowWidth = row.length * nodeWidth + (row.length - 1) * horizontalGap;
+                const startX = Math.max(graphPadding, (surfaceWidth - rowWidth) / 2);
+                row.forEach((item, column) => {
+                    positions.set(item.id, {
+                        x: startX + column * (nodeWidth + horizontalGap),
+                        y
+                    });
                 });
-            });
+                y += nodeHeight + rowGap;
+            }
+            y += verticalGap - rowGap;
         });
+        surfaceHeight = Math.max(520, y - verticalGap + graphPadding);
 
         content.style.width = `${surfaceWidth}px`;
         content.style.height = `${surfaceHeight}px`;
@@ -304,7 +318,7 @@
                 query && !matches ? 'is-search-dimmed' : ''
             ].filter(Boolean).join(' ');
             const prerequisiteCount = (dependencies.get(item.id) || []).length;
-            return `<button class="${classes}" type="button" data-graph-concept="${item.id}" data-phase="${item.phaseId}" style="left:${position.x}px;top:${position.y}px">
+            return `<button class="${classes}" type="button" data-graph-concept="${item.id}" data-phase="${item.phaseId}" style="left:${position.x}px;top:${position.y}px;width:${nodeWidth}px">
                 <span class="dependency-node-number">${item.moduleNumber}</span>
                 <span class="dependency-node-copy">
                     <small>${escapeHTML(item.reference)} · ${item.application ? 'Application' : `Module ${item.moduleNumber}`}</small>
@@ -415,9 +429,11 @@
     }
 
     function fitGraph(behavior = 'auto') {
+        // Fit to width: the graph reads top-to-bottom, so keep nodes legible
+        // and let the viewport scroll vertically rather than shrinking
+        // everything into one unreadable overview.
         const availableWidth = Math.max(1, viewport.clientWidth - zoomPadding * 2);
-        const availableHeight = Math.max(1, viewport.clientHeight - zoomPadding * 2);
-        zoomScale = clampZoom(Math.min(1, availableWidth / surfaceWidth, availableHeight / surfaceHeight));
+        zoomScale = clampZoom(Math.min(1, availableWidth / surfaceWidth));
         zoomMode = 'fit';
         sizeZoomedSurface();
         drawEdges();
