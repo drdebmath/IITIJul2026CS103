@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 9: Arrays I · Fixed Sequences & Traversal">
-    <title>Lecture 9: Arrays I · Fixed Sequences & Traversal</title>
+    <meta name="description" content="CS103 Lecture 9: Traverse fixed sequences within exact bounds">
+    <title>Lecture 9: Traverse fixed sequences within exact bounds</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 9: Arrays I
+# Lecture 9: Traverse fixed sequences within exact bounds
 ## Store and traverse one fixed sequence safely
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Prototype a snake body
+## Store ordered body segments and detect whether the head touches one.
+
+**Studio thread:** Prototype a snake body
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,38 @@
 
 **Compare:** indexed traversal versus whole-sequence range traversal
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The structure makes a complete data window available. · Find an anomalous temperature in a week
+
+An array stores a fixed measurement window; one traversal computes the mean and locates the largest deviation.
+
+~~~cpp
+#include <array>
+#include <cmath>
+#include <iostream>
+
+int main() {
+    std::array<double, 7> t{31.2, 31.5, 37.8, 31.1, 30.9, 31.4, 31.0};
+    double sum = 0;
+    for (double value : t) sum += value;
+    double mean = sum / t.size();
+
+    std::size_t anomaly = 0;
+    for (std::size_t i = 1; i < t.size(); ++i)
+        if (std::abs(t[i] - mean) > std::abs(t[anomaly] - mean)) anomaly = i;
+
+    std::cout << "Anomaly index: " << anomaly;
+}
+~~~
+
+**Takeaways**
+
+- The structure makes a complete data window available.
+- Traversal applies one rule to every element.
+- Searching is an application of array access.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## An array has one element type and fixed extent
+## An array fixes its element type and extent
 
 ~~~cpp
 #include <array>
@@ -42,7 +74,7 @@ std::array<double, 5> voltage{2.1, 2.3, 2.0, 2.4, 2.2};
 The five elements occupy a contiguous sequence.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## An index selects one element
+## An index is valid only inside the array’s exact bounds
 
 ~~~cpp
 voltage[0] = 2.5;            // first element
@@ -52,7 +84,7 @@ double last = voltage[4];    // fifth element
 For size 5, valid indices are 0 through 4.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Traverse using the actual bound
+## Traversal uses the actual bound, never a guessed endpoint
 
 ~~~cpp
 double sum = 0.0;
@@ -64,7 +96,7 @@ for (std::size_t i = 0; i < voltage.size(); ++i) {
 The invariant is: elements before <code>i</code> are already included.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a body of segments
+## Game evolution: Linked segments represent a growing body
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -87,7 +119,7 @@ int main() {
 **Next unlock · L10:** replace coordinate rules with a stored two-dimensional world.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Range-for expresses whole-sequence work
+## Range-for visits every element without manual indices
 
 ~~~cpp
 double maximum = voltage[0];
@@ -99,7 +131,7 @@ for (double value : voltage) {
 Use an explicit index only when the position matters.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Pass an array without hiding its size
+## Array functions must receive the extent they rely on
 
 ~~~cpp
 double mean(const std::array<double, 5>& values) {
@@ -110,7 +142,7 @@ double mean(const std::array<double, 5>& values) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Out-of-bounds access is undefined behavior
+## Out-of-bounds access has no reliable result
 
 ~~~cpp
 // voltage[5] = 0.0;  // invalid: no sixth element
@@ -119,16 +151,57 @@ double mean(const std::array<double, 5>& values) {
 C++ does not automatically protect <code>operator[]</code>. Keep the valid range visible in the loop condition.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Safe array work respects index, traversal, and bound
 
 - A fixed array has one type, one extent, and contiguous elements.
 - Zero is the first index.
 - Use <code>size()</code> as the traversal bound.
 - State the invariant and test empty-boundary logic before coding.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Find an anomalous temperature in a week with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The structure makes a complete data window available.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Rotate an array right by k positions without using another full array.
+- Find the second-largest distinct value in an array.
+- Reverse a fixed array in place.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Find an anomalous temperature in a week without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="9" data-markdown><textarea data-template>
+## Solve five problems to transfer Find an anomalous temperature in a week
+
+**IC151 lab practice · 5 problems**
+
+1. Rotate an array right by k positions without using another full array.
+1. Find the second-largest distinct value in an array.
+1. Reverse a fixed array in place.
+1. Count how many readings lie above the mean.
+1. Implement linear search on a fixed array and report the first matching index.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

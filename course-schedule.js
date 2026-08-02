@@ -2,7 +2,6 @@
     'use strict';
 
     const timeZone = 'Asia/Kolkata';
-    const timeEndpoint = 'https://gettimeapi.dev/v1/time?timezone=Asia%2FKolkata';
     const lectureTime = 'Tuesday 10:30–11:25 · Friday 11:30–12:25 IST';
     const { sessions, academicEvents } = window.CS103Data;
 
@@ -79,14 +78,6 @@
         return `Starts in ${days} day${days === 1 ? '' : 's'}`;
     }
 
-    async function queryIITTime() {
-        const response = await fetch(timeEndpoint, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Time service returned ${response.status}`);
-        const payload = await response.json();
-        if (!payload.iso8601) throw new Error('Time service response did not include iso8601');
-        return new Date(payload.iso8601);
-    }
-
     function fillQuizDates() {
         sessions.filter((session) => session.kind === 'quiz').forEach((session) => {
             const target = document.getElementById(`quiz${session.quizNumber}-date`);
@@ -146,34 +137,21 @@
         link.setAttribute('aria-label', `Open ${upcoming.title}`);
     }
 
-    async function initializeUpcomingBar() {
+    function initializeUpcomingBar() {
         if (!document.getElementById('upcoming-lecture') && !document.getElementById('lecture-schedule-body')) return;
         renderScheduleTable();
         fillQuizDates();
         updateContinueCard();
         window.addEventListener('cs103:progresschange', updateContinueCard);
 
-        let synchronizedAt = new Date();
-        let performanceAt = performance.now();
-        let sourceLabel = 'Device-time fallback · IST';
-
-        try {
-            synchronizedAt = await queryIITTime();
-            performanceAt = performance.now();
-            sourceLabel = 'Network time · Asia/Kolkata';
-        } catch (error) {
-            console.warn('Network time unavailable; using device time.', error);
-        }
-
         const tick = () => {
-            const now = new Date(synchronizedAt.getTime() + (performance.now() - performanceAt));
-            renderUpcoming(now, sourceLabel);
+            renderUpcoming(new Date(), 'Device clock · Asia/Kolkata');
         };
         tick();
         window.setInterval(tick, 60000);
     }
 
-    window.CS103Schedule = Object.freeze({ sessions, academicEvents, queryIITTime, renderScheduleTable, timeZone, lectureTime, formatSessionDate, formatSessionTime });
+    window.CS103Schedule = Object.freeze({ sessions, academicEvents, renderScheduleTable, timeZone, lectureTime, formatSessionDate, formatSessionTime });
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeUpcomingBar, { once: true });

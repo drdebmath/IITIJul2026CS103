@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { lectureExtras } from './lecture-extras.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const md = String.raw;
@@ -8,15 +9,15 @@ const md = String.raw;
 const lectures = [
     {
         id: 1,
-        title: 'Programming & Problem Solving',
+        title: 'Turn a precise problem into a running C++ program',
         slides: [
-            md`# Lecture 1: Programming & Problem Solving
-## From a problem to a running C++ program
+            md`# Lecture 1: Turn a precise problem into a running C++ program
+## Turn a precise problem into a running C++ program
 
-No computer or programming experience is assumed.
+Bring one problem you can explain in plain language; we will turn it into a small, observable program.
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)`,
-            md`## A program follows an algorithm
+            md`## An algorithm is a finite sequence of precise steps
 
 An **algorithm** is a finite sequence of precise steps.
 
@@ -28,7 +29,7 @@ Use the same problem-solving workflow every time:
 4. **Solve:** write precise steps; implement one at a time.
 5. **Verify:** explain why they work; test boundaries.
 6. **Improve:** compare clarity, safety, generality, and cost.`,
-            md`## What the computer does
+            md`## The CPU executes instructions while RAM holds active state
 
 - The **CPU** executes machine instructions.
 - RAM holds active instructions and values temporarily.
@@ -36,7 +37,7 @@ Use the same problem-solving workflow every time:
 - Binary encodes information using bits.
 
 **Abstraction** lets C++ express ideas without writing machine instructions directly.`,
-            md`## Anatomy of the first program
+            md`## main starts the program and output makes the result observable
 
 ~~~cpp
 #include <iostream>
@@ -48,7 +49,7 @@ int main() {
 ~~~
 
 <code>main</code> is the entry point. Output makes the program's result observable.`,
-            md`## Edit, compile, link, run
+            md`## The toolchain turns source code into a testable executable
 
 Save the source as <code>hello.cpp</code>, then use the toolchain:
 
@@ -60,7 +61,7 @@ g++ -std=c++17 hello.cpp -o hello
 - A compiler checks and translates the source.
 - A linker combines required compiled parts.
 - The executable is the program you run.`,
-            md`## Reference: why languages differ
+            md`## Choose a language from the problem’s trade-offs
 
 A **programming language** makes some kinds of thinking and engineering easier than others.
 
@@ -69,7 +70,7 @@ A **programming language** makes some kinds of thinking and engineering easier t
 - Python favors rapid exploration; JavaScript reaches the browser; other languages serve other constraints.
 
 There is no universally best language. We learn transferable models and algorithms, then choose tools from the problem.`,
-            md`## Comments, identifiers, and declarations
+            md`## Names and declarations make program state readable
 
 ~~~cpp
 // A comment explains intent.
@@ -79,7 +80,7 @@ bool laboratoryOpen = true;
 ~~~
 
 An identifier names something. A declaration introduces a name and its type.`,
-            md`## Session summary
+            md`## Edit → compile → link → run → test is a reliable workflow
 
 - Begin with input, process, and output.
 - An algorithm must be finite and precise.
@@ -90,11 +91,11 @@ An identifier names something. A declaration introduces a name and its type.`,
     },
     {
         id: 2,
-        title: 'Types & Representation',
+        title: 'Choose types from meaning, range, and precision',
         slides: [
-            md`# Lecture 2: Types & Representation
+            md`# Lecture 2: Choose types from meaning, range, and precision
 ## Give every stored value a deliberate meaning`,
-            md`## Variables and static typing
+            md`## Static typing checks a variable’s kind before the program runs
 
 A **variable** is a named storage location. **Static typing** means types are checked before execution.
 
@@ -106,7 +107,7 @@ bool submitted = false;
 ~~~
 
 The initializer supplies the first value.`,
-            md`## Primitive types answer different questions
+            md`## Choose int, double, char, or bool from the value’s meaning
 
 | Requirement | Suitable type | Example |
 |---|---|---|
@@ -116,14 +117,14 @@ The initializer supplies the first value.`,
 | true/false state | <code>bool</code> | connected |
 
 Sizes are implementation-dependent; inspect them with <code>sizeof</code>.`,
-            md`## Reference: integer modifiers
+            md`## Signedness and width determine the numeric range
 
 <code>signed</code> supports negative and positive values. <code>unsigned</code> represents only non-negative values but wraps at its maximum.
 
 <code>short</code>, <code>long</code>, and <code>long long</code> change minimum range requirements.
 
 Use a modifier only when its range and interaction with other types are understood.`,
-            md`## Constants preserve an invariant
+            md`## const prevents accidental reassignment
 
 ~~~cpp
 const double safeLimit = 12.5;
@@ -133,7 +134,7 @@ double reading = 11.8;
 ~~~
 
 <code>const</code> prevents modification through that name after initialization.`,
-            md`## Type inference still produces one type
+            md`## auto deduces one real type without removing type meaning
 
 ~~~cpp
 auto samples = 12;       // int
@@ -142,7 +143,7 @@ const auto room = 103;   // const int
 ~~~
 
 Use <code>auto</code> when the initializer makes the type obvious.`,
-            md`## Convert explicitly when information may change
+            md`## Explicit casts make possible information loss visible
 
 ~~~cpp
 double mean = 97.56;
@@ -150,7 +151,7 @@ int whole = static_cast<int>(mean);  // 97
 ~~~
 
 An explicit conversion documents intent. Check the destination range first: fractional information may be truncated, and an out-of-range conversion may be invalid.`,
-            md`## Session summary
+            md`## Type choice follows meaning, range, and precision
 
 - A type describes values and permitted operations.
 - Choose representation from meaning, range, and precision.
@@ -161,11 +162,11 @@ An explicit conversion documents intent. Check the destination range first: frac
     },
     {
         id: 3,
-        title: 'Expressions, Scope & Program State',
+        title: 'Track expressions, scope, storage, and lifetime',
         slides: [
-            md`# Lecture 3: Expressions, Scope & Program State
+            md`# Lecture 3: Track expressions, scope, storage, and lifetime
 ## Names, values, visibility, and lifetime`,
-            md`## Operators build expressions
+            md`## Operators combine values into expressions
 
 ~~~cpp
 int total = 5 + 3 * 2;       // 11
@@ -174,7 +175,7 @@ bool safe = total < 20 && grouped > 0;
 ~~~
 
 Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.`,
-            md`## A namespace prevents name collisions
+            md`## Namespaces keep same-named declarations from colliding
 
 ~~~cpp
 namespace laboratory {
@@ -187,7 +188,7 @@ int main() {
 ~~~
 
 The scope-resolution operator <code>::</code> selects a name from a namespace.`,
-            md`## Scope controls where a name is visible
+            md`## A name is usable only inside its scope
 
 ~~~cpp
 #include <iostream>
@@ -204,14 +205,14 @@ int main() {
 ~~~
 
 Keep names in the smallest scope that contains every required use.`,
-            md`## Scope and lifetime are different
+            md`## Scope controls visibility while lifetime controls existence
 
 - **Scope:** where source code may use a name.
 - **Storage duration:** how long the corresponding object exists.
 - **Linkage:** whether declarations in different files name the same entity.
 
 A local static object has block scope but program-long storage duration.`,
-            md`## Storage duration is a lifetime promise
+            md`## Storage duration explains when an object is created and destroyed
 
 ~~~cpp
 // Defined outside every block: program-long storage duration.
@@ -224,7 +225,7 @@ int main() {
 ~~~
 
 Later, functions will provide a safer interface around shared state. For now, distinguish where a name is visible from how long its object exists.`,
-            md`## Reference: one definition shared by two files
+            md`## Linkage decides which cross-file definition is shared
 
 ~~~cpp
 // data.cpp
@@ -235,7 +236,7 @@ extern int sharedCount;
 ~~~
 
 <code>extern</code> declares an entity defined elsewhere. A complete executable must still contain <code>main</code> and link every required definition.`,
-            md`## Session summary
+            md`## Track every name by meaning, visibility, lifetime, and linkage
 
 - Expressions compute values or effects.
 - Parentheses make precedence explicit.
@@ -246,11 +247,11 @@ extern int sharedCount;
     },
     {
         id: 4,
-        title: 'Decisions & Safe Branching',
+        title: 'Turn requirements into safe, testable branches',
         slides: [
-            md`# Lecture 4: Decisions & Safe Branching
+            md`# Lecture 4: Turn requirements into safe, testable branches
 ## Turn requirements into testable paths`,
-            md`## A condition selects a path
+            md`## A Boolean condition selects a control-flow path
 
 Write the rule before the syntax:
 
@@ -261,7 +262,7 @@ Write the rule before the syntax:
 | within limit | false | normal |
 
 Every row should correspond to a test.`,
-            md`## Order an if / else-if chain carefully
+            md`## Order branches from exceptional cases to the normal case
 
 ~~~cpp
 if (emergencyStop || current > safeLimit) {
@@ -274,7 +275,7 @@ if (emergencyStop || current > safeLimit) {
 ~~~
 
 Place exceptional and narrower cases before the normal fallback.`,
-            md`## Use switch for discrete choices
+            md`## switch selects among cases for one discrete value
 
 ~~~cpp
 switch (menuChoice) {
@@ -285,7 +286,7 @@ default: std::cout << "invalid choice\n";
 ~~~
 
 <code>switch</code> is for integral or enumeration values, not numeric ranges.`,
-            md`## Short-circuit evaluation can guard an operation
+            md`## Short-circuiting protects operations behind a valid guard
 
 ~~~cpp
 if (resistance != 0.0 && voltage / resistance > limit) {
@@ -294,7 +295,7 @@ if (resistance != 0.0 && voltage / resistance > limit) {
 ~~~
 
 The division runs only when the left condition is true.`,
-            md`## Floating-point equality needs a tolerance
+            md`## Floating-point comparisons need a problem-chosen tolerance
 
 ~~~cpp
 double difference = measured - expected;
@@ -305,7 +306,7 @@ bool nearlyEqual = difference <= tolerance;
 ~~~
 
 Choose tolerance from the measurement or problem—not one universal constant. A reusable comparison function comes after functions are introduced.`,
-            md`## Test the boundaries first
+            md`## Boundary tests reveal wrong comparisons early
 
 For a safe limit of 10, test:
 
@@ -316,7 +317,7 @@ For a safe limit of 10, test:
 - invalid measurement: negative input.
 
 Also test every <code>switch</code> case and its default.`,
-            md`## Session summary
+            md`## Safe branching names every path and tests every boundary
 
 - Translate decision tables into branches.
 - Order branches from exceptional to fallback.
@@ -327,11 +328,11 @@ Also test every <code>switch</code> case and its default.`,
     },
     {
         id: 5,
-        title: 'Iteration I · while & Input Validation',
+        title: 'Make loop state progress toward termination',
         slides: [
-            md`# Lecture 5: Iteration I
+            md`# Lecture 5: Make loop state progress toward termination
 ## while, do-while, progress, and stopping`,
-            md`## Trace a while loop before running it
+            md`## Trace the condition and update to predict every while iteration
 
 ~~~cpp
 int remaining = 3;
@@ -342,7 +343,7 @@ while (remaining > 0) {
 ~~~
 
 Trace: 3 → 2 → 1 → stop at 0.`,
-            md`## Every loop needs progress
+            md`## Every loop update must move toward termination
 
 Before each iteration, ask:
 
@@ -351,7 +352,7 @@ Before each iteration, ask:
 3. Which statement moves toward stopping?
 
 If no state moves toward a false condition, the loop may never terminate.`,
-            md`## Sentinel input handles an unknown count
+            md`## A sentinel lets a loop process an unknown number of inputs
 
 ~~~cpp
 int value = 0;
@@ -364,7 +365,7 @@ while (value != -1) {
 ~~~
 
 The sentinel <code>-1</code> ends input and is not added.`,
-            md`## do-while validates after the first attempt
+            md`## do-while validates input after the first attempt
 
 ~~~cpp
 double height = 0.0;
@@ -375,14 +376,14 @@ do {
 ~~~
 
 The body runs once before the condition is tested.`,
-            md`## Three common loop failures
+            md`## Stalled updates and wrong bounds break loops
 
 - No update: the condition never changes.
 - Wrong direction: the update moves away from stopping.
 - Off-by-one: <code>&lt;</code> and <code>&lt;=</code> describe different valid ranges.
 
 Write the intended values beside the loop before choosing the comparison.`,
-            md`## Practical pattern: scan until enough defects
+            md`## Stop a scan as soon as the answer is known
 
 ~~~cpp
 while (tested < available && defects < 3) {
@@ -394,7 +395,7 @@ while (tested < available && defects < 3) {
 ~~~
 
 Both stopping reasons remain visible in the condition.`,
-            md`## Session summary
+            md`## Choose a loop by its stopping rule and prove its progress
 
 - <code>while</code> may execute zero times.
 - <code>do-while</code> executes at least once.
@@ -405,11 +406,11 @@ Both stopping reasons remain visible in the condition.`,
     },
     {
         id: 6,
-        title: 'Iteration II · for, Nested Loops & Invariants',
+        title: 'Use ranges and invariants to control repetition',
         slides: [
-            md`# Lecture 6: Iteration II
+            md`# Lecture 6: Use ranges and invariants to control repetition
 ## for loops, nested loops, and invariants`,
-            md`## Counted repetition with for
+            md`## A for loop makes initialization, bound, and update explicit
 
 ~~~cpp
 for (int step = 1; step <= 5; ++step) {
@@ -418,7 +419,7 @@ for (int step = 1; step <= 5; ++step) {
 ~~~
 
 Read it as initialize → test → body → update → test again.`,
-            md`## State the valid counter range
+            md`## A correct counter states its valid range
 
 For five zero-based positions, valid indices are 0, 1, 2, 3, 4.
 
@@ -429,7 +430,7 @@ for (int i = 0; i < 5; ++i) {
 ~~~
 
 The condition directly states the upper boundary is excluded.`,
-            md`## Nested loops enumerate combinations
+            md`## Nested loops enumerate every coordinate or combination
 
 ~~~cpp
 for (int row = 0; row < 3; ++row) {
@@ -440,21 +441,21 @@ for (int row = 0; row < 3; ++row) {
 ~~~
 
 The inner loop completes every column for one row.`,
-            md`## A loop invariant explains correctness
+            md`## A loop invariant states what stays true after each iteration
 
 Example invariant:
 
 > Before iteration <code>i</code>, positions 0 through <code>i - 1</code> have already been processed.
 
 Check the statement before the first iteration, after one update, and at termination.`,
-            md`## Choose the loop from the stopping rule
+            md`## Choose for, while, or do-while from the stopping rule
 
 - <code>while</code>: stop when an event or changing condition says so.
 - <code>do-while</code>: perform once, then decide.
 - <code>for</code>: traverse a known counter range.
 
 The choice communicates intent; any loop can still be written incorrectly.`,
-            md`## Boundary failures to diagnose
+            md`## Boundary tests expose missing or duplicated iterations
 
 ~~~cpp
 for (int i = 0; i <= 5; ++i)   // six values
@@ -462,7 +463,7 @@ for (int i = 5; i >= 0; ++i)   // moves away from stopping
 ~~~
 
 These are diagnosis examples. Do not run the second loop unchanged.`,
-            md`## Session summary
+            md`## A correct loop states its range, invariant, and progress
 
 - Put initialization, test, and update together for counted work.
 - Nested loops traverse combinations such as rows × columns.
@@ -472,11 +473,11 @@ These are diagnosis examples. Do not run the second loop unchanged.`,
     },
     {
         id: 7,
-        title: 'Functions I · Contracts & Calls',
+        title: 'Give each operation a clear function contract',
         slides: [
-            md`# Lecture 7: Functions I
+            md`# Lecture 7: Give each operation a clear function contract
 ## Give one operation a clear name and contract`,
-            md`## A function owns one task
+            md`## One function performs one explainable operation
 
 A function contract states:
 
@@ -485,7 +486,7 @@ A function contract states:
 - returned result or visible effect.
 
 Small contracts reduce copy-paste and can be tested independently.`,
-            md`## Read a definition from the outside inward
+            md`## Read a function’s contract before its implementation
 
 ~~~cpp
 double rectangleArea(double length, double width) {
@@ -494,7 +495,7 @@ double rectangleArea(double length, double width) {
 ~~~
 
 Return type → name → parameters → body.`,
-            md`## Declaration before use, definition once
+            md`## Declare interfaces once and define each function once
 
 ~~~cpp
 #include <iostream>
@@ -509,7 +510,7 @@ double rectangleArea(double length, double width) {
     return length * width;
 }
 ~~~`,
-            md`## Value parameters are local copies
+            md`## Value parameters isolate small inputs as local copies
 
 ~~~cpp
 int doubled(int value) {
@@ -519,7 +520,7 @@ int doubled(int value) {
 ~~~
 
 Changing <code>value</code> does not change the caller's argument.`,
-            md`## Decompose a calculation into named steps
+            md`## Named functions turn a calculation into testable steps
 
 ~~~cpp
 double subtotal(double price, int count) { return price * count; }
@@ -528,7 +529,7 @@ double total(double amount, double rate) { return amount + tax(amount, rate); }
 ~~~
 
 Each name states one responsibility.`,
-            md`## Reference: unnamed callable behavior
+            md`## A lambda packages short callable behavior where it is used
 
 A lambda expression defines a small callable at its point of use.
 
@@ -537,7 +538,7 @@ auto isPositive = [](int value) { return value > 0; };
 ~~~
 
 Named functions remain the default for novice code. Lambdas return later as search and sorting applications.`,
-            md`## Session summary
+            md`## Function contracts make behavior testable
 
 - A function contract states inputs, preconditions, and output.
 - A declaration makes a function known before its definition.
@@ -547,11 +548,11 @@ Named functions remain the default for novice code. Lambdas return later as sear
     },
     {
         id: 8,
-        title: 'Functions II · References & Decomposition',
+        title: 'Choose copy, alias, and recursion deliberately',
         slides: [
-            md`# Lecture 8: Functions II
+            md`# Lecture 8: Choose copy, alias, and recursion deliberately
 ## References, overloading, decomposition, and the call stack`,
-            md`## Value or reference?
+            md`## The parameter contract decides copy, alias, or read-only access
 
 ~~~cpp
 void clampToZero(double& value) {
@@ -560,7 +561,7 @@ void clampToZero(double& value) {
 ~~~
 
 A reference is another name for the caller's object. Mutation must be part of the contract.`,
-            md`## A const reference permits reading, not mutation
+            md`## const reference reads without copying or mutating
 
 ~~~cpp
 void printReading(const double& reading) {
@@ -569,7 +570,7 @@ void printReading(const double& reading) {
 ~~~
 
 The syntax matters now; avoiding expensive copies becomes useful when records and strings arrive.`,
-            md`## Overloads share a name, not a signature
+            md`## Overloads share a name only when parameter lists distinguish them
 
 ~~~cpp
 int absolute(int value);
@@ -577,7 +578,7 @@ double absolute(double value);
 ~~~
 
 The compiler selects from parameter lists. Return type alone cannot distinguish overloads.`,
-            md`## Decomposition keeps main readable
+            md`## Decomposition keeps main readable and each step testable
 
 ~~~cpp
 double readPositive();
@@ -586,12 +587,12 @@ void printFare(double fare);
 ~~~
 
 <code>main</code> coordinates these tasks instead of containing every detail.`,
-            md`## Function calls form a call stack
+            md`## Each active call owns a stack frame until it returns
 
 Each active call has a stack frame containing parameters, locals, and return state.
 
 The most recent unfinished call completes first—last in, first out.`,
-            md`## Gentle recursion preview
+            md`## Recursion needs a base case and a smaller next call
 
 ~~~cpp
 int factorial(int n) {
@@ -601,7 +602,7 @@ int factorial(int n) {
 ~~~
 
 Every recursive call must move measurably toward a base case.`,
-            md`## Session summary
+            md`## Choose parameter passing and decomposition from the contract
 
 - References can expose caller state intentionally.
 - <code>const&</code> provides read-only access through an alias.
@@ -612,11 +613,11 @@ Every recursive call must move measurably toward a base case.`,
     },
     {
         id: 9,
-        title: 'Arrays I · Fixed Sequences & Traversal',
+        title: 'Traverse fixed sequences within exact bounds',
         slides: [
-            md`# Lecture 9: Arrays I
+            md`# Lecture 9: Traverse fixed sequences within exact bounds
 ## Store and traverse one fixed sequence safely`,
-            md`## An array has one element type and fixed extent
+            md`## An array fixes its element type and extent
 
 ~~~cpp
 #include <array>
@@ -625,7 +626,7 @@ std::array<double, 5> voltage{2.1, 2.3, 2.0, 2.4, 2.2};
 ~~~
 
 The five elements occupy a contiguous sequence.`,
-            md`## An index selects one element
+            md`## An index is valid only inside the array’s exact bounds
 
 ~~~cpp
 voltage[0] = 2.5;            // first element
@@ -633,7 +634,7 @@ double last = voltage[4];    // fifth element
 ~~~
 
 For size 5, valid indices are 0 through 4.`,
-            md`## Traverse using the actual bound
+            md`## Traversal uses the actual bound, never a guessed endpoint
 
 ~~~cpp
 double sum = 0.0;
@@ -643,7 +644,7 @@ for (std::size_t i = 0; i < voltage.size(); ++i) {
 ~~~
 
 The invariant is: elements before <code>i</code> are already included.`,
-            md`## Range-for expresses whole-sequence work
+            md`## Range-for visits every element without manual indices
 
 ~~~cpp
 double maximum = voltage[0];
@@ -653,7 +654,7 @@ for (double value : voltage) {
 ~~~
 
 Use an explicit index only when the position matters.`,
-            md`## Pass an array without hiding its size
+            md`## Array functions must receive the extent they rely on
 
 ~~~cpp
 double mean(const std::array<double, 5>& values) {
@@ -662,14 +663,14 @@ double mean(const std::array<double, 5>& values) {
     return sum / values.size();
 }
 ~~~`,
-            md`## Out-of-bounds access is undefined behavior
+            md`## Out-of-bounds access has no reliable result
 
 ~~~cpp
 // voltage[5] = 0.0;  // invalid: no sixth element
 ~~~
 
 C++ does not automatically protect <code>operator[]</code>. Keep the valid range visible in the loop condition.`,
-            md`## Session summary
+            md`## Safe array work respects index, traversal, and bound
 
 - A fixed array has one type, one extent, and contiguous elements.
 - Zero is the first index.
@@ -679,11 +680,11 @@ C++ does not automatically protect <code>operator[]</code>. Keep the valid range
     },
     {
         id: 10,
-        title: 'Arrays II · Matrices & std::vector',
+        title: 'Match matrices and vectors to their operations',
         slides: [
-            md`# Lecture 10: Arrays II
+            md`# Lecture 10: Match matrices and vectors to their operations
 ## Matrices and runtime-sized contiguous sequences`,
-            md`## A matrix needs one index per dimension
+            md`## A matrix needs one bound for each dimension
 
 ~~~cpp
 int image[2][3]{{10, 20, 30}, {40, 50, 60}};
@@ -691,7 +692,7 @@ int pixel = image[1][2];  // row 1, column 2
 ~~~
 
 Both dimensions are zero-based.`,
-            md`## Traverse rows and columns with matching bounds
+            md`## Matching bounds keep row and column traversal safe
 
 ~~~cpp
 for (int row = 0; row < 2; ++row) {
@@ -700,7 +701,7 @@ for (int row = 0; row < 2; ++row) {
     }
 }
 ~~~`,
-            md`## A vector owns a runtime-sized sequence
+            md`## std::vector owns a contiguous sequence whose size can change
 
 ~~~cpp
 #include <vector>
@@ -711,7 +712,7 @@ readings.push_back(21);
 ~~~
 
 The vector grows while preserving contiguous element storage.`,
-            md`## Bounds still matter
+            md`## Dynamic size does not remove the need for bounds checks
 
 ~~~cpp
 for (std::size_t i = 0; i < readings.size(); ++i) {
@@ -720,7 +721,7 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 ~~~
 
 <code>at()</code> checks; <code>operator[]</code> assumes the index is valid.`,
-            md`## Choose from the requirement
+            md`## Choose array or vector from size and operation requirements
 
 | Requirement | Representation |
 |---|---|
@@ -728,7 +729,7 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 | readings until input ends | vector |
 | fixed 3 × 3 transform | 2D array |
 | rows whose lengths may differ | nested vectors |`,
-            md`## Practical pattern: row totals
+            md`## Nested traversal makes each row total testable
 
 ~~~cpp
 std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
@@ -738,7 +739,7 @@ for (const auto& row : scores) {
     std::cout << total << '\n';
 }
 ~~~`,
-            md`## Session summary
+            md`## Storage follows size knowledge, ownership, and access operations
 
 - A matrix needs row and column bounds.
 - A vector owns a contiguous sequence whose size is known at runtime.
@@ -748,11 +749,11 @@ for (const auto& row : scores) {
     },
     {
         id: 11,
-        title: 'Strings & Text Processing',
+        title: 'Process owned text with explicit boundaries',
         slides: [
-            md`# Lecture 11: Strings & Text Processing
+            md`# Lecture 11: Process owned text with explicit boundaries
 ## Prefer owned text values, then study their representation`,
-            md`## std::string owns and sizes its text
+            md`## std::string owns, sizes, and edits its character sequence
 
 ~~~cpp
 #include <string>
@@ -762,7 +763,7 @@ std::cout << name.size() << '\n';
 ~~~
 
 <code>std::string</code> manages its character storage.`,
-            md`## Read a complete line
+            md`## getline reads a complete line, including spaces
 
 ~~~cpp
 std::string sentence;
@@ -770,7 +771,7 @@ std::getline(std::cin, sentence);
 ~~~
 
 <code>getline</code> preserves spaces. When mixing formatted extraction and line input, consume the pending newline deliberately.`,
-            md`## Search and slice with explicit positions
+            md`## Positions and lengths make text operations explicit
 
 ~~~cpp
 std::size_t dash = code.find('-');
@@ -780,7 +781,7 @@ if (dash != std::string::npos) {
 ~~~
 
 Always check whether a search succeeded.`,
-            md`## Classify characters safely
+            md`## Character classification requires a safe unsigned-char conversion
 
 ~~~cpp
 unsigned char ch = static_cast<unsigned char>(text[i]);
@@ -788,7 +789,7 @@ if (std::isdigit(ch)) ++digits;
 ~~~
 
 Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.`,
-            md`## Validate one rule at a time
+            md`## Separate predicates make text validation reliable
 
 ~~~cpp
 bool valid = id.size() == 9;
@@ -797,12 +798,12 @@ for (std::size_t i = 2; valid && i < id.size(); ++i) {
     valid = std::isdigit(static_cast<unsigned char>(id[i]));
 }
 ~~~`,
-            md`## Reference: C-style strings
+            md`## C-style strings end at a null character and need manual bounds care
 
 A C-style string is a character array ending at the first null character <code>'\0'</code>.
 
 Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.`,
-            md`## Session summary
+            md`## Safe text processing prefers ownership, parsing rules, and bounds
 
 - <code>std::string</code> is the default owned text type.
 - Check search results and index bounds.
@@ -813,11 +814,11 @@ Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a de
     },
     {
         id: 12,
-        title: 'Debugging & Assessment Debrief',
+        title: 'Repair programs with evidence and tests',
         slides: [
-            md`# Lecture 12: Debugging & Assessment Debrief
+            md`# Lecture 12: Repair programs with evidence and tests
 ## Turn feedback into a repair strategy`,
-            md`## Classify the failure first
+            md`## Classifying the defect narrows the repair
 
 - Compile-time: the source violates a language rule.
 - Link-time: a required definition is missing or duplicated.
@@ -825,7 +826,7 @@ Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a de
 - Logic: the program runs but produces the wrong result.
 
 Classification determines the next useful observation.`,
-            md`## Read the first useful diagnostic
+            md`## The first compiler or test diagnostic narrows the search
 
 For a compiler message:
 
@@ -834,7 +835,7 @@ For a compiler message:
 3. Inspect the line immediately before it too.
 4. Make one small change.
 5. Recompile before changing anything else.`,
-            md`## Trace state instead of guessing
+            md`## A state trace shows where behavior first diverges
 
 ~~~cpp
 int total = 0;
@@ -844,7 +845,7 @@ for (int i = 0; i < 3; ++i) {
 ~~~
 
 Record <code>i</code>, <code>values[i]</code>, and <code>total</code> after every iteration.`,
-            md`## Boundary tests expose common defects
+            md`## Boundary cases expose empty, off-by-one, and precision defects
 
 For an average function, test:
 
@@ -855,7 +856,7 @@ For an average function, test:
 | two unequal integers | reveals integer division |
 | <code>assert(condition)</code> | stops a debug run at the first false expectation |
 | maximum expected count | stresses the bound |`,
-            md`## Repair a safe average
+            md`## A safe average checks emptiness and preserves precision
 
 ~~~cpp
 bool average(const std::vector<int>& values, double& result) {
@@ -866,7 +867,7 @@ bool average(const std::vector<int>& values, double& result) {
     return true;
 }
 ~~~`,
-            md`## Use assessment evidence
+            md`## Assessment evidence becomes a repair plan
 
 For each lost mark, write:
 
@@ -877,7 +878,7 @@ For each lost mark, write:
 - the date you will retry it without notes.
 
 Revisit prerequisites in the dependency graph instead of memorizing one answer.`,
-            md`## Session summary
+            md`## Repair by classifying, tracing, testing, and documenting
 
 - Classify before editing.
 - Trace changing state explicitly.
@@ -888,11 +889,11 @@ Revisit prerequisites in the dependency graph instead of memorizing one answer.`
     },
     {
         id: 13,
-        title: 'Records, Pointers & Memory Layout',
+        title: 'Group state and validate addresses',
         slides: [
-            md`# Lecture 13: Records, Pointers & Memory Layout
+            md`# Lecture 13: Group state and validate addresses
 ## Group related state and inspect addresses safely`,
-            md`## A struct models one record
+            md`## A struct keeps the fields of one record coherent
 
 ~~~cpp
 struct Reading {
@@ -905,7 +906,7 @@ Reading sample{7, 31.5, true};
 ~~~
 
 Member names keep related values coherent.`,
-            md`## Arrays of records support repeated domain data
+            md`## An array of records keeps repeated domain objects together
 
 ~~~cpp
 std::array<Reading, 3> samples{{
@@ -916,7 +917,7 @@ for (const Reading& reading : samples) {
     if (reading.valid) std::cout << reading.value << '\n';
 }
 ~~~`,
-            md`## A pointer stores an address
+            md`## A pointer stores where an object lives
 
 ~~~cpp
 int score = 95;
@@ -924,7 +925,7 @@ int* scorePointer = &score;
 ~~~
 
 The pointer is a separate object. <code>&score</code> obtains the address of <code>score</code>.`,
-            md`## Dereference only a valid pointer
+            md`## Dereference only a pointer proved valid
 
 ~~~cpp
 if (scorePointer != nullptr) {
@@ -933,7 +934,7 @@ if (scorePointer != nullptr) {
 ~~~
 
 Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”`,
-            md`## Dot and arrow select record members
+            md`## Dot selects through an object; arrow selects through a pointer
 
 ~~~cpp
 Reading reading{7, 31.5, true};
@@ -942,12 +943,12 @@ Reading* pointer = &reading;
 reading.value = 32.0;
 pointer->value = 32.5;  // same as (*pointer).value
 ~~~`,
-            md`## Reference: layout, alignment, and pointer arithmetic
+            md`## Layout, alignment, and pointer arithmetic affect safety
 
 Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
 
 Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.`,
-            md`## Session summary
+            md`## Safe memory reasoning groups state and validates addresses
 
 - A struct creates one coherent record type.
 - An array of records stores repeated entities.
@@ -958,14 +959,14 @@ Pointer arithmetic is valid only within one array object (or one-past its end). 
     },
     {
         id: 14,
-        title: 'Dynamic Memory & Linked Structures',
+        title: 'Make dynamic ownership explicit',
         slides: [
-            md`# Lecture 14: Dynamic Memory & Linked Structures
+            md`# Lecture 14: Make dynamic ownership explicit
 ## Make ownership and lifetime explicit`,
-            md`## Automatic and dynamic storage solve different needs
+            md`## Automatic storage follows scope; dynamic storage follows ownership
 
 Automatic local objects are destroyed when their scope ends. Dynamic storage can outlive the creating scope, so ownership must state who releases it.`,
-            md`## Raw new and delete must match
+            md`## new and delete must match the allocated type and ownership
 
 ~~~cpp
 int* value = new int{42};
@@ -975,7 +976,7 @@ value = nullptr;
 ~~~
 
 Use <code>delete[]</code> only for storage obtained with <code>new[]</code>.`,
-            md`## Prefer ownership in a smart pointer
+            md`## unique_ptr makes exclusive ownership and release explicit
 
 ~~~cpp
 auto value = std::make_unique<int>(42);
@@ -983,13 +984,13 @@ std::cout << *value << '\n';
 ~~~
 
 A smart pointer releases its owned resource automatically. It prevents ownership leaks, but unrelated non-owning pointers can still dangle.`,
-            md`## Name the failure modes
+            md`## Leaks, dangling pointers, double deletion, and bad allocation are different defects
 
 - Memory leak: owned storage becomes unreachable without release.
 - Dangling pointer: an address remains after the object has died.
 - Double deletion: the same allocation is released twice.
 - Allocation failure: <code>new</code> normally throws <code>std::bad_alloc</code>.`,
-            md`## A linked list connects separately stored nodes
+            md`## A linked list represents a sequence through separately stored nodes
 
 ~~~cpp
 #include <memory>
@@ -1004,7 +1005,7 @@ head->value = 42;
 head->next = std::make_unique<Node>();
 head->next->value = 57;
 ~~~`,
-            md`## Traverse links until the end
+            md`## Traversal stops at nullptr after visiting each reachable node
 
 ~~~cpp
 for (Node* current = head.get(); current != nullptr;
@@ -1014,12 +1015,12 @@ for (Node* current = head.get(); current != nullptr;
 ~~~
 
 The invariant states that every node before <code>current</code> has been processed.`,
-            md`## Reference: the C allocation interface
+            md`## C allocation exposes bytes, so its ownership contract must be explicit
 
 <code>malloc</code>, <code>calloc</code>, and <code>realloc</code> manage untyped bytes and must be paired with <code>free</code>.
 
 They do not construct or destroy C++ objects. Use them only when a C interface requires them.`,
-            md`## Session summary
+            md`## Make ownership explicit before allocating or linking
 
 - Dynamic storage requires an ownership rule.
 - Prefer <code>unique_ptr</code> for exclusive ownership and automatic release.
@@ -1029,16 +1030,16 @@ They do not construct or destroy C++ objects. Use them only when a C interface r
     },
     {
         id: 15,
-        title: 'Linear Structures & Array Algorithms',
+        title: 'Choose structures from operations and cost',
         slides: [
-            md`# Lecture 15: Linear Structures & Array Algorithms
+            md`# Lecture 15: Choose structures from operations and cost
 ## Choose operations before representation`,
-            md`## An abstract data type is an operation contract
+            md`## An abstract data type specifies operations before representation
 
 A stack promises <code>push</code>, <code>pop</code>, and <code>top</code>. A queue promises <code>enqueue</code>, <code>dequeue</code>, and <code>front</code>.
 
 The contract does not require a class or one specific representation.`,
-            md`## Linear search applies traversal to stored data
+            md`## Linear search is the trustworthy baseline when only traversal is known
 
 ~~~cpp
 std::vector<int> values{8, 3, 5, 3};
@@ -1049,7 +1050,7 @@ for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
 ~~~
 
 Worst case: inspect every element.`,
-            md`## Bubble sort applies neighboring swaps
+            md`## Bubble sort trades simplicity for quadratic time
 
 ~~~cpp
 for (std::size_t end = values.size(); end > 1; --end) {
@@ -1062,7 +1063,7 @@ for (std::size_t end = values.size(); end > 1; --end) {
     }
 }
 ~~~`,
-            md`## A stack is last-in, first-out
+            md`## A stack returns the most recently pushed item first
 
 With an array representation, keep one integer <code>top</code>:
 
@@ -1071,12 +1072,12 @@ With an array representation, keep one integer <code>top</code>:
 - top: inspect without removing.
 
 An undo history and function calls are stack applications.`,
-            md`## A queue is first-in, first-out
+            md`## A queue returns the earliest enqueued item first
 
 A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</code>. A linked queue keeps pointers to the first and last nodes.
 
 Print jobs and breadth-first exploration are queue applications.`,
-            md`## Compare operations, not names
+            md`## Compare structures by operation costs, not names
 
 | Requirement | Useful choice |
 |---|---|
@@ -1084,7 +1085,7 @@ Print jobs and breadth-first exploration are queue applications.`,
 | undo most recent action | stack |
 | serve arrival order | queue |
 | repeatedly exchange adjacent inversions | array + bubble sort |`,
-            md`## Session summary
+            md`## Match operations, invariants, and cost before choosing a structure
 
 - An ADT is defined by valid operations and behavior.
 - Algorithms are applications of the representation's operations.
@@ -1095,11 +1096,11 @@ Print jobs and breadth-first exploration are queue applications.`,
     },
     {
         id: 16,
-        title: 'Recursive Decomposition in Practice',
+        title: 'Prove recursive progress to a base case',
         slides: [
-            md`# Lecture 16: Recursive Decomposition in Practice
+            md`# Lecture 16: Prove recursive progress to a base case
 ## Prove a smaller call reaches a base case`,
-            md`## Trace the call stack
+            md`## Each recursive call adds a frame and must eventually return
 
 For <code>factorial(3)</code>:
 
@@ -1107,7 +1108,7 @@ For <code>factorial(3)</code>:
 2. <code>factorial(2)</code> waits for <code>factorial(1)</code>.
 3. The base case returns 1.
 4. Waiting frames finish in reverse order.`,
-            md`## State base case and progress together
+            md`## Every recursive call moves toward its base case
 
 ~~~cpp
 int factorial(int n) {
@@ -1117,7 +1118,7 @@ int factorial(int n) {
 ~~~
 
 The argument decreases, so a non-negative input reaches the base case.`,
-            md`## Reverse a linked list recursively
+            md`## Recursive reversal rewires one node and delegates the suffix
 
 ~~~cpp
 Node* reverse(Node* head) {
@@ -1128,24 +1129,24 @@ Node* reverse(Node* head) {
     return newHead;
 }
 ~~~`,
-            md`## Backtracking generates permutations
+            md`## Backtracking explores, recurses, and undoes each choice
 
 Choose one value for the current position, recursively arrange the remainder, then undo the choice.
 
 The data structure is an array; recursion supplies the search order.`,
-            md`## Reference: longest common subsequence
+            md`## Memoization avoids repeated subproblems in LCS
 
 For two strings, an LCS recurrence compares their final characters and reduces one or both prefixes.
 
 The direct recursive version repeats subproblems. Memoization stores results so identical states are solved once.`,
-            md`## Account for time and space
+            md`## Recursion trades stack space and repeated work for clarity
 
 - Recursive list reversal: O(n) time, O(n) call-stack space.
 - Iterative reversal: O(n) time, O(1) auxiliary space.
 - Permutation generation: at least proportional to the number of produced permutations.
 
 Complexity describes growth, not stopwatch seconds.`,
-            md`## Session summary
+            md`## Prove termination, trace frames, and measure recursive cost
 
 - A recursive call must receive a smaller problem.
 - A base case handles the smallest problem directly.
@@ -1155,11 +1156,11 @@ Complexity describes growth, not stopwatch seconds.`,
     },
     {
         id: 17,
-        title: 'Search Trees, Heaps & Sorting',
+        title: 'Preserve invariants to search and sort efficiently',
         slides: [
-            md`# Lecture 17: Search Trees, Heaps & Sorting
+            md`# Lecture 17: Preserve invariants to search and sort efficiently
 ## Preserve an invariant to obtain efficient operations`,
-            md`## Binary search requires sorted data
+            md`## Binary search halves a sorted range without overflow
 
 ~~~cpp
 while (left <= right) {
@@ -1171,7 +1172,7 @@ while (left <= right) {
 ~~~
 
 Each comparison discards one impossible half.`,
-            md`## A binary search tree stores the same ordering structurally
+            md`## A BST stores ordering in its left and right subtrees
 
 For every node:
 
@@ -1180,7 +1181,7 @@ For every node:
 - both subtrees obey the same invariant.
 
 Choose and document one policy for duplicate keys.`,
-            md`## Insert by following the invariant
+            md`## BST insertion preserves order by following comparisons
 
 ~~~cpp
 struct Node { int key; Node* left; Node* right; };
@@ -1192,12 +1193,12 @@ Node* insert(Node* root, int key) {
     return root;
 }
 ~~~`,
-            md`## A binary heap exposes the highest priority
+            md`## A heap keeps the highest-priority element at the root
 
 A max heap is a complete binary tree where every parent is at least its children.
 
 In a zero-based array, children of index <code>i</code> are <code>2*i+1</code> and <code>2*i+2</code>.`,
-            md`## heapify restores heap order
+            md`## heapify restores parent-child order after one local violation
 
 ~~~cpp
 void heapify(std::vector<int>& a, int size, int root) {
@@ -1208,14 +1209,14 @@ void heapify(std::vector<int>& a, int size, int root) {
     if (largest != root) { std::swap(a[root], a[largest]); heapify(a, size, largest); }
 }
 ~~~`,
-            md`## Merge sort divides, solves, and combines
+            md`## Merge sort recursively sorts halves and combines them stably
 
 1. Divide the range into two halves.
 2. Recursively sort each half.
 3. Merge two sorted sequences into temporary storage.
 
 Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.`,
-            md`## Session summary
+            md`## State the invariant before choosing a search or sort
 
 - Binary search exploits sorted-array order.
 - A BST encodes ordering in links.
@@ -1226,11 +1227,11 @@ Merge sort is **stable**: records with equal keys keep their original relative o
     },
     {
         id: 18,
-        title: 'Object Design & Value Semantics',
+        title: 'Protect object invariants across their lifetime',
         slides: [
-            md`# Lecture 18: Object Design & Value Semantics
+            md`# Lecture 18: Protect object invariants across its lifetime
 ## Protect invariants and make object lifetime predictable`,
-            md`## A class combines state, behavior, and access control
+            md`## A class protects state by combining data, behavior, and access control
 
 ~~~cpp
 class Counter {
@@ -1243,7 +1244,7 @@ public:
 ~~~
 
 The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.`,
-            md`## Constructors establish valid state
+            md`## Constructors establish valid initial state before use
 
 ~~~cpp
 class Rectangle {
@@ -1259,7 +1260,7 @@ public:
 ~~~
 
 Overloaded constructors may offer several distinct valid initialization paths.`,
-            md`## Copy construction and assignment are different
+            md`## Copy construction creates; assignment replaces an existing value
 
 ~~~cpp
 Rectangle first(4.0, 3.0);
@@ -1269,12 +1270,12 @@ assigned = first;          // copy assignment: existing object
 ~~~
 
 Value members such as numbers and strings usually support the Rule of Zero.`,
-            md`## Destruction and RAII bind resource lifetime to an object
+            md`## RAII binds resource release to object lifetime
 
 A destructor runs when an object's lifetime ends. RAII stores a resource in an owning object whose destructor releases it.
 
 Prefer <code>std::string</code>, <code>std::vector</code>, and smart pointers over handwritten ownership and deep-copy code.`,
-            md`## Reference: operators should preserve value meaning
+            md`## Overloaded operators preserve the meaning users expect from values
 
 Useful value-type operations include:
 
@@ -1284,7 +1285,7 @@ Useful value-type operations include:
 - copy assignment safely replacing an existing value.
 
 Do not change an operator's expected meaning.`,
-            md`## Session summary
+            md`## Value types depend on invariants, ownership, and predictable lifetime
 
 - A class should protect a meaningful invariant.
 - Constructors initialize; assignment replaces an existing value.
@@ -1295,11 +1296,11 @@ Do not change an operator's expected meaning.`,
     },
     {
         id: 19,
-        title: 'Friend Access & Inheritance Foundations',
+        title: 'Use inheritance only when substitution is safe',
         slides: [
-            md`# Lecture 19: Friend Access & Inheritance Foundations
+            md`# Lecture 19: Use inheritance only when substitution is safe
 ## Move from one value type to a justified is-a relationship`,
-            md`## Friendship should remain exceptional
+            md`## Friend access is a narrow exception, not an interface
 
 ~~~cpp
 class Complex {
@@ -1311,12 +1312,12 @@ public:
 ~~~
 
 A friend is a non-member granted narrow access. Friendship is not inheritance or a security boundary.`,
-            md`## Public inheritance means substitutability
+            md`## Public inheritance promises substitutability
 
 If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operation promised by <code>Vehicle</code> must remain meaningful for <code>ElectricCar</code>.
 
 This is an **is-a** relationship, not merely code reuse.`,
-            md`## A class hierarchy is a dependency tree
+            md`## A class hierarchy makes shared promises and specialization explicit
 
 ~~~text
 Vehicle
@@ -1326,7 +1327,7 @@ Vehicle
 ~~~
 
 The base owns common behavior; derived classes add or refine specialized behavior.`,
-            md`## A small base and derived class
+            md`## A small base interface leaves derived types to specialize
 
 ~~~cpp
 class Vehicle {
@@ -1341,7 +1342,7 @@ public:
 ~~~
 
 A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.`,
-            md`## Construction proceeds base before derived
+            md`## Base construction completes before derived construction
 
 1. Base members are initialized.
 2. The base constructor runs.
@@ -1349,12 +1350,12 @@ A <code>protected</code> member would be hidden from ordinary callers but access
 4. The derived constructor runs.
 
 Destruction occurs in the reverse order.`,
-            md`## Prefer composition for has-a relationships
+            md`## Composition models has-a without forcing substitutability
 
 A <code>Car</code> has an <code>Engine</code>; it is not an engine.
 
 Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.`,
-            md`## Session summary
+            md`## Use inheritance for is-a contracts and composition for owned parts
 
 - Friend access is narrow and explicit.
 - Public inheritance models is-a and substitutability.
@@ -1365,22 +1366,22 @@ Composition usually exposes fewer dependencies and is easier to change. Inherita
     },
     {
         id: 20,
-        title: 'Inheritance & Runtime Polymorphism',
+        title: 'Select runtime behavior through safe interfaces',
         slides: [
-            md`# Lecture 20: Inheritance & Runtime Polymorphism
+            md`# Lecture 20: Select runtime behavior through safe interfaces
 ## Select behavior from the runtime object safely`,
-            md`## Public and private inheritance make different promises
+            md`## Public and private inheritance make different interface promises
 
 - Public inheritance preserves the base interface and models is-a.
 - Private inheritance is an implementation technique and does not promise substitutability.
 
 Composition is usually clearer than private inheritance.`,
-            md`## Reference: multiple and virtual inheritance
+            md`## Virtual inheritance shares one common base in a diamond
 
 Multiple inheritance gives one derived class more than one direct base.
 
 In a diamond, virtual inheritance can share one common base subobject. Use these mechanisms only when the domain model genuinely requires them; they are not the starting point for polymorphism.`,
-            md`## A virtual function enables dynamic dispatch
+            md`## A virtual function selects the override from the runtime type
 
 ~~~cpp
 class Shape {
@@ -1396,7 +1397,7 @@ public:
     double area() const override { return side * side; }
 };
 ~~~`,
-            md`## Own one polymorphic object safely
+            md`## A virtual destructor makes base-pointer deletion safe
 
 ~~~cpp
 std::unique_ptr<Shape> shape = std::make_unique<Square>(4.0);
@@ -1404,7 +1405,7 @@ double result = shape->area();
 ~~~
 
 The virtual destructor makes deletion through the base interface safe. Lecture 21 will place differently typed objects in one owning container.`,
-            md`## A factory centralizes concrete construction
+            md`## A factory centralizes construction behind the interface
 
 ~~~cpp
 std::unique_ptr<Shape> makeSquare(double side) {
@@ -1413,7 +1414,7 @@ std::unique_ptr<Shape> makeSquare(double side) {
 ~~~
 
 A factory returns an abstraction while choosing a concrete type in one place.`,
-            md`## Test the substitutability contract
+            md`## Every derived type must pass the base-level tests
 
 For every derived type, test:
 
@@ -1421,7 +1422,7 @@ For every derived type, test:
 - cleanup through base ownership;
 - invalid constructor inputs;
 - behavior added by a new derived type without changing existing callers.`,
-            md`## Session summary
+            md`## Interfaces, safe ownership, and substitutability earn polymorphism
 
 - Public inheritance promises substitutability.
 - Dynamic dispatch selects an override at runtime.
@@ -1432,11 +1433,11 @@ For every derived type, test:
     },
     {
         id: 21,
-        title: 'Polymorphic Data Structures',
+        title: 'Separate polymorphism, ownership, and graph links',
         slides: [
-            md`# Lecture 21: Polymorphic Data Structures
+            md`# Lecture 21: Separate polymorphism, ownership, and graph links
 ## Store varied behavior behind one safe interface`,
-            md`## A heterogeneous container owns one base interface
+            md`## A heterogeneous container owns varied objects through one interface
 
 ~~~cpp
 std::vector<std::unique_ptr<Shape>> shapes;
@@ -1445,7 +1446,7 @@ shapes.push_back(std::make_unique<Square>(3.0));
 ~~~
 
 Concrete types differ; ownership and the operation contract are uniform.`,
-            md`## Algorithms use only the promised operation
+            md`## Algorithms stay reusable through promised interface operations
 
 ~~~cpp
 double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
@@ -1456,7 +1457,7 @@ double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
 ~~~
 
 Adding a new shape does not change this traversal.`,
-            md`## An object graph stores entities and relationships
+            md`## An object graph separates entities from their relationships
 
 ~~~text
 [Indore] --rail--> [Ujjain]
@@ -1467,24 +1468,24 @@ Adding a new shape does not change this traversal.`,
 ~~~
 
 Vertices model entities; edges model relationships. The graph is a structure, not an external visualization service.`,
-            md`## Choose graph storage from operations
+            md`## Graph storage follows the operations the application needs
 
 - Adjacency list: store outgoing neighbors for each vertex.
 - Edge list: store relationships as records.
 - Matrix: direct pair lookup but quadratic storage.
 
 Polymorphism is useful only when vertex or edge behavior genuinely varies.`,
-            md`## Ownership must stay unambiguous
+            md`## Ownership stays independent from graph connectivity
 
 Let the graph own vertices and edges with smart pointers. Store non-owning IDs or indices for relationships when possible.
 
 Avoid cycles of shared ownership; graph connectivity is not the same as memory ownership.`,
-            md`## Extension exercise
+            md`## Add one actor without changing the controller
 
 Add a <code>WeightedEdge</code> with a cost and a <code>ScheduledEdge</code> with departure time.
 
 Write one traversal that prints every edge through the base interface, then identify which operations do not require polymorphism.`,
-            md`## Session summary
+            md`## Polymorphism, ownership, and graph links stay independently testable
 
 - Heterogeneous containers combine a base contract with safe ownership.
 - Algorithms depend on operations, not concrete type names.
@@ -1495,11 +1496,11 @@ Write one traversal that prints every edge through the base interface, then iden
     },
     {
         id: 22,
-        title: 'Applied Object Systems',
+        title: 'Compose domain objects with explicit policies',
         slides: [
-            md`# Lecture 22: Applied Object Systems
+            md`# Lecture 22: Compose domain objects with explicit policies
 ## Compose domain objects, collections, and algorithms`,
-            md`## Assign one responsibility to each component
+            md`## One component owns one reason to change
 
 - <code>Flight</code>: route, capacity, and availability invariant.
 - <code>Passenger</code>: passenger identity and contact value.
@@ -1507,7 +1508,7 @@ Write one traversal that prints every edge through the base interface, then iden
 - <code>BookingSystem</code>: collection operations and policies.
 
 High cohesion keeps each responsibility local.`,
-            md`## A domain model names relationships
+            md`## A domain model names the objects and rules that matter
 
 ~~~cpp
 struct Flight { std::string code; std::string from; std::string to; int seats; };
@@ -1516,7 +1517,7 @@ struct Booking { std::size_t flightIndex; std::size_t passengerIndex; };
 ~~~
 
 Indices express associations without ambiguous ownership.`,
-            md`## Search applies a predicate to the collection
+            md`## A predicate turns a domain question into reusable selection
 
 ~~~cpp
 auto matchesRoute = [requestedFrom, requestedTo](const Flight& flight) {
@@ -1527,7 +1528,7 @@ auto result = std::find_if(flights.begin(), flights.end(), matchesRoute);
 ~~~
 
 The lambda is a predicate: a callable returning true or false. Its capture list copies the two requested city values into the callable.`,
-            md`## Sorting applies a comparator
+            md`## A comparator makes ordering policy explicit and testable
 
 ~~~cpp
 std::sort(flights.begin(), flights.end(),
@@ -1537,18 +1538,18 @@ std::sort(flights.begin(), flights.end(),
 ~~~
 
 The comparator defines one consistent ordering relation.`,
-            md`## Routing is a graph application
+            md`## Route planning applies graph algorithms to domain constraints
 
 Airports are vertices and direct flights are edges. Route optimization selects a path according to hops, time, distance, or cost.
 
 State the objective before choosing an algorithm.`,
-            md`## Patterns separate policy from mechanism
+            md`## Patterns separate replaceable policy from stable mechanism
 
 - Factory: choose which concrete service object to create.
 - Strategy: supply a pricing or ranking policy through an interface.
 
 Use a design pattern only after the recurring responsibility problem is visible.`,
-            md`## Session summary
+            md`## Compose domain objects with explicit predicates, comparators, and policies
 
 - Domain classes represent entities, values, and associations.
 - Collections expose search and sorting applications.
@@ -1559,11 +1560,11 @@ Use a design pattern only after the recurring responsibility problem is visible.
     },
     {
         id: 23,
-        title: 'Recursive & Polymorphic Capstones',
+        title: 'Integrate structures, algorithms, and evidence',
         slides: [
-            md`# Lecture 23: Recursive & Polymorphic Capstones
+            md`# Lecture 23: Integrate structures, algorithms, and evidence
 ## Select structures and algorithms for integrated problems`,
-            md`## Begin with the required operation
+            md`## The required operation determines the candidate structures
 
 | Application | Structure | Algorithmic idea |
 |---|---|---|
@@ -1571,12 +1572,12 @@ Use a design pattern only after the recurring responsibility problem is visible.
 | transform every tree node | binary tree | recursive traversal |
 | multiply matrix blocks | matrices | recursive decomposition |
 | vary legal behavior by piece | hierarchy | dynamic dispatch |`,
-            md`## Block-recursive matrix multiplication
+            md`## Block recursion reduces matrix multiplication to smaller compatible products
 
 Split each matrix into four blocks, recursively multiply compatible block pairs, and add partial results.
 
 The base case multiplies a sufficiently small block directly. A practical implementation must also handle dimensions that are not powers of two.`,
-            md`## Radix sort applies stable buckets
+            md`## Stable buckets let radix sort process one digit at a time
 
 For non-negative decimal integers:
 
@@ -1585,7 +1586,7 @@ For non-negative decimal integers:
 3. move to the next digit.
 
 The queue-like bucket structure supplies stable collection order.`,
-            md`## Invert a binary tree
+            md`## Tree inversion swaps each node’s children recursively
 
 ~~~cpp
 Node* invert(Node* root) {
@@ -1597,12 +1598,12 @@ Node* invert(Node* root) {
     return root;
 }
 ~~~`,
-            md`## Chess applies runtime polymorphism
+            md`## A shared Piece interface lets each chess type choose its move
 
 A base <code>Piece</code> promises legal-move generation. <code>Rook</code>, <code>Bishop</code>, and <code>Knight</code> implement different movement rules.
 
 The board owns pieces; the caller asks through the common interface.`,
-            md`## Integration checklist
+            md`## A capstone needs state, invariants, ownership, stopping rules, and adversarial tests
 
 Before implementation, identify:
 
@@ -1612,7 +1613,7 @@ Before implementation, identify:
 - base case or stopping condition;
 - normal, boundary, and invalid tests;
 - expected time and space growth.`,
-            md`## Course summary
+            md`## A capstone is justified by its representation, algorithm, invariant, and evidence
 
 - Represent state with a structure whose operations match the problem.
 - Apply algorithms through those operations.
@@ -1621,6 +1622,11 @@ Before implementation, identify:
         ]
     }
 ];
+
+const missingLectureExtras = lectures.filter((lecture) => !lectureExtras[lecture.id]);
+if (missingLectureExtras.length > 0) {
+    throw new Error(`Missing practical example and practice set for lecture IDs: ${missingLectureExtras.map((lecture) => lecture.id).join(', ')}`);
+}
 
 // These generated briefs make the transferable problem-solving routine visible
 // without changing authored slide numbers or the eight-slide live-session limit.
@@ -1886,7 +1892,7 @@ if (missingStudioBriefs.length > 0) {
 }
 
 const lectureOneShowcase = [
-    md`## By the final week, algorithms will come alive
+    md`## Algorithms become concrete when state changes are visible
 
 | Build | State and structure | Algorithmic idea |
 |---|---|---|
@@ -1899,7 +1905,7 @@ const lectureOneShowcase = [
 | music and circuits | event sequences / component graph | randomized generation and optimization |
 
 These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.`,
-    md`## One model, many ways to see it
+    md`## One verified model can drive every view
 
 ~~~text
 Problem → model/state → algorithm → trace
@@ -1918,7 +1924,7 @@ By semester end, you should be able to explain not only *what* you built, but *w
 // One continuous Grid Snake + Cleaner build. Each slide is inserted only after
 // the authored slide that teaches every C++ feature used in its snippet.
 const gameEvolutionSlides = {
-    1: md`## Game evolution sneak peek · a visible first frame
+    1: md`## Game evolution: Output makes the first world visible
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -1938,7 +1944,7 @@ int main() {
 
 **Next unlock · L02:** replace fixed symbols with named coordinates, score, and dirt state.`,
 
-    2: md`## Game evolution sneak peek · name the state
+    2: md`## Game evolution: Named state gives the world memory
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -1959,7 +1965,7 @@ int main() {
 
 **Next unlock · L03:** compute a new coordinate from the current state and one movement delta.`,
 
-    3: md`## Game evolution sneak peek · one state transition
+    3: md`## Game evolution: One transition updates the world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -1982,7 +1988,7 @@ int main() {
 
 **Next unlock · L04:** accept different directions and reject unsafe moves.`,
 
-    4: md`## Game evolution sneak peek · a legal move
+    4: md`## Game evolution: A legal move respects the boundary
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2003,7 +2009,7 @@ int main() {
 
 **Next unlock · L05:** repeat commands until the game ends.`,
 
-    5: md`## Game evolution sneak peek · the game loop
+    5: md`## Game evolution: A loop advances the game until it stops
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2026,7 +2032,7 @@ int main() {
 
 **Next unlock · L06:** redraw every row and column after each turn.`,
 
-    6: md`## Game evolution sneak peek · render the board
+    6: md`## Game evolution: Rendering turns state into a board
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2050,7 +2056,7 @@ int main() {
 
 **Next unlock · L07:** name scoring and movement calculations as testable functions.`,
 
-    7: md`## Game evolution sneak peek · a scoring contract
+    7: md`## Game evolution: A scoring contract makes progress measurable
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2072,7 +2078,7 @@ int main() {
 
 **Next unlock · L08:** deliberately mutate row and column through references.`,
 
-    8: md`## Game evolution sneak peek · a movement operation
+    8: md`## Game evolution: A movement function isolates one rule
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2093,7 +2099,7 @@ int main() {
 
 **Next unlock · L09:** store the complete Snake body as sequences of coordinates.`,
 
-    9: md`## Game evolution sneak peek · a body of segments
+    9: md`## Game evolution: Linked segments represent a growing body
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2115,7 +2121,7 @@ int main() {
 
 **Next unlock · L10:** replace coordinate rules with a stored two-dimensional world.`,
 
-    10: md`## Game evolution sneak peek · a 2D world
+    10: md`## Game evolution: A 2D structure represents the world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2138,7 +2144,7 @@ int main() {
 
 **Next unlock · L11:** record and validate a replay as owned text.`,
 
-    11: md`## Game evolution sneak peek · a replay string
+    11: md`## Game evolution: A replay string stores commands
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2162,7 +2168,7 @@ int main() {
 
 **Next unlock · L12:** turn a replay into a repeatable regression test.`,
 
-    12: md`## Game evolution sneak peek · replay as a test
+    12: md`## Game evolution: A replay becomes a reproducible test
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2186,7 +2192,7 @@ int main() {
 
 **Next unlock · L13:** group each cell's related fields into one record.`,
 
-    13: md`## Game evolution sneak peek · coherent cells
+    13: md`## Game evolution: Records keep cells and entities coherent
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2207,7 +2213,7 @@ int main() {
 
 **Next unlock · L14:** make each Snake segment own the next segment dynamically.`,
 
-    14: md`## Game evolution sneak peek · a linked Snake
+    14: md`## Game evolution: Linked ownership lets Snake grow safely
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2228,7 +2234,7 @@ int main() {
 
 **Next unlock · L15:** maintain pending dirt as a queue and search stored cells.`,
 
-    15: md`## Game evolution sneak peek · a cleaning queue
+    15: md`## Game evolution: A queue orders cleaning work
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2252,7 +2258,7 @@ int main() {
 
 **Next unlock · L16:** explore choices recursively and undo dead ends.`,
 
-    16: md`## Game evolution sneak peek · recursive maze search
+    16: md`## Game evolution: Recursive search explores and undoes choices
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2275,7 +2281,7 @@ bool reaches(std::vector<std::string>& grid,int row,int column) {
 
 **Next unlock · L17:** accelerate repeated collision checks and prioritize dirt.`,
 
-    17: md`## Game evolution sneak peek · faster grid decisions
+    17: md`## Game evolution: Invariants make grid decisions faster
 
 | L17 tool | Exact game part enabled |
 |---|---|
@@ -2301,7 +2307,7 @@ bool occupied(const int cells[], int count, int id) {
 
 **Next unlock · L18:** package state and operations inside a reliably constructed game object.`,
 
-    18: md`## Game evolution sneak peek · a valid Cleaner object
+    18: md`## Game evolution: A class protects a valid Cleaner
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2326,7 +2332,7 @@ int main(){ Cleaner first(1,1); Cleaner replay=first;
 
 **Next unlock · L19:** model genuine is-a actors and has-a capabilities.`,
 
-    19: md`## Game evolution sneak peek · Snake meets Cleaner
+    19: md`## Game evolution: Snake and Cleaner can share a world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2348,7 +2354,7 @@ class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner
 
 **Next unlock · L20:** select different actor behavior through one virtual interface.`,
 
-    20: md`## Game evolution sneak peek · one runtime-selected actor
+    20: md`## Game evolution: One interface selects an actor at runtime
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2372,7 +2378,7 @@ int main() {
 
 **Next unlock · L21:** own several differently typed actors in one world.`,
 
-    21: md`## Game evolution sneak peek · a mixed actor world
+    21: md`## Game evolution: Actors share a graph without sharing ownership
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2395,7 +2401,7 @@ int main(){ std::vector<std::unique_ptr<Actor>> actors;
 
 **Next unlock · L22:** choose and compare route and task-selection policies over this world.`,
 
-    22: md`## Game evolution sneak peek · choose the next target
+    22: md`## Game evolution: A comparator chooses the next target
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -2420,7 +2426,7 @@ if (!dirt.empty()) next=dirt[0];
 
 **Next unlock · L23:** integrate body, policy, routes, collision rules, and visualization into one verified capstone.`,
 
-    23: md`## Game evolution sneak peek · one verified capstone family
+    23: md`## Game evolution: One verified capstone connects every layer
 
 | Final build | Exact parts now connected | Concept provenance |
 |---|---|---|
@@ -2450,13 +2456,16 @@ if (missingGameVariants.length > 0) {
     throw new Error(`Missing game evolution slide for lecture IDs: ${missingGameVariants.map((lecture) => lecture.id).join(', ')}`);
 }
 
-function markdownSection(content, className = '') {
+function markdownSection(content, className = '', attributes = '') {
     const classAttribute = className ? ` class="${className}"` : '';
-    return `    <section${classAttribute} data-markdown><textarea data-template>\n${content.trim()}\n    </textarea></section>`;
+    const extraAttributes = attributes ? ` ${attributes}` : '';
+    return `    <section${classAttribute}${extraAttributes} data-markdown><textarea data-template>\n${content.trim()}\n    </textarea></section>`;
 }
 
 function studioSlide(brief) {
-    return md`## Algorithmic studio · ${brief.thread}
+    return md`## ${brief.problem}
+
+**Studio thread:** ${brief.thread}
 
 | Ask | Today’s answer |
 |---|---|
@@ -2472,7 +2481,64 @@ function studioSlide(brief) {
 **Compare:** ${brief.compare}`;
 }
 
+function practicalExampleSlide(extra) {
+    const takeaways = extra.takeaways.map((takeaway) => `- ${takeaway}`).join('\n');
+    return md`## ${extra.takeaways[0]} · ${extra.title}
+
+${extra.context}
+
+~~~cpp
+${extra.code}
+~~~
+
+**Takeaways**
+
+${takeaways}`;
+}
+
+function practiceSlide(extra) {
+    const problems = extra.problems.map((problem) => `1. ${problem}`).join('\n');
+    return md`## Solve five problems to transfer ${extra.title}
+
+**IC151 lab practice · 5 problems**
+
+${problems}
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).`;
+}
+
+function verificationSlide(extra) {
+    const checks = extra.problems.slice(0, 3).map((problem) => `- ${problem}`).join('\n');
+    return md`## Verify ${extra.title} with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** ${extra.takeaways[0]}
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+${checks}`;
+}
+
+function handoffSlide(extra) {
+    return md`## Explain ${extra.title} without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.`;
+}
+
 function page({ id, title, slides }) {
+    const extra = lectureExtras[id];
     const authoredSections = slides.map((slide) => markdownSection(slide));
     const insertionIndex = gameVariantAfter[id];
     if (insertionIndex < 1 || insertionIndex >= authoredSections.length) {
@@ -2485,9 +2551,17 @@ function page({ id, title, slides }) {
     );
     const generatedContext = [
         markdownSection(studioSlide(studioBriefs[id]), 'course-extra-slide course-algorithmic-studio'),
+        markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
         ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
     ];
-    const sections = [authoredSections[0], ...generatedContext, ...authoredSections.slice(1)].join('\n');
+    const practice = markdownSection(
+        practiceSlide(extra),
+        'course-extra-slide lab-practice-slide',
+        `data-course-practice="${id}"`
+    );
+    const verification = markdownSection(verificationSlide(extra));
+    const handoff = markdownSection(handoffSlide(extra));
+    const sections = [authoredSections[0], ...generatedContext, ...authoredSections.slice(1), verification, handoff, practice].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>
@@ -2503,7 +2577,6 @@ function page({ id, title, slides }) {
 ${sections}
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>
@@ -2517,7 +2590,7 @@ for (const lecture of lectures) {
 const reviewRedirect = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="refresh" content="0; url=lecture12.html"><link rel="canonical" href="lecture12.html">
-<title>Mid-semester review · CS103</title></head><body><p>The review is now <a href="lecture12.html">Lecture 12 · Debugging & Assessment Debrief</a>.</p></body></html>\n`;
+<title>Mid-semester review · CS103</title></head><body><p>The review is now <a href="lecture12.html">Lecture 12 · Repair programs with evidence and tests</a>.</p></body></html>\n`;
 fs.writeFileSync(path.join(root, 'midsem-review.html'), reviewRedirect);
 
 console.log(`Generated ${lectures.length} chronological lecture pages.`);

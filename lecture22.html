@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 22: Applied Object Systems">
-    <title>Lecture 22: Applied Object Systems</title>
+    <meta name="description" content="CS103 Lecture 22: Compose domain objects with explicit policies">
+    <title>Lecture 22: Compose domain objects with explicit policies</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 22: Applied Object Systems
+# Lecture 22: Compose domain objects with explicit policies
 ## Compose domain objects, collections, and algorithms
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Rank tasks and model routes
+## Separate actors, tasks, relationships, and the policy that ranks candidates.
+
+**Studio thread:** Rank tasks and model routes
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,37 @@
 
 **Compare:** hard-coded selection versus an explicit replaceable policy
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Domain objects are the data structure’s elements. · Search and rank available flights
+
+The object model supplies flight records; standard algorithms filter and rank those records for a real booking workflow.
+
+~~~cpp
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+
+struct Flight { std::string code, from, to; double fare; };
+
+int main() {
+    std::vector<Flight> flights{{"AI1", "IDR", "DEL", 5100}, {"AI2", "IDR", "DEL", 4600}};
+    std::sort(flights.begin(), flights.end(),
+              [](const Flight& a, const Flight& b) { return a.fare < b.fare; });
+    auto match = std::find_if(flights.begin(), flights.end(),
+              [](const Flight& f) { return f.from == "IDR" && f.to == "DEL"; });
+    if (match != flights.end()) std::cout << match->code << " " << match->fare;
+}
+~~~
+
+**Takeaways**
+
+- Domain objects are the data structure’s elements.
+- Comparators encode a user-facing ranking rule.
+- Algorithms compose with the object model.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Assign one responsibility to each component
+## One component owns one reason to change
 
 - <code>Flight</code>: route, capacity, and availability invariant.
 - <code>Passenger</code>: passenger identity and contact value.
@@ -41,7 +72,7 @@
 High cohesion keeps each responsibility local.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A domain model names relationships
+## A domain model names the objects and rules that matter
 
 ~~~cpp
 struct Flight { std::string code; std::string from; std::string to; int seats; };
@@ -52,7 +83,7 @@ struct Booking { std::size_t flightIndex; std::size_t passengerIndex; };
 Indices express associations without ambiguous ownership.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Search applies a predicate to the collection
+## A predicate turns a domain question into reusable selection
 
 ~~~cpp
 auto matchesRoute = [requestedFrom, requestedTo](const Flight& flight) {
@@ -65,7 +96,7 @@ auto result = std::find_if(flights.begin(), flights.end(), matchesRoute);
 The lambda is a predicate: a callable returning true or false. Its capture list copies the two requested city values into the callable.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Sorting applies a comparator
+## A comparator makes ordering policy explicit and testable
 
 ~~~cpp
 std::sort(flights.begin(), flights.end(),
@@ -77,7 +108,7 @@ std::sort(flights.begin(), flights.end(),
 The comparator defines one consistent ordering relation.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · choose the next target
+## Game evolution: A comparator chooses the next target
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -103,14 +134,14 @@ if (!dirt.empty()) next=dirt[0];
 **Next unlock · L23:** integrate body, policy, routes, collision rules, and visualization into one verified capstone.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Routing is a graph application
+## Route planning applies graph algorithms to domain constraints
 
 Airports are vertices and direct flights are edges. Route optimization selects a path according to hops, time, distance, or cost.
 
 State the objective before choosing an algorithm.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Patterns separate policy from mechanism
+## Patterns separate replaceable policy from stable mechanism
 
 - Factory: choose which concrete service object to create.
 - Strategy: supply a pricing or ranking policy through an interface.
@@ -118,7 +149,7 @@ State the objective before choosing an algorithm.
 Use a design pattern only after the recurring responsibility problem is visible.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Compose domain objects with explicit predicates, comparators, and policies
 
 - Domain classes represent entities, values, and associations.
 - Collections expose search and sorting applications.
@@ -126,9 +157,50 @@ Use a design pattern only after the recurring responsibility problem is visible.
 - Routing applies graph structure to a stated objective.
 - Patterns name reusable responsibility arrangements.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Search and rank available flights with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Domain objects are the data structure’s elements.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Design classes for passengers, flights, and bookings with clear ownership.
+- Filter flights by route, date, and remaining capacity.
+- Sort matching flights by fare and then departure time.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Search and rank available flights without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="22" data-markdown><textarea data-template>
+## Solve five problems to transfer Search and rank available flights
+
+**IC151 lab practice · 5 problems**
+
+1. Design classes for passengers, flights, and bookings with clear ownership.
+1. Filter flights by route, date, and remaining capacity.
+1. Sort matching flights by fare and then departure time.
+1. Model airports as a graph and find a minimum-hop route.
+1. Apply one design pattern to make payment processing extensible.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

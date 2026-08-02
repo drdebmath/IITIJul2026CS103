@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 7: Functions I · Contracts & Calls">
-    <title>Lecture 7: Functions I · Contracts & Calls</title>
+    <meta name="description" content="CS103 Lecture 7: Give each operation a clear function contract">
+    <title>Lecture 7: Give each operation a clear function contract</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 7: Functions I
+# Lecture 7: Give each operation a clear function contract
 ## Give one operation a clear name and contract
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Give robot actions contracts
+## Stop one growing main function from mixing movement, sensing, and display.
+
+**Studio thread:** Give robot actions contracts
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,34 @@
 
 **Compare:** one monolithic procedure versus several testable functions
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## A function owns one clear responsibility. · Travel estimate behind a function contract
+
+The caller validates input, then a small function receives two values and returns one calculated result.
+
+~~~cpp
+#include <iostream>
+
+double estimateTravel(double distanceKm, double speedKmph) {
+    return distanceKm / speedKmph;
+}
+
+int main() {
+    double distance = 420;
+    double speed = 70;
+    if (distance >= 0 && speed > 0)
+        std::cout << "Travel time: " << estimateTravel(distance, speed) << " hours";
+}
+~~~
+
+**Takeaways**
+
+- A function owns one clear responsibility.
+- Parameters are inputs to this contract.
+- The return value is the calculated output.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## A function owns one task
+## One function performs one explainable operation
 
 A function contract states:
 
@@ -42,7 +70,7 @@ A function contract states:
 Small contracts reduce copy-paste and can be tested independently.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Read a definition from the outside inward
+## Read a function’s contract before its implementation
 
 ~~~cpp
 double rectangleArea(double length, double width) {
@@ -53,7 +81,7 @@ double rectangleArea(double length, double width) {
 Return type → name → parameters → body.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Declaration before use, definition once
+## Declare interfaces once and define each function once
 
 ~~~cpp
 #include <iostream>
@@ -70,7 +98,7 @@ double rectangleArea(double length, double width) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Value parameters are local copies
+## Value parameters isolate small inputs as local copies
 
 ~~~cpp
 int doubled(int value) {
@@ -82,7 +110,7 @@ int doubled(int value) {
 Changing <code>value</code> does not change the caller's argument.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a scoring contract
+## Game evolution: A scoring contract makes progress measurable
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -105,7 +133,7 @@ int main() {
 **Next unlock · L08:** deliberately mutate row and column through references.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Decompose a calculation into named steps
+## Named functions turn a calculation into testable steps
 
 ~~~cpp
 double subtotal(double price, int count) { return price * count; }
@@ -116,7 +144,7 @@ double total(double amount, double rate) { return amount + tax(amount, rate); }
 Each name states one responsibility.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: unnamed callable behavior
+## A lambda packages short callable behavior where it is used
 
 A lambda expression defines a small callable at its point of use.
 
@@ -127,16 +155,57 @@ auto isPositive = [](int value) { return value > 0; };
 Named functions remain the default for novice code. Lambdas return later as search and sorting applications.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Function contracts make behavior testable
 
 - A function contract states inputs, preconditions, and output.
 - A declaration makes a function known before its definition.
 - Value parameters are copies.
 - Prefer short functions with one explainable responsibility.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Travel estimate behind a function contract with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** A function owns one clear responsibility.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Write a function that returns the area of a rectangle.
+- Write a function that converts Celsius to Fahrenheit.
+- Write a boolean function that reports whether an integer is even.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Travel estimate behind a function contract without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="7" data-markdown><textarea data-template>
+## Solve five problems to transfer Travel estimate behind a function contract
+
+**IC151 lab practice · 5 problems**
+
+1. Write a function that returns the area of a rectangle.
+1. Write a function that converts Celsius to Fahrenheit.
+1. Write a boolean function that reports whether an integer is even.
+1. Refactor a unit converter so each conversion is a separate function.
+1. State the inputs, output, and precondition of a safe division function.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

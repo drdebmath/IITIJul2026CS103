@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 20: Inheritance & Runtime Polymorphism">
-    <title>Lecture 20: Inheritance & Runtime Polymorphism</title>
+    <meta name="description" content="CS103 Lecture 20: Select runtime behavior through safe interfaces">
+    <title>Lecture 20: Select runtime behavior through safe interfaces</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 20: Inheritance & Runtime Polymorphism
+# Lecture 20: Select runtime behavior through safe interfaces
 ## Select behavior from the runtime object safely
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Run multiple agent policies
+## Let sweep, nearest-dirt, and cautious agents act through one controller.
+
+**Studio thread:** Run multiple agent policies
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,38 @@
 
 **Compare:** a growing type switch versus virtual dispatch
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The caller depends on an abstraction. · Create notifications through one interface
+
+A factory returns a base pointer; virtual dispatch selects the concrete notification without conditionals at the call site.
+
+~~~cpp
+#include <memory>
+#include <string>
+
+class Notifier {
+public:
+    virtual std::string send() const = 0;
+    virtual ~Notifier() = default;
+};
+class Email : public Notifier {
+public:
+    std::string send() const override { return "email sent"; }
+};
+
+std::unique_ptr<Notifier> makeNotifier() {
+    return std::make_unique<Email>();
+}
+~~~
+
+**Takeaways**
+
+- The caller depends on an abstraction.
+- Virtual dispatch replaces type-switching.
+- The factory centralizes object creation.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Public and private inheritance make different promises
+## Public and private inheritance make different interface promises
 
 - Public inheritance preserves the base interface and models is-a.
 - Private inheritance is an implementation technique and does not promise substitutability.
@@ -39,14 +71,14 @@
 Composition is usually clearer than private inheritance.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: multiple and virtual inheritance
+## Virtual inheritance shares one common base in a diamond
 
 Multiple inheritance gives one derived class more than one direct base.
 
 In a diamond, virtual inheritance can share one common base subobject. Use these mechanisms only when the domain model genuinely requires them; they are not the starting point for polymorphism.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A virtual function enables dynamic dispatch
+## A virtual function selects the override from the runtime type
 
 ~~~cpp
 class Shape {
@@ -64,7 +96,7 @@ public:
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Own one polymorphic object safely
+## A virtual destructor makes base-pointer deletion safe
 
 ~~~cpp
 std::unique_ptr<Shape> shape = std::make_unique<Square>(4.0);
@@ -74,7 +106,7 @@ double result = shape->area();
 The virtual destructor makes deletion through the base interface safe. Lecture 21 will place differently typed objects in one owning container.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A factory centralizes concrete construction
+## A factory centralizes construction behind the interface
 
 ~~~cpp
 std::unique_ptr<Shape> makeSquare(double side) {
@@ -85,7 +117,7 @@ std::unique_ptr<Shape> makeSquare(double side) {
 A factory returns an abstraction while choosing a concrete type in one place.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · one runtime-selected actor
+## Game evolution: One interface selects an actor at runtime
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -110,7 +142,7 @@ int main() {
 **Next unlock · L21:** own several differently typed actors in one world.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Test the substitutability contract
+## Every derived type must pass the base-level tests
 
 For every derived type, test:
 
@@ -120,7 +152,7 @@ For every derived type, test:
 - behavior added by a new derived type without changing existing callers.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Interfaces, safe ownership, and substitutability earn polymorphism
 
 - Public inheritance promises substitutability.
 - Dynamic dispatch selects an override at runtime.
@@ -128,9 +160,50 @@ For every derived type, test:
 - Own derived objects with smart pointers.
 - Factories separate construction choice from use.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Create notifications through one interface with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The caller depends on an abstraction.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Model a diamond hierarchy and resolve it using virtual inheritance.
+- Compare public and private inheritance with a working example.
+- Implement a Shape hierarchy and compute total area polymorphically.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Create notifications through one interface without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="20" data-markdown><textarea data-template>
+## Solve five problems to transfer Create notifications through one interface
+
+**IC151 lab practice · 5 problems**
+
+1. Model a diamond hierarchy and resolve it using virtual inheritance.
+1. Compare public and private inheritance with a working example.
+1. Implement a Shape hierarchy and compute total area polymorphically.
+1. Create a factory that builds payment strategies from a code.
+1. Trace construction and destruction order in multiple inheritance.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

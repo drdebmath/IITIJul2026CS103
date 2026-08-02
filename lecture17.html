@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 17: Search Trees, Heaps & Sorting">
-    <title>Lecture 17: Search Trees, Heaps & Sorting</title>
+    <meta name="description" content="CS103 Lecture 17: Preserve invariants to search and sort efficiently">
+    <title>Lecture 17: Preserve invariants to search and sort efficiently</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 17: Search Trees, Heaps & Sorting
+# Lecture 17: Preserve invariants to search and sort efficiently
 ## Preserve an invariant to obtain efficient operations
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Rank routes and accelerate search
+## Find ordered data or repeatedly select the most promising route candidate.
+
+**Studio thread:** Rank routes and accelerate search
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,32 @@
 
 **Compare:** linear baseline versus binary search; bubble sort versus merge sort
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## A heap encodes priority as a structural invariant. · Prioritize emergency maintenance
+
+A heap makes the highest-priority request available immediately while preserving efficient insertion.
+
+~~~cpp
+#include <iostream>
+#include <queue>
+
+int main() {
+    std::priority_queue<int> severity;
+    severity.push(2);
+    severity.push(5);
+    severity.push(3);
+    std::cout << "Next severity: " << severity.top();
+}
+~~~
+
+**Takeaways**
+
+- A heap encodes priority as a structural invariant.
+- The largest stored severity is exposed first.
+- The application inherits logarithmic insertion.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Binary search requires sorted data
+## Binary search halves a sorted range without overflow
 
 ~~~cpp
 while (left <= right) {
@@ -45,7 +71,7 @@ while (left <= right) {
 Each comparison discards one impossible half.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A binary search tree stores the same ordering structurally
+## A BST stores ordering in its left and right subtrees
 
 For every node:
 
@@ -56,7 +82,7 @@ For every node:
 Choose and document one policy for duplicate keys.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Insert by following the invariant
+## BST insertion preserves order by following comparisons
 
 ~~~cpp
 struct Node { int key; Node* left; Node* right; };
@@ -70,14 +96,14 @@ Node* insert(Node* root, int key) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A binary heap exposes the highest priority
+## A heap keeps the highest-priority element at the root
 
 A max heap is a complete binary tree where every parent is at least its children.
 
 In a zero-based array, children of index <code>i</code> are <code>2*i+1</code> and <code>2*i+2</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## heapify restores heap order
+## heapify restores parent-child order after one local violation
 
 ~~~cpp
 void heapify(std::vector<int>& a, int size, int root) {
@@ -90,7 +116,7 @@ void heapify(std::vector<int>& a, int size, int root) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Merge sort divides, solves, and combines
+## Merge sort recursively sorts halves and combines them stably
 
 1. Divide the range into two halves.
 2. Recursively sort each half.
@@ -99,7 +125,7 @@ void heapify(std::vector<int>& a, int size, int root) {
 Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · faster grid decisions
+## Game evolution: Invariants make grid decisions faster
 
 | L17 tool | Exact game part enabled |
 |---|---|
@@ -126,7 +152,7 @@ bool occupied(const int cells[], int count, int id) {
 **Next unlock · L18:** package state and operations inside a reliably constructed game object.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## State the invariant before choosing a search or sort
 
 - Binary search exploits sorted-array order.
 - A BST encodes ordering in links.
@@ -134,9 +160,50 @@ bool occupied(const int cells[], int count, int id) {
 - heapify repairs a local invariant.
 - Merge sort applies recursive decomposition to sequences.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Prioritize emergency maintenance with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** A heap encodes priority as a structural invariant.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Implement iterative binary search and count comparisons.
+- Insert, search, and print an inorder traversal of a BST.
+- Build a min-heap without using priority_queue.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Prioritize emergency maintenance without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="17" data-markdown><textarea data-template>
+## Solve five problems to transfer Prioritize emergency maintenance
+
+**IC151 lab practice · 5 problems**
+
+1. Implement iterative binary search and count comparisons.
+1. Insert, search, and print an inorder traversal of a BST.
+1. Build a min-heap without using priority_queue.
+1. Implement merge sort and measure its comparisons.
+1. Choose the best structure for a dictionary, task scheduler, and undo history.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

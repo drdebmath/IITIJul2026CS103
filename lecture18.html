@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 18: Object Design & Value Semantics">
-    <title>Lecture 18: Object Design & Value Semantics</title>
+    <meta name="description" content="CS103 Lecture 18: Protect object invariants across their lifetime">
+    <title>Lecture 18: Protect object invariants across their lifetime</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 18: Object Design & Value Semantics
+# Lecture 18: Protect object invariants across its lifetime
 ## Protect invariants and make object lifetime predictable
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Turn the robot into a reliable object
+## Prevent any caller from creating or leaving an invalid robot state.
+
+**Studio thread:** Turn the robot into a reliable object
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,39 @@
 
 **Compare:** public record mutation versus a small invariant-preserving interface
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## A constructor establishes invariants. · Encapsulate a bank account
+
+The class protects its invariant—balance cannot become negative—while constructors establish a valid starting state.
+
+~~~cpp
+#include <string>
+
+class Account {
+    std::string owner_;
+    double balance_;
+public:
+    Account(const std::string& owner, double opening)
+        : owner_(owner), balance_(0.0) {
+        if (opening > 0.0) balance_ = opening;
+    }
+    bool withdraw(double amount) {
+        if (amount <= 0 || amount > balance_) return false;
+        balance_ -= amount;
+        return true;
+    }
+    double balance() const { return balance_; }
+};
+~~~
+
+**Takeaways**
+
+- A constructor establishes invariants.
+- Private state changes through controlled operations.
+- Methods express domain rules, not just setters.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## A class combines state, behavior, and access control
+## A class protects state by combining data, behavior, and access control
 
 ~~~cpp
 class Counter {
@@ -46,7 +79,7 @@ public:
 The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Constructors establish valid state
+## Constructors establish valid initial state before use
 
 ~~~cpp
 class Rectangle {
@@ -64,7 +97,7 @@ public:
 Overloaded constructors may offer several distinct valid initialization paths.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Copy construction and assignment are different
+## Copy construction creates; assignment replaces an existing value
 
 ~~~cpp
 Rectangle first(4.0, 3.0);
@@ -76,7 +109,7 @@ assigned = first;          // copy assignment: existing object
 Value members such as numbers and strings usually support the Rule of Zero.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a valid Cleaner object
+## Game evolution: A class protects a valid Cleaner
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -102,14 +135,14 @@ int main(){ Cleaner first(1,1); Cleaner replay=first;
 **Next unlock · L19:** model genuine is-a actors and has-a capabilities.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Destruction and RAII bind resource lifetime to an object
+## RAII binds resource release to object lifetime
 
 A destructor runs when an object's lifetime ends. RAII stores a resource in an owning object whose destructor releases it.
 
 Prefer <code>std::string</code>, <code>std::vector</code>, and smart pointers over handwritten ownership and deep-copy code.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: operators should preserve value meaning
+## Overloaded operators preserve the meaning users expect from values
 
 Useful value-type operations include:
 
@@ -121,7 +154,7 @@ Useful value-type operations include:
 Do not change an operator's expected meaning.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Value types depend on invariants, ownership, and predictable lifetime
 
 - A class should protect a meaningful invariant.
 - Constructors initialize; assignment replaces an existing value.
@@ -129,9 +162,50 @@ Do not change an operator's expected meaning.
 - Prefer Rule-of-Zero member types.
 - Overloads must keep interfaces unsurprising.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Encapsulate a bank account with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** A constructor establishes invariants.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Design a Temperature class that rejects values below absolute zero.
+- Implement default, parameterized, and copy constructors for a Matrix class.
+- Overload + and == for a Fraction class.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Encapsulate a bank account without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="18" data-markdown><textarea data-template>
+## Solve five problems to transfer Encapsulate a bank account
+
+**IC151 lab practice · 5 problems**
+
+1. Design a Temperature class that rejects values below absolute zero.
+1. Implement default, parameterized, and copy constructors for a Matrix class.
+1. Overload + and == for a Fraction class.
+1. Overload stream input and output for a Time value.
+1. Implement a dynamic Buffer class using the rule of three.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

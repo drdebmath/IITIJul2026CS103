@@ -3,23 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 1: Programming & Problem Solving">
-    <title>Lecture 1: Programming & Problem Solving</title>
+    <meta name="description" content="CS103 Lecture 1: Turn a precise problem into a running C++ program">
+    <title>Lecture 1: Turn a precise problem into a running C++ program</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 1: Programming & Problem Solving
-## From a problem to a running C++ program
+# Lecture 1: Turn a precise problem into a running C++ program
+## Turn a precise problem into a running C++ program
 
-No computer or programming experience is assumed.
+Bring one problem you can explain in plain language; we will turn it into a small, observable program.
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Demo theatre → first robot command
+## Make a machine carry out one observable action.
+
+**Studio thread:** Demo theatre → first robot command
 
 | Ask | Today’s answer |
 |---|---|
@@ -34,8 +36,31 @@ No computer or programming experience is assumed.
 
 **Compare:** a fixed command list versus a rule-based cleaner (preview only)
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Inputs become named values. · Travel-time estimator
+
+Turn a familiar quantity problem into the input → process → output pattern used by every program.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    double distanceKm, speedKmph;
+    std::cin >> distanceKm >> speedKmph;
+
+    double travelHours = distanceKm / speedKmph;
+    std::cout << "Estimated hours: " << travelHours << std::endl;
+}
+~~~
+
+**Takeaways**
+
+- Inputs become named values.
+- The formula is the algorithm.
+- Output makes the result observable.
+    </textarea></section>
     <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
-## By the final week, algorithms will come alive
+## Algorithms become concrete when state changes are visible
 
 | Build | State and structure | Algorithmic idea |
 |---|---|---|
@@ -50,7 +75,7 @@ No computer or programming experience is assumed.
 These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.
     </textarea></section>
     <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
-## One model, many ways to see it
+## One verified model can drive every view
 
 ~~~text
 Problem → model/state → algorithm → trace
@@ -66,7 +91,7 @@ Problem → model/state → algorithm → trace
 By semester end, you should be able to explain not only *what* you built, but *why its representation and algorithm fit the problem*.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A program follows an algorithm
+## An algorithm is a finite sequence of precise steps
 
 An **algorithm** is a finite sequence of precise steps.
 
@@ -80,7 +105,7 @@ Use the same problem-solving workflow every time:
 6. **Improve:** compare clarity, safety, generality, and cost.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## What the computer does
+## The CPU executes instructions while RAM holds active state
 
 - The **CPU** executes machine instructions.
 - RAM holds active instructions and values temporarily.
@@ -90,7 +115,7 @@ Use the same problem-solving workflow every time:
 **Abstraction** lets C++ express ideas without writing machine instructions directly.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Anatomy of the first program
+## main starts the program and output makes the result observable
 
 ~~~cpp
 #include <iostream>
@@ -104,7 +129,7 @@ int main() {
 <code>main</code> is the entry point. Output makes the program's result observable.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a visible first frame
+## Game evolution: Output makes the first world visible
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -125,7 +150,7 @@ int main() {
 **Next unlock · L02:** replace fixed symbols with named coordinates, score, and dirt state.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Edit, compile, link, run
+## The toolchain turns source code into a testable executable
 
 Save the source as <code>hello.cpp</code>, then use the toolchain:
 
@@ -139,7 +164,7 @@ g++ -std=c++17 hello.cpp -o hello
 - The executable is the program you run.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: why languages differ
+## Choose a language from the problem’s trade-offs
 
 A **programming language** makes some kinds of thinking and engineering easier than others.
 
@@ -150,7 +175,7 @@ A **programming language** makes some kinds of thinking and engineering easier t
 There is no universally best language. We learn transferable models and algorithms, then choose tools from the problem.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Comments, identifiers, and declarations
+## Names and declarations make program state readable
 
 ~~~cpp
 // A comment explains intent.
@@ -162,7 +187,7 @@ bool laboratoryOpen = true;
 An identifier names something. A declaration introduces a name and its type.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Edit → compile → link → run → test is a reliable workflow
 
 - Begin with input, process, and output.
 - An algorithm must be finite and precise.
@@ -170,9 +195,50 @@ An identifier names something. A declaration introduces a name and its type.
 - <code>main</code> is the C++ entry point.
 - Edit → compile → link → run → test.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Travel-time estimator with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Inputs become named values.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Read a temperature in Celsius and print the Fahrenheit equivalent.
+- Read the length and width of a classroom and print area and perimeter.
+- Read three quiz scores and print their arithmetic mean.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Travel-time estimator without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="1" data-markdown><textarea data-template>
+## Solve five problems to transfer Travel-time estimator
+
+**IC151 lab practice · 5 problems**
+
+1. Read a temperature in Celsius and print the Fahrenheit equivalent.
+1. Read the length and width of a classroom and print area and perimeter.
+1. Read three quiz scores and print their arithmetic mean.
+1. Read seconds and express the duration as hours, minutes, and seconds.
+1. Write an IPO chart and C++ program for estimating simple interest.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 6: Iteration II · for, Nested Loops & Invariants">
-    <title>Lecture 6: Iteration II · for, Nested Loops & Invariants</title>
+    <meta name="description" content="CS103 Lecture 6: Use ranges and invariants to control repetition">
+    <title>Lecture 6: Use ranges and invariants to control repetition</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 6: Iteration II
+# Lecture 6: Use ranges and invariants to control repetition
 ## for loops, nested loops, and invariants
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Sweep and render a grid
+## Visit each cell of a small room and print an ASCII frame.
+
+**Studio thread:** Sweep and render a grid
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,32 @@
 
 **Compare:** row-major versus column-major traversal
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The counter has one clear valid range. · Print a multiplication table without guessing bounds
+
+A counted loop names its start, continuation rule, and update in one place; the loop invariant explains what has already been printed.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int number;
+    std::cin >> number;
+    for (int multiplier = 1; multiplier <= 10; ++multiplier) {
+        std::cout << number << " × " << multiplier
+                  << " = " << number * multiplier << '\n';
+    }
+}
+~~~
+
+**Takeaways**
+
+- The counter has one clear valid range.
+- The update moves toward termination.
+- The invariant describes completed rows.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Counted repetition with for
+## A for loop makes initialization, bound, and update explicit
 
 ~~~cpp
 for (int step = 1; step <= 5; ++step) {
@@ -42,7 +68,7 @@ for (int step = 1; step <= 5; ++step) {
 Read it as initialize → test → body → update → test again.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## State the valid counter range
+## A correct counter states its valid range
 
 For five zero-based positions, valid indices are 0, 1, 2, 3, 4.
 
@@ -55,7 +81,7 @@ for (int i = 0; i < 5; ++i) {
 The condition directly states the upper boundary is excluded.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Nested loops enumerate combinations
+## Nested loops enumerate every coordinate or combination
 
 ~~~cpp
 for (int row = 0; row < 3; ++row) {
@@ -68,7 +94,7 @@ for (int row = 0; row < 3; ++row) {
 The inner loop completes every column for one row.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · render the board
+## Game evolution: Rendering turns state into a board
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -93,7 +119,7 @@ int main() {
 **Next unlock · L07:** name scoring and movement calculations as testable functions.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A loop invariant explains correctness
+## A loop invariant states what stays true after each iteration
 
 Example invariant:
 
@@ -102,7 +128,7 @@ Example invariant:
 Check the statement before the first iteration, after one update, and at termination.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Choose the loop from the stopping rule
+## Choose for, while, or do-while from the stopping rule
 
 - <code>while</code>: stop when an event or changing condition says so.
 - <code>do-while</code>: perform once, then decide.
@@ -111,7 +137,7 @@ Check the statement before the first iteration, after one update, and at termina
 The choice communicates intent; any loop can still be written incorrectly.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Boundary failures to diagnose
+## Boundary tests expose missing or duplicated iterations
 
 ~~~cpp
 for (int i = 0; i <= 5; ++i)   // six values
@@ -121,16 +147,57 @@ for (int i = 5; i >= 0; ++i)   // moves away from stopping
 These are diagnosis examples. Do not run the second loop unchanged.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## A correct loop states its range, invariant, and progress
 
 - Put initialization, test, and update together for counted work.
 - Nested loops traverse combinations such as rows × columns.
 - Write valid values before writing a bound.
 - Use an invariant to explain what is already correct.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Print a multiplication table without guessing bounds with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The counter has one clear valid range.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Print the first n odd numbers and their sum.
+- Draw an r-by-c rectangle using nested loops.
+- Trace a loop with <= changed to < and explain the difference.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Print a multiplication table without guessing bounds without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="6" data-markdown><textarea data-template>
+## Solve five problems to transfer Print a multiplication table without guessing bounds
+
+**IC151 lab practice · 5 problems**
+
+1. Print the first n odd numbers and their sum.
+1. Draw an r-by-c rectangle using nested loops.
+1. Trace a loop with <= changed to < and explain the difference.
+1. Rewrite a counted while loop as a for loop.
+1. Find and repair three non-terminating or off-by-one loops.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

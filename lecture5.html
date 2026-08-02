@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 5: Iteration I · while & Input Validation">
-    <title>Lecture 5: Iteration I · while & Input Validation</title>
+    <meta name="description" content="CS103 Lecture 5: Make loop state progress toward termination">
+    <title>Lecture 5: Make loop state progress toward termination</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 5: Iteration I
+# Lecture 5: Make loop state progress toward termination
 ## while, do-while, progress, and stopping
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Clean an unknown-length corridor
+## Continue cleaning until the wall, battery limit, or input sentinel is reached.
+
+**Studio thread:** Clean an unknown-length corridor
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,38 @@
 
 **Compare:** event-controlled repetition versus a guessed fixed number of steps
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## while repeats while a condition stays true. · Production-line quality scan
+
+A loop processes repeated measurements, counts defects, and stops early if too many failures appear.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int samples, defects = 0;
+    std::cin >> samples;
+
+    int i = 0;
+    while (i < samples) {
+        double diameter;
+        std::cin >> diameter;
+        if (diameter < 9.95 || diameter > 10.05) ++defects;
+        if (defects >= 3) break;
+        ++i;
+    }
+    std::cout << "Defects found: " << defects;
+}
+~~~
+
+**Takeaways**
+
+- while repeats while a condition stays true.
+- A state update must move toward termination.
+- break is appropriate when the result is already known.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Trace a while loop before running it
+## Trace the condition and update to predict every while iteration
 
 ~~~cpp
 int remaining = 3;
@@ -44,7 +76,7 @@ while (remaining > 0) {
 Trace: 3 → 2 → 1 → stop at 0.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Every loop needs progress
+## Every loop update must move toward termination
 
 Before each iteration, ask:
 
@@ -55,7 +87,7 @@ Before each iteration, ask:
 If no state moves toward a false condition, the loop may never terminate.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Sentinel input handles an unknown count
+## A sentinel lets a loop process an unknown number of inputs
 
 ~~~cpp
 int value = 0;
@@ -70,7 +102,7 @@ while (value != -1) {
 The sentinel <code>-1</code> ends input and is not added.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## do-while validates after the first attempt
+## do-while validates input after the first attempt
 
 ~~~cpp
 double height = 0.0;
@@ -83,7 +115,7 @@ do {
 The body runs once before the condition is tested.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · the game loop
+## Game evolution: A loop advances the game until it stops
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -107,7 +139,7 @@ int main() {
 **Next unlock · L06:** redraw every row and column after each turn.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Three common loop failures
+## Stalled updates and wrong bounds break loops
 
 - No update: the condition never changes.
 - Wrong direction: the update moves away from stopping.
@@ -116,7 +148,7 @@ int main() {
 Write the intended values beside the loop before choosing the comparison.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Practical pattern: scan until enough defects
+## Stop a scan as soon as the answer is known
 
 ~~~cpp
 while (tested < available && defects < 3) {
@@ -130,7 +162,7 @@ while (tested < available && defects < 3) {
 Both stopping reasons remain visible in the condition.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Choose a loop by its stopping rule and prove its progress
 
 - <code>while</code> may execute zero times.
 - <code>do-while</code> executes at least once.
@@ -138,9 +170,50 @@ Both stopping reasons remain visible in the condition.
 - State must make measurable progress.
 - Trace normal, boundary, and invalid cases.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Production-line quality scan with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** while repeats while a condition stays true.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Read values until a sentinel and report minimum, maximum, and mean.
+- Validate a positive password length using a do-while loop.
+- Count down from an input value to zero with while.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Production-line quality scan without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="5" data-markdown><textarea data-template>
+## Solve five problems to transfer Production-line quality scan
+
+**IC151 lab practice · 5 problems**
+
+1. Read values until a sentinel and report minimum, maximum, and mean.
+1. Validate a positive password length using a do-while loop.
+1. Count down from an input value to zero with while.
+1. Keep asking for a temperature until it lies in a stated safe range.
+1. Trace and repair a while loop whose control variable never changes.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 21: Polymorphic Data Structures">
-    <title>Lecture 21: Polymorphic Data Structures</title>
+    <meta name="description" content="CS103 Lecture 21: Separate polymorphism, ownership, and graph links">
+    <title>Lecture 21: Separate polymorphism, ownership, and graph links</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 21: Polymorphic Data Structures
+# Lecture 21: Separate polymorphism, ownership, and graph links
 ## Store varied behavior behind one safe interface
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Own a mixed actor world
+## Store Snake and Cleaner objects together while keeping their relationships safe.
+
+**Studio thread:** Own a mixed actor world
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,36 @@
 
 **Compare:** owning smart pointers versus non-owning indices
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Polymorphism lets one structure store varied behavior. · Store heterogeneous shapes safely
+
+A container of owning base pointers becomes an extensible data structure whose aggregation algorithm is independent of concrete types.
+
+~~~cpp
+#include <memory>
+#include <vector>
+
+class Shape {
+public:
+    virtual double area() const = 0;
+    virtual ~Shape() = default;
+};
+
+double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
+    double total = 0;
+    for (const auto& shape : shapes) total += shape->area();
+    return total;
+}
+~~~
+
+**Takeaways**
+
+- Polymorphism lets one structure store varied behavior.
+- unique_ptr makes ownership explicit.
+- The aggregation algorithm depends only on the interface.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## A heterogeneous container owns one base interface
+## A heterogeneous container owns varied objects through one interface
 
 ~~~cpp
 std::vector<std::unique_ptr<Shape>> shapes;
@@ -42,7 +72,7 @@ shapes.push_back(std::make_unique<Square>(3.0));
 Concrete types differ; ownership and the operation contract are uniform.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Algorithms use only the promised operation
+## Algorithms stay reusable through promised interface operations
 
 ~~~cpp
 double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
@@ -55,7 +85,7 @@ double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
 Adding a new shape does not change this traversal.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## An object graph stores entities and relationships
+## An object graph separates entities from their relationships
 
 ~~~text
 [Indore] --rail--> [Ujjain]
@@ -68,7 +98,7 @@ Adding a new shape does not change this traversal.
 Vertices model entities; edges model relationships. The graph is a structure, not an external visualization service.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Choose graph storage from operations
+## Graph storage follows the operations the application needs
 
 - Adjacency list: store outgoing neighbors for each vertex.
 - Edge list: store relationships as records.
@@ -77,14 +107,14 @@ Vertices model entities; edges model relationships. The graph is a structure, no
 Polymorphism is useful only when vertex or edge behavior genuinely varies.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Ownership must stay unambiguous
+## Ownership stays independent from graph connectivity
 
 Let the graph own vertices and edges with smart pointers. Store non-owning IDs or indices for relationships when possible.
 
 Avoid cycles of shared ownership; graph connectivity is not the same as memory ownership.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a mixed actor world
+## Game evolution: Actors share a graph without sharing ownership
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -108,14 +138,14 @@ int main(){ std::vector<std::unique_ptr<Actor>> actors;
 **Next unlock · L22:** choose and compare route and task-selection policies over this world.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Extension exercise
+## Add one actor without changing the controller
 
 Add a <code>WeightedEdge</code> with a cost and a <code>ScheduledEdge</code> with departure time.
 
 Write one traversal that prints every edge through the base interface, then identify which operations do not require polymorphism.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Polymorphism, ownership, and graph links stay independently testable
 
 - Heterogeneous containers combine a base contract with safe ownership.
 - Algorithms depend on operations, not concrete type names.
@@ -123,9 +153,50 @@ Write one traversal that prints every edge through the base interface, then iden
 - Pick adjacency representation from required operations.
 - Keep graph links separate from ownership links.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Store heterogeneous shapes safely with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Polymorphism lets one structure store varied behavior.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Implement Circle and Rectangle classes for the shape container.
+- Create a polymorphic graph whose edges compute different travel costs.
+- Write a deep-copy operation for a container of cloneable objects.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Store heterogeneous shapes safely without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="21" data-markdown><textarea data-template>
+## Solve five problems to transfer Store heterogeneous shapes safely
+
+**IC151 lab practice · 5 problems**
+
+1. Implement Circle and Rectangle classes for the shape container.
+1. Create a polymorphic graph whose edges compute different travel costs.
+1. Write a deep-copy operation for a container of cloneable objects.
+1. Add a new shape without modifying the total-area algorithm.
+1. Compare a polymorphic container with std::variant for this problem.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

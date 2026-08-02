@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 16: Recursive Decomposition in Practice">
-    <title>Lecture 16: Recursive Decomposition in Practice</title>
+    <meta name="description" content="CS103 Lecture 16: Prove recursive progress to a base case">
+    <title>Lecture 16: Prove recursive progress to a base case</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 16: Recursive Decomposition in Practice
+# Lecture 16: Prove recursive progress to a base case
 ## Prove a smaller call reaches a base case
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Explore mazes and repeated subproblems
+## Search choices, undo dead ends, and avoid recomputing identical states.
+
+**Studio thread:** Explore mazes and repeated subproblems
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,31 @@
 
 **Compare:** direct recursion versus memoized or iterative solutions
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The base case handles an empty or one-node list. · Reverse a linked chain recursively
+
+The recursive call solves the smaller tail; pointer rewiring makes the old head the new tail.
+
+~~~cpp
+struct Node { int value; Node* next; };
+
+Node* reverse(Node* head) {
+    if (!head || !head->next) return head;
+    Node* newHead = reverse(head->next);
+    head->next->next = head;
+    head->next = nullptr;
+    return newHead;
+}
+~~~
+
+**Takeaways**
+
+- The base case handles an empty or one-node list.
+- The call stack remembers each old head.
+- The algorithm is meaningful because of the linked structure.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Trace the call stack
+## Each recursive call adds a frame and must eventually return
 
 For <code>factorial(3)</code>:
 
@@ -41,7 +66,7 @@ For <code>factorial(3)</code>:
 4. Waiting frames finish in reverse order.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## State base case and progress together
+## Every recursive call moves toward its base case
 
 ~~~cpp
 int factorial(int n) {
@@ -53,7 +78,7 @@ int factorial(int n) {
 The argument decreases, so a non-negative input reaches the base case.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reverse a linked list recursively
+## Recursive reversal rewires one node and delegates the suffix
 
 ~~~cpp
 Node* reverse(Node* head) {
@@ -66,14 +91,14 @@ Node* reverse(Node* head) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Backtracking generates permutations
+## Backtracking explores, recurses, and undoes each choice
 
 Choose one value for the current position, recursively arrange the remainder, then undo the choice.
 
 The data structure is an array; recursion supplies the search order.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · recursive maze search
+## Game evolution: Recursive search explores and undoes choices
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -97,14 +122,14 @@ bool reaches(std::vector<std::string>& grid,int row,int column) {
 **Next unlock · L17:** accelerate repeated collision checks and prioritize dirt.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: longest common subsequence
+## Memoization avoids repeated subproblems in LCS
 
 For two strings, an LCS recurrence compares their final characters and reduces one or both prefixes.
 
 The direct recursive version repeats subproblems. Memoization stores results so identical states are solved once.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Account for time and space
+## Recursion trades stack space and repeated work for clarity
 
 - Recursive list reversal: O(n) time, O(n) call-stack space.
 - Iterative reversal: O(n) time, O(1) auxiliary space.
@@ -113,16 +138,57 @@ The direct recursive version repeats subproblems. Memoization stores results so 
 Complexity describes growth, not stopwatch seconds.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Prove termination, trace frames, and measure recursive cost
 
 - A recursive call must receive a smaller problem.
 - A base case handles the smallest problem directly.
 - Stack frames consume space.
 - Recursion can expose natural structure, while iteration may use less memory.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Reverse a linked chain recursively with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The base case handles an empty or one-node list.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Trace recursive factorial and draw every stack frame.
+- Generate all permutations of a string without duplicates.
+- Compute the longest common subsequence recursively with memoization.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Reverse a linked chain recursively without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="16" data-markdown><textarea data-template>
+## Solve five problems to transfer Reverse a linked chain recursively
+
+**IC151 lab practice · 5 problems**
+
+1. Trace recursive factorial and draw every stack frame.
+1. Generate all permutations of a string without duplicates.
+1. Compute the longest common subsequence recursively with memoization.
+1. Reverse a linked list iteratively and compare space use.
+1. Implement bucket sort for normalized decimal values.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

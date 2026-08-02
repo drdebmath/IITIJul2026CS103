@@ -2,13 +2,7 @@
     'use strict';
 
     const timeZone = 'Asia/Kolkata';
-    const timeEndpoint = 'https://gettimeapi.dev/v1/time?timezone=Asia%2FKolkata';
-    const batches = {
-        B1: { day: 'Monday', start: '08:30', end: '11:25', finalDate: '2026-11-16', dates: ['2026-08-10', '2026-08-17', '2026-08-24', '2026-08-31', '2026-09-07', '2026-09-14', '2026-10-05', '2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02', '2026-11-09'] },
-        B2: { day: 'Monday', start: '13:30', end: '16:25', finalDate: '2026-11-16', dates: ['2026-08-10', '2026-08-17', '2026-08-24', '2026-08-31', '2026-09-07', '2026-09-14', '2026-10-05', '2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02', '2026-11-09'] },
-        B3: { day: 'Thursday', start: '08:30', end: '11:25', finalDate: '2026-11-19', dates: ['2026-08-06', '2026-08-13', '2026-08-20', '2026-08-27', '2026-09-03', '2026-09-10', '2026-10-08', '2026-10-15', '2026-10-22', '2026-10-29', '2026-11-05', '2026-11-12'] },
-        B4: { day: 'Saturday', start: '13:30', end: '16:25', finalDate: '2026-11-21', dates: ['2026-08-08', '2026-08-22', '2026-08-29', '2026-09-05', '2026-09-12', '2026-09-17', '2026-10-10', '2026-10-17', '2026-10-24', '2026-10-31', '2026-11-07', '2026-11-14'] }
-    };
+    const batches = window.CS103Data.labBatches;
 
     function meetingDate(batch, index, boundary) {
         const data = batches[batch];
@@ -26,10 +20,35 @@
             <th scope="row">${String(index + 1).padStart(2, '0')}</th>
             ${Object.keys(batches).map((batch) => {
                 const date = meetingDate(batch, index, 'start');
-                const special = batch === 'B4' && batches[batch].dates[index] === '2026-09-17';
-                return `<td${special ? ' class="special-date"' : ''}><strong>${formatDate(date)}</strong><span>${batches[batch].start}–${batches[batch].end}${special ? ' · Saturday slot on Thursday' : ''}</span></td>`;
+                const exception = batches[batch].exceptions?.[batches[batch].dates[index]] || '';
+                return `<td${exception ? ' class="special-date"' : ''}><strong>${formatDate(date)}</strong><span>${batches[batch].start}–${batches[batch].end}${exception ? ` · ${exception}` : ''}</span></td>`;
             }).join('')}
         </tr>`).join('');
+    }
+
+    function renderScheduleFacts() {
+        const firstLab = Object.entries(batches)
+            .map(([batch, data]) => ({ batch, date: meetingDate(batch, 0, 'start') }))
+            .sort((left, right) => left.date - right.date)[0];
+        const firstLabTitle = document.getElementById('first-lab-title');
+        if (firstLabTitle && firstLab) firstLabTitle.textContent = `${formatDate(firstLab.date)} · ${firstLab.batch}`;
+
+        const summary = document.getElementById('schedule-summary');
+        if (summary) summary.textContent = `${batches.B1.dates.length} regular labs per batch · final examinations are listed below.`;
+
+        Object.entries(batches).forEach(([batch, data]) => {
+            const card = document.querySelector(`[data-batch-card="${batch}"]`);
+            if (!card) return;
+            card.querySelector('[data-batch-day]').textContent = data.day;
+            card.querySelector('[data-batch-time]').textContent = `${data.start}–${data.end}`;
+            card.querySelector('[data-batch-first]').textContent = `First lab · ${formatDate(meetingDate(batch, 0, 'start'))}`;
+
+            const exam = document.querySelector(`[data-batch-exam="${batch}"]`);
+            if (exam) exam.textContent = `${formatDate(new Date(`${data.finalDate}T${data.start}:00+05:30`))} · ${data.start}–${data.end}`;
+        });
+
+        const finalTitle = document.getElementById('final-exam-title');
+        if (finalTitle) finalTitle.textContent = 'Each batch has one scheduled final laboratory examination.';
     }
 
     function allMeetings(selection) {
@@ -63,14 +82,6 @@
         const live = now >= upcoming.date && now <= upcoming.end;
         title.textContent = `${live ? 'Live now · ' : ''}Batch ${upcoming.batch} · ${upcoming.kind === 'final' ? 'Final lab examination' : `Lab ${String(upcoming.index + 1).padStart(2, '0')}`}`;
         meta.textContent = `${formatDate(upcoming.date)} · ${data.start}–${data.end} IST · CITC first floor · ${source}`;
-    }
-
-    async function queryTime() {
-        const response = await fetch(timeEndpoint, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Time service returned ${response.status}`);
-        const payload = await response.json();
-        if (!payload.iso8601) throw new Error('Time response missing iso8601');
-        return new Date(payload.iso8601);
     }
 
     function getCookie(name) {
@@ -114,22 +125,13 @@
         sync();
     }
 
-    async function initialize() {
+    function initialize() {
         renderSchedule();
+        renderScheduleFacts();
         setupChecklist();
         setupTheme();
         const picker = document.getElementById('batch-picker');
-        let synchronizedAt = new Date();
-        let performanceAt = performance.now();
-        let source = 'device-time fallback';
-        try {
-            synchronizedAt = await queryTime();
-            performanceAt = performance.now();
-            source = 'network time';
-        } catch (error) {
-            console.warn('Network time unavailable; using device time.', error);
-        }
-        const tick = () => renderNextLab(new Date(synchronizedAt.getTime() + performance.now() - performanceAt), source);
+        const tick = () => renderNextLab(new Date(), 'Device clock · Asia/Kolkata');
         picker.addEventListener('change', () => {
             setCookie('ic151_batch', picker.value);
             tick();

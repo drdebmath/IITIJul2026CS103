@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 11: Strings & Text Processing">
-    <title>Lecture 11: Strings & Text Processing</title>
+    <meta name="description" content="CS103 Lecture 11: Process owned text with explicit boundaries">
+    <title>Lecture 11: Process owned text with explicit boundaries</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 11: Strings & Text Processing
+# Lecture 11: Process owned text with explicit boundaries
 ## Prefer owned text values, then study their representation
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Record and replay ASCII animation
+## Read commands and render complete, validated text frames.
+
+**Studio thread:** Record and replay ASCII animation
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,36 @@
 
 **Compare:** rebuilding a frame versus incrementally editing the terminal
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## std::string owns and sizes text safely. · Validate an institute enrollment ID
+
+A useful text rule combines string length, fixed prefixes, and character classification.
+
+~~~cpp
+#include <cctype>
+#include <iostream>
+#include <string>
+
+bool validId(const std::string& id) {
+    if (id.size() != 9 || id.substr(0, 2) != "BT") return false;
+    for (std::size_t i = 2; i < id.size(); ++i)
+        if (!std::isdigit(static_cast<unsigned char>(id[i]))) return false;
+    return true;
+}
+
+int main() {
+    std::cout << std::boolalpha << validId("BT2601034");
+}
+~~~
+
+**Takeaways**
+
+- std::string owns and sizes text safely.
+- Validation is a sequence of explicit predicates.
+- cctype functions require careful character conversion.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## std::string owns and sizes its text
+## std::string owns, sizes, and edits its character sequence
 
 ~~~cpp
 #include <string>
@@ -43,7 +73,7 @@ std::cout << name.size() << '\n';
 <code>std::string</code> manages its character storage.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Read a complete line
+## getline reads a complete line, including spaces
 
 ~~~cpp
 std::string sentence;
@@ -53,7 +83,7 @@ std::getline(std::cin, sentence);
 <code>getline</code> preserves spaces. When mixing formatted extraction and line input, consume the pending newline deliberately.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Search and slice with explicit positions
+## Positions and lengths make text operations explicit
 
 ~~~cpp
 std::size_t dash = code.find('-');
@@ -65,7 +95,7 @@ if (dash != std::string::npos) {
 Always check whether a search succeeded.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Classify characters safely
+## Character classification requires a safe unsigned-char conversion
 
 ~~~cpp
 unsigned char ch = static_cast<unsigned char>(text[i]);
@@ -75,7 +105,7 @@ if (std::isdigit(ch)) ++digits;
 Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a replay string
+## Game evolution: A replay string stores commands
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -100,7 +130,7 @@ int main() {
 **Next unlock · L12:** turn a replay into a repeatable regression test.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Validate one rule at a time
+## Separate predicates make text validation reliable
 
 ~~~cpp
 bool valid = id.size() == 9;
@@ -111,14 +141,14 @@ for (std::size_t i = 2; valid && i < id.size(); ++i) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: C-style strings
+## C-style strings end at a null character and need manual bounds care
 
 A C-style string is a character array ending at the first null character <code>'\0'</code>.
 
 Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Safe text processing prefers ownership, parsing rules, and bounds
 
 - <code>std::string</code> is the default owned text type.
 - Check search results and index bounds.
@@ -126,9 +156,50 @@ Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a de
 - Character classification requires a safe unsigned value.
 - A buffer overflow is undefined behavior, not a recoverable string operation.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Validate an institute enrollment ID with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** std::string owns and sizes text safely.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Normalize a full name to title case while preserving spaces.
+- Count words without using stringstream.
+- Find every occurrence of a substring, including overlaps.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Validate an institute enrollment ID without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="11" data-markdown><textarea data-template>
+## Solve five problems to transfer Validate an institute enrollment ID
+
+**IC151 lab practice · 5 problems**
+
+1. Normalize a full name to title case while preserving spaces.
+1. Count words without using stringstream.
+1. Find every occurrence of a substring, including overlaps.
+1. Validate a password against four independent rules.
+1. Implement run-length encoding and decoding for a string.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

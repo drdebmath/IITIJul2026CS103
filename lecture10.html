@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 10: Arrays II · Matrices & std::vector">
-    <title>Lecture 10: Arrays II · Matrices & std::vector</title>
+    <meta name="description" content="CS103 Lecture 10: Match matrices and vectors to their operations">
+    <title>Lecture 10: Match matrices and vectors to their operations</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 10: Arrays II
+# Lecture 10: Match matrices and vectors to their operations
 ## Matrices and runtime-sized contiguous sequences
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Grow the grid world
+## Store rooms and paths whose dimensions are known only at runtime.
+
+**Studio thread:** Grow the grid world
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,34 @@
 
 **Compare:** fixed 2D array versus nested vectors
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Each index stays within its own dimension. · Summarize a classroom score matrix
+
+A matrix needs one loop per dimension; a vector is useful when the number of stored values is known only at runtime.
+
+~~~cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
+    for (std::size_t row = 0; row < scores.size(); ++row) {
+        int total = 0;
+        for (std::size_t col = 0; col < scores[row].size(); ++col)
+            total += scores[row][col];
+        std::cout << "row " << row << " total=" << total << '\n';
+    }
+}
+~~~
+
+**Takeaways**
+
+- Each index stays within its own dimension.
+- size() supplies the actual bound.
+- The structure matches rows containing columns.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## A matrix needs one index per dimension
+## A matrix needs one bound for each dimension
 
 ~~~cpp
 int image[2][3]{{10, 20, 30}, {40, 50, 60}};
@@ -41,7 +69,7 @@ int pixel = image[1][2];  // row 1, column 2
 Both dimensions are zero-based.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a 2D world
+## Game evolution: A 2D structure represents the world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -65,7 +93,7 @@ int main() {
 **Next unlock · L11:** record and validate a replay as owned text.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Traverse rows and columns with matching bounds
+## Matching bounds keep row and column traversal safe
 
 ~~~cpp
 for (int row = 0; row < 2; ++row) {
@@ -76,7 +104,7 @@ for (int row = 0; row < 2; ++row) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A vector owns a runtime-sized sequence
+## std::vector owns a contiguous sequence whose size can change
 
 ~~~cpp
 #include <vector>
@@ -89,7 +117,7 @@ readings.push_back(21);
 The vector grows while preserving contiguous element storage.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Bounds still matter
+## Dynamic size does not remove the need for bounds checks
 
 ~~~cpp
 for (std::size_t i = 0; i < readings.size(); ++i) {
@@ -100,7 +128,7 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 <code>at()</code> checks; <code>operator[]</code> assumes the index is valid.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Choose from the requirement
+## Choose array or vector from size and operation requirements
 
 | Requirement | Representation |
 |---|---|
@@ -110,7 +138,7 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 | rows whose lengths may differ | nested vectors |
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Practical pattern: row totals
+## Nested traversal makes each row total testable
 
 ~~~cpp
 std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
@@ -122,16 +150,57 @@ for (const auto& row : scores) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Storage follows size knowledge, ownership, and access operations
 
 - A matrix needs row and column bounds.
 - A vector owns a contiguous sequence whose size is known at runtime.
 - <code>size()</code> states the valid upper bound.
 - Choose fixed or dynamic storage from the requirement.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Summarize a classroom score matrix with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Each index stays within its own dimension.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Compute every row sum and column sum of a matrix.
+- Find the largest element and report its row and column.
+- Read n values into a vector and compute their mean.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Summarize a classroom score matrix without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="10" data-markdown><textarea data-template>
+## Solve five problems to transfer Summarize a classroom score matrix
+
+**IC151 lab practice · 5 problems**
+
+1. Compute every row sum and column sum of a matrix.
+1. Find the largest element and report its row and column.
+1. Read n values into a vector and compute their mean.
+1. Use at() to demonstrate checked access and handle failure.
+1. Choose array or vector for four stated storage requirements.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

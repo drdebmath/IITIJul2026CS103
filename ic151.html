@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#f5f7fb">
     <title>IC151 · Programming Laboratory</title>
     <link rel="stylesheet" href="ic151.css">
+    <script defer src="course-data.js"></script>
     <script>
         try {
             const savedTheme = localStorage.getItem('cs103-theme');
@@ -54,7 +55,7 @@
                 <strong>CITC building</strong>
                 <span>First floor · computers 1–72</span>
                 <dl>
-                    <div><dt>First lab</dt><dd>6 Aug · B3</dd></div>
+                    <div><dt>First lab</dt><dd id="first-lab-title">Loading schedule…</dd></div>
                     <div><dt>Duration</dt><dd>2 h 55 min</dd></div>
                     <div><dt>Environment</dt><dd>Ubuntu · g++</dd></div>
                 </dl>
@@ -66,7 +67,7 @@
                 <div>
                     <span class="live-label">Upcoming IC151 lab</span>
                     <strong id="next-lab-title">Checking the Autumn 2026 schedule…</strong>
-                    <span id="next-lab-meta">Network time · Asia/Kolkata</span>
+                    <span id="next-lab-meta">Device clock · Asia/Kolkata</span>
                 </div>
                 <label class="batch-picker">Your batch
                     <select id="batch-picker" aria-label="Choose your IC151 batch">
@@ -82,15 +83,15 @@
 
         <section class="section shell" id="schedule" aria-labelledby="schedule-title">
             <div class="section-heading">
-                <div><p class="section-kicker">Batch timetable</p><h2 id="schedule-title">B3 starts 6 August, B4 on 8 August, and B1–B2 on 10 August.</h2></div>
-                <p>12 regular labs per batch · midsemester break 27 September–4 October · final lab examinations 16–21 November.</p>
+                <div><p class="section-kicker">Batch timetable</p><h2 id="schedule-title">Autumn 2026 lab schedule.</h2></div>
+                <p id="schedule-summary">Loading the twelve regular labs and final examination dates from the course schedule.</p>
             </div>
 
             <div class="batch-grid" aria-label="Weekly batch slots">
-                <article><span>B1</span><strong>Monday</strong><p>08:30–11:25</p><small>First lab · 10 Aug</small></article>
-                <article><span>B2</span><strong>Monday</strong><p>13:30–16:25</p><small>First lab · 10 Aug</small></article>
-                <article><span>B3</span><strong>Thursday</strong><p>08:30–11:25</p><small>First lab · 6 Aug</small></article>
-                <article><span>B4</span><strong>Saturday</strong><p>13:30–16:25</p><small>First lab · 8 Aug</small></article>
+                    <article data-batch-card="B1"><span>B1</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
+                    <article data-batch-card="B2"><span>B2</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
+                    <article data-batch-card="B3"><span>B3</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
+                    <article data-batch-card="B4"><span>B4</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
             </div>
 
             <div class="table-card">
@@ -102,15 +103,15 @@
                 </div>
             </div>
             <div class="final-exam-card" aria-labelledby="final-exam-title">
-                <div><span>IC151 final lab examination</span><strong id="final-exam-title">Common exam week · 16–21 November 2026 · before 23 November</strong></div>
+                <div><span>IC151 final lab examination</span><strong id="final-exam-title">Loading final examination dates…</strong></div>
                 <ul>
-                    <li><b>B1</b><span>Mon 16 Nov · 08:30–11:25</span></li>
-                    <li><b>B2</b><span>Mon 16 Nov · 13:30–16:25</span></li>
-                    <li><b>B3</b><span>Thu 19 Nov · 08:30–11:25</span></li>
-                    <li><b>B4</b><span>Sat 21 Nov · 13:30–16:25</span></li>
+                    <li><b>B1</b><span data-batch-exam="B1">Loading…</span></li>
+                    <li><b>B2</b><span data-batch-exam="B2">Loading…</span></li>
+                    <li><b>B3</b><span data-batch-exam="B3">Loading…</span></li>
+                    <li><b>B4</b><span data-batch-exam="B4">Loading…</span></li>
                 </ul>
             </div>
-            <p class="schedule-disclaimer">No labs: 15 August and 27 September–4 October. Saturday timetable: Thursday, 17 September. Official announcements supersede this schedule.</p>
+            <p class="schedule-disclaimer">The course data records institute breaks and timetable exceptions. Official announcements supersede this schedule.</p>
         </section>
 
         <section class="section section-soft" id="setup" aria-labelledby="setup-title">

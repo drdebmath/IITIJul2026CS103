@@ -1,644 +1,8 @@
 (function () {
     'use strict';
 
-    const extras = {
-        1: {
-            title: 'Travel-time estimator',
-            context: 'Turn a familiar quantity problem into the input → process → output pattern used by every program.',
-            code: `#include <iostream>
-
-int main() {
-    double distanceKm, speedKmph;
-    std::cin >> distanceKm >> speedKmph;
-
-    double travelHours = distanceKm / speedKmph;
-    std::cout << "Estimated hours: " << travelHours << std::endl;
-}`,
-            takeaways: ['Inputs become named values.', 'The formula is the algorithm.', 'Output makes the result observable.'],
-            problems: [
-                'Read a temperature in Celsius and print the Fahrenheit equivalent.',
-                'Read the length and width of a classroom and print area and perimeter.',
-                'Read three quiz scores and print their arithmetic mean.',
-                'Read seconds and express the duration as hours, minutes, and seconds.',
-                'Write an IPO chart and C++ program for estimating simple interest.'
-            ]
-        },
-        2: {
-            title: 'Choose types for a sensor packet',
-            context: 'A weather station mixes counts, precise measurements, status flags, and identifiers—each deserves an intentional type.',
-            code: `#include <iostream>
-
-int main() {
-    int stationId = 2048;
-    double temperature = 31.625;
-    float humidity = 68.4f;
-    bool batteryLow = false;
-    char quality = 'A';
-
-    std::cout << stationId << " " << temperature << " "
-              << humidity << " " << quality << " " << batteryLow;
-}`,
-            takeaways: ['Range and precision guide type choice.', 'A type documents intent.', 'Narrow types are useful only when their limits are understood.'],
-            problems: [
-                'Choose types for roll number, CGPA, hostel block, and fee-paid status.',
-                'Print the size and numeric limits of the fundamental arithmetic types.',
-                'Demonstrate truncation when a double is converted to int.',
-                'Compare signed and unsigned behavior near zero.',
-                'Use const and auto to model the radius and area of a circle.'
-            ]
-        },
-        3: {
-            title: 'Update game state without leaking temporary names',
-            context: 'A small block holds one reward calculation while the score remains available to the rest of the program.',
-            code: `#include <iostream>
-
-int main() {
-    int score = 4;
-    {
-        int collectedReward = 3;
-        score += collectedReward;
-    }
-    std::cout << score << std::endl;
-}`,
-            takeaways: ['Expressions transform program state.', 'Scope hides transition-only names.', 'The longer-lived score remains available afterward.'],
-            problems: [
-                'Trace local and global variables with the same name.',
-                'Use one inner block for a temporary score update, then print the outer score.',
-                'Place two variables with the same name in different namespaces and select both with ::.',
-                'Evaluate five expressions involving arithmetic and logical precedence.',
-                'Refactor a program to remove an unnecessary global variable.'
-            ]
-        },
-        4: {
-            title: 'Over-current protection controller',
-            context: 'A controller must classify current readings and disconnect equipment only when the safety rule is satisfied.',
-            code: `#include <iostream>
-
-int main() {
-    double current, safeLimit;
-    bool emergencyStop;
-    std::cin >> current >> safeLimit >> emergencyStop;
-
-    if (emergencyStop || current > safeLimit) {
-        std::cout << "TRIP: disconnect supply";
-    } else if (current > 0.9 * safeLimit) {
-        std::cout << "WARNING: near limit";
-    } else {
-        std::cout << "NORMAL";
-    }
-}`,
-            takeaways: ['Order branches from exceptional to normal.', 'Short-circuiting expresses safety logic clearly.', 'Every boundary value needs a test.'],
-            problems: [
-                'Classify a temperature as freezing, safe, warm, or dangerous.',
-                'Compute income tax using three progressive slabs.',
-                'Use switch to implement a menu-driven unit converter.',
-                'Validate whether three lengths can form a triangle and classify it.',
-                'Design boundary tests for an elevator load controller.'
-            ]
-        },
-        5: {
-            title: 'Production-line quality scan',
-            context: 'A loop processes repeated measurements, counts defects, and stops early if too many failures appear.',
-            code: `#include <iostream>
-
-int main() {
-    int samples, defects = 0;
-    std::cin >> samples;
-
-    int i = 0;
-    while (i < samples) {
-        double diameter;
-        std::cin >> diameter;
-        if (diameter < 9.95 || diameter > 10.05) ++defects;
-        if (defects >= 3) break;
-        ++i;
-    }
-    std::cout << "Defects found: " << defects;
-}`,
-            takeaways: ['while repeats while a condition stays true.', 'A state update must move toward termination.', 'break is appropriate when the result is already known.'],
-            problems: [
-                'Read values until a sentinel and report minimum, maximum, and mean.',
-                'Validate a positive password length using a do-while loop.',
-                'Count down from an input value to zero with while.',
-                'Keep asking for a temperature until it lies in a stated safe range.',
-                'Trace and repair a while loop whose control variable never changes.'
-            ]
-        },
-        6: {
-            title: 'Find an anomalous temperature in a week',
-            context: 'An array stores a fixed measurement window; one traversal computes the mean and locates the largest deviation.',
-            code: `#include <array>
-#include <cmath>
-#include <iostream>
-
-int main() {
-    std::array<double, 7> t{31.2, 31.5, 37.8, 31.1, 30.9, 31.4, 31.0};
-    double sum = 0;
-    for (double value : t) sum += value;
-    double mean = sum / t.size();
-
-    std::size_t anomaly = 0;
-    for (std::size_t i = 1; i < t.size(); ++i)
-        if (std::abs(t[i] - mean) > std::abs(t[anomaly] - mean)) anomaly = i;
-
-    std::cout << "Anomaly index: " << anomaly;
-}`,
-            takeaways: ['The structure makes a complete data window available.', 'Traversal applies one rule to every element.', 'Searching is an application of array access.'],
-            problems: [
-                'Rotate an array right by k positions without using another full array.',
-                'Find the second-largest distinct value in an array.',
-                'Reverse a fixed array in place.',
-                'Count how many readings lie above the mean.',
-                'Implement linear search on a fixed array and report the first matching index.'
-            ]
-        },
-        7: {
-            title: 'Travel estimate behind a function contract',
-            context: 'The caller validates input, then a small function receives two values and returns one calculated result.',
-            code: `#include <iostream>
-
-double estimateTravel(double distanceKm, double speedKmph) {
-    return distanceKm / speedKmph;
-}
-
-int main() {
-    double distance = 420;
-    double speed = 70;
-    if (distance >= 0 && speed > 0)
-        std::cout << "Travel time: " << estimateTravel(distance, speed) << " hours";
-}`,
-            takeaways: ['A function owns one clear responsibility.', 'Parameters are inputs to this contract.', 'The return value is the calculated output.'],
-            problems: [
-                'Write a function that returns the area of a rectangle.',
-                'Write a function that converts Celsius to Fahrenheit.',
-                'Write a boolean function that reports whether an integer is even.',
-                'Refactor a unit converter so each conversion is a separate function.',
-                'State the inputs, output, and precondition of a safe division function.'
-            ]
-        },
-        8: {
-            title: 'Represent and filter sensor records',
-            context: 'A struct keeps each reading coherent; passing by const reference lets a function inspect records efficiently.',
-            code: `#include <iostream>
-#include <string>
-
-struct Reading {
-    std::string sensor;
-    double value;
-    bool valid;
-};
-
-void printIfValid(const Reading& r) {
-    if (r.valid) std::cout << r.sensor << ": " << r.value << std::endl;
-}
-
-int main() {
-    Reading sample{"pressure-2", 101.7, true};
-    printIfValid(sample);
-}`,
-            takeaways: ['A struct models one domain record.', 'Member names replace parallel loose variables.', 'References avoid unnecessary record copies.'],
-            problems: [
-                'Model a book and sort an array of books by price.',
-                'Calculate and print the padding of three alternate struct layouts.',
-                'Update a student record through a pointer and the arrow operator.',
-                'Use a lambda to filter employees above a salary threshold.',
-                'Build a singly linked list node and insert at the front.'
-            ]
-        },
-        9: {
-            title: 'Ownership-safe linked sample log',
-            context: 'Each node exclusively owns the next node, so the complete chain is released automatically.',
-            code: `#include <iostream>
-#include <memory>
-
-struct Node {
-    int sample;
-    std::unique_ptr<Node> next;
-};
-
-int main() {
-    auto head = std::make_unique<Node>();
-    head->sample = 42;
-    head->next = std::make_unique<Node>();
-    head->next->sample = 57;
-    for (Node* p = head.get(); p; p = p->next.get())
-        std::cout << p->sample << " ";
-}`,
-            takeaways: ['Ownership determines who releases memory.', 'Links turn separate allocations into a structure.', 'Leaving scope releases the complete owned chain automatically.'],
-            problems: [
-                'Allocate an integer array dynamically and compute its median.',
-                'Implement insert-at-end and delete-by-value for a linked list.',
-                'Demonstrate and then repair a dangling-pointer bug.',
-                'Rewrite a raw owning pointer with unique_ptr.',
-                'Detect whether a linked list contains a cycle.'
-            ]
-        },
-        10: {
-            title: 'Dispatch print jobs with a queue',
-            context: 'FIFO order is a property of the queue structure; the scheduling algorithm simply consumes that interface.',
-            code: `#include <iostream>
-#include <queue>
-#include <string>
-
-int main() {
-    std::queue<std::string> jobs;
-    jobs.push("report.pdf");
-    jobs.push("diagram.png");
-    jobs.push("notes.txt");
-
-    while (!jobs.empty()) {
-        std::cout << "Printing " << jobs.front() << std::endl;
-        jobs.pop();
-    }
-}`,
-            takeaways: ['The structure supplies the ordering guarantee.', 'The algorithm uses only front, push, and pop.', 'Choosing a structure simplifies the application.'],
-            problems: [
-                'Implement a stack using a fixed array and test overflow and underflow.',
-                'Implement a circular queue using an array.',
-                'Check balanced brackets using a stack.',
-                'Use linear search to find all overdue jobs in an array.',
-                'Sort student records by score using bubble sort and a comparator.'
-            ]
-        },
-        11: {
-            title: 'Prioritize emergency maintenance',
-            context: 'A heap makes the highest-priority request available immediately while preserving efficient insertion.',
-            code: `#include <iostream>
-#include <queue>
-
-int main() {
-    std::priority_queue<int> severity;
-    severity.push(2);
-    severity.push(5);
-    severity.push(3);
-    std::cout << "Next severity: " << severity.top();
-}`,
-            takeaways: ['A heap encodes priority as a structural invariant.', 'The largest stored severity is exposed first.', 'The application inherits logarithmic insertion.'],
-            problems: [
-                'Implement iterative binary search and count comparisons.',
-                'Insert, search, and print an inorder traversal of a BST.',
-                'Build a min-heap without using priority_queue.',
-                'Implement merge sort and measure its comparisons.',
-                'Choose the best structure for a dictionary, task scheduler, and undo history.'
-            ]
-        },
-        12: {
-            title: 'Integrated rainfall analyzer',
-            context: 'A compact program combines input validation, arrays, functions, and searching—the pre-mid-semester toolkit.',
-            code: `#include <algorithm>
-#include <iostream>
-#include <vector>
-
-double total(const std::vector<double>& rain) {
-    double sum = 0;
-    for (double value : rain) sum += value;
-    return sum;
-}
-
-int main() {
-    std::vector<double> rain{0, 4.2, 18.0, 2.1, 0, 7.5, 1.0};
-    auto wettest = std::max_element(rain.begin(), rain.end());
-    std::cout << total(rain) << " " << (wettest - rain.begin());
-}`,
-            takeaways: ['Small concepts compose into one solution.', 'A function separates calculation from orchestration.', 'The structure determines which algorithms are available.'],
-            problems: [
-                'Build a menu-driven student-score analyzer using functions.',
-                'Read a matrix and report its saddle points.',
-                'Process a sentence and count each vowel case-insensitively.',
-                'Implement a queue of structs using dynamic nodes.',
-                'Explain the time and space cost of your analyzer.'
-            ]
-        },
-        13: {
-            title: 'Debug a safe average function',
-            context: 'Most exam bugs are contract violations: an empty range, a wrong bound, an uninitialized accumulator, or integer division.',
-            code: `#include <cassert>
-#include <vector>
-
-bool average(const std::vector<int>& values, double& result) {
-    if (values.empty()) return false;
-    long long sum = 0;
-    for (int value : values) sum += value;
-    result = static_cast<double>(sum) / values.size();
-    return true;
-}
-
-int main() {
-    double result = 0.0;
-    assert(average({1, 2}, result) && result == 1.5);
-    assert(!average({}, result));
-}`,
-            takeaways: ['State preconditions explicitly.', 'Initialize every accumulator.', 'Test empty, one-element, and boundary cases.'],
-            problems: [
-                'Repair five off-by-one errors in supplied loop fragments.',
-                'Write tests that expose integer division in an average function.',
-                'Find and fix a null-pointer dereference in a list traversal.',
-                'Explain assignment-versus-comparison and design a warning example.',
-                'Create a ten-case test plan for binary search.'
-            ]
-        },
-        14: {
-            title: 'Validate an institute enrollment ID',
-            context: 'A useful text rule combines string length, fixed prefixes, and character classification.',
-            code: `#include <cctype>
-#include <iostream>
-#include <string>
-
-bool validId(const std::string& id) {
-    if (id.size() != 9 || id.substr(0, 2) != "BT") return false;
-    for (std::size_t i = 2; i < id.size(); ++i)
-        if (!std::isdigit(static_cast<unsigned char>(id[i]))) return false;
-    return true;
-}
-
-int main() {
-    std::cout << std::boolalpha << validId("BT2601034");
-}`,
-            takeaways: ['std::string owns and sizes text safely.', 'Validation is a sequence of explicit predicates.', 'cctype functions require careful character conversion.'],
-            problems: [
-                'Normalize a full name to title case while preserving spaces.',
-                'Count words without using stringstream.',
-                'Find every occurrence of a substring, including overlaps.',
-                'Validate a password against four independent rules.',
-                'Implement run-length encoding and decoding for a string.'
-            ]
-        },
-        15: {
-            title: 'Encapsulate a bank account',
-            context: 'The class protects its invariant—balance cannot become negative—while constructors establish a valid starting state.',
-            code: `#include <string>
-
-class Account {
-    std::string owner_;
-    double balance_;
-public:
-    Account(const std::string& owner, double opening)
-        : owner_(owner), balance_(0.0) {
-        if (opening > 0.0) balance_ = opening;
-    }
-    bool withdraw(double amount) {
-        if (amount <= 0 || amount > balance_) return false;
-        balance_ -= amount;
-        return true;
-    }
-    double balance() const { return balance_; }
-};`,
-            takeaways: ['A constructor establishes invariants.', 'Private state changes through controlled operations.', 'Methods express domain rules, not just setters.'],
-            problems: [
-                'Design a Temperature class that rejects values below absolute zero.',
-                'Implement default, parameterized, and copy constructors for a Matrix class.',
-                'Overload + and == for a Fraction class.',
-                'Overload stream input and output for a Time value.',
-                'Implement a dynamic Buffer class using the rule of three.'
-            ]
-        },
-        16: {
-            title: 'Calibrate inherited energy meters',
-            context: 'A friend calibration function has one narrow privilege; a derived meter reuses the protected correction operation without introducing dynamic dispatch yet.',
-            code: `#include <iostream>
-
-class Meter {
-    double offset_ = 0;
-    friend void calibrate(Meter&, double);
-protected:
-    double corrected(double raw) const { return raw + offset_; }
-public:
-    double read(double raw) const { return corrected(raw); }
-};
-
-void calibrate(Meter& meter, double offset) { meter.offset_ = offset; }
-
-class EnergyMeter : public Meter {
-public:
-    double kilowattHours(double raw) const { return corrected(raw); }
-};`,
-            takeaways: ['Inheritance reuses a stable base abstraction.', 'protected exposes only what derived classes need.', 'Friend access remains narrow and purposeful.'],
-            problems: [
-                'Build a Vehicle base class with Car and Bicycle specializations.',
-                'Demonstrate public, protected, and private member accessibility.',
-                'Use a friend function to compare private measurements from two objects.',
-                'Explain why a polymorphic base class needs a virtual destructor.',
-                'Refactor duplicated derived-class behavior into a base class.'
-            ]
-        },
-        17: {
-            title: 'Create notifications through one interface',
-            context: 'A factory returns a base pointer; virtual dispatch selects the concrete notification without conditionals at the call site.',
-            code: `#include <memory>
-#include <string>
-
-class Notifier {
-public:
-    virtual std::string send() const = 0;
-    virtual ~Notifier() = default;
-};
-class Email : public Notifier {
-public:
-    std::string send() const override { return "email sent"; }
-};
-
-std::unique_ptr<Notifier> makeNotifier() {
-    return std::make_unique<Email>();
-}`,
-            takeaways: ['The caller depends on an abstraction.', 'Virtual dispatch replaces type-switching.', 'The factory centralizes object creation.'],
-            problems: [
-                'Model a diamond hierarchy and resolve it using virtual inheritance.',
-                'Compare public and private inheritance with a working example.',
-                'Implement a Shape hierarchy and compute total area polymorphically.',
-                'Create a factory that builds payment strategies from a code.',
-                'Trace construction and destruction order in multiple inheritance.'
-            ]
-        },
-        18: {
-            title: 'Store heterogeneous shapes safely',
-            context: 'A container of owning base pointers becomes an extensible data structure whose aggregation algorithm is independent of concrete types.',
-            code: `#include <memory>
-#include <vector>
-
-class Shape {
-public:
-    virtual double area() const = 0;
-    virtual ~Shape() = default;
-};
-
-double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
-    double total = 0;
-    for (const auto& shape : shapes) total += shape->area();
-    return total;
-}`,
-            takeaways: ['Polymorphism lets one structure store varied behavior.', 'unique_ptr makes ownership explicit.', 'The aggregation algorithm depends only on the interface.'],
-            problems: [
-                'Implement Circle and Rectangle classes for the shape container.',
-                'Create a polymorphic graph whose edges compute different travel costs.',
-                'Write a deep-copy operation for a container of cloneable objects.',
-                'Add a new shape without modifying the total-area algorithm.',
-                'Compare a polymorphic container with std::variant for this problem.'
-            ]
-        },
-        19: {
-            title: 'Search and rank available flights',
-            context: 'The object model supplies flight records; standard algorithms filter and rank those records for a real booking workflow.',
-            code: `#include <algorithm>
-#include <iostream>
-#include <string>
-#include <vector>
-
-struct Flight { std::string code, from, to; double fare; };
-
-int main() {
-    std::vector<Flight> flights{{"AI1", "IDR", "DEL", 5100}, {"AI2", "IDR", "DEL", 4600}};
-    std::sort(flights.begin(), flights.end(),
-              [](const Flight& a, const Flight& b) { return a.fare < b.fare; });
-    auto match = std::find_if(flights.begin(), flights.end(),
-              [](const Flight& f) { return f.from == "IDR" && f.to == "DEL"; });
-    if (match != flights.end()) std::cout << match->code << " " << match->fare;
-}`,
-            takeaways: ['Domain objects are the data structure’s elements.', 'Comparators encode a user-facing ranking rule.', 'Algorithms compose with the object model.'],
-            problems: [
-                'Design classes for passengers, flights, and bookings with clear ownership.',
-                'Filter flights by route, date, and remaining capacity.',
-                'Sort matching flights by fare and then departure time.',
-                'Model airports as a graph and find a minimum-hop route.',
-                'Apply one design pattern to make payment processing extensible.'
-            ]
-        },
-        20: {
-            title: 'Reverse a linked chain recursively',
-            context: 'The recursive call solves the smaller tail; pointer rewiring makes the old head the new tail.',
-            code: `struct Node { int value; Node* next; };
-
-Node* reverse(Node* head) {
-    if (!head || !head->next) return head;
-    Node* newHead = reverse(head->next);
-    head->next->next = head;
-    head->next = nullptr;
-    return newHead;
-}`,
-            takeaways: ['The base case handles an empty or one-node list.', 'The call stack remembers each old head.', 'The algorithm is meaningful because of the linked structure.'],
-            problems: [
-                'Trace recursive factorial and draw every stack frame.',
-                'Generate all permutations of a string without duplicates.',
-                'Compute the longest common subsequence recursively with memoization.',
-                'Reverse a linked list iteratively and compare space use.',
-                'Implement bucket sort for normalized decimal values.'
-            ]
-        },
-        21: {
-            title: 'Sort fixed-width institute IDs by digits',
-            context: 'Radix sort exploits the digit structure of integer keys; the stable bucket pass is the algorithmic application.',
-            code: `#include <array>
-#include <vector>
-
-void digitPass(std::vector<int>& values, int place) {
-    std::array<std::vector<int>, 10> buckets;
-    for (int value : values) buckets[(value / place) % 10].push_back(value);
-    std::size_t out = 0;
-    for (const auto& bucket : buckets)
-        for (int value : bucket) values[out++] = value;
-}`,
-            takeaways: ['The key representation determines the buckets.', 'Stable passes preserve earlier digit order.', 'The array of vectors is the structure that makes the algorithm direct.'],
-            problems: [
-                'Complete LSD radix sort for non-negative integers.',
-                'Extend radix sort to handle negative integers.',
-                'Implement block-recursive multiplication for square matrices.',
-                'Invert a binary tree recursively and iteratively.',
-                'Design a ChessPiece hierarchy and generate legal moves polymorphically.'
-            ]
-        },
-        22: {
-            title: 'Print a multiplication table without guessing bounds',
-            context: 'A counted loop names its start, continuation rule, and update in one place; the loop invariant explains what has already been printed.',
-            code: `#include <iostream>
-
-int main() {
-    int number;
-    std::cin >> number;
-    for (int multiplier = 1; multiplier <= 10; ++multiplier) {
-        std::cout << number << " × " << multiplier
-                  << " = " << number * multiplier << '\\n';
-    }
-}`,
-            takeaways: ['The counter has one clear valid range.', 'The update moves toward termination.', 'The invariant describes completed rows.'],
-            problems: [
-                'Print the first n odd numbers and their sum.',
-                'Draw an r-by-c rectangle using nested loops.',
-                'Trace a loop with <= changed to < and explain the difference.',
-                'Rewrite a counted while loop as a for loop.',
-                'Find and repair three non-terminating or off-by-one loops.'
-            ]
-        },
-        23: {
-            title: 'Return two results without global state',
-            context: 'Input values are copied; output references name the caller’s existing variables. The contract makes both roles explicit.',
-            code: `#include <iostream>
-
-void orderPair(int first, int second, int& smaller, int& larger) {
-    if (first <= second) {
-        smaller = first;
-        larger = second;
-    } else {
-        smaller = second;
-        larger = first;
-    }
-}
-
-int main() {
-    int low = 0, high = 0;
-    orderPair(17, 4, low, high);
-    std::cout << low << " " << high << '\\n';
-}`,
-            takeaways: ['Parameter roles are visible at the interface.', 'References avoid hidden global state.', 'One function performs one testable job.'],
-            problems: [
-                'Write a function that swaps two integers through references.',
-                'Overload absoluteValue for int and double.',
-                'Split a bill calculator into input, calculation, and output functions.',
-                'Compare a large read-only parameter by value and const reference.',
-                'Write factorial recursively and identify its base case.'
-            ]
-        },
-        24: {
-            title: 'Summarize a classroom score matrix',
-            context: 'A matrix needs one loop per dimension; a vector is useful when the number of stored values is known only at runtime.',
-            code: `#include <iostream>
-#include <vector>
-
-int main() {
-    std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
-    for (std::size_t row = 0; row < scores.size(); ++row) {
-        int total = 0;
-        for (std::size_t col = 0; col < scores[row].size(); ++col)
-            total += scores[row][col];
-        std::cout << "row " << row << " total=" << total << '\\n';
-    }
-}`,
-            takeaways: ['Each index stays within its own dimension.', 'size() supplies the actual bound.', 'The structure matches rows containing columns.'],
-            problems: [
-                'Compute every row sum and column sum of a matrix.',
-                'Find the largest element and report its row and column.',
-                'Read n values into a vector and compute their mean.',
-                'Use at() to demonstrate checked access and handle failure.',
-                'Choose array or vector for four stated storage requirements.'
-            ]
-        }
-    };
-
-    // The source examples predate the chronological 2026 numbering. Remap them
-    // once so every injected application and practice set follows lecture1–23.
-    const legacyExtras = { ...extras };
-    const chronologicalExtraSources = {
-        1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 22, 7: 7, 8: 23,
-        9: 6, 10: 24, 11: 14, 12: 13, 13: 8, 14: 9, 15: 10,
-        16: 20, 17: 11, 18: 15, 19: 16, 20: 17, 21: 18, 22: 19, 23: 21
-    };
-    Object.keys(extras).forEach((id) => delete extras[id]);
-    Object.entries(chronologicalExtraSources).forEach(([lecture, source]) => {
-        extras[lecture] = legacyExtras[source];
-    });
-
     const progress = window.CS103Progress;
     const lectureId = progress ? progress.lectureIdFromPath(window.location.pathname) : Number((window.location.pathname.match(/lecture(\d+)/i) || [])[1]);
-    const extra = extras[lectureId];
-    if (!extra) return;
 
     const conceptTree = Array.isArray(window.CS103ConceptTree) ? window.CS103ConceptTree : [];
     const allConcepts = conceptTree.flatMap((phase) => phase.modules.flatMap((module) => module.concepts));
@@ -654,7 +18,7 @@ int main() {
     const themeStorageKey = 'cs103-theme';
     const embedded = window.self !== window.top;
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sequence = progress ? progress.lectureSequence : Object.keys(extras).map(Number).sort((a, b) => a - b).map((id) => ({ id, file: `lecture${id}.html`, title: extras[id].title }));
+    const sequence = progress?.lectureSequence || window.CS103Data?.lectureSequence || [];
     const sequenceIndex = sequence.findIndex((lecture) => lecture.id === lectureId);
     const scheduledSequence = scheduleSession ? scheduleSession.sequence : Math.max(1, sequenceIndex + 1);
     const lectureMeta = sequence[sequenceIndex] || { title: `Lecture ${lectureId}` };
@@ -751,8 +115,8 @@ int main() {
         const start = document.createElement('section');
         start.className = 'course-extra-slide course-novice-slide';
         start.innerHTML = `
-            <span class="course-extra-kicker">Start here · no prior computer use assumed</span>
-            <h2>Turn on, sign in, and get oriented.</h2>
+            <span class="course-extra-kicker">First step · get a working setup</span>
+            <h2>A safe setup gets you from the power button to your first command.</h2>
             <ol class="course-novice-steps">
                 <li><strong>Power:</strong> press the computer’s power button once and wait.</li>
                 <li><strong>Sign in:</strong> ask the instructor or TA if the machine requests credentials you do not have.</li>
@@ -764,7 +128,7 @@ int main() {
         screen.className = 'course-extra-slide course-novice-slide';
         screen.innerHTML = `
             <span class="course-extra-kicker">Digital basics</span>
-            <h2>Five objects you will use today.</h2>
+            <h2>Files, folders, browsers, and terminals make the first program possible.</h2>
             <div class="course-novice-grid">
                 <article><strong>Window</strong><span>A rectangular area belonging to one application.</span></article>
                 <article><strong>Browser</strong><span>The application used to open this course website.</span></article>
@@ -829,12 +193,13 @@ int main() {
         const firstTerm = terms[0] || lectureMeta.title;
         const secondTerm = terms[1] || firstTerm;
         const lastTerm = terms[terms.length - 1] || firstTerm;
+        const practicalTitle = document.querySelector('.practical-example-slide h2')?.textContent || lectureMeta.title;
         return [
             `Without looking at the definition, explain “${firstTerm}” in one sentence.`,
             firstTerm === secondTerm
                 ? `What must be true before you can use today’s main idea safely?`
                 : `How is “${secondTerm}” connected to “${firstTerm}”?`,
-            `Before running the practical example “${extra.title}”, predict its first observable result.`,
+            `Before running the practical example “${practicalTitle}”, predict its first observable result.`,
             `Name one normal case, one boundary case, and one invalid case for today’s code.`,
             outcomes[0]
                 ? `Can you now do this outcome without notes: “${outcomes[0]}”? Explain your next step.`
@@ -849,7 +214,7 @@ int main() {
         section.dataset.courseMinute = String(minute);
         section.innerHTML = `
             <span class="course-extra-kicker">Minute ${minute} · Checkpoint ${index + 1} of 5</span>
-            <h2>${question}</h2>
+            <h2>Checkpoint: ${question}</h2>
             <div class="course-checkpoint-routine">
                 <span><strong>Think</strong> 30 seconds</span>
                 <span><strong>Pair</strong> compare reasoning</span>
@@ -995,69 +360,6 @@ int main() {
         if (indices) window.Reveal.slide(indices.h, indices.v, indices.f);
     }
 
-    function createExampleSlide() {
-        const section = document.createElement('section');
-        section.className = 'course-extra-slide practical-example-slide';
-
-        const kicker = document.createElement('span');
-        kicker.className = 'course-extra-kicker';
-        kicker.textContent = 'Practical application';
-
-        const heading = document.createElement('h2');
-        heading.textContent = extra.title;
-
-        const layout = document.createElement('div');
-        layout.className = 'practical-example-layout';
-
-        const copy = document.createElement('div');
-        copy.className = 'practical-example-copy';
-        const paragraph = document.createElement('p');
-        paragraph.textContent = extra.context;
-        const list = document.createElement('ul');
-        extra.takeaways.forEach((takeaway) => {
-            const item = document.createElement('li');
-            item.textContent = takeaway;
-            list.appendChild(item);
-        });
-        copy.append(paragraph, list);
-
-        const pre = document.createElement('pre');
-        const code = document.createElement('code');
-        code.className = 'language-cpp';
-        code.textContent = extra.code;
-        pre.appendChild(code);
-        layout.append(copy, pre);
-        section.append(kicker, heading, layout);
-        return section;
-    }
-
-    function createPracticeSlide() {
-        const section = document.createElement('section');
-        section.className = 'course-extra-slide lab-practice-slide';
-        section.setAttribute('data-course-practice', String(lectureId));
-
-        const kicker = document.createElement('span');
-        kicker.className = 'course-extra-kicker';
-        kicker.textContent = 'IC151 · Lab practice';
-
-        const heading = document.createElement('h2');
-        heading.textContent = 'Practice set · 5 problems';
-
-        const list = document.createElement('ol');
-        list.className = 'lab-practice-list';
-        extra.problems.forEach((problem) => {
-            const item = document.createElement('li');
-            item.textContent = problem;
-            list.appendChild(item);
-        });
-
-        const note = document.createElement('p');
-        note.className = 'practice-complete-note';
-        note.append('Reaching this set marks the lecture as studied in this browser. ', Object.assign(document.createElement('a'), { href: 'ic151.html', textContent: 'Open the IC151 lab setup and batch schedule.' }));
-        section.append(kicker, heading, list, note);
-        return section;
-    }
-
     function createNavigationSlide() {
         const section = document.createElement('section');
         section.className = 'course-extra-slide course-navigation-slide';
@@ -1068,7 +370,7 @@ int main() {
         kicker.textContent = 'Course navigation';
 
         const heading = document.createElement('h2');
-        heading.textContent = nextLecture ? 'Continue the sequence.' : 'Course sequence complete.';
+        heading.textContent = nextLecture ? `Choose the next step: ${nextLecture.title}.` : 'Choose a concept to revisit after the course.';
 
         const navigation = document.createElement('nav');
         navigation.className = 'lecture-end-nav';
@@ -1081,26 +383,6 @@ int main() {
         `;
         section.append(kicker, heading, navigation);
         return section;
-    }
-
-    function injectExtraSlides() {
-        const slides = document.querySelector('.reveal .slides');
-        if (!slides || slides.querySelector('[data-course-practice]')) return;
-
-        const exampleSlide = createExampleSlide();
-        practiceSlide = createPracticeSlide();
-        const lastSlide = slides.lastElementChild;
-        const isNavigation = lastSlide && /back to course outline|navigation/i.test(lastSlide.textContent || '');
-        if (isNavigation) lastSlide.remove();
-        const midSessionCheckpoint = slides.querySelector('[data-course-minute="30"]');
-        if (midSessionCheckpoint) midSessionCheckpoint.after(exampleSlide);
-        else slides.appendChild(exampleSlide);
-        slides.append(practiceSlide, createNavigationSlide());
-
-        if (window.hljs) {
-            const code = exampleSlide.querySelector('code');
-            try { window.hljs.highlightElement(code); } catch (error) { /* Highlighting is optional. */ }
-        }
     }
 
     function updateProgressUI() {
@@ -1679,7 +961,6 @@ int main() {
     injectNoviceOnboardingSlides();
     injectCheckpoints();
     createDeckBar();
-    injectExtraSlides();
     updateProgressUI();
 
     if (window.Reveal && typeof window.Reveal.on === 'function') {

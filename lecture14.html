@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 14: Dynamic Memory & Linked Structures">
-    <title>Lecture 14: Dynamic Memory & Linked Structures</title>
+    <meta name="description" content="CS103 Lecture 14: Make dynamic ownership explicit">
+    <title>Lecture 14: Make dynamic ownership explicit</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 14: Dynamic Memory & Linked Structures
+# Lecture 14: Make dynamic ownership explicit
 ## Make ownership and lifetime explicit
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Rebuild snake as a linked body
+## Grow and shrink an ordered body without a fixed maximum size.
+
+**Studio thread:** Rebuild snake as a linked body
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,13 +32,43 @@
 
 **Compare:** contiguous body storage versus linked nodes
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Ownership determines who releases memory. · Ownership-safe linked sample log
+
+Each node exclusively owns the next node, so the complete chain is released automatically.
+
+~~~cpp
+#include <iostream>
+#include <memory>
+
+struct Node {
+    int sample;
+    std::unique_ptr<Node> next;
+};
+
+int main() {
+    auto head = std::make_unique<Node>();
+    head->sample = 42;
+    head->next = std::make_unique<Node>();
+    head->next->sample = 57;
+    for (Node* p = head.get(); p; p = p->next.get())
+        std::cout << p->sample << " ";
+}
+~~~
+
+**Takeaways**
+
+- Ownership determines who releases memory.
+- Links turn separate allocations into a structure.
+- Leaving scope releases the complete owned chain automatically.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Automatic and dynamic storage solve different needs
+## Automatic storage follows scope; dynamic storage follows ownership
 
 Automatic local objects are destroyed when their scope ends. Dynamic storage can outlive the creating scope, so ownership must state who releases it.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Raw new and delete must match
+## new and delete must match the allocated type and ownership
 
 ~~~cpp
 int* value = new int{42};
@@ -48,7 +80,7 @@ value = nullptr;
 Use <code>delete[]</code> only for storage obtained with <code>new[]</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Prefer ownership in a smart pointer
+## unique_ptr makes exclusive ownership and release explicit
 
 ~~~cpp
 auto value = std::make_unique<int>(42);
@@ -58,7 +90,7 @@ std::cout << *value << '\n';
 A smart pointer releases its owned resource automatically. It prevents ownership leaks, but unrelated non-owning pointers can still dangle.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Name the failure modes
+## Leaks, dangling pointers, double deletion, and bad allocation are different defects
 
 - Memory leak: owned storage becomes unreachable without release.
 - Dangling pointer: an address remains after the object has died.
@@ -66,7 +98,7 @@ A smart pointer releases its owned resource automatically. It prevents ownership
 - Allocation failure: <code>new</code> normally throws <code>std::bad_alloc</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A linked list connects separately stored nodes
+## A linked list represents a sequence through separately stored nodes
 
 ~~~cpp
 #include <memory>
@@ -83,7 +115,7 @@ head->next->value = 57;
 ~~~
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a linked Snake
+## Game evolution: Linked ownership lets Snake grow safely
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -105,7 +137,7 @@ int main() {
 **Next unlock · L15:** maintain pending dirt as a queue and search stored cells.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Traverse links until the end
+## Traversal stops at nullptr after visiting each reachable node
 
 ~~~cpp
 for (Node* current = head.get(); current != nullptr;
@@ -117,23 +149,64 @@ for (Node* current = head.get(); current != nullptr;
 The invariant states that every node before <code>current</code> has been processed.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: the C allocation interface
+## C allocation exposes bytes, so its ownership contract must be explicit
 
 <code>malloc</code>, <code>calloc</code>, and <code>realloc</code> manage untyped bytes and must be paired with <code>free</code>.
 
 They do not construct or destroy C++ objects. Use them only when a C interface requires them.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Make ownership explicit before allocating or linking
 
 - Dynamic storage requires an ownership rule.
 - Prefer <code>unique_ptr</code> for exclusive ownership and automatic release.
 - Smart ownership prevents leaks, not every possible dangling observer.
 - Linked lists trade contiguous access for explicit links.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Ownership-safe linked sample log with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Ownership determines who releases memory.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Allocate an integer array dynamically and compute its median.
+- Implement insert-at-end and delete-by-value for a linked list.
+- Demonstrate and then repair a dangling-pointer bug.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Ownership-safe linked sample log without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="14" data-markdown><textarea data-template>
+## Solve five problems to transfer Ownership-safe linked sample log
+
+**IC151 lab practice · 5 problems**
+
+1. Allocate an integer array dynamically and compute its median.
+1. Implement insert-at-end and delete-by-value for a linked list.
+1. Demonstrate and then repair a dangling-pointer bug.
+1. Rewrite a raw owning pointer with unique_ptr.
+1. Detect whether a linked list contains a cycle.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

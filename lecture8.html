@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 8: Functions II · References & Decomposition">
-    <title>Lecture 8: Functions II · References & Decomposition</title>
+    <meta name="description" content="CS103 Lecture 8: Choose copy, alias, and recursion deliberately">
+    <title>Lecture 8: Choose copy, alias, and recursion deliberately</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 8: Functions II
+# Lecture 8: Choose copy, alias, and recursion deliberately
 ## References, overloading, decomposition, and the call stack
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Build a testable controller
+## Let functions observe or intentionally change shared robot state.
+
+**Studio thread:** Build a testable controller
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,39 @@
 
 **Compare:** returning a new state versus updating through a reference
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Parameter roles are visible at the interface. · Return two results without global state
+
+Input values are copied; output references name the caller’s existing variables. The contract makes both roles explicit.
+
+~~~cpp
+#include <iostream>
+
+void orderPair(int first, int second, int& smaller, int& larger) {
+    if (first <= second) {
+        smaller = first;
+        larger = second;
+    } else {
+        smaller = second;
+        larger = first;
+    }
+}
+
+int main() {
+    int low = 0, high = 0;
+    orderPair(17, 4, low, high);
+    std::cout << low << " " << high << '\n';
+}
+~~~
+
+**Takeaways**
+
+- Parameter roles are visible at the interface.
+- References avoid hidden global state.
+- One function performs one testable job.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Value or reference?
+## The parameter contract decides copy, alias, or read-only access
 
 ~~~cpp
 void clampToZero(double& value) {
@@ -42,7 +75,7 @@ void clampToZero(double& value) {
 A reference is another name for the caller's object. Mutation must be part of the contract.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A const reference permits reading, not mutation
+## const reference reads without copying or mutating
 
 ~~~cpp
 void printReading(const double& reading) {
@@ -53,7 +86,7 @@ void printReading(const double& reading) {
 The syntax matters now; avoiding expensive copies becomes useful when records and strings arrive.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Overloads share a name, not a signature
+## Overloads share a name only when parameter lists distinguish them
 
 ~~~cpp
 int absolute(int value);
@@ -63,7 +96,7 @@ double absolute(double value);
 The compiler selects from parameter lists. Return type alone cannot distinguish overloads.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a movement operation
+## Game evolution: A movement function isolates one rule
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -85,7 +118,7 @@ int main() {
 **Next unlock · L09:** store the complete Snake body as sequences of coordinates.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Decomposition keeps main readable
+## Decomposition keeps main readable and each step testable
 
 ~~~cpp
 double readPositive();
@@ -96,14 +129,14 @@ void printFare(double fare);
 <code>main</code> coordinates these tasks instead of containing every detail.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Function calls form a call stack
+## Each active call owns a stack frame until it returns
 
 Each active call has a stack frame containing parameters, locals, and return state.
 
 The most recent unfinished call completes first—last in, first out.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Gentle recursion preview
+## Recursion needs a base case and a smaller next call
 
 ~~~cpp
 int factorial(int n) {
@@ -115,7 +148,7 @@ int factorial(int n) {
 Every recursive call must move measurably toward a base case.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Choose parameter passing and decomposition from the contract
 
 - References can expose caller state intentionally.
 - <code>const&</code> provides read-only access through an alias.
@@ -123,9 +156,50 @@ Every recursive call must move measurably toward a base case.
 - The call stack tracks unfinished calls.
 - Recursive design requires a base case and progress.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Return two results without global state with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Parameter roles are visible at the interface.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Write a function that swaps two integers through references.
+- Overload absoluteValue for int and double.
+- Split a bill calculator into input, calculation, and output functions.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Return two results without global state without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="8" data-markdown><textarea data-template>
+## Solve five problems to transfer Return two results without global state
+
+**IC151 lab practice · 5 problems**
+
+1. Write a function that swaps two integers through references.
+1. Overload absoluteValue for int and double.
+1. Split a bill calculator into input, calculation, and output functions.
+1. Compare a large read-only parameter by value and const reference.
+1. Write factorial recursively and identify its base case.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

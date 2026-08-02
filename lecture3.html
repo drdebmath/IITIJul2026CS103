@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 3: Expressions, Scope & Program State">
-    <title>Lecture 3: Expressions, Scope & Program State</title>
+    <meta name="description" content="CS103 Lecture 3: Track expressions, scope, storage, and lifetime">
+    <title>Lecture 3: Track expressions, scope, storage, and lifetime</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 3: Expressions, Scope & Program State
+# Lecture 3: Track expressions, scope, storage, and lifetime
 ## Names, values, visibility, and lifetime
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Track robot state
+## Update a robot pose and score while keeping temporary calculations local.
+
+**Studio thread:** Track robot state
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,32 @@
 
 **Compare:** many unrelated variables versus one coherent state model introduced later
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Expressions transform program state. · Update game state without leaking temporary names
+
+A small block holds one reward calculation while the score remains available to the rest of the program.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int score = 4;
+    {
+        int collectedReward = 3;
+        score += collectedReward;
+    }
+    std::cout << score << std::endl;
+}
+~~~
+
+**Takeaways**
+
+- Expressions transform program state.
+- Scope hides transition-only names.
+- The longer-lived score remains available afterward.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Operators build expressions
+## Operators combine values into expressions
 
 ~~~cpp
 int total = 5 + 3 * 2;       // 11
@@ -42,7 +68,7 @@ bool safe = total < 20 && grouped > 0;
 Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A namespace prevents name collisions
+## Namespaces keep same-named declarations from colliding
 
 ~~~cpp
 namespace laboratory {
@@ -57,7 +83,7 @@ int main() {
 The scope-resolution operator <code>::</code> selects a name from a namespace.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Scope controls where a name is visible
+## A name is usable only inside its scope
 
 ~~~cpp
 #include <iostream>
@@ -76,7 +102,7 @@ int main() {
 Keep names in the smallest scope that contains every required use.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · one state transition
+## Game evolution: One transition updates the world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -100,7 +126,7 @@ int main() {
 **Next unlock · L04:** accept different directions and reject unsafe moves.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Scope and lifetime are different
+## Scope controls visibility while lifetime controls existence
 
 - **Scope:** where source code may use a name.
 - **Storage duration:** how long the corresponding object exists.
@@ -109,7 +135,7 @@ int main() {
 A local static object has block scope but program-long storage duration.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Storage duration is a lifetime promise
+## Storage duration explains when an object is created and destroyed
 
 ~~~cpp
 // Defined outside every block: program-long storage duration.
@@ -124,7 +150,7 @@ int main() {
 Later, functions will provide a safer interface around shared state. For now, distinguish where a name is visible from how long its object exists.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: one definition shared by two files
+## Linkage decides which cross-file definition is shared
 
 ~~~cpp
 // data.cpp
@@ -137,7 +163,7 @@ extern int sharedCount;
 <code>extern</code> declares an entity defined elsewhere. A complete executable must still contain <code>main</code> and link every required definition.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Track every name by meaning, visibility, lifetime, and linkage
 
 - Expressions compute values or effects.
 - Parentheses make precedence explicit.
@@ -145,9 +171,50 @@ extern int sharedCount;
 - Scope, storage duration, and linkage answer different questions.
 - Avoid global mutable state unless one clearly identified part of the program is responsible for it.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Update game state without leaking temporary names with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Expressions transform program state.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Trace local and global variables with the same name.
+- Use one inner block for a temporary score update, then print the outer score.
+- Place two variables with the same name in different namespaces and select both with ::.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Update game state without leaking temporary names without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="3" data-markdown><textarea data-template>
+## Solve five problems to transfer Update game state without leaking temporary names
+
+**IC151 lab practice · 5 problems**
+
+1. Trace local and global variables with the same name.
+1. Use one inner block for a temporary score update, then print the outer score.
+1. Place two variables with the same name in different namespaces and select both with ::.
+1. Evaluate five expressions involving arithmetic and logical precedence.
+1. Refactor a program to remove an unnecessary global variable.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

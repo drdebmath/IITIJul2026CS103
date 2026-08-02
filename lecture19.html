@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 19: Friend Access & Inheritance Foundations">
-    <title>Lecture 19: Friend Access & Inheritance Foundations</title>
+    <meta name="description" content="CS103 Lecture 19: Use inheritance only when substitution is safe">
+    <title>Lecture 19: Use inheritance only when substitution is safe</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 19: Friend Access & Inheritance Foundations
+# Lecture 19: Use inheritance only when substitution is safe
 ## Move from one value type to a justified is-a relationship
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Design a family of cleaning agents
+## Share genuine agent behavior without claiming false is-a relationships.
+
+**Studio thread:** Design a family of cleaning agents
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,39 @@
 
 **Compare:** inheritance versus composition
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Inheritance reuses a stable base abstraction. · Calibrate inherited energy meters
+
+A friend calibration function has one narrow privilege; a derived meter reuses the protected correction operation without introducing dynamic dispatch yet.
+
+~~~cpp
+#include <iostream>
+
+class Meter {
+    double offset_ = 0;
+    friend void calibrate(Meter&, double);
+protected:
+    double corrected(double raw) const { return raw + offset_; }
+public:
+    double read(double raw) const { return corrected(raw); }
+};
+
+void calibrate(Meter& meter, double offset) { meter.offset_ = offset; }
+
+class EnergyMeter : public Meter {
+public:
+    double kilowattHours(double raw) const { return corrected(raw); }
+};
+~~~
+
+**Takeaways**
+
+- Inheritance reuses a stable base abstraction.
+- protected exposes only what derived classes need.
+- Friend access remains narrow and purposeful.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Friendship should remain exceptional
+## Friend access is a narrow exception, not an interface
 
 ~~~cpp
 class Complex {
@@ -45,14 +78,14 @@ public:
 A friend is a non-member granted narrow access. Friendship is not inheritance or a security boundary.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Public inheritance means substitutability
+## Public inheritance promises substitutability
 
 If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operation promised by <code>Vehicle</code> must remain meaningful for <code>ElectricCar</code>.
 
 This is an **is-a** relationship, not merely code reuse.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A class hierarchy is a dependency tree
+## A class hierarchy makes shared promises and specialization explicit
 
 ~~~text
 Vehicle
@@ -64,7 +97,7 @@ Vehicle
 The base owns common behavior; derived classes add or refine specialized behavior.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A small base and derived class
+## A small base interface leaves derived types to specialize
 
 ~~~cpp
 class Vehicle {
@@ -81,7 +114,7 @@ public:
 A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Construction proceeds base before derived
+## Base construction completes before derived construction
 
 1. Base members are initialized.
 2. The base constructor runs.
@@ -91,14 +124,14 @@ A <code>protected</code> member would be hidden from ordinary callers but access
 Destruction occurs in the reverse order.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Prefer composition for has-a relationships
+## Composition models has-a without forcing substitutability
 
 A <code>Car</code> has an <code>Engine</code>; it is not an engine.
 
 Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · Snake meets Cleaner
+## Game evolution: Snake and Cleaner can share a world
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -121,7 +154,7 @@ class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner
 **Next unlock · L20:** select different actor behavior through one virtual interface.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Use inheritance for is-a contracts and composition for owned parts
 
 - Friend access is narrow and explicit.
 - Public inheritance models is-a and substitutability.
@@ -129,9 +162,50 @@ class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner
 - Base construction precedes derived construction.
 - Prefer composition for has-a relationships.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Calibrate inherited energy meters with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Inheritance reuses a stable base abstraction.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Build a Vehicle base class with Car and Bicycle specializations.
+- Demonstrate public, protected, and private member accessibility.
+- Use a friend function to compare private measurements from two objects.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Calibrate inherited energy meters without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="19" data-markdown><textarea data-template>
+## Solve five problems to transfer Calibrate inherited energy meters
+
+**IC151 lab practice · 5 problems**
+
+1. Build a Vehicle base class with Car and Bicycle specializations.
+1. Demonstrate public, protected, and private member accessibility.
+1. Use a friend function to compare private measurements from two objects.
+1. Explain why a polymorphic base class needs a virtual destructor.
+1. Refactor duplicated derived-class behavior into a base class.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

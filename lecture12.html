@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 12: Debugging & Assessment Debrief">
-    <title>Lecture 12: Debugging & Assessment Debrief</title>
+    <meta name="description" content="CS103 Lecture 12: Repair programs with evidence and tests">
+    <title>Lecture 12: Repair programs with evidence and tests</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 12: Debugging & Assessment Debrief
+# Lecture 12: Repair programs with evidence and tests
 ## Turn feedback into a repair strategy
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Repair the simulator from evidence
+## Find why a program compiles or runs yet violates its promised behavior.
+
+**Studio thread:** Repair the simulator from evidence
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,38 @@
 
 **Compare:** evidence-guided repair versus editing several guesses at once
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## State preconditions explicitly. · Debug a safe average function
+
+Most exam bugs are contract violations: an empty range, a wrong bound, an uninitialized accumulator, or integer division.
+
+~~~cpp
+#include <cassert>
+#include <vector>
+
+bool average(const std::vector<int>& values, double& result) {
+    if (values.empty()) return false;
+    long long sum = 0;
+    for (int value : values) sum += value;
+    result = static_cast<double>(sum) / values.size();
+    return true;
+}
+
+int main() {
+    double result = 0.0;
+    assert(average({1, 2}, result) && result == 1.5);
+    assert(!average({}, result));
+}
+~~~
+
+**Takeaways**
+
+- State preconditions explicitly.
+- Initialize every accumulator.
+- Test empty, one-element, and boundary cases.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Classify the failure first
+## Classifying the defect narrows the repair
 
 - Compile-time: the source violates a language rule.
 - Link-time: a required definition is missing or duplicated.
@@ -41,7 +73,7 @@
 Classification determines the next useful observation.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Read the first useful diagnostic
+## The first compiler or test diagnostic narrows the search
 
 For a compiler message:
 
@@ -52,7 +84,7 @@ For a compiler message:
 5. Recompile before changing anything else.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Trace state instead of guessing
+## A state trace shows where behavior first diverges
 
 ~~~cpp
 int total = 0;
@@ -64,7 +96,7 @@ for (int i = 0; i < 3; ++i) {
 Record <code>i</code>, <code>values[i]</code>, and <code>total</code> after every iteration.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Boundary tests expose common defects
+## Boundary cases expose empty, off-by-one, and precision defects
 
 For an average function, test:
 
@@ -77,7 +109,7 @@ For an average function, test:
 | maximum expected count | stresses the bound |
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · replay as a test
+## Game evolution: A replay becomes a reproducible test
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -102,7 +134,7 @@ int main() {
 **Next unlock · L13:** group each cell's related fields into one record.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Repair a safe average
+## A safe average checks emptiness and preserves precision
 
 ~~~cpp
 bool average(const std::vector<int>& values, double& result) {
@@ -115,7 +147,7 @@ bool average(const std::vector<int>& values, double& result) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Use assessment evidence
+## Assessment evidence becomes a repair plan
 
 For each lost mark, write:
 
@@ -128,7 +160,7 @@ For each lost mark, write:
 Revisit prerequisites in the dependency graph instead of memorizing one answer.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Repair by classifying, tracing, testing, and documenting
 
 - Classify before editing.
 - Trace changing state explicitly.
@@ -136,9 +168,50 @@ Revisit prerequisites in the dependency graph instead of memorizing one answer.
 - Repair one assumption at a time.
 - Assessment feedback is a map for deliberate practice.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Debug a safe average function with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** State preconditions explicitly.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Repair five off-by-one errors in supplied loop fragments.
+- Write tests that expose integer division in an average function.
+- Find and fix a null-pointer dereference in a list traversal.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Debug a safe average function without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="12" data-markdown><textarea data-template>
+## Solve five problems to transfer Debug a safe average function
+
+**IC151 lab practice · 5 problems**
+
+1. Repair five off-by-one errors in supplied loop fragments.
+1. Write tests that expose integer division in an average function.
+1. Find and fix a null-pointer dereference in a list traversal.
+1. Explain assignment-versus-comparison and design a warning example.
+1. Create a ten-case test plan for binary search.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

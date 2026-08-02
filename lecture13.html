@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 13: Records, Pointers & Memory Layout">
-    <title>Lecture 13: Records, Pointers & Memory Layout</title>
+    <meta name="description" content="CS103 Lecture 13: Group state and validate addresses">
+    <title>Lecture 13: Group state and validate addresses</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 13: Records, Pointers & Memory Layout
+# Lecture 13: Group state and validate addresses
 ## Group related state and inspect addresses safely
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Model cells, components, and entities
+## Keep each sampled cell and its related properties coherent.
+
+**Studio thread:** Model cells, components, and entities
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,39 @@
 
 **Compare:** parallel arrays versus an array of coherent records
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## A struct models one domain record. · Represent and filter sensor records
+
+A struct keeps each reading coherent; passing by const reference lets a function inspect records efficiently.
+
+~~~cpp
+#include <iostream>
+#include <string>
+
+struct Reading {
+    std::string sensor;
+    double value;
+    bool valid;
+};
+
+void printIfValid(const Reading& r) {
+    if (r.valid) std::cout << r.sensor << ": " << r.value << std::endl;
+}
+
+int main() {
+    Reading sample{"pressure-2", 101.7, true};
+    printIfValid(sample);
+}
+~~~
+
+**Takeaways**
+
+- A struct models one domain record.
+- Member names replace parallel loose variables.
+- References avoid unnecessary record copies.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## A struct models one record
+## A struct keeps the fields of one record coherent
 
 ~~~cpp
 struct Reading {
@@ -46,7 +79,7 @@ Reading sample{7, 31.5, true};
 Member names keep related values coherent.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Arrays of records support repeated domain data
+## An array of records keeps repeated domain objects together
 
 ~~~cpp
 std::array<Reading, 3> samples{{
@@ -59,7 +92,7 @@ for (const Reading& reading : samples) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A pointer stores an address
+## A pointer stores where an object lives
 
 ~~~cpp
 int score = 95;
@@ -69,7 +102,7 @@ int* scorePointer = &score;
 The pointer is a separate object. <code>&score</code> obtains the address of <code>score</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Dereference only a valid pointer
+## Dereference only a pointer proved valid
 
 ~~~cpp
 if (scorePointer != nullptr) {
@@ -80,7 +113,7 @@ if (scorePointer != nullptr) {
 Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Dot and arrow select record members
+## Dot selects through an object; arrow selects through a pointer
 
 ~~~cpp
 Reading reading{7, 31.5, true};
@@ -91,7 +124,7 @@ pointer->value = 32.5;  // same as (*pointer).value
 ~~~
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · coherent cells
+## Game evolution: Records keep cells and entities coherent
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -113,14 +146,14 @@ int main() {
 **Next unlock · L14:** make each Snake segment own the next segment dynamically.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: layout, alignment, and pointer arithmetic
+## Layout, alignment, and pointer arithmetic affect safety
 
 Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
 
 Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Safe memory reasoning groups state and validates addresses
 
 - A struct creates one coherent record type.
 - An array of records stores repeated entities.
@@ -128,9 +161,50 @@ Pointer arithmetic is valid only within one array object (or one-past its end). 
 - Check for <code>nullptr</code> before access.
 - Layout is implementation-specific and pointer arithmetic has strict bounds.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Represent and filter sensor records with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** A struct models one domain record.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Model a book and sort an array of books by price.
+- Calculate and print the padding of three alternate struct layouts.
+- Update a student record through a pointer and the arrow operator.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Represent and filter sensor records without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="13" data-markdown><textarea data-template>
+## Solve five problems to transfer Represent and filter sensor records
+
+**IC151 lab practice · 5 problems**
+
+1. Model a book and sort an array of books by price.
+1. Calculate and print the padding of three alternate struct layouts.
+1. Update a student record through a pointer and the arrow operator.
+1. Use a lambda to filter employees above a salary threshold.
+1. Build a singly linked list node and insert at the front.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

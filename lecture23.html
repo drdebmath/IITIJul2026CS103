@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 23: Recursive & Polymorphic Capstones">
-    <title>Lecture 23: Recursive & Polymorphic Capstones</title>
+    <meta name="description" content="CS103 Lecture 23: Integrate structures, algorithms, and evidence">
+    <title>Lecture 23: Integrate structures, algorithms, and evidence</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 23: Recursive & Polymorphic Capstones
+# Lecture 23: Integrate structures, algorithms, and evidence
 ## Select structures and algorithms for integrated problems
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Open capstone and Hall of Fame candidate
+## Integrate a game, cleaner, visualization, music generator, or circuit optimizer.
+
+**Studio thread:** Open capstone and Hall of Fame candidate
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,32 @@
 
 **Compare:** the first correct baseline versus the final evidence-backed design
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The key representation determines the buckets. · Sort fixed-width institute IDs by digits
+
+Radix sort exploits the digit structure of integer keys; the stable bucket pass is the algorithmic application.
+
+~~~cpp
+#include <array>
+#include <vector>
+
+void digitPass(std::vector<int>& values, int place) {
+    std::array<std::vector<int>, 10> buckets;
+    for (int value : values) buckets[(value / place) % 10].push_back(value);
+    std::size_t out = 0;
+    for (const auto& bucket : buckets)
+        for (int value : bucket) values[out++] = value;
+}
+~~~
+
+**Takeaways**
+
+- The key representation determines the buckets.
+- Stable passes preserve earlier digit order.
+- The array of vectors is the structure that makes the algorithm direct.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Begin with the required operation
+## The required operation determines the candidate structures
 
 | Application | Structure | Algorithmic idea |
 |---|---|---|
@@ -41,14 +67,14 @@
 | vary legal behavior by piece | hierarchy | dynamic dispatch |
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Block-recursive matrix multiplication
+## Block recursion reduces matrix multiplication to smaller compatible products
 
 Split each matrix into four blocks, recursively multiply compatible block pairs, and add partial results.
 
 The base case multiplies a sufficiently small block directly. A practical implementation must also handle dimensions that are not powers of two.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Radix sort applies stable buckets
+## Stable buckets let radix sort process one digit at a time
 
 For non-negative decimal integers:
 
@@ -59,7 +85,7 @@ For non-negative decimal integers:
 The queue-like bucket structure supplies stable collection order.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Invert a binary tree
+## Tree inversion swaps each node’s children recursively
 
 ~~~cpp
 Node* invert(Node* root) {
@@ -73,14 +99,14 @@ Node* invert(Node* root) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Chess applies runtime polymorphism
+## A shared Piece interface lets each chess type choose its move
 
 A base <code>Piece</code> promises legal-move generation. <code>Rook</code>, <code>Bishop</code>, and <code>Knight</code> implement different movement rules.
 
 The board owns pieces; the caller asks through the common interface.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Integration checklist
+## A capstone needs state, invariants, ownership, stopping rules, and adversarial tests
 
 Before implementation, identify:
 
@@ -92,7 +118,7 @@ Before implementation, identify:
 - expected time and space growth.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · one verified capstone family
+## Game evolution: One verified capstone connects every layer
 
 | Final build | Exact parts now connected | Concept provenance |
 |---|---|---|
@@ -110,16 +136,57 @@ Before implementation, identify:
 **Final extension:** replay the same verified state trace in terminal, ASCII animation, or HTML/SVG without changing the game rules.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Course summary
+## A capstone is justified by its representation, algorithm, invariant, and evidence
 
 - Represent state with a structure whose operations match the problem.
 - Apply algorithms through those operations.
 - Preserve bounds, invariants, ownership, and progress.
 - Use the dependency graph to revisit the earliest uncertain prerequisite.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Sort fixed-width institute IDs by digits with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The key representation determines the buckets.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Complete LSD radix sort for non-negative integers.
+- Extend radix sort to handle negative integers.
+- Implement block-recursive multiplication for square matrices.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Sort fixed-width institute IDs by digits without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="23" data-markdown><textarea data-template>
+## Solve five problems to transfer Sort fixed-width institute IDs by digits
+
+**IC151 lab practice · 5 problems**
+
+1. Complete LSD radix sort for non-negative integers.
+1. Extend radix sort to handle negative integers.
+1. Implement block-recursive multiplication for square matrices.
+1. Invert a binary tree recursively and iteratively.
+1. Design a ChessPiece hierarchy and generate legal moves polymorphically.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

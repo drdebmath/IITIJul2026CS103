@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 15: Linear Structures & Array Algorithms">
-    <title>Lecture 15: Linear Structures & Array Algorithms</title>
+    <meta name="description" content="CS103 Lecture 15: Choose structures from operations and cost">
+    <title>Lecture 15: Choose structures from operations and cost</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 15: Linear Structures & Array Algorithms
+# Lecture 15: Choose structures from operations and cost
 ## Choose operations before representation
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Queue the cells that still need cleaning
+## Remember pending dirty cells and service them in a deliberate order.
+
+**Studio thread:** Queue the cells that still need cleaning
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,15 +32,44 @@
 
 **Compare:** FIFO service order versus LIFO service order
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## The structure supplies the ordering guarantee. · Dispatch print jobs with a queue
+
+FIFO order is a property of the queue structure; the scheduling algorithm simply consumes that interface.
+
+~~~cpp
+#include <iostream>
+#include <queue>
+#include <string>
+
+int main() {
+    std::queue<std::string> jobs;
+    jobs.push("report.pdf");
+    jobs.push("diagram.png");
+    jobs.push("notes.txt");
+
+    while (!jobs.empty()) {
+        std::cout << "Printing " << jobs.front() << std::endl;
+        jobs.pop();
+    }
+}
+~~~
+
+**Takeaways**
+
+- The structure supplies the ordering guarantee.
+- The algorithm uses only front, push, and pop.
+- Choosing a structure simplifies the application.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## An abstract data type is an operation contract
+## An abstract data type specifies operations before representation
 
 A stack promises <code>push</code>, <code>pop</code>, and <code>top</code>. A queue promises <code>enqueue</code>, <code>dequeue</code>, and <code>front</code>.
 
 The contract does not require a class or one specific representation.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Linear search applies traversal to stored data
+## Linear search is the trustworthy baseline when only traversal is known
 
 ~~~cpp
 std::vector<int> values{8, 3, 5, 3};
@@ -51,7 +82,7 @@ for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
 Worst case: inspect every element.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Bubble sort applies neighboring swaps
+## Bubble sort trades simplicity for quadratic time
 
 ~~~cpp
 for (std::size_t end = values.size(); end > 1; --end) {
@@ -66,7 +97,7 @@ for (std::size_t end = values.size(); end > 1; --end) {
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A stack is last-in, first-out
+## A stack returns the most recently pushed item first
 
 With an array representation, keep one integer <code>top</code>:
 
@@ -77,14 +108,14 @@ With an array representation, keep one integer <code>top</code>:
 An undo history and function calls are stack applications.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A queue is first-in, first-out
+## A queue returns the earliest enqueued item first
 
 A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</code>. A linked queue keeps pointers to the first and last nodes.
 
 Print jobs and breadth-first exploration are queue applications.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · a cleaning queue
+## Game evolution: A queue orders cleaning work
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -109,7 +140,7 @@ int main() {
 **Next unlock · L16:** explore choices recursively and undo dead ends.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Compare operations, not names
+## Compare structures by operation costs, not names
 
 | Requirement | Useful choice |
 |---|---|
@@ -119,7 +150,7 @@ int main() {
 | repeatedly exchange adjacent inversions | array + bubble sort |
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Match operations, invariants, and cost before choosing a structure
 
 - An ADT is defined by valid operations and behavior.
 - Algorithms are applications of the representation's operations.
@@ -127,9 +158,50 @@ int main() {
 - Stack means LIFO; queue means FIFO.
 - Bubble sort is simple but performs quadratic work.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Dispatch print jobs with a queue with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** The structure supplies the ordering guarantee.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Implement a stack using a fixed array and test overflow and underflow.
+- Implement a circular queue using an array.
+- Check balanced brackets using a stack.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Dispatch print jobs with a queue without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="15" data-markdown><textarea data-template>
+## Solve five problems to transfer Dispatch print jobs with a queue
+
+**IC151 lab practice · 5 problems**
+
+1. Implement a stack using a fixed array and test overflow and underflow.
+1. Implement a circular queue using an array.
+1. Check balanced brackets using a stack.
+1. Use linear search to find all overdue jobs in an array.
+1. Sort student records by score using bubble sort and a comparator.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

@@ -3,19 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 2: Types & Representation">
-    <title>Lecture 2: Types & Representation</title>
+    <meta name="description" content="CS103 Lecture 2: Choose types from meaning, range, and precision">
+    <title>Lecture 2: Choose types from meaning, range, and precision</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 2: Types & Representation
+# Lecture 2: Choose types from meaning, range, and precision
 ## Give every stored value a deliberate meaning
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Algorithmic studio · Encode the cleaning world
+## Store position, dirt, battery, and sensor readings without confusing their meanings.
+
+**Studio thread:** Encode the cleaning world
 
 | Ask | Today’s answer |
 |---|---|
@@ -30,8 +32,34 @@
 
 **Compare:** one overloaded numeric type versus several meaning-specific types
     </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Range and precision guide type choice. · Choose types for a sensor packet
+
+A weather station mixes counts, precise measurements, status flags, and identifiers—each deserves an intentional type.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int stationId = 2048;
+    double temperature = 31.625;
+    float humidity = 68.4f;
+    bool batteryLow = false;
+    char quality = 'A';
+
+    std::cout << stationId << " " << temperature << " "
+              << humidity << " " << quality << " " << batteryLow;
+}
+~~~
+
+**Takeaways**
+
+- Range and precision guide type choice.
+- A type documents intent.
+- Narrow types are useful only when their limits are understood.
+    </textarea></section>
     <section data-markdown><textarea data-template>
-## Variables and static typing
+## Static typing checks a variable’s kind before the program runs
 
 A **variable** is a named storage location. **Static typing** means types are checked before execution.
 
@@ -45,7 +73,7 @@ bool submitted = false;
 The initializer supplies the first value.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Primitive types answer different questions
+## Choose int, double, char, or bool from the value’s meaning
 
 | Requirement | Suitable type | Example |
 |---|---|---|
@@ -57,7 +85,7 @@ The initializer supplies the first value.
 Sizes are implementation-dependent; inspect them with <code>sizeof</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: integer modifiers
+## Signedness and width determine the numeric range
 
 <code>signed</code> supports negative and positive values. <code>unsigned</code> represents only non-negative values but wraps at its maximum.
 
@@ -66,7 +94,7 @@ Sizes are implementation-dependent; inspect them with <code>sizeof</code>.
 Use a modifier only when its range and interaction with other types are understood.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Constants preserve an invariant
+## const prevents accidental reassignment
 
 ~~~cpp
 const double safeLimit = 12.5;
@@ -78,7 +106,7 @@ double reading = 11.8;
 <code>const</code> prevents modification through that name after initialization.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution sneak peek · name the state
+## Game evolution: Named state gives the world memory
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -100,7 +128,7 @@ int main() {
 **Next unlock · L03:** compute a new coordinate from the current state and one movement delta.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Type inference still produces one type
+## auto deduces one real type without removing type meaning
 
 ~~~cpp
 auto samples = 12;       // int
@@ -111,7 +139,7 @@ const auto room = 103;   // const int
 Use <code>auto</code> when the initializer makes the type obvious.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Convert explicitly when information may change
+## Explicit casts make possible information loss visible
 
 ~~~cpp
 double mean = 97.56;
@@ -121,7 +149,7 @@ int whole = static_cast<int>(mean);  // 97
 An explicit conversion documents intent. Check the destination range first: fractional information may be truncated, and an out-of-range conversion may be invalid.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Session summary
+## Type choice follows meaning, range, and precision
 
 - A type describes values and permitted operations.
 - Choose representation from meaning, range, and precision.
@@ -129,9 +157,50 @@ An explicit conversion documents intent. Check the destination range first: frac
 - Use <code>const</code> for values that must not change.
 - Make potentially lossy conversions explicit.
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## Verify Choose types for a sensor packet with a claim, trace, boundary, and improvement
+
+Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+
+- **Claim:** Range and precision guide type choice.
+- **Trace:** name the state that changes and the observation that would confirm it.
+- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
+- **Improvement:** explain one change that would make the solution clearer or safer.
+
+### Exit ticket
+
+Choose one problem to solve now and two to attempt in the lab:
+
+- Choose types for roll number, CGPA, hostel block, and fee-paid status.
+- Print the size and numeric limits of the fundamental arithmetic types.
+- Demonstrate truncation when a double is converted to int.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Explain Choose types for a sensor packet without opening the code
+
+Explain today’s idea to a partner without opening the code:
+
+1. State the input, output, and one rule the solution must preserve.
+2. Point to the operation that makes progress or changes the state.
+3. Name the first test you would run after changing the implementation.
+
+If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="2" data-markdown><textarea data-template>
+## Solve five problems to transfer Choose types for a sensor packet
+
+**IC151 lab practice · 5 problems**
+
+1. Choose types for roll number, CGPA, hostel block, and fee-paid status.
+1. Print the size and numeric limits of the fundamental arithmetic types.
+1. Demonstrate truncation when a double is converted to int.
+1. Compare signed and unsigned behavior near zero.
+1. Use const and auto to model the radius and area of a circle.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
 </html>

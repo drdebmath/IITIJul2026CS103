@@ -31,6 +31,8 @@
     document.write([
         script('course-map.js'),
         script('course-concepts.js'),
+        script('course-data.js'),
+        script('course-progress.js'),
         script('course-schedule.js'),
         style('dist/reveal.css', 'dist/reveal.css'),
         style('dist/theme/white.css', 'dist/theme/white.css', 'theme-link'),
