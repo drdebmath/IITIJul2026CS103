@@ -26,11 +26,10 @@ int main() {
         2: {
             title: 'Choose types for a sensor packet',
             context: 'A weather station mixes counts, precise measurements, status flags, and identifiers—each deserves an intentional type.',
-            code: `#include <cstdint>
-#include <iostream>
+            code: `#include <iostream>
 
 int main() {
-    std::uint16_t stationId = 2048;
+    int stationId = 2048;
     double temperature = 31.625;
     float humidity = 68.4f;
     bool batteryLow = false;
@@ -49,26 +48,23 @@ int main() {
             ]
         },
         3: {
-            title: 'Count completed experiments safely',
-            context: 'A static local variable remembers state across calls while the rest of the implementation remains scoped.',
+            title: 'Update game state without leaking temporary names',
+            context: 'A small block holds one reward calculation while the score remains available to the rest of the program.',
             code: `#include <iostream>
 
-namespace lab {
-int recordExperiment() {
-    static int completed = 0;
-    return ++completed;
-}
-}
-
 int main() {
-    std::cout << lab::recordExperiment() << std::endl;
-    std::cout << lab::recordExperiment() << std::endl;
+    int score = 4;
+    {
+        int collectedReward = 3;
+        score += collectedReward;
+    }
+    std::cout << score << std::endl;
 }`,
-            takeaways: ['Scope limits where a name is visible.', 'Storage duration controls how long a value survives.', 'Namespaces prevent collisions.'],
+            takeaways: ['Expressions transform program state.', 'Scope hides transition-only names.', 'The longer-lived score remains available afterward.'],
             problems: [
                 'Trace local and global variables with the same name.',
-                'Write a function whose static counter reports how often it was called.',
-                'Place two area functions in different namespaces and call both.',
+                'Use one inner block for a temporary score update, then print the outer score.',
+                'Place two variables with the same name in different namespaces and select both with ::.',
                 'Evaluate five expressions involving arithmetic and logical precedence.',
                 'Refactor a program to remove an unnecessary global variable.'
             ]
@@ -221,12 +217,14 @@ struct Node {
 };
 
 int main() {
-    auto head = std::make_unique<Node>(Node{42, nullptr});
-    head->next = std::make_unique<Node>(Node{57, nullptr});
+    auto head = std::make_unique<Node>();
+    head->sample = 42;
+    head->next = std::make_unique<Node>();
+    head->next->sample = 57;
     for (Node* p = head.get(); p; p = p->next.get())
         std::cout << p->sample << " ";
 }`,
-            takeaways: ['Ownership determines who releases memory.', 'Links turn separate allocations into a structure.', 'RAII removes an entire class of leaks.'],
+            takeaways: ['Ownership determines who releases memory.', 'Links turn separate allocations into a structure.', 'Leaving scope releases the complete owned chain automatically.'],
             problems: [
                 'Allocate an integer array dynamically and compute its median.',
                 'Implement insert-at-end and delete-by-value for a linked list.',
@@ -267,24 +265,15 @@ int main() {
             context: 'A heap makes the highest-priority request available immediately while preserving efficient insertion.',
             code: `#include <iostream>
 #include <queue>
-#include <string>
-
-struct Request {
-    int severity;
-    std::string equipment;
-    bool operator<(const Request& other) const {
-        return severity < other.severity;
-    }
-};
 
 int main() {
-    std::priority_queue<Request> work;
-    work.push({2, "pump"});
-    work.push({5, "reactor"});
-    work.push({3, "compressor"});
-    std::cout << work.top().equipment;
+    std::priority_queue<int> severity;
+    severity.push(2);
+    severity.push(5);
+    severity.push(3);
+    std::cout << "Next severity: " << severity.top();
 }`,
-            takeaways: ['A heap encodes priority as a structural invariant.', 'The comparator defines what “highest” means.', 'The application inherits logarithmic insertion.'],
+            takeaways: ['A heap encodes priority as a structural invariant.', 'The largest stored severity is exposed first.', 'The application inherits logarithmic insertion.'],
             problems: [
                 'Implement iterative binary search and count comparisons.',
                 'Insert, search, and print an inorder traversal of a BST.',
@@ -323,14 +312,21 @@ int main() {
         13: {
             title: 'Debug a safe average function',
             context: 'Most exam bugs are contract violations: an empty range, a wrong bound, an uninitialized accumulator, or integer division.',
-            code: `#include <stdexcept>
+            code: `#include <cassert>
 #include <vector>
 
-double average(const std::vector<int>& values) {
-    if (values.empty()) throw std::invalid_argument("empty data");
+bool average(const std::vector<int>& values, double& result) {
+    if (values.empty()) return false;
     long long sum = 0;
     for (int value : values) sum += value;
-    return static_cast<double>(sum) / values.size();
+    result = static_cast<double>(sum) / values.size();
+    return true;
+}
+
+int main() {
+    double result = 0.0;
+    assert(average({1, 2}, result) && result == 1.5);
+    assert(!average({}, result));
 }`,
             takeaways: ['State preconditions explicitly.', 'Initialize every accumulator.', 'Test empty, one-element, and boundary cases.'],
             problems: [
@@ -370,21 +366,20 @@ int main() {
         15: {
             title: 'Encapsulate a bank account',
             context: 'The class protects its invariant—balance cannot become negative—while constructors establish a valid starting state.',
-            code: `#include <stdexcept>
-#include <string>
-#include <utility>
+            code: `#include <string>
 
 class Account {
     std::string owner_;
     double balance_;
 public:
-    Account(std::string owner, double opening)
-        : owner_(std::move(owner)), balance_(opening) {
-        if (opening < 0) throw std::invalid_argument("negative opening");
+    Account(const std::string& owner, double opening)
+        : owner_(owner), balance_(0.0) {
+        if (opening > 0.0) balance_ = opening;
     }
-    void withdraw(double amount) {
-        if (amount <= 0 || amount > balance_) throw std::invalid_argument("invalid withdrawal");
+    bool withdraw(double amount) {
+        if (amount <= 0 || amount > balance_) return false;
         balance_ -= amount;
+        return true;
     }
     double balance() const { return balance_; }
 };`,
@@ -751,36 +746,6 @@ int main() {
         });
     }
 
-    function createCourseContextSlide() {
-        if (!lectureContext || document.querySelector('[data-course-context]')) return null;
-        const section = document.createElement('section');
-        section.className = 'course-extra-slide course-context-slide';
-        section.dataset.courseContext = String(lectureId);
-
-        const sessionLabel = scheduleSession ? `Session ${String(scheduleSession.sequence).padStart(2, '0')} · ${window.CS103Schedule.formatSessionDate(scheduleSession)} · ${window.CS103Schedule.formatSessionTime(scheduleSession)}` : `Lecture ${String(lectureId).padStart(2, '0')}`;
-        const conceptLabels = lectureConcepts.length
-            ? lectureConcepts.map((concept) => `<li><a href="${concept.href}"><span>${concept.reference}</span>${concept.title}</a></li>`).join('')
-            : '<li><span>Integration</span>Review and connect the preceding concept path.</li>';
-        const referenceCount = coreAuthoredSlides ? document.querySelectorAll('[data-course-authored-slide].course-reference-slide').length : 0;
-        section.innerHTML = `
-            <span class="course-extra-kicker">Learning path · ${sessionLabel}</span>
-            <h2>Why this lecture comes now.</h2>
-            <div class="course-context-grid">
-                <article><small>Course branch</small><strong>${lectureContext.module}</strong><p>${lectureContext.unlocks}</p><a class="course-code-link" href="codes/index.html#lecture-${String(lectureId).padStart(2, '0')}">Open lecture code examples ↗</a></article>
-                <article><small>Builds on</small><ul>${lectureContext.prerequisites.map((item) => `<li>${item}</li>`).join('')}</ul></article>
-                <article><small>By the end</small><ul>${lectureContext.outcomes.map((item) => `<li>${item}</li>`).join('')}</ul></article>
-            </div>
-            <div class="course-concept-reference-list">
-                <small>Concept references in this deck</small>
-                <ul>${conceptLabels}</ul>
-            </div>
-            <div class="course-pacing-note">
-                <span><strong>55-minute core path</strong>${referenceCount ? ` · ${referenceCount} deeper reference slide${referenceCount === 1 ? '' : 's'} kept outside the live session` : ' · every authored slide is in the live session'}</span>
-                ${referenceCount ? `<button id="course-reference-toggle" type="button">${showReferenceSlides ? 'Use 55-minute core' : 'Show reference slides'}</button>` : ''}
-            </div>`;
-        return section;
-    }
-
     function createNoviceOnboardingSlides() {
         if (lectureId !== 1) return [];
         const start = document.createElement('section');
@@ -810,18 +775,14 @@ int main() {
         return [start, screen];
     }
 
-    function injectCourseContextSlide() {
+    function injectNoviceOnboardingSlides() {
         const first = authoredLeafSlides()[0];
-        const contextSlide = createCourseContextSlide();
-        if (first && contextSlide) {
-            first.after(contextSlide);
-            let after = contextSlide;
-            createNoviceOnboardingSlides().forEach((slide) => {
-                after.after(slide);
-                after = slide;
-            });
-            contextSlide.querySelector('#course-reference-toggle')?.addEventListener('click', () => setReferenceVisibility(!showReferenceSlides));
-        }
+        if (!first) return;
+        let after = first;
+        createNoviceOnboardingSlides().forEach((slide) => {
+            after.after(slide);
+            after = slide;
+        });
     }
 
     function markReferenceSlides() {
@@ -1715,7 +1676,7 @@ int main() {
     annotateAuthoredSlides();
     markReferenceSlides();
     setReferenceVisibility(showReferenceSlides);
-    injectCourseContextSlide();
+    injectNoviceOnboardingSlides();
     injectCheckpoints();
     createDeckBar();
     injectExtraSlides();

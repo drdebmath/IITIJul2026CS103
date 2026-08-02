@@ -18,6 +18,53 @@ No computer or programming experience is assumed.
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Demo theatre → first robot command
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Make a machine carry out one observable action. |
+| **Model** | Input describes a command; a finite process produces output. |
+| **Represent** | Names stand for the few values the action needs. |
+| **Solve** | Write an input → process → output algorithm, then compile it. |
+| **Verify** | Predict the exact output; compare it with one run and one deliberate error. |
+| **Improve** | Rename vague steps and remove every instruction a partner cannot follow. |
+
+**Technique lens:** simulation and precise sequencing
+
+**Compare:** a fixed command list versus a rule-based cleaner (preview only)
+    </textarea></section>
+    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
+## By the final week, algorithms will come alive
+
+| Build | State and structure | Algorithmic idea |
+|---|---|---|
+| cleaning robot | grid + position + dirt | simulation and sweep |
+| graph cleaner | vertices + edges + visited set | BFS/DFS coverage |
+| object components | pixels + labels + frontier | flood fill |
+| shortest routes | grid/graph + queue/heap + parents | BFS and weighted search |
+| Snake, two representations | text/linked body + occupied cells | update loop, traversal, collision search |
+| multi-agent cleaner | classes + shared world | policies, allocation, graph coverage |
+| music and circuits | event sequences / component graph | randomized generation and optimization |
+
+These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.
+    </textarea></section>
+    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
+## One model, many ways to see it
+
+~~~text
+Problem → model/state → algorithm → trace
+                            ├─ ASCII terminal animation
+                            ├─ HTML/SVG interactive view
+                            └─ modern C++ graphics window
+~~~
+
+- The **model** is the source of truth; a renderer is only a view.
+- A recorded trace lets every view replay the same run.
+- Extensions can add color, sound, controls, multiple agents, or procedural music without changing a verified core.
+
+By semester end, you should be able to explain not only *what* you built, but *why its representation and algorithm fit the problem*.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A program follows an algorithm
 
@@ -25,11 +72,12 @@ An **algorithm** is a finite sequence of precise steps.
 
 Use the same problem-solving workflow every time:
 
-1. State the input and expected output.
-2. Work one example by hand.
-3. Write unambiguous steps.
-4. Implement one step at a time.
-5. Test normal, boundary, and invalid input.
+1. **Problem:** state inputs, outputs, constraints, and success.
+2. **Model:** keep only the details that affect the answer.
+3. **Represent:** choose state and data structures.
+4. **Solve:** write precise steps; implement one at a time.
+5. **Verify:** explain why they work; test boundaries.
+6. **Improve:** compare clarity, safety, generality, and cost.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## What the computer does
@@ -55,6 +103,27 @@ int main() {
 
 <code>main</code> is the entry point. Output makes the program's result observable.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a visible first frame
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| observable output | draw one fixed Snake-and-Cleaner frame in the terminal |
+
+~~~cpp
+#include <iostream>
+int main() {
+    std::cout << "+-----+\n";
+    std::cout << "|S..*C|\n";
+    std::cout << "+-----+\n";
+    return 0;
+}
+~~~
+
+**Predict and verify:** write the seven visible characters in the middle row before running it.
+
+**Next unlock · L02:** replace fixed symbols with named coordinates, score, and dirt state.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Edit, compile, link, run
 
@@ -70,17 +139,15 @@ g++ -std=c++17 hello.cpp -o hello
 - The executable is the program you run.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Reference: why C++ exists
+## Reference: why languages differ
 
-Programming languages evolved to make instructions safer to express and easier to reuse.
+A **programming language** makes some kinds of thinking and engineering easier than others.
 
-C++ combines:
+- **C++17 is our main workshop:** high-level libraries, visible representation, resource control, and performance for games, graphics, science, and systems.
+- **Rust is our modern glimpse:** ownership is checked by the compiler, preventing many memory and data-race defects before execution.
+- Python favors rapid exploration; JavaScript reaches the browser; other languages serve other constraints.
 
-- high-level functions and standard-library types;
-- direct control over representation and resources;
-- performance suitable for scientific and systems work.
-
-History is context—not a prerequisite for writing the first program.
+There is no universally best language. We learn transferable models and algorithms, then choose tools from the problem.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Comments, identifiers, and declarations
@@ -105,7 +172,6 @@ An identifier names something. A declaration introduces a name and its type.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

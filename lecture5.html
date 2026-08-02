@@ -14,6 +14,22 @@
 # Lecture 5: Iteration I
 ## while, do-while, progress, and stopping
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Clean an unknown-length corridor
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Continue cleaning until the wall, battery limit, or input sentinel is reached. |
+| **Model** | Repeated transitions change measurable state toward a stopping condition. |
+| **Represent** | Position, battery, dirt count, and stop reason are loop state. |
+| **Solve** | Use while for an event-controlled run and do-while for validated input. |
+| **Verify** | Trace zero iterations, one iteration, normal progress, and every stop reason. |
+| **Improve** | Make progress and termination visible in the condition and update. |
+
+**Technique lens:** iteration and simulation
+
+**Compare:** event-controlled repetition versus a guessed fixed number of steps
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Trace a while loop before running it
 
@@ -66,6 +82,30 @@ do {
 
 The body runs once before the condition is tested.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · the game loop
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| while, do-while, and progress | keep requesting valid moves until quit or collision |
+
+~~~cpp
+#include <iostream>
+int main() {
+    char command;
+    do { std::cin >> command; } while (command!='w' && command!='a' &&
+                                      command!='s' && command!='d' && command!='q');
+    int turns = 0;
+    while (command != 'q' && turns < 20) {
+        ++turns; std::cin >> command;
+    }
+}
+~~~
+
+**Termination argument:** every accepted non-quit command increases <code>turns</code>; at 20 the loop stops.
+
+**Next unlock · L06:** redraw every row and column after each turn.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Three common loop failures
 
@@ -100,7 +140,6 @@ Both stopping reasons remain visible in the condition.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

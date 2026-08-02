@@ -14,6 +14,22 @@
 # Lecture 22: Applied Object Systems
 ## Compose domain objects, collections, and algorithms
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Rank tasks and model routes
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Separate actors, tasks, relationships, and the policy that ranks candidates. |
+| **Model** | A task has constraints and a measurable key; a route has vertices and edges. |
+| **Represent** | Domain records, index associations, predicates, comparators, and a strategy interface. |
+| **Solve** | Filter with a predicate, rank with a comparator, and isolate policy selection. |
+| **Verify** | Test empty collections, invalid indices, equal keys, and comparator consistency. |
+| **Improve** | Swap ranking policies without changing the stored domain objects. |
+
+**Technique lens:** applied object modeling, collection algorithms, and policy separation
+
+**Compare:** hard-coded selection versus an explicit replaceable policy
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Assign one responsibility to each component
 
@@ -39,14 +55,14 @@ Indices express associations without ambiguous ownership.
 ## Search applies a predicate to the collection
 
 ~~~cpp
-auto matchesRoute = [&](const Flight& flight) {
+auto matchesRoute = [requestedFrom, requestedTo](const Flight& flight) {
     return flight.from == requestedFrom && flight.to == requestedTo;
 };
 
 auto result = std::find_if(flights.begin(), flights.end(), matchesRoute);
 ~~~
 
-The lambda is a predicate: a callable returning true or false.
+The lambda is a predicate: a callable returning true or false. Its capture list copies the two requested city values into the callable.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Sorting applies a comparator
@@ -59,6 +75,32 @@ std::sort(flights.begin(), flights.end(),
 ~~~
 
 The comparator defines one consistent ordering relation.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · choose the next target
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| domain object | one Task records a dirty cell and its route length |
+| comparator and sorting | the Cleaner ranks shorter routes first |
+| deterministic tie-break | equal routes use row, then column |
+
+~~~cpp
+struct Task { int row; int column; int steps; };
+std::vector<Task> dirt{{0,4,4},{2,1,3},{4,4,8}};
+std::sort(dirt.begin(),dirt.end(),
+    [](const Task& a,const Task& b) {
+        if (a.steps!=b.steps) return a.steps<b.steps;
+        if (a.row!=b.row) return a.row<b.row;
+        return a.column<b.column;
+    });
+Task next{-1,-1,0};
+if (!dirt.empty()) next=dirt[0];
+~~~
+
+**Invariant/test:** route lengths are nonnegative; after sorting, <code>next</code> is no worse than every remaining task. Test empty, one-task, and equal-distance cases.
+
+**Next unlock · L23:** integrate body, policy, routes, collision rules, and visualization into one verified capstone.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Routing is a graph application
@@ -86,7 +128,6 @@ Use a design pattern only after the recurring responsibility problem is visible.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

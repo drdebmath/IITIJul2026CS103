@@ -22,11 +22,12 @@ An **algorithm** is a finite sequence of precise steps.
 
 Use the same problem-solving workflow every time:
 
-1. State the input and expected output.
-2. Work one example by hand.
-3. Write unambiguous steps.
-4. Implement one step at a time.
-5. Test normal, boundary, and invalid input.`,
+1. **Problem:** state inputs, outputs, constraints, and success.
+2. **Model:** keep only the details that affect the answer.
+3. **Represent:** choose state and data structures.
+4. **Solve:** write precise steps; implement one at a time.
+5. **Verify:** explain why they work; test boundaries.
+6. **Improve:** compare clarity, safety, generality, and cost.`,
             md`## What the computer does
 
 - The **CPU** executes machine instructions.
@@ -59,17 +60,15 @@ g++ -std=c++17 hello.cpp -o hello
 - A compiler checks and translates the source.
 - A linker combines required compiled parts.
 - The executable is the program you run.`,
-            md`## Reference: why C++ exists
+            md`## Reference: why languages differ
 
-Programming languages evolved to make instructions safer to express and easier to reuse.
+A **programming language** makes some kinds of thinking and engineering easier than others.
 
-C++ combines:
+- **C++17 is our main workshop:** high-level libraries, visible representation, resource control, and performance for games, graphics, science, and systems.
+- **Rust is our modern glimpse:** ownership is checked by the compiler, preventing many memory and data-race defects before execution.
+- Python favors rapid exploration; JavaScript reaches the browser; other languages serve other constraints.
 
-- high-level functions and standard-library types;
-- direct control over representation and resources;
-- performance suitable for scientific and systems work.
-
-History is context—not a prerequisite for writing the first program.`,
+There is no universally best language. We learn transferable models and algorithms, then choose tools from the problem.`,
             md`## Comments, identifiers, and declarations
 
 ~~~cpp
@@ -212,21 +211,19 @@ Keep names in the smallest scope that contains every required use.`,
 - **Linkage:** whether declarations in different files name the same entity.
 
 A local static object has block scope but program-long storage duration.`,
-            md`## A static local remembers between calls
+            md`## Storage duration is a lifetime promise
 
 ~~~cpp
-#include <iostream>
-
-int nextExperimentNumber() {
-    static int completed = 0;
-    return ++completed;
-}
+// Defined outside every block: program-long storage duration.
+int completedExperiments = 0;
 
 int main() {
-    std::cout << nextExperimentNumber() << ' ';
-    std::cout << nextExperimentNumber();  // 1 2
+    int today = 2;               // exists during this run of main
+    completedExperiments += today;
 }
-~~~`,
+~~~
+
+Later, functions will provide a safer interface around shared state. For now, distinguish where a name is visible from how long its object exists.`,
             md`## Reference: one definition shared by two files
 
 ~~~cpp
@@ -300,14 +297,14 @@ The division runs only when the left condition is true.`,
             md`## Floating-point equality needs a tolerance
 
 ~~~cpp
-#include <cmath>
-
-bool nearlyEqual(double a, double b, double tolerance) {
-    return std::abs(a - b) <= tolerance;
+double difference = measured - expected;
+if (difference < 0.0) {
+    difference = -difference;
 }
+bool nearlyEqual = difference <= tolerance;
 ~~~
 
-Choose tolerance from the measurement or problem—not one universal constant.`,
+Choose tolerance from the measurement or problem—not one universal constant. A reusable comparison function comes after functions are introduced.`,
             md`## Test the boundaries first
 
 For a safe limit of 10, test:
@@ -856,15 +853,17 @@ For an average function, test:
 | empty input | invalid precondition |
 | one value | smallest valid size |
 | two unequal integers | reveals integer division |
+| <code>assert(condition)</code> | stops a debug run at the first false expectation |
 | maximum expected count | stresses the bound |`,
             md`## Repair a safe average
 
 ~~~cpp
-double average(const std::vector<int>& values) {
-    if (values.empty()) throw std::invalid_argument("empty data");
+bool average(const std::vector<int>& values, double& result) {
+    if (values.empty()) return false;
     long long sum = 0;
     for (int value : values) sum += value;
-    return static_cast<double>(sum) / values.size();
+    result = static_cast<double>(sum) / values.size();
+    return true;
 }
 ~~~`,
             md`## Use assessment evidence
@@ -993,13 +992,17 @@ A smart pointer releases its owned resource automatically. It prevents ownership
             md`## A linked list connects separately stored nodes
 
 ~~~cpp
+#include <memory>
+
 struct Node {
     int value;
     std::unique_ptr<Node> next;
 };
 
-auto head = std::make_unique<Node>(Node{42, nullptr});
-head->next = std::make_unique<Node>(Node{57, nullptr});
+auto head = std::make_unique<Node>();
+head->value = 42;
+head->next = std::make_unique<Node>();
+head->next->value = 57;
 ~~~`,
             md`## Traverse links until the end
 
@@ -1019,7 +1022,7 @@ They do not construct or destroy C++ objects. Use them only when a C interface r
             md`## Session summary
 
 - Dynamic storage requires an ownership rule.
-- Prefer RAII and <code>unique_ptr</code> for exclusive ownership.
+- Prefer <code>unique_ptr</code> for exclusive ownership and automatic release.
 - Smart ownership prevents leaks, not every possible dangling observer.
 - Linked lists trade contiguous access for explicit links.`
         ]
@@ -1038,13 +1041,11 @@ The contract does not require a class or one specific representation.`,
             md`## Linear search applies traversal to stored data
 
 ~~~cpp
-int found = -1;
-for (std::size_t i = 0; i < values.size(); ++i) {
-    if (values[i] == target) {
-        found = static_cast<int>(i);
-        break;
-    }
-}
+std::vector<int> values{8, 3, 5, 3};
+int target = 5;
+std::size_t found = values.size();
+for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
+    if (values[i] == target) found = i;
 ~~~
 
 Worst case: inspect every element.`,
@@ -1053,8 +1054,11 @@ Worst case: inspect every element.`,
 ~~~cpp
 for (std::size_t end = values.size(); end > 1; --end) {
     for (std::size_t i = 1; i < end; ++i) {
-        if (values[i] < values[i - 1])
-            std::swap(values[i], values[i - 1]);
+        if (values[i] < values[i - 1]) {
+            int temporary = values[i];
+            values[i] = values[i - 1];
+            values[i - 1] = temporary;
+        }
     }
 }
 ~~~`,
@@ -1210,7 +1214,7 @@ void heapify(std::vector<int>& a, int size, int root) {
 2. Recursively sort each half.
 3. Merge two sorted sequences into temporary storage.
 
-Merge sort is stable and O(n log n); its array implementation uses additional storage. Heap sort is in-place but not stable.`,
+Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.`,
             md`## Session summary
 
 - Binary search exploits sorted-array order.
@@ -1238,7 +1242,7 @@ public:
 };
 ~~~
 
-The invariant is: <code>value</code> is modified only through the public interface.`,
+The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.`,
             md`## Constructors establish valid state
 
 ~~~cpp
@@ -1246,7 +1250,10 @@ class Rectangle {
     double length;
     double width;
 public:
-    Rectangle(double l, double w) : length(l), width(w) {}
+    Rectangle(double l, double w) : length(1.0), width(1.0) {
+        if (l > 0.0) length = l;
+        if (w > 0.0) width = w;
+    }
     double area() const { return length * width; }
 };
 ~~~
@@ -1277,25 +1284,13 @@ Useful value-type operations include:
 - copy assignment safely replacing an existing value.
 
 Do not change an operator's expected meaning.`,
-            md`## A friend is narrow trusted access
-
-~~~cpp
-class Complex {
-    double real, imaginary;
-public:
-    Complex(double r, double i) : real(r), imaginary(i) {}
-    friend std::ostream& operator<<(std::ostream&, const Complex&);
-};
-~~~
-
-Friendship is explicit access, not inheritance and not a security boundary.`,
             md`## Session summary
 
 - A class should protect a meaningful invariant.
 - Constructors initialize; assignment replaces an existing value.
 - Destruction ends lifetime and releases owned resources.
 - Prefer Rule-of-Zero member types.
-- Overloads and friends must keep interfaces unsurprising.`
+- Overloads must keep interfaces unsurprising.`
         ]
     },
     {
@@ -1306,9 +1301,16 @@ Friendship is explicit access, not inheritance and not a security boundary.`,
 ## Move from one value type to a justified is-a relationship`,
             md`## Friendship should remain exceptional
 
-A friend function is a non-member granted access to private and protected members.
+~~~cpp
+class Complex {
+    double real, imaginary;
+public:
+    Complex(double r, double i) : real(r), imaginary(i) {}
+    friend std::ostream& operator<<(std::ostream&, const Complex&);
+};
+~~~
 
-Use it for symmetric operations such as stream insertion when a normal public interface would be less clear.`,
+A friend is a non-member granted narrow access. Friendship is not inheritance or a security boundary.`,
             md`## Public inheritance means substitutability
 
 If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operation promised by <code>Vehicle</code> must remain meaningful for <code>ElectricCar</code>.
@@ -1336,7 +1338,9 @@ class ElectricCar : public Vehicle {
 public:
     int batteryPercent() const { return 80; }
 };
-~~~`,
+~~~
+
+A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.`,
             md`## Construction proceeds base before derived
 
 1. Base members are initialized.
@@ -1392,17 +1396,14 @@ public:
     double area() const override { return side * side; }
 };
 ~~~`,
-            md`## Own polymorphic objects safely
+            md`## Own one polymorphic object safely
 
 ~~~cpp
-std::vector<std::unique_ptr<Shape>> shapes;
-shapes.push_back(std::make_unique<Square>(4.0));
-
-double total = 0.0;
-for (const auto& shape : shapes) total += shape->area();
+std::unique_ptr<Shape> shape = std::make_unique<Square>(4.0);
+double result = shape->area();
 ~~~
 
-The virtual destructor makes deletion through the base interface safe.`,
+The virtual destructor makes deletion through the base interface safe. Lecture 21 will place differently typed objects in one owning container.`,
             md`## A factory centralizes concrete construction
 
 ~~~cpp
@@ -1518,14 +1519,14 @@ Indices express associations without ambiguous ownership.`,
             md`## Search applies a predicate to the collection
 
 ~~~cpp
-auto matchesRoute = [&](const Flight& flight) {
+auto matchesRoute = [requestedFrom, requestedTo](const Flight& flight) {
     return flight.from == requestedFrom && flight.to == requestedTo;
 };
 
 auto result = std::find_if(flights.begin(), flights.end(), matchesRoute);
 ~~~
 
-The lambda is a predicate: a callable returning true or false.`,
+The lambda is a predicate: a callable returning true or false. Its capture list copies the two requested city values into the callable.`,
             md`## Sorting applies a comparator
 
 ~~~cpp
@@ -1621,8 +1622,872 @@ Before implementation, identify:
     }
 ];
 
+// These generated briefs make the transferable problem-solving routine visible
+// without changing authored slide numbers or the eight-slide live-session limit.
+const studioBriefs = {
+    1: {
+        thread: 'Demo theatre → first robot command',
+        problem: 'Make a machine carry out one observable action.',
+        model: 'Input describes a command; a finite process produces output.',
+        represent: 'Names stand for the few values the action needs.',
+        solve: 'Write an input → process → output algorithm, then compile it.',
+        verify: 'Predict the exact output; compare it with one run and one deliberate error.',
+        improve: 'Rename vague steps and remove every instruction a partner cannot follow.',
+        lens: 'simulation and precise sequencing',
+        compare: 'a fixed command list versus a rule-based cleaner (preview only)'
+    },
+    2: {
+        thread: 'Encode the cleaning world',
+        problem: 'Store position, dirt, battery, and sensor readings without confusing their meanings.',
+        model: 'A robot has discrete state plus approximate physical measurements.',
+        represent: 'int for counts/coordinates, bool for facts, double for measurements, const for limits.',
+        solve: 'Choose each type from meaning, range, precision, and permitted operations.',
+        verify: 'Try zero, the largest expected value, a fractional value, and a lossy conversion.',
+        improve: 'Replace magic values with named constants and document units.',
+        lens: 'representation before algorithm',
+        compare: 'one overloaded numeric type versus several meaning-specific types'
+    },
+    3: {
+        thread: 'Track robot state',
+        problem: 'Update a robot pose and score while keeping temporary calculations local.',
+        model: 'A transition maps old state plus one action to new state.',
+        represent: 'Scoped names hold row, column, direction, score, and intermediate expressions.',
+        solve: 'Evaluate one transition in dependency order.',
+        verify: 'Build a before/after state table and evaluate expressions by hand first.',
+        improve: 'Reduce mutable scope and make grouping explicit with names or parentheses.',
+        lens: 'state-transition simulation',
+        compare: 'many unrelated variables versus one coherent state model introduced later'
+    },
+    4: {
+        thread: 'Make movement safe',
+        problem: 'Accept a move only when it stays in bounds and avoids an obstacle.',
+        model: 'Each attempted move belongs to exactly one outcome class.',
+        represent: 'A decision table maps Boolean conditions to MOVE, BLOCKED, or INVALID.',
+        solve: 'Translate mutually exclusive rows into a carefully ordered branch chain.',
+        verify: 'Test every table row, exact boundary, just-outside value, and default case.',
+        improve: 'Remove overlapping conditions and guard unsafe calculations by short-circuiting.',
+        lens: 'exhaustive case analysis',
+        compare: 'nested if statements versus a flat decision table and branch chain'
+    },
+    5: {
+        thread: 'Clean an unknown-length corridor',
+        problem: 'Continue cleaning until the wall, battery limit, or input sentinel is reached.',
+        model: 'Repeated transitions change measurable state toward a stopping condition.',
+        represent: 'Position, battery, dirt count, and stop reason are loop state.',
+        solve: 'Use while for an event-controlled run and do-while for validated input.',
+        verify: 'Trace zero iterations, one iteration, normal progress, and every stop reason.',
+        improve: 'Make progress and termination visible in the condition and update.',
+        lens: 'iteration and simulation',
+        compare: 'event-controlled repetition versus a guessed fixed number of steps'
+    },
+    6: {
+        thread: 'Sweep and render a grid',
+        problem: 'Visit each cell of a small room and print an ASCII frame.',
+        model: 'A room is rows × columns; the current pair identifies one cell.',
+        represent: 'Nested counters represent coordinates; characters represent visible cell states.',
+        solve: 'Enumerate every coordinate with nested for loops.',
+        verify: 'State the processed-prefix invariant and count expected visits before running.',
+        improve: 'Separate the sweep order from rendering and diagnose off-by-one bounds.',
+        lens: 'systematic enumeration',
+        compare: 'row-major versus column-major traversal'
+    },
+    7: {
+        thread: 'Give robot actions contracts',
+        problem: 'Stop one growing main function from mixing movement, sensing, and display.',
+        model: 'The controller coordinates small operations with explicit responsibilities.',
+        represent: 'Function parameters are inputs; return values report results.',
+        solve: 'Decompose by one explainable task and compose calls into a controller.',
+        verify: 'Test each contract independently before integrating the functions.',
+        improve: 'Remove duplication and rename a function whose contract needs “and”.',
+        lens: 'procedural decomposition',
+        compare: 'one monolithic procedure versus several testable functions'
+    },
+    8: {
+        thread: 'Build a testable controller',
+        problem: 'Let functions observe or intentionally change shared robot state.',
+        model: 'Calls form a stack of unfinished responsibilities.',
+        represent: 'Values copy small inputs; references alias intentional shared state; const& observes.',
+        solve: 'Choose a parameter mode from the contract, not from syntax preference.',
+        verify: 'Trace caller and callee state, including a recursive countdown preview.',
+        improve: 'Return information instead of mutating when either design is equally clear.',
+        lens: 'decomposition with controlled aliasing',
+        compare: 'returning a new state versus updating through a reference'
+    },
+    9: {
+        thread: 'Prototype a snake body',
+        problem: 'Store ordered body segments and detect whether the head touches one.',
+        model: 'A snake is a bounded sequence whose position order matters.',
+        represent: 'A fixed array stores segments; an index selects one position.',
+        solve: 'Traverse all valid indices and use a linear scan as a trustworthy baseline.',
+        verify: 'Test the first segment, last segment, no match, and the smallest valid body.',
+        improve: 'Use the actual size as the bound and state what the processed prefix means.',
+        lens: 'brute-force linear search',
+        compare: 'indexed traversal versus whole-sequence range traversal'
+    },
+    10: {
+        thread: 'Grow the grid world',
+        problem: 'Store rooms and paths whose dimensions are known only at runtime.',
+        model: 'A grid is a sequence of rows; each row is a sequence of cells.',
+        represent: 'A matrix models fixed geometry; vectors model runtime-sized or ragged data.',
+        solve: 'Select fixed or dynamic storage, then traverse using each real bound.',
+        verify: 'Test 1×1, one row, unequal row lengths, and checked invalid access.',
+        improve: 'Pass the grid to a renderer instead of mixing storage with output.',
+        lens: 'data-driven simulation',
+        compare: 'fixed 2D array versus nested vectors'
+    },
+    11: {
+        thread: 'Record and replay ASCII animation',
+        problem: 'Read commands and render complete, validated text frames.',
+        model: 'A replay is a sequence of command lines transformed into visible states.',
+        represent: 'std::string owns text; positions and character classes describe its structure.',
+        solve: 'Parse one rule at a time, then map model state to an ASCII frame.',
+        verify: 'Test empty text, spaces, missing delimiters, bad characters, and a valid replay.',
+        improve: 'Keep parsing, simulation, and rendering as separate functions.',
+        lens: 'string processing and model–view separation',
+        compare: 'rebuilding a frame versus incrementally editing the terminal'
+    },
+    12: {
+        thread: 'Repair the simulator from evidence',
+        problem: 'Find why a program compiles or runs yet violates its promised behavior.',
+        model: 'A defect is the earliest point where observed state diverges from expected state.',
+        represent: 'A minimal failing input and trace table capture reproducible evidence.',
+        solve: 'Classify, minimize, trace, change one assumption, and retest.',
+        verify: 'Run the failing case plus the boundary and regression cases after repair.',
+        improve: 'Turn every lost mark or discovered defect into a reusable test.',
+        lens: 'systematic debugging',
+        compare: 'evidence-guided repair versus editing several guesses at once'
+    },
+    13: {
+        thread: 'Model cells, components, and entities',
+        problem: 'Keep each sampled cell and its related properties coherent.',
+        model: 'One entity has identity, value, validity, and possibly a location.',
+        represent: 'A struct groups fields; a pointer can refer to an existing entity.',
+        solve: 'Traverse records and follow only valid, non-null relationships.',
+        verify: 'Check member invariants, null pointers, and first/last record access.',
+        improve: 'Prefer IDs or references when ownership does not need to move.',
+        lens: 'record-based modeling',
+        compare: 'parallel arrays versus an array of coherent records'
+    },
+    14: {
+        thread: 'Rebuild snake as a linked body',
+        problem: 'Grow and shrink an ordered body without a fixed maximum size.',
+        model: 'Each segment owns the next segment; the head owns the complete chain.',
+        represent: 'Linked nodes and unique_ptr make links and ownership explicit.',
+        solve: 'Build and traverse an exclusively owned chain; ownership transfer is deferred.',
+        verify: 'Test empty, one-node, and multi-node bodies; trace object lifetime.',
+        improve: 'Compare operation cost and safety against the already-known vector representation.',
+        lens: 'linked structure and automatic resource release',
+        compare: 'contiguous body storage versus linked nodes'
+    },
+    15: {
+        thread: 'Queue the cells that still need cleaning',
+        problem: 'Remember pending dirty cells and service them in a deliberate order.',
+        model: 'A stored target is waiting, active, or already cleaned.',
+        represent: 'A vector plus a front index acts as a FIFO queue; an array can act as a stack.',
+        solve: 'Scan once to collect dirty indices, then process them in stored order.',
+        verify: 'Test no dirt, one target, repeated targets, and full capacity.',
+        improve: 'Compare FIFO, LIFO, and direct linear search from the operations each needs.',
+        lens: 'linear structures, search, and elementary sorting',
+        compare: 'FIFO service order versus LIFO service order'
+    },
+    16: {
+        thread: 'Explore mazes and repeated subproblems',
+        problem: 'Search choices, undo dead ends, and avoid recomputing identical states.',
+        model: 'Each call owns one smaller state and returns an answer to its caller.',
+        represent: 'The call stack records choices; a memo table stores solved states.',
+        solve: 'Use recursion for structure, backtracking for reversible choices, and memoization for repeated subproblems.',
+        verify: 'Prove a decreasing measure reaches a base case and trace each undo.',
+        improve: 'Replace repeated recursion with memoization or an iterative frontier when useful.',
+        lens: 'recursion, backtracking, and dynamic programming',
+        compare: 'direct recursion versus memoized or iterative solutions'
+    },
+    17: {
+        thread: 'Rank routes and accelerate search',
+        problem: 'Find ordered data or repeatedly select the most promising route candidate.',
+        model: 'An invariant rules out impossible regions or keeps the best priority at the front.',
+        represent: 'Sorted array, BST, or array-backed heap supports different operations.',
+        solve: 'Use binary search, heap repair, or divide–solve–merge as the operation demands.',
+        verify: 'Check the ordering/heap invariant before and after every update.',
+        improve: 'Compare asymptotic growth, stability, storage, and worst-case shape.',
+        lens: 'divide and conquer, ordered search, and priority-based greedy choice',
+        compare: 'linear baseline versus binary search; bubble sort versus merge sort'
+    },
+    18: {
+        thread: 'Turn the robot into a reliable object',
+        problem: 'Prevent any caller from creating or leaving an invalid robot state.',
+        model: 'A robot owns state and exposes only invariant-preserving operations.',
+        represent: 'A class, constructor, private members, and Rule-of-Zero value members.',
+        solve: 'Move responsibility beside the state it governs.',
+        verify: 'Test construction, copied values, assignment, destruction, and invalid inputs.',
+        improve: 'Prefer composition and library-owned resources over handwritten ownership.',
+        lens: 'object-oriented modeling and RAII',
+        compare: 'public record mutation versus a small invariant-preserving interface'
+    },
+    19: {
+        thread: 'Design a family of cleaning agents',
+        problem: 'Share genuine agent behavior without claiming false is-a relationships.',
+        model: 'Specialized agents must remain usable wherever the base contract is expected.',
+        represent: 'A shallow hierarchy models is-a; member objects model has-a.',
+        solve: 'Extract only the common promise and compose independent capabilities.',
+        verify: 'Substitute each derived type in base-level scenarios.',
+        improve: 'Replace inheritance with composition when substitutability is hard to defend.',
+        lens: 'object-oriented abstraction',
+        compare: 'inheritance versus composition'
+    },
+    20: {
+        thread: 'Run multiple agent policies',
+        problem: 'Let sweep, nearest-dirt, and cautious agents act through one controller.',
+        model: 'The environment requests an action without knowing the concrete policy type.',
+        represent: 'A virtual interface and one unique_ptr-owned agent.',
+        solve: 'Use dynamic dispatch; centralize concrete creation in a factory.',
+        verify: 'Call through the base interface and test cleanup plus invalid construction.',
+        improve: 'Add a policy without changing the simulation loop.',
+        lens: 'runtime polymorphism and simulation',
+        compare: 'a growing type switch versus virtual dispatch'
+    },
+    21: {
+        thread: 'Own a mixed actor world',
+        problem: 'Store Snake and Cleaner objects together while keeping their relationships safe.',
+        model: 'Actors own behavior; graph links describe relationships but do not own actors.',
+        represent: 'A vector of unique_ptr-owned actors plus adjacency lists of non-owning indices.',
+        solve: 'Traverse actors through one interface and validate every stored relationship.',
+        verify: 'Check non-null ownership, in-range links, isolated actors, and cyclic links.',
+        improve: 'Keep ownership and graph connectivity independent so either can change safely.',
+        lens: 'polymorphic containers and object-graph modeling',
+        compare: 'owning smart pointers versus non-owning indices'
+    },
+    22: {
+        thread: 'Rank tasks and model routes',
+        problem: 'Separate actors, tasks, relationships, and the policy that ranks candidates.',
+        model: 'A task has constraints and a measurable key; a route has vertices and edges.',
+        represent: 'Domain records, index associations, predicates, comparators, and a strategy interface.',
+        solve: 'Filter with a predicate, rank with a comparator, and isolate policy selection.',
+        verify: 'Test empty collections, invalid indices, equal keys, and comparator consistency.',
+        improve: 'Swap ranking policies without changing the stored domain objects.',
+        lens: 'applied object modeling, collection algorithms, and policy separation',
+        compare: 'hard-coded selection versus an explicit replaceable policy'
+    },
+    23: {
+        thread: 'Open capstone and Hall of Fame candidate',
+        problem: 'Integrate a game, cleaner, visualization, music generator, or circuit optimizer.',
+        model: 'Define state, legal operations, objective, constraints, and audience before coding.',
+        represent: 'Choose structures from required operations, ownership, and visualization needs.',
+        solve: 'Combine only justified paradigms: recursion, DP, search, greedy, or polymorphism.',
+        verify: 'Give a correctness argument, adversarial tests, and a reproducible demonstration.',
+        improve: 'Profile, simplify, document trade-offs, and add one meaningful extension.',
+        lens: 'algorithm selection and integration',
+        compare: 'the first correct baseline versus the final evidence-backed design'
+    }
+};
+
+const missingStudioBriefs = lectures.filter((lecture) => !studioBriefs[lecture.id]);
+if (missingStudioBriefs.length > 0) {
+    throw new Error(`Missing algorithmic studio brief for lecture IDs: ${missingStudioBriefs.map((lecture) => lecture.id).join(', ')}`);
+}
+
+const lectureOneShowcase = [
+    md`## By the final week, algorithms will come alive
+
+| Build | State and structure | Algorithmic idea |
+|---|---|---|
+| cleaning robot | grid + position + dirt | simulation and sweep |
+| graph cleaner | vertices + edges + visited set | BFS/DFS coverage |
+| object components | pixels + labels + frontier | flood fill |
+| shortest routes | grid/graph + queue/heap + parents | BFS and weighted search |
+| Snake, two representations | text/linked body + occupied cells | update loop, traversal, collision search |
+| multi-agent cleaner | classes + shared world | policies, allocation, graph coverage |
+| music and circuits | event sequences / component graph | randomized generation and optimization |
+
+These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.`,
+    md`## One model, many ways to see it
+
+~~~text
+Problem → model/state → algorithm → trace
+                            ├─ ASCII terminal animation
+                            ├─ HTML/SVG interactive view
+                            └─ modern C++ graphics window
+~~~
+
+- The **model** is the source of truth; a renderer is only a view.
+- A recorded trace lets every view replay the same run.
+- Extensions can add color, sound, controls, multiple agents, or procedural music without changing a verified core.
+
+By semester end, you should be able to explain not only *what* you built, but *why its representation and algorithm fit the problem*.`
+];
+
+// One continuous Grid Snake + Cleaner build. Each slide is inserted only after
+// the authored slide that teaches every C++ feature used in its snippet.
+const gameEvolutionSlides = {
+    1: md`## Game evolution sneak peek · a visible first frame
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| observable output | draw one fixed Snake-and-Cleaner frame in the terminal |
+
+~~~cpp
+#include <iostream>
+int main() {
+    std::cout << "+-----+\n";
+    std::cout << "|S..*C|\n";
+    std::cout << "+-----+\n";
+    return 0;
+}
+~~~
+
+**Predict and verify:** write the seven visible characters in the middle row before running it.
+
+**Next unlock · L02:** replace fixed symbols with named coordinates, score, and dirt state.`,
+
+    2: md`## Game evolution sneak peek · name the state
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| typed variables and constants | remember one actor's row, column, score, and board bounds |
+
+~~~cpp
+#include <iostream>
+int main() {
+    const int rows = 5, columns = 9;
+    int headRow = 2, headColumn = 3;
+    int score = 0;
+    bool dirtHere = true;
+    std::cout << headRow << ' ' << headColumn << ' ' << score << ' ' << dirtHere << '\n';
+}
+~~~
+
+**Model check:** row and column are independent whole-number coordinates; dirt is a yes/no fact.
+
+**Next unlock · L03:** compute a new coordinate from the current state and one movement delta.`,
+
+    3: md`## Game evolution sneak peek · one state transition
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| expressions and block scope | calculate one candidate move, then commit it |
+
+~~~cpp
+#include <iostream>
+int main() {
+    int row = 2, column = 3;
+    int dRow = 0, dColumn = 1;
+    {
+        int nextRow = row + dRow, nextColumn = column + dColumn;
+        row = nextRow; column = nextColumn;
+    }
+    std::cout << row << ' ' << column << '\n';
+}
+~~~
+
+**Invariant:** outside the inner block, only the committed position remains visible.
+
+**Next unlock · L04:** accept different directions and reject unsafe moves.`,
+
+    4: md`## Game evolution sneak peek · a legal move
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| switch and guarded branching | translate WASD into a direction and reject a wall crossing |
+
+~~~cpp
+int main() {
+    int row=2, column=3, dRow=0, dColumn=0; char command='d';
+    switch(command) { case 'w': dRow=-1; break; case 's': dRow=1; break;
+        case 'a': dColumn=-1; break; case 'd': dColumn=1; break; default: break; }
+    int nextRow=row+dRow, nextColumn=column+dColumn;
+    bool inside=nextRow>=0 && nextRow<5 && nextColumn>=0 && nextColumn<9;
+    if (inside) { row=nextRow; column=nextColumn; }
+}
+~~~
+
+**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8.
+
+**Next unlock · L05:** repeat commands until the game ends.`,
+
+    5: md`## Game evolution sneak peek · the game loop
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| while, do-while, and progress | keep requesting valid moves until quit or collision |
+
+~~~cpp
+#include <iostream>
+int main() {
+    char command;
+    do { std::cin >> command; } while (command!='w' && command!='a' &&
+                                      command!='s' && command!='d' && command!='q');
+    int turns = 0;
+    while (command != 'q' && turns < 20) {
+        ++turns; std::cin >> command;
+    }
+}
+~~~
+
+**Termination argument:** every accepted non-quit command increases <code>turns</code>; at 20 the loop stops.
+
+**Next unlock · L06:** redraw every row and column after each turn.`,
+
+    6: md`## Game evolution sneak peek · render the board
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| nested for loops | visit every 2D position and choose the symbol to print |
+
+~~~cpp
+#include <iostream>
+int main() {
+    int actorRow=1, actorColumn=3;
+    for (int row=0; row<3; ++row) {
+        for (int column=0; column<7; ++column) {
+            if (row==actorRow && column==actorColumn) std::cout << 'S';
+            else std::cout << '.';
+        }
+        std::cout << '\n';
+    }
+}
+~~~
+
+**Loop invariant:** before row <code>r</code>, every cell in earlier rows has been rendered exactly once.
+
+**Next unlock · L07:** name scoring and movement calculations as testable functions.`,
+
+    7: md`## Game evolution sneak peek · a scoring contract
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| functions and value parameters | award points for cleaning without changing the caller accidentally |
+
+~~~cpp
+#include <iostream>
+int scoreAfterClean(int score, bool dirtHere) {
+    if (dirtHere) score += 10;
+    return score;
+}
+int main() {
+    int score=0;
+    std::cout << scoreAfterClean(score,true) << ' ' << score << '\n';
+}
+~~~
+
+**Contract test:** the function returns 10, while the caller's original <code>score</code> remains 0.
+
+**Next unlock · L08:** deliberately mutate row and column through references.`,
+
+    8: md`## Game evolution sneak peek · a movement operation
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| reference parameters and decomposition | update the caller's two coordinate variables in one named operation |
+
+~~~cpp
+void movePlayer(int& row, int& column, int dRow, int dColumn) {
+    row += dRow;
+    column += dColumn;
+}
+int main() {
+    int row=2, column=3;
+    movePlayer(row,column,0,1);
+}
+~~~
+
+**Mutation contract:** only <code>row</code> and <code>column</code> are aliases; the direction values are copies.
+
+**Next unlock · L09:** store the complete Snake body as sequences of coordinates.`,
+
+    9: md`## Game evolution sneak peek · a body of segments
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| fixed arrays and traversal | store several Snake segment coordinates and test a proposed collision |
+
+~~~cpp
+#include <array>
+int main() {
+    std::array<int,4> rows{2,2,2,1};
+    std::array<int,4> columns{4,3,2,2};
+    int nextRow=2, nextColumn=3;
+    bool collision=false;
+    for (std::size_t i=0; i<rows.size(); ++i)
+        if (rows[i]==nextRow && columns[i]==nextColumn) collision=true;
+}
+~~~
+
+**Representation check:** index <code>i</code> must name the same segment in both arrays.
+
+**Next unlock · L10:** replace coordinate rules with a stored two-dimensional world.`,
+
+    10: md`## Game evolution sneak peek · a 2D world
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| two-dimensional arrays | store walls, dirt, and empty cells by row and column |
+
+~~~cpp
+#include <iostream>
+int main() {
+    char world[3][5]{{'#','#','#','#','#'},
+                     {'#','*','.','C','#'},
+                     {'#','#','#','#','#'}};
+    int row=1, column=1;
+    if (world[row][column]=='*') world[row][column]='.';
+    for (int r=0; r<3; ++r) { for (int c=0; c<5; ++c) std::cout << world[r][c];
+        std::cout << '\n'; }
+}
+~~~
+
+**Invariant:** every access uses one row in [0,3) and one column in [0,5).
+
+**Next unlock · L11:** record and validate a replay as owned text.`,
+
+    11: md`## Game evolution sneak peek · a replay string
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| strings and character validation | store a whole move sequence and reject unknown commands |
+
+~~~cpp
+#include <cctype>
+#include <string>
+int main() {
+    std::string replay="wAsD";
+    bool valid=true;
+    for (std::size_t i=0; valid && i<replay.size(); ++i) {
+        unsigned char ch=static_cast<unsigned char>(replay[i]);
+        char move=static_cast<char>(std::tolower(ch));
+        valid = move=='w' || move=='a' || move=='s' || move=='d';
+    }
+}
+~~~
+
+**Boundary tests:** check the empty replay, one valid character, and one invalid character.
+
+**Next unlock · L12:** turn a replay into a repeatable regression test.`,
+
+    12: md`## Game evolution sneak peek · replay as a test
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| tracing, boundary cases, and assert | replay one move and stop at the first broken expectation |
+
+~~~cpp
+#include <cassert>
+bool step(int& row, int& column, char move) {
+    if (move=='d' && column<4) { ++column; return true; }
+    return false;
+}
+int main() {
+    int row=2, column=3;
+    assert(step(row,column,'d'));
+    assert(row==2 && column==4);
+    assert(!step(row,column,'d'));
+}
+~~~
+
+**Debugging rule:** keep this smallest failing replay before repairing a larger game.
+
+**Next unlock · L13:** group each cell's related fields into one record.`,
+
+    13: md`## Game evolution sneak peek · coherent cells
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| structs and pointers | keep a cell's coordinate and dirt together, then refer to one target |
+
+~~~cpp
+#include <array>
+struct Cell { int row; int column; bool dirty; };
+int main() {
+    std::array<Cell,3> cells{{{0,0,false},{0,1,true},{0,2,false}}};
+    Cell* target=nullptr;
+    for (Cell& cell:cells) if (cell.dirty) target=&cell;
+    if (target!=nullptr) target->dirty=false;
+}
+~~~
+
+**Invariant:** <code>target</code> is either null or points to a live element of <code>cells</code>.
+
+**Next unlock · L14:** make each Snake segment own the next segment dynamically.`,
+
+    14: md`## Game evolution sneak peek · a linked Snake
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| dynamic storage and exclusive ownership | let the body grow as a chain of owned segments |
+
+~~~cpp
+#include <memory>
+struct Segment { int cell=0; std::unique_ptr<Segment> next; };
+int main() {
+    auto head=std::make_unique<Segment>();
+    head->cell=12;
+    head->next=std::make_unique<Segment>();
+    head->next->cell=11;
+}
+~~~
+
+**Ownership invariant:** the head exclusively owns the chain; automatic destruction follows every <code>next</code> link.
+
+**Next unlock · L15:** maintain pending dirt as a queue and search stored cells.`,
+
+    15: md`## Game evolution sneak peek · a cleaning queue
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| queue behavior on a linear structure | clean dirty cell IDs in first-discovered, first-served order |
+
+~~~cpp
+#include <iostream>
+#include <vector>
+int main() {
+    std::vector<int> pending{8,13,21};
+    std::size_t front=0;
+    while (front<pending.size()) {
+        int targetCell=pending[front];
+        ++front;
+        std::cout << "clean " << targetCell << '\n';
+    }
+}
+~~~
+
+**Queue invariant:** indices below <code>front</code> are cleaned; indices from <code>front</code> onward are pending.
+
+**Next unlock · L16:** explore choices recursively and undo dead ends.`,
+
+    16: md`## Game evolution sneak peek · recursive maze search
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| recursion and backtracking | ask whether the Cleaner can reach dirt through open cells |
+
+~~~cpp
+#include <string>
+#include <vector>
+bool reaches(std::vector<std::string>& grid,int row,int column) {
+    if (row<0 || column<0 || row>=static_cast<int>(grid.size()) ||
+        column>=static_cast<int>(grid[0].size()) || grid[row][column]=='#') return false;
+    if (grid[row][column]=='*') return true;
+    grid[row][column]='#';
+    return reaches(grid,row-1,column) || reaches(grid,row+1,column) ||
+           reaches(grid,row,column-1) || reaches(grid,row,column+1);
+}
+~~~
+
+**Progress argument:** every recursive branch either stops or marks one previously open cell.
+
+**Next unlock · L17:** accelerate repeated collision checks and prioritize dirt.`,
+
+    17: md`## Game evolution sneak peek · faster grid decisions
+
+| L17 tool | Exact game part enabled |
+|---|---|
+| binary search | test sorted occupied cell IDs for collision |
+| BST | update occupied IDs as the body changes |
+| max heap | select the highest-priority dirt target |
+| stable merge sort | order equal-priority targets without changing discovery order |
+
+~~~cpp
+bool occupied(const int cells[], int count, int id) {
+    int left=0, right=count-1;
+    while (left<=right) {
+        int middle=left+(right-left)/2;
+        if (cells[middle]==id) return true;
+        if (cells[middle]<id) left=middle+1;
+        else right=middle-1;
+    }
+    return false;
+}
+~~~
+
+**Invariant:** if <code>id</code> exists, it remains inside the current [left,right] interval.
+
+**Next unlock · L18:** package state and operations inside a reliably constructed game object.`,
+
+    18: md`## Game evolution sneak peek · a valid Cleaner object
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| class invariants, construction, and copying | prevent arbitrary coordinate mutation and copy a replay state |
+
+~~~cpp
+#include <cassert>
+class Cleaner {
+    int row_, column_;
+public:
+    Cleaner(int row,int column):row_(0),column_(0) {
+        if (row>=0) row_=row; if (column>=0) column_=column;
+    }
+    void moveRight(int columns) { if (column_+1<columns) ++column_; }
+    int cell(int columns) const { return row_*columns+column_; }
+};
+int main(){ Cleaner first(1,1); Cleaner replay=first;
+    replay.moveRight(5); assert(first.cell(5)==6 && replay.cell(5)==7); }
+~~~
+
+**Value test:** changing the copied replay does not change the original Cleaner.
+
+**Next unlock · L19:** model genuine is-a actors and has-a capabilities.`,
+
+    19: md`## Game evolution sneak peek · Snake meets Cleaner
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| friend, inheritance, and composition | compare two occupants while only Cleaner has a dirt sensor |
+
+~~~cpp
+struct DirtSensor { bool dirty=false; };
+class GridOccupant {
+    unsigned cell_;
+    friend bool sameCell(const GridOccupant&,const GridOccupant&);
+public: explicit GridOccupant(unsigned cell):cell_(cell) {}
+};
+bool sameCell(const GridOccupant& a,const GridOccupant& b){ return a.cell_==b.cell_; }
+class SnakeHead:public GridOccupant { public: explicit SnakeHead(unsigned c):GridOccupant(c){} };
+class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner(unsigned c):GridOccupant(c){} };
+~~~
+
+**Design test:** both derived objects substitute for <code>const GridOccupant&amp;</code>; the sensor remains a has-a member.
+
+**Next unlock · L20:** select different actor behavior through one virtual interface.`,
+
+    20: md`## Game evolution sneak peek · one runtime-selected actor
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| virtual dispatch, base ownership, and factory | create one concrete actor while the game uses only its interface |
+
+~~~cpp
+#include <cassert>
+#include <memory>
+struct Actor { virtual char mark() const=0; virtual ~Actor()=default; };
+struct Snake:Actor { char mark() const override { return 'S'; } };
+std::unique_ptr<Actor> makeSnake() {
+    return std::make_unique<Snake>();
+}
+int main() {
+    std::unique_ptr<Actor> actor=makeSnake();
+    assert(actor->mark()=='S');
+}
+~~~
+
+**Substitution test:** <code>main</code> never needs the concrete type after construction.
+
+**Next unlock · L21:** own several differently typed actors in one world.`,
+
+    21: md`## Game evolution sneak peek · a mixed actor world
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| polymorphic container and object graph | own Snake and Cleaner together and store non-owning links |
+
+~~~cpp
+#include <cassert>
+#include <memory>
+#include <vector>
+struct Actor { virtual char mark() const=0; virtual ~Actor()=default; };
+struct Snake:Actor { char mark() const override{return 'S';} };
+struct Cleaner:Actor { char mark() const override{return 'C';} };
+int main(){ std::vector<std::unique_ptr<Actor>> actors;
+  actors.push_back(std::make_unique<Snake>()); actors.push_back(std::make_unique<Cleaner>());
+  std::vector<std::vector<std::size_t>> links{{1},{0}};
+  assert(actors[0] && actors[1]); for(const auto& xs:links) for(auto v:xs) assert(v<actors.size()); }
+~~~
+
+**Ownership invariant:** the container owns actors; connectivity is represented separately by valid indices.
+
+**Next unlock · L22:** choose and compare route and task-selection policies over this world.`,
+
+    22: md`## Game evolution sneak peek · choose the next target
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| domain object | one Task records a dirty cell and its route length |
+| comparator and sorting | the Cleaner ranks shorter routes first |
+| deterministic tie-break | equal routes use row, then column |
+
+~~~cpp
+struct Task { int row; int column; int steps; };
+std::vector<Task> dirt{{0,4,4},{2,1,3},{4,4,8}};
+std::sort(dirt.begin(),dirt.end(),
+    [](const Task& a,const Task& b) {
+        if (a.steps!=b.steps) return a.steps<b.steps;
+        if (a.row!=b.row) return a.row<b.row;
+        return a.column<b.column;
+    });
+Task next{-1,-1,0};
+if (!dirt.empty()) next=dirt[0];
+~~~
+
+**Invariant/test:** route lengths are nonnegative; after sorting, <code>next</code> is no worse than every remaining task. Test empty, one-task, and equal-distance cases.
+
+**Next unlock · L23:** integrate body, policy, routes, collision rules, and visualization into one verified capstone.`,
+
+    23: md`## Game evolution sneak peek · one verified capstone family
+
+| Final build | Exact parts now connected | Concept provenance |
+|---|---|---|
+| linked Snake | command → candidate head → collision check → body/food update → ASCII frame | state and loops L02–L06; functions/tests L07–L12; records and links L13–L14; search L17; game object L18 |
+| grid Cleaner | 2D world → nearest dirt → parent path → legal move → clean and redraw | arrays/strings L09–L11; queue L15; search comparison L16–L17; class invariant L18 |
+| multi-agent graph Cleaner | actors → graph links → distinct reservations → synchronous movement → cleaning | inheritance/polymorphism L19–L21; predicates, ranking, routing, and policy L22 |
+| capstone decision | required operation → representation → algorithm → invariant → adversarial test | L23 integration checklist |
+
+**One-turn correctness gate:** every Snake segment is distinct and in bounds; every Cleaner step follows a real grid or graph edge; reserved targets are distinct; dirt never increases and decreases exactly when a target is cleaned.
+
+**Adversarial tests:** tail-cell movement, unreachable dirt, equal-distance targets, one actor, and an already-clean world.
+
+**Run/play:** <code>codes/lecture-23-snake-linked-game.cpp</code>, <code>codes/lecture-23-grid-cleaning-robot.cpp</code>, and <code>codes/lecture-23-multi-agent-graph-cleaning.cpp</code>.
+
+**Final extension:** replay the same verified state trace in terminal, ASCII animation, or HTML/SVG without changing the game rules.`
+};
+
+const gameVariantAfter = {
+    1: 4, 2: 5, 3: 4, 4: 5, 5: 5, 6: 4, 7: 5,
+    8: 4, 9: 4, 10: 2, 11: 5, 12: 5, 13: 6, 14: 6,
+    15: 6, 16: 5, 17: 7, 18: 4, 19: 7, 20: 6, 21: 6, 22: 5, 23: 7
+};
+
+const missingGameVariants = lectures.filter((lecture) =>
+    !gameEvolutionSlides[lecture.id] || gameVariantAfter[lecture.id] === undefined);
+if (missingGameVariants.length > 0) {
+    throw new Error(`Missing game evolution slide for lecture IDs: ${missingGameVariants.map((lecture) => lecture.id).join(', ')}`);
+}
+
+function markdownSection(content, className = '') {
+    const classAttribute = className ? ` class="${className}"` : '';
+    return `    <section${classAttribute} data-markdown><textarea data-template>\n${content.trim()}\n    </textarea></section>`;
+}
+
+function studioSlide(brief) {
+    return md`## Algorithmic studio · ${brief.thread}
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | ${brief.problem} |
+| **Model** | ${brief.model} |
+| **Represent** | ${brief.represent} |
+| **Solve** | ${brief.solve} |
+| **Verify** | ${brief.verify} |
+| **Improve** | ${brief.improve} |
+
+**Technique lens:** ${brief.lens}
+
+**Compare:** ${brief.compare}`;
+}
+
 function page({ id, title, slides }) {
-    const sections = slides.map((slide) => `    <section data-markdown><textarea data-template>\n${slide.trim()}\n    </textarea></section>`).join('\n');
+    const authoredSections = slides.map((slide) => markdownSection(slide));
+    const insertionIndex = gameVariantAfter[id];
+    if (insertionIndex < 1 || insertionIndex >= authoredSections.length) {
+        throw new Error(`Invalid game slide position for lecture ${id}: ${insertionIndex}`);
+    }
+    authoredSections.splice(
+        insertionIndex,
+        0,
+        markdownSection(gameEvolutionSlides[id], 'course-extra-slide course-game-evolution-slide')
+    );
+    const generatedContext = [
+        markdownSection(studioSlide(studioBriefs[id]), 'course-extra-slide course-algorithmic-studio'),
+        ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
+    ];
+    const sections = [authoredSections[0], ...generatedContext, ...authoredSections.slice(1)].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>

@@ -1,25 +1,19 @@
 // Lecture 12 · Repair a contract and test its boundaries
 #include <cassert>
-#include <stdexcept>
 #include <vector>
 
-double average(const std::vector<int>& values) {
-    if (values.empty()) throw std::invalid_argument("average requires data");
+bool average(const std::vector<int>& values, double& result) {
+    if (values.empty()) return false;
     long long sum = 0;
     for (const int value : values) sum += value;
-    return static_cast<double>(sum) / static_cast<double>(values.size());
+    result = static_cast<double>(sum) / static_cast<double>(values.size());
+    return true;
 }
 
 int main() {
-    assert(average({7}) == 7.0);
-    assert(average({1, 2}) == 1.5);       // exposes accidental integer division
-    assert(average({-5, 5}) == 0.0);
-
-    bool rejectedEmptyInput = false;
-    try {
-        static_cast<void>(average({}));
-    } catch (const std::invalid_argument&) {
-        rejectedEmptyInput = true;
-    }
-    assert(rejectedEmptyInput);
+    double result = 0.0;
+    assert(average({7}, result) && result == 7.0);
+    assert(average({1, 2}, result) && result == 1.5);
+    assert(average({-5, 5}, result) && result == 0.0);
+    assert(!average({}, result));
 }

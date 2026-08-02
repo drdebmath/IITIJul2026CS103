@@ -1,7 +1,6 @@
 // Lecture 19 · Narrow friend access and inheritance foundations
 #include <iostream>
 #include <string>
-#include <utility>
 
 class Meter {
     double offset_ = 0;
@@ -17,7 +16,7 @@ void calibrate(Meter& meter, double offset) {
 class EnergyMeter : public Meter {
     std::string circuit_;
 public:
-    explicit EnergyMeter(std::string circuit) : circuit_(std::move(circuit)) {}
+    explicit EnergyMeter(const std::string& circuit) : circuit_(circuit) {}
     double kilowattHours(double raw) const { return corrected(raw); }
     const std::string& circuit() const { return circuit_; }
 };

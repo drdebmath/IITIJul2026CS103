@@ -14,6 +14,22 @@
 # Lecture 18: Object Design & Value Semantics
 ## Protect invariants and make object lifetime predictable
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Turn the robot into a reliable object
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Prevent any caller from creating or leaving an invalid robot state. |
+| **Model** | A robot owns state and exposes only invariant-preserving operations. |
+| **Represent** | A class, constructor, private members, and Rule-of-Zero value members. |
+| **Solve** | Move responsibility beside the state it governs. |
+| **Verify** | Test construction, copied values, assignment, destruction, and invalid inputs. |
+| **Improve** | Prefer composition and library-owned resources over handwritten ownership. |
+
+**Technique lens:** object-oriented modeling and RAII
+
+**Compare:** public record mutation versus a small invariant-preserving interface
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A class combines state, behavior, and access control
 
@@ -27,7 +43,7 @@ public:
 };
 ~~~
 
-The invariant is: <code>value</code> is modified only through the public interface.
+The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Constructors establish valid state
@@ -37,7 +53,10 @@ class Rectangle {
     double length;
     double width;
 public:
-    Rectangle(double l, double w) : length(l), width(w) {}
+    Rectangle(double l, double w) : length(1.0), width(1.0) {
+        if (l > 0.0) length = l;
+        if (w > 0.0) width = w;
+    }
     double area() const { return length * width; }
 };
 ~~~
@@ -55,6 +74,32 @@ assigned = first;          // copy assignment: existing object
 ~~~
 
 Value members such as numbers and strings usually support the Rule of Zero.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a valid Cleaner object
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| class invariants, construction, and copying | prevent arbitrary coordinate mutation and copy a replay state |
+
+~~~cpp
+#include <cassert>
+class Cleaner {
+    int row_, column_;
+public:
+    Cleaner(int row,int column):row_(0),column_(0) {
+        if (row>=0) row_=row; if (column>=0) column_=column;
+    }
+    void moveRight(int columns) { if (column_+1<columns) ++column_; }
+    int cell(int columns) const { return row_*columns+column_; }
+};
+int main(){ Cleaner first(1,1); Cleaner replay=first;
+    replay.moveRight(5); assert(first.cell(5)==6 && replay.cell(5)==7); }
+~~~
+
+**Value test:** changing the copied replay does not change the original Cleaner.
+
+**Next unlock · L19:** model genuine is-a actors and has-a capabilities.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Destruction and RAII bind resource lifetime to an object
@@ -76,31 +121,16 @@ Useful value-type operations include:
 Do not change an operator's expected meaning.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A friend is narrow trusted access
-
-~~~cpp
-class Complex {
-    double real, imaginary;
-public:
-    Complex(double r, double i) : real(r), imaginary(i) {}
-    friend std::ostream& operator<<(std::ostream&, const Complex&);
-};
-~~~
-
-Friendship is explicit access, not inheritance and not a security boundary.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
 ## Session summary
 
 - A class should protect a meaningful invariant.
 - Constructors initialize; assignment replaces an existing value.
 - Destruction ends lifetime and releases owned resources.
 - Prefer Rule-of-Zero member types.
-- Overloads and friends must keep interfaces unsurprising.
+- Overloads must keep interfaces unsurprising.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

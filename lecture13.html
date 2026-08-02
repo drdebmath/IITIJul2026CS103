@@ -14,6 +14,22 @@
 # Lecture 13: Records, Pointers & Memory Layout
 ## Group related state and inspect addresses safely
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Model cells, components, and entities
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Keep each sampled cell and its related properties coherent. |
+| **Model** | One entity has identity, value, validity, and possibly a location. |
+| **Represent** | A struct groups fields; a pointer can refer to an existing entity. |
+| **Solve** | Traverse records and follow only valid, non-null relationships. |
+| **Verify** | Check member invariants, null pointers, and first/last record access. |
+| **Improve** | Prefer IDs or references when ownership does not need to move. |
+
+**Technique lens:** record-based modeling
+
+**Compare:** parallel arrays versus an array of coherent records
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A struct models one record
 
@@ -74,6 +90,28 @@ reading.value = 32.0;
 pointer->value = 32.5;  // same as (*pointer).value
 ~~~
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · coherent cells
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| structs and pointers | keep a cell's coordinate and dirt together, then refer to one target |
+
+~~~cpp
+#include <array>
+struct Cell { int row; int column; bool dirty; };
+int main() {
+    std::array<Cell,3> cells{{{0,0,false},{0,1,true},{0,2,false}}};
+    Cell* target=nullptr;
+    for (Cell& cell:cells) if (cell.dirty) target=&cell;
+    if (target!=nullptr) target->dirty=false;
+}
+~~~
+
+**Invariant:** <code>target</code> is either null or points to a live element of <code>cells</code>.
+
+**Next unlock · L14:** make each Snake segment own the next segment dynamically.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Reference: layout, alignment, and pointer arithmetic
 
@@ -92,7 +130,6 @@ Pointer arithmetic is valid only within one array object (or one-past its end). 
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

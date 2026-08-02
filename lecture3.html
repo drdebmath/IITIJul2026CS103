@@ -14,6 +14,22 @@
 # Lecture 3: Expressions, Scope & Program State
 ## Names, values, visibility, and lifetime
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Track robot state
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Update a robot pose and score while keeping temporary calculations local. |
+| **Model** | A transition maps old state plus one action to new state. |
+| **Represent** | Scoped names hold row, column, direction, score, and intermediate expressions. |
+| **Solve** | Evaluate one transition in dependency order. |
+| **Verify** | Build a before/after state table and evaluate expressions by hand first. |
+| **Improve** | Reduce mutable scope and make grouping explicit with names or parentheses. |
+
+**Technique lens:** state-transition simulation
+
+**Compare:** many unrelated variables versus one coherent state model introduced later
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Operators build expressions
 
@@ -59,6 +75,30 @@ int main() {
 
 Keep names in the smallest scope that contains every required use.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · one state transition
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| expressions and block scope | calculate one candidate move, then commit it |
+
+~~~cpp
+#include <iostream>
+int main() {
+    int row = 2, column = 3;
+    int dRow = 0, dColumn = 1;
+    {
+        int nextRow = row + dRow, nextColumn = column + dColumn;
+        row = nextRow; column = nextColumn;
+    }
+    std::cout << row << ' ' << column << '\n';
+}
+~~~
+
+**Invariant:** outside the inner block, only the committed position remains visible.
+
+**Next unlock · L04:** accept different directions and reject unsafe moves.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Scope and lifetime are different
 
@@ -69,21 +109,19 @@ Keep names in the smallest scope that contains every required use.
 A local static object has block scope but program-long storage duration.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A static local remembers between calls
+## Storage duration is a lifetime promise
 
 ~~~cpp
-#include <iostream>
-
-int nextExperimentNumber() {
-    static int completed = 0;
-    return ++completed;
-}
+// Defined outside every block: program-long storage duration.
+int completedExperiments = 0;
 
 int main() {
-    std::cout << nextExperimentNumber() << ' ';
-    std::cout << nextExperimentNumber();  // 1 2
+    int today = 2;               // exists during this run of main
+    completedExperiments += today;
 }
 ~~~
+
+Later, functions will provide a safer interface around shared state. For now, distinguish where a name is visible from how long its object exists.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Reference: one definition shared by two files
@@ -109,7 +147,6 @@ extern int sharedCount;
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

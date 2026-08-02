@@ -1,28 +1,12 @@
-// Lecture 3 · Static storage duration and external linkage
+// Lecture 3 · Program-long storage duration and external linkage
 #include <iostream>
-using namespace std;
 
-// ==== 6. static inside function ====
-void counter() {
-    static int count = 0; // persists between calls
-    count++;
-    cout << "Called " << count << " times." << endl;
-}
-
-// ==== 7. extern example ====
-extern int sharedData; // Declaration of variable defined in examples2_data.cpp
-
-void useSharedData() {
-    cout << "Shared Data value: " << sharedData << endl;
-}
+extern int sharedData;
+int completedRuns = 0;
 
 int main() {
-    cout << "--- Static Variable Example ---" << endl;
-    counter();
-    counter();
-
-    cout << "--- Extern Variable Example ---" << endl;
-    useSharedData();
-
-    return 0;
+    int thisRun = 1;
+    completedRuns += thisRun;
+    std::cout << "program-long state: " << completedRuns << '\n';
+    std::cout << "extern definition: " << sharedData << '\n';
 }

@@ -14,6 +14,22 @@
 # Lecture 10: Arrays II
 ## Matrices and runtime-sized contiguous sequences
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Grow the grid world
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store rooms and paths whose dimensions are known only at runtime. |
+| **Model** | A grid is a sequence of rows; each row is a sequence of cells. |
+| **Represent** | A matrix models fixed geometry; vectors model runtime-sized or ragged data. |
+| **Solve** | Select fixed or dynamic storage, then traverse using each real bound. |
+| **Verify** | Test 1×1, one row, unequal row lengths, and checked invalid access. |
+| **Improve** | Pass the grid to a renderer instead of mixing storage with output. |
+
+**Technique lens:** data-driven simulation
+
+**Compare:** fixed 2D array versus nested vectors
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A matrix needs one index per dimension
 
@@ -23,6 +39,30 @@ int pixel = image[1][2];  // row 1, column 2
 ~~~
 
 Both dimensions are zero-based.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a 2D world
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| two-dimensional arrays | store walls, dirt, and empty cells by row and column |
+
+~~~cpp
+#include <iostream>
+int main() {
+    char world[3][5]{{'#','#','#','#','#'},
+                     {'#','*','.','C','#'},
+                     {'#','#','#','#','#'}};
+    int row=1, column=1;
+    if (world[row][column]=='*') world[row][column]='.';
+    for (int r=0; r<3; ++r) { for (int c=0; c<5; ++c) std::cout << world[r][c];
+        std::cout << '\n'; }
+}
+~~~
+
+**Invariant:** every access uses one row in [0,3) and one column in [0,5).
+
+**Next unlock · L11:** record and validate a replay as owned text.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Traverse rows and columns with matching bounds
@@ -91,7 +131,6 @@ for (const auto& row : scores) {
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

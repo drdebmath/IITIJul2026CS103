@@ -627,6 +627,16 @@ body.course-modern .reveal .course-extra-slide {
         var(--course-surface) !important;
 }
 
+body.course-modern .reveal .course-game-evolution-slide {
+    background:
+        radial-gradient(circle at 91% 7%, rgba(14, 148, 136, 0.14), transparent 22rem),
+        var(--course-surface) !important;
+}
+
+body.course-modern .reveal .course-game-evolution-slide h2 {
+    color: var(--course-teal);
+}
+
 .course-extra-kicker {
     display: inline-flex;
     align-items: center;

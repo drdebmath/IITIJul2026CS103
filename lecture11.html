@@ -14,6 +14,22 @@
 # Lecture 11: Strings & Text Processing
 ## Prefer owned text values, then study their representation
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Record and replay ASCII animation
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Read commands and render complete, validated text frames. |
+| **Model** | A replay is a sequence of command lines transformed into visible states. |
+| **Represent** | std::string owns text; positions and character classes describe its structure. |
+| **Solve** | Parse one rule at a time, then map model state to an ASCII frame. |
+| **Verify** | Test empty text, spaces, missing delimiters, bad characters, and a valid replay. |
+| **Improve** | Keep parsing, simulation, and rendering as separate functions. |
+
+**Technique lens:** string processing and model–view separation
+
+**Compare:** rebuilding a frame versus incrementally editing the terminal
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## std::string owns and sizes its text
 
@@ -58,6 +74,31 @@ if (std::isdigit(ch)) ++digits;
 
 Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a replay string
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| strings and character validation | store a whole move sequence and reject unknown commands |
+
+~~~cpp
+#include <cctype>
+#include <string>
+int main() {
+    std::string replay="wAsD";
+    bool valid=true;
+    for (std::size_t i=0; valid && i<replay.size(); ++i) {
+        unsigned char ch=static_cast<unsigned char>(replay[i]);
+        char move=static_cast<char>(std::tolower(ch));
+        valid = move=='w' || move=='a' || move=='s' || move=='d';
+    }
+}
+~~~
+
+**Boundary tests:** check the empty replay, one valid character, and one invalid character.
+
+**Next unlock · L12:** turn a replay into a repeatable regression test.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Validate one rule at a time
 
@@ -87,7 +128,6 @@ Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a de
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

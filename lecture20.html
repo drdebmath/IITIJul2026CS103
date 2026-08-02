@@ -14,6 +14,22 @@
 # Lecture 20: Inheritance & Runtime Polymorphism
 ## Select behavior from the runtime object safely
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Run multiple agent policies
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Let sweep, nearest-dirt, and cautious agents act through one controller. |
+| **Model** | The environment requests an action without knowing the concrete policy type. |
+| **Represent** | A virtual interface and one unique_ptr-owned agent. |
+| **Solve** | Use dynamic dispatch; centralize concrete creation in a factory. |
+| **Verify** | Call through the base interface and test cleanup plus invalid construction. |
+| **Improve** | Add a policy without changing the simulation loop. |
+
+**Technique lens:** runtime polymorphism and simulation
+
+**Compare:** a growing type switch versus virtual dispatch
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Public and private inheritance make different promises
 
@@ -48,17 +64,14 @@ public:
 ~~~
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Own polymorphic objects safely
+## Own one polymorphic object safely
 
 ~~~cpp
-std::vector<std::unique_ptr<Shape>> shapes;
-shapes.push_back(std::make_unique<Square>(4.0));
-
-double total = 0.0;
-for (const auto& shape : shapes) total += shape->area();
+std::unique_ptr<Shape> shape = std::make_unique<Square>(4.0);
+double result = shape->area();
 ~~~
 
-The virtual destructor makes deletion through the base interface safe.
+The virtual destructor makes deletion through the base interface safe. Lecture 21 will place differently typed objects in one owning container.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## A factory centralizes concrete construction
@@ -70,6 +83,31 @@ std::unique_ptr<Shape> makeSquare(double side) {
 ~~~
 
 A factory returns an abstraction while choosing a concrete type in one place.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · one runtime-selected actor
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| virtual dispatch, base ownership, and factory | create one concrete actor while the game uses only its interface |
+
+~~~cpp
+#include <cassert>
+#include <memory>
+struct Actor { virtual char mark() const=0; virtual ~Actor()=default; };
+struct Snake:Actor { char mark() const override { return 'S'; } };
+std::unique_ptr<Actor> makeSnake() {
+    return std::make_unique<Snake>();
+}
+int main() {
+    std::unique_ptr<Actor> actor=makeSnake();
+    assert(actor->mark()=='S');
+}
+~~~
+
+**Substitution test:** <code>main</code> never needs the concrete type after construction.
+
+**Next unlock · L21:** own several differently typed actors in one world.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Test the substitutability contract
@@ -92,7 +130,6 @@ For every derived type, test:
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

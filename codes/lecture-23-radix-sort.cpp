@@ -16,7 +16,10 @@ void digitPass(std::vector<unsigned>& values, unsigned place) {
 void radixSort(std::vector<unsigned>& values) {
     unsigned largest = 0;
     for (const unsigned value : values) if (value > largest) largest = value;
-    for (unsigned place = 1; largest / place > 0; place *= 10) digitPass(values, place);
+    for (unsigned place = 1; largest / place > 0; place *= 10) {
+        digitPass(values, place);
+        if (place > largest / 10) break;
+    }
 }
 
 int main() {

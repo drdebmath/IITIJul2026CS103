@@ -24,9 +24,12 @@ void preorder(const Node* root) {
 }
 
 int main() {
-    auto root = std::make_unique<Node>(Node{4, nullptr, nullptr});
-    root->left = std::make_unique<Node>(Node{2, nullptr, nullptr});
-    root->right = std::make_unique<Node>(Node{7, nullptr, nullptr});
+    auto root = std::make_unique<Node>();
+    root->value = 4;
+    root->left = std::make_unique<Node>();
+    root->left->value = 2;
+    root->right = std::make_unique<Node>();
+    root->right->value = 7;
     invert(root.get());
     preorder(root.get());
     std::cout << '\n';

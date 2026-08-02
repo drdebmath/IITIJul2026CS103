@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CS103: Introduction to Programming at IIT Indore — course modules, code examples, assessment details, and lecture schedule.">
+    <meta name="description" content="CS103 at IIT Indore — a modern, project-driven introduction to algorithmic thinking, independent learning, and expressive C++ programming.">
     <meta name="theme-color" content="#f5f7fb">
     <title>CS103 · Introduction to Programming</title>
     <link rel="canonical" href="https://drdebmath.github.io/IITIJul2026CS103/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="CS103 · Introduction to Programming">
-    <meta property="og:description" content="CS103 at IIT Indore — course modules, code examples, assessment details, and lecture schedule.">
+    <meta property="og:description" content="Think, model, build, verify, and improve through a semester of visual, project-driven programming in modern C++.">
     <meta property="og:url" content="https://drdebmath.github.io/IITIJul2026CS103/">
     <script defer src="course-data.js"></script>
     <script defer src="course-progress.js"></script>
@@ -142,30 +142,30 @@
         }
 
         .nav {
-            min-height: 74px;
+            min-height: 56px;
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 14px;
         }
 
         .brand {
             display: inline-flex;
             align-items: center;
-            gap: 11px;
+            gap: 8px;
             text-decoration: none;
             white-space: nowrap;
         }
 
         .brand-mark {
-            width: 42px;
-            height: 42px;
+            width: 34px;
+            height: 34px;
             display: grid;
             place-items: center;
-            border-radius: 13px;
+            border-radius: 10px;
             color: #ffffff;
             background: linear-gradient(145deg, #4f68dc, #263fa6);
-            box-shadow: 0 8px 20px rgba(64, 89, 199, 0.28);
-            font-size: 0.78rem;
+            box-shadow: 0 5px 14px rgba(64, 89, 199, 0.24);
+            font-size: 0.68rem;
             font-weight: 850;
             letter-spacing: -0.03em;
         }
@@ -176,14 +176,14 @@
         }
 
         .brand-copy strong {
-            font-size: 0.96rem;
+            font-size: 0.86rem;
             letter-spacing: -0.02em;
         }
 
         .brand-copy span {
-            margin-top: 4px;
+            margin-top: 2px;
             color: var(--muted);
-            font-size: 0.72rem;
+            font-size: 0.62rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
@@ -191,18 +191,22 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             margin-left: auto;
         }
 
         .nav-links a {
-            padding: 9px 12px;
-            border-radius: 10px;
+            padding: 6px 8px;
+            border-radius: 8px;
             color: var(--muted);
-            font-size: 0.88rem;
+            font-size: 0.8rem;
             font-weight: 650;
             text-decoration: none;
             transition: color 160ms ease, background 160ms ease;
+        }
+
+        .nav-label-compact {
+            display: none;
         }
 
         .nav-links a:hover {
@@ -210,14 +214,34 @@
             background: var(--surface-soft);
         }
 
+        .nav-links .nav-studio {
+            color: #ffffff;
+            background: var(--primary-strong);
+        }
+
+        .nav-links .nav-studio:hover {
+            color: #ffffff;
+            background: var(--primary);
+        }
+
+        .nav-links .nav-lab {
+            color: var(--primary-strong);
+            background: color-mix(in srgb, var(--primary) 10%, transparent);
+        }
+
+        .nav-links .nav-lab:hover {
+            color: var(--primary-strong);
+            background: color-mix(in srgb, var(--primary) 17%, transparent);
+        }
+
         .theme-toggle {
-            width: 42px;
-            height: 42px;
+            width: 34px;
+            height: 34px;
             display: grid;
             place-items: center;
             flex: 0 0 auto;
             border: 1px solid var(--line);
-            border-radius: 13px;
+            border-radius: 10px;
             color: var(--ink);
             background: var(--surface);
             box-shadow: var(--shadow-sm);
@@ -942,20 +966,18 @@
 
         @media (max-width: 900px) {
             .nav {
-                flex-wrap: wrap;
-                gap: 12px;
-                padding-block: 12px;
+                gap: 8px;
+                padding-block: 6px;
             }
 
             .nav-links {
-                order: 3;
-                width: 100%;
-                flex-wrap: wrap;
-                margin-left: 0;
+                min-width: 0;
+                flex: 1;
+                justify-content: flex-end;
             }
 
             .theme-toggle {
-                margin-left: auto;
+                margin-left: 0;
             }
 
             .hero {
@@ -991,7 +1013,7 @@
             }
 
             .nav {
-                min-height: 66px;
+                min-height: 58px;
             }
 
             .brand-copy span {
@@ -1464,6 +1486,530 @@
             }
         }
 
+        .vision-section,
+        .builds-section,
+        .studio-section,
+        .first-lecture-section,
+        .hall-section,
+        .promise-section,
+        .community-section {
+            margin-bottom: clamp(96px, 12vw, 150px);
+        }
+
+        .vision-loop {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            margin: 0 0 22px;
+            padding: 0;
+            list-style: none;
+            counter-reset: thinking-loop;
+        }
+
+        .vision-loop li {
+            position: relative;
+            min-height: 150px;
+            padding: 48px 17px 17px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+            counter-increment: thinking-loop;
+        }
+
+        .vision-loop li::before {
+            position: absolute;
+            top: 16px;
+            left: 17px;
+            width: 25px;
+            height: 25px;
+            display: grid;
+            place-items: center;
+            content: counter(thinking-loop, decimal-leading-zero);
+            border-radius: 8px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.66rem;
+            font-weight: 850;
+        }
+
+        .vision-loop strong {
+            display: block;
+            font-size: 0.92rem;
+            line-height: 1.3;
+        }
+
+        .vision-loop span {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 0.76rem;
+            line-height: 1.5;
+        }
+
+        .vision-principles,
+        .language-grid,
+        .first-lecture-grid,
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .principle-card,
+        .language-card,
+        .lecture-moment,
+        .community-card {
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .principle-card h3,
+        .language-card h3,
+        .lecture-moment h3,
+        .community-card h3 {
+            margin: 0;
+            font-size: 1.02rem;
+            letter-spacing: -0.025em;
+        }
+
+        .principle-card p,
+        .language-card p,
+        .lecture-moment p,
+        .community-card p {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .language-grid {
+            grid-template-columns: 1.2fr 0.8fr;
+            margin-top: 18px;
+        }
+
+        .language-card:first-child {
+            border-color: color-mix(in srgb, var(--primary) 35%, var(--line));
+            background: linear-gradient(145deg, var(--primary-soft), var(--surface) 62%);
+        }
+
+        .language-card:last-child {
+            border-color: color-mix(in srgb, var(--teal) 35%, var(--line));
+            background: linear-gradient(145deg, var(--teal-soft), var(--surface) 62%);
+        }
+
+        .build-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .build-card {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .build-card summary {
+            position: relative;
+            min-height: 154px;
+            padding: 22px 46px 20px 22px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .build-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .build-card summary::after {
+            position: absolute;
+            top: 22px;
+            right: 20px;
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            content: "+";
+            border-radius: 9px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .build-card[open] summary::after {
+            content: "−";
+        }
+
+        .build-card:nth-child(3n + 2) summary::after {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .build-card:nth-child(3n) summary::after {
+            color: var(--amber);
+            background: var(--amber-soft);
+        }
+
+        .build-tag {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: var(--primary-strong);
+            font-size: 0.65rem;
+            font-weight: 850;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .build-card summary strong {
+            display: block;
+            font-size: 1.05rem;
+            letter-spacing: -0.025em;
+        }
+
+        .build-card summary span:last-child {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.77rem;
+        }
+
+        .build-body {
+            padding: 0 22px 22px;
+            border-top: 1px solid var(--line);
+        }
+
+        .build-body dl {
+            margin: 17px 0 0;
+        }
+
+        .build-body dt {
+            margin-top: 11px;
+            color: var(--ink);
+            font-size: 0.69rem;
+            font-weight: 850;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .build-body dd {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 0.77rem;
+        }
+
+        .visual-ladder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface-soft);
+        }
+
+        .studio-launch {
+            display: flex;
+            justify-content: flex-end;
+            margin: -10px 0 24px;
+        }
+
+        .visual-ladder strong {
+            width: 100%;
+            font-size: 0.8rem;
+        }
+
+        .visual-ladder span {
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: var(--muted);
+            background: var(--surface);
+            font-size: 0.72rem;
+            font-weight: 750;
+        }
+
+        .studio-timeline {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .studio-week {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 17px;
+            min-height: 154px;
+            padding: 19px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .week-label {
+            height: fit-content;
+            padding: 8px 7px;
+            border-radius: 11px;
+            color: var(--primary-strong);
+            background: var(--primary-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.7rem;
+            font-weight: 850;
+            text-align: center;
+        }
+
+        .studio-week:nth-child(4n + 2) .week-label,
+        .studio-week:nth-child(4n + 3) .week-label {
+            color: var(--teal);
+            background: var(--teal-soft);
+        }
+
+        .studio-week h3 {
+            margin: 0;
+            font-size: 0.98rem;
+            letter-spacing: -0.02em;
+        }
+
+        .studio-week p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 0.77rem;
+        }
+
+        .week-technique {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-strong);
+            font-size: 0.67rem;
+            font-weight: 800;
+        }
+
+        .first-lecture-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .lecture-moment {
+            position: relative;
+            padding-top: 55px;
+        }
+
+        .lecture-moment::before {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            content: attr(data-time);
+            color: var(--primary-strong);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.7rem;
+            font-weight: 850;
+        }
+
+        .assessment-philosophy {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .assessment-value {
+            padding: 19px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface-soft);
+        }
+
+        .assessment-value strong {
+            display: block;
+            font-size: 0.87rem;
+        }
+
+        .assessment-value span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 0.74rem;
+        }
+
+        .hall-shell {
+            overflow: hidden;
+            border: 1px solid color-mix(in srgb, var(--amber) 30%, var(--line));
+            border-radius: var(--radius-lg);
+            background: linear-gradient(140deg, var(--amber-soft), var(--surface) 55%);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hall-intro {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(270px, 0.5fr);
+            gap: 28px;
+            padding: clamp(26px, 5vw, 48px);
+        }
+
+        .hall-intro h3 {
+            margin: 0;
+            font-size: clamp(1.7rem, 4vw, 2.7rem);
+            letter-spacing: -0.05em;
+            line-height: 1.05;
+        }
+
+        .hall-intro p {
+            margin: 12px 0 0;
+            color: var(--muted);
+        }
+
+        .hall-rule {
+            align-self: center;
+            padding: 18px;
+            border: 1px solid color-mix(in srgb, var(--amber) 25%, var(--line));
+            border-radius: 16px;
+            color: var(--amber);
+            background: color-mix(in srgb, var(--surface) 82%, transparent);
+            font-size: 0.8rem;
+            font-weight: 750;
+        }
+
+        .hall-categories {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 1px;
+            margin: 0;
+            padding: 1px 0 0;
+            background: var(--line);
+            list-style: none;
+        }
+
+        .hall-categories li {
+            min-height: 112px;
+            padding: 19px 14px;
+            background: var(--surface);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .hall-categories span {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--amber);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.72rem;
+        }
+
+        .promise-card {
+            display: grid;
+            grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1fr);
+            gap: clamp(28px, 6vw, 72px);
+            padding: clamp(28px, 6vw, 64px);
+            border-radius: var(--radius-lg);
+            color: #f4f7ff;
+            background: linear-gradient(145deg, #263fa6, #15234f 70%);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .promise-card .section-kicker {
+            color: #b9c5ff;
+        }
+
+        .promise-card h2 {
+            margin: 0;
+            font-size: clamp(2.1rem, 5vw, 4.1rem);
+            letter-spacing: -0.06em;
+            line-height: 0.98;
+        }
+
+        .promise-copy p {
+            margin: 0 0 17px;
+            color: #d7def0;
+        }
+
+        .promise-signature {
+            color: #ffffff !important;
+            font-weight: 800;
+        }
+
+        .community-card ul {
+            margin: 13px 0 0;
+            padding-left: 19px;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .community-card li + li {
+            margin-top: 6px;
+        }
+
+        @media (max-width: 980px) {
+            .vision-loop,
+            .build-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .first-lecture-grid,
+            .assessment-philosophy,
+            .hall-categories {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .community-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .brand-copy span {
+                display: none;
+            }
+
+            .nav-links {
+                justify-content: flex-end;
+            }
+
+            .nav-links > a {
+                white-space: nowrap;
+            }
+
+            .nav-label-full {
+                display: none;
+            }
+
+            .nav-label-compact {
+                display: inline;
+            }
+
+            .vision-loop,
+            .vision-principles,
+            .language-grid,
+            .build-grid,
+            .studio-timeline,
+            .first-lecture-grid,
+            .assessment-philosophy,
+            .hall-intro,
+            .hall-categories,
+            .promise-card,
+            .community-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vision-loop li {
+                min-height: auto;
+            }
+
+            .studio-week {
+                grid-template-columns: 61px minmax(0, 1fr);
+            }
+
+        }
+
         @media (prefers-reduced-motion: reduce) {
             html {
                 scroll-behavior: auto;
@@ -1476,6 +2022,7 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
     </style>
 </head>
 <body>
@@ -1492,12 +2039,19 @@
             </a>
 
             <div class="nav-links">
-                <a href="#modules">Modules</a>
-                <a href="#assessment">Assessment</a>
-                <a href="#schedule">Schedule</a>
-                <a href="ic151.html">IC151 labs</a>
-                <a href="speedrun.html">Dependency graph</a>
-                <a href="codes/index.html">Code library</a>
+                <a class="nav-studio" href="studio.html" aria-label="Algorithm Studio">
+                    <span class="nav-label-full">Algorithm Studio</span>
+                    <span class="nav-label-compact" aria-hidden="true">Studio</span>
+                </a>
+                <a class="nav-lab" href="ic151.html">IC151</a>
+                <a href="speedrun.html" aria-label="Dependency graph">
+                    <span class="nav-label-full">Dependency graph</span>
+                    <span class="nav-label-compact" aria-hidden="true">Graph</span>
+                </a>
+                <a href="codes/index.html" aria-label="Code library">
+                    <span class="nav-label-full">Code library</span>
+                    <span class="nav-label-compact" aria-hidden="true">Code</span>
+                </a>
             </div>
 
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch theme">
@@ -1537,12 +2091,12 @@
                 <div>
                     <p class="eyebrow">IIT Indore · CS103</p>
                     <h1 id="course-title">Introduction to <span>Programming.</span></h1>
-                    <p class="hero-description">Build the foundations to think computationally, write expressive C++ programs, and turn real-world problems into precise solutions.</p>
+                    <p class="hero-description">Learn how to approach unfamiliar problems, model them precisely, choose an algorithm, verify it, and improve it—while building expressive modern C++ systems that come alive on screen.</p>
                     <p class="instructor-byline">Instructor · <a href="https://drdebmath.github.io" target="_blank" rel="noopener noreferrer">Dr. Debasish Pattanayak</a></p>
 
                     <div class="hero-meta">
-                        <a class="primary-action" href="speedrun.html">
-                            Explore the dependency graph <span class="arrow" aria-hidden="true">→</span>
+                        <a class="primary-action" href="studio.html">
+                            Launch the Algorithm Studio <span class="arrow" aria-hidden="true">→</span>
                         </a>
                         <a class="secondary-action" href="lecture1.html">
                             Start lecture 01 <span class="arrow" aria-hidden="true">→</span>
@@ -1550,9 +2104,9 @@
                     </div>
 
                     <div class="hero-tags" aria-label="Course highlights">
-                        <span>C++ fundamentals</span>
-                        <span>9 core modules</span>
-                        <span>23 paced lectures</span>
+                        <span>Modern C++ · Rust glimpse</span>
+                        <span>14 project milestones</span>
+                        <span>Algorithms made visible</span>
                     </div>
                 </div>
 
@@ -1605,6 +2159,244 @@
                 </a>
             </nav>
         </div>
+
+        <section class="vision-section shell" id="vision" aria-labelledby="vision-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">The course vision</p>
+                    <h2 id="vision-title">Learn to think before you type.</h2>
+                </div>
+                <p>Syntax is a tool. The durable skill is turning an unfamiliar situation into a model, an algorithm, evidence, and a better second attempt.</p>
+            </div>
+
+            <ol class="vision-loop" aria-label="The CS103 problem-solving loop">
+                <li><strong>Approach</strong><span>Restate the goal, work a tiny example, and identify what is known.</span></li>
+                <li><strong>Model</strong><span>Choose the state, operations, constraints, inputs, and desired outputs.</span></li>
+                <li><strong>Choose</strong><span>Match the structure to a technique: simulation, search, greedy, recursion, or more.</span></li>
+                <li><strong>Verify</strong><span>Use invariants, boundary cases, traces, tests, and explanations—not hope.</span></li>
+                <li><strong>Improve</strong><span>Measure time, memory, clarity, and generality; then revise deliberately.</span></li>
+            </ol>
+
+            <div class="vision-principles">
+                <article class="principle-card">
+                    <h3>Problems evolve</h3>
+                    <p>A grid becomes a graph; one robot becomes a team; a working search becomes a shortest-path algorithm. Each project is the next question hiding inside the previous one.</p>
+                </article>
+                <article class="principle-card">
+                    <h3>Compare, do not imitate</h3>
+                    <p>We keep brute force as a trustworthy baseline, then compare divide-and-conquer, greedy, dynamic programming, backtracking, graph, and randomized strategies.</p>
+                </article>
+                <article class="principle-card">
+                    <h3>Make thinking visible</h3>
+                    <p>Every major algorithm is traced by hand, animated in the terminal, rendered as ASCII or HTML/SVG, and finally organized as clean modular code.</p>
+                </article>
+            </div>
+
+            <div class="language-grid" aria-label="Programming language perspective">
+                <article class="language-card">
+                    <h3>Modern C++ · our main workshop</h3>
+                    <p>C++ makes data representation, performance, value semantics, and abstraction visible. We favor standard-library containers, range-based loops, const-correct interfaces, RAII, tests, and small composable functions.</p>
+                </article>
+                <article class="language-card">
+                    <h3>Rust · a glimpse ahead</h3>
+                    <p>Short comparisons show how ownership, borrowing, pattern matching, and strong tooling can prevent whole classes of systems bugs. Different languages encode different trade-offs; choosing one is an engineering decision.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="builds-section shell" id="builds" aria-labelledby="builds-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">A glimpse of the finish line</p>
+                    <h2 id="builds-title">Systems you will know how to build.</h2>
+                </div>
+                <p>Open any build to see the model beneath the spectacle. Each demonstration becomes a project, then a platform for your own extension.</p>
+            </div>
+
+            <div class="studio-launch"><a class="primary-action" href="studio.html">Try the robot, pathfinder, and Snake <span class="arrow" aria-hidden="true">→</span></a></div>
+
+            <div class="build-grid">
+                <details class="build-card">
+                    <summary><span class="build-tag">Simulation · grids</span><strong>Cleaning robot</strong><span>Watch a robot sweep a dirty 2D room and explain every decision.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>Discrete time steps on a bounded 2D grid with walls, dirt, and a robot pose.</dd>
+                        <dt>Abstraction</dt><dd>The physical room becomes cells; sensing and motion become state transitions.</dd>
+                        <dt>Data structures</dt><dd><code>vector&lt;string&gt;</code>, coordinate pairs, direction arrays, and a visited matrix.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Simulation, loop invariants, coverage strategies, and a brute-force baseline.</dd>
+                        <dt>Extensions</dt><dd>Battery limits, unknown rooms, noisy sensors, and randomized exploration.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Graphs · search</span><strong>Cleaning a network</strong><span>The same robot leaves the grid and cleans rooms connected by corridors.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A graph whose vertices are rooms and whose edges are traversable corridors.</dd>
+                        <dt>Abstraction</dt><dd>Geometry is discarded; only connectivity and edge cost remain.</dd>
+                        <dt>Data structures</dt><dd>Adjacency lists, queue or stack, visited set, and parent map.</dd>
+                        <dt>Algorithmic ideas</dt><dd>BFS, DFS, spanning trees, reachability, and correctness by discovered frontier.</dd>
+                        <dt>Extensions</dt><dd>Directed passages, weighted travel, re-contamination, and online graph discovery.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Images · components</span><strong>Object discretization</strong><span>Turn pixels or occupied cells into separate, measurable objects.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A binary image or occupancy grid with four- or eight-neighbour adjacency.</dd>
+                        <dt>Abstraction</dt><dd>An object is a maximal connected component, independent of its visual label.</dd>
+                        <dt>Data structures</dt><dd>Matrix, component labels, coordinate queue, and component records.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Flood fill, recursive DFS, BFS, counting, and boundary handling.</dd>
+                        <dt>Extensions</dt><dd>Area, perimeter, bounding boxes, holes, colour segmentation, and image compression.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Objects · coordination</span><strong>Multi-agent cleaning</strong><span>Model a fleet whose agents share work without colliding.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>Many autonomous agents update within a shared world and a scheduling policy.</dd>
+                        <dt>Abstraction</dt><dd><code>World</code>, <code>Agent</code>, <code>Task</code>, and <code>Policy</code> classes separate responsibilities.</dd>
+                        <dt>Data structures</dt><dd>Object collections, queues, maps, event log, and reservation table.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Object-oriented modeling, greedy assignment, simulation, and conflict resolution.</dd>
+                        <dt>Extensions</dt><dd>Auctions, heterogeneous agents, failure recovery, fairness, and emergent swarm rules.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Paths · grid</span><strong>Shortest path on a map</strong><span>Animate a wavefront through a maze and reconstruct the route.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A grid graph with passable cells and optional movement costs.</dd>
+                        <dt>Abstraction</dt><dd>Each cell is a state; moves are edges; distance is the optimization objective.</dd>
+                        <dt>Data structures</dt><dd>Queue or priority queue, distance matrix, parent matrix, and frontier.</dd>
+                        <dt>Algorithmic ideas</dt><dd>BFS, Dijkstra, A* heuristics, path reconstruction, and admissibility.</dd>
+                        <dt>Extensions</dt><dd>Diagonal moves, terrain cost, dynamic obstacles, and multiple destinations.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Paths · graphs</span><strong>Route planner</strong><span>Find and justify the best route through a weighted network.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A weighted directed or undirected graph with non-negative edge costs.</dd>
+                        <dt>Abstraction</dt><dd>Locations are vertices; time, distance, or risk becomes edge weight.</dd>
+                        <dt>Data structures</dt><dd>Weighted adjacency list, min-priority queue, distance and predecessor maps.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Dijkstra, greedy choice, relaxation, shortest-path trees, and counterexamples.</dd>
+                        <dt>Extensions</dt><dd>Multi-criteria routes, negative weights, all-pairs paths, and live traffic updates.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Game · linked state</span><strong>Snake, from string to game</strong><span>Represent a moving body, enforce its invariant, and make it playable.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A timed grid simulation with input, collision rules, food, and score.</dd>
+                        <dt>Abstraction</dt><dd>The snake is an ordered path: first as a string of moves, then as linked segments.</dd>
+                        <dt>Data structures</dt><dd>Deque or linked list, occupancy set, direction vector, and game-state object.</dd>
+                        <dt>Algorithmic ideas</dt><dd>State machines, constant-time head/tail updates, invariants, and randomized food placement.</dd>
+                        <dt>Extensions</dt><dd>Replay logs, AI with search, obstacles, two-player mode, and procedural levels.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Terminal · animation</span><strong>ASCII renderer</strong><span>Make algorithms come alive with portable terminal frames.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A frame buffer periodically re-rendered from the current simulation state.</dd>
+                        <dt>Abstraction</dt><dd>Models emit renderable snapshots; the view owns symbols, colour, and timing.</dd>
+                        <dt>Data structures</dt><dd>Character matrix, frame history, event stream, and double buffer.</dd>
+                        <dt>Algorithmic ideas</dt><dd>ASCII graphics, ANSI control, delta rendering, animation loops, and modular views.</dd>
+                        <dt>Extensions</dt><dd>Pause/step controls, recorded replays, plots, accessibility palettes, and benchmarking.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Web &amp; C++ graphics</span><strong>Interactive visual lab</strong><span>Move one algorithm from terminal traces to HTML/SVG and modern C++ graphics.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A deterministic event stream drives several independent views.</dd>
+                        <dt>Abstraction</dt><dd>Algorithm, controller, and renderer communicate through clean interfaces.</dd>
+                        <dt>Data structures</dt><dd>Snapshot records, scene graph, event queue, and geometry primitives.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Model-view separation, observer pattern, interpolation, and reproducible replay.</dd>
+                        <dt>Extensions</dt><dd>HTML/SVG controls, Canvas, SFML/SDL visualizers, speed scrubber, and comparison mode.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Music · recursion</span><strong>Procedural composer</strong><span>Generate melodies from rules, probability, and repeated structure.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A discrete timeline of notes with pitch, duration, velocity, and instrument.</dd>
+                        <dt>Abstraction</dt><dd>Musical phrases become transformable sequences and recursive grammars.</dd>
+                        <dt>Data structures</dt><dd>Note vectors, trees of phrases, weighted choices, and MIDI event lists.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Recursion, randomized algorithms, dynamic programming for rhythm, and constraints.</dd>
+                        <dt>Extensions</dt><dd>Markov melodies, harmony search, live controls, MIDI export, and student-composed rules.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Optimization · circuits</span><strong>Circuit optimizer</strong><span>Search equivalent designs for a smaller or faster logical circuit.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A Boolean expression or directed acyclic graph of logic gates.</dd>
+                        <dt>Abstraction</dt><dd>Equivalent truth tables define correctness; gate count and depth define cost.</dd>
+                        <dt>Data structures</dt><dd>Expression tree, DAG, truth-table bitsets, and memoization map.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Brute force, divide and conquer, dynamic programming, local greedy rewrites, and verification.</dd>
+                        <dt>Extensions</dt><dd>Multiple cost models, common-subexpression sharing, SAT-based search, and visualization.</dd>
+                    </dl></div>
+                </details>
+
+                <details class="build-card">
+                    <summary><span class="build-tag">Search · generation</span><strong>Maze and puzzle forge</strong><span>Create solvable worlds, then challenge an algorithm—and a human—to solve them.</span></summary>
+                    <div class="build-body"><dl>
+                        <dt>Computational model</dt><dd>A state space with legal moves, goal tests, and generated constraints.</dd>
+                        <dt>Abstraction</dt><dd>Mazes, Sudoku-like puzzles, and games share search states and transitions.</dd>
+                        <dt>Data structures</dt><dd>Grid or graph, recursion stack, candidate sets, and seeded random generator.</dd>
+                        <dt>Algorithmic ideas</dt><dd>Backtracking, randomized DFS, pruning, heuristics, and uniqueness checking.</dd>
+                        <dt>Extensions</dt><dd>Difficulty rating, daily seeds, competitive solvers, generative art, and web sharing.</dd>
+                    </dl></div>
+                </details>
+            </div>
+
+            <div class="visual-ladder" aria-label="Representations used for major algorithms">
+                <strong>One algorithm, many lenses</strong>
+                <span>paper trace</span><span>tests &amp; invariants</span><span>terminal steps</span><span>ASCII animation</span><span>HTML/SVG</span><span>interactive graphics</span><span>object-oriented model</span><span>clean modules</span>
+            </div>
+        </section>
+
+        <section class="studio-section shell" id="studio" aria-labelledby="studio-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Semester studio</p>
+                    <h2 id="studio-title">One growing system, every week.</h2>
+                </div>
+                <p>Each milestone includes a working build, a visual explanation, focused challenges, and one open-ended “what if?” exploration.</p>
+            </div>
+
+            <ol class="studio-timeline">
+                <li class="studio-week"><span class="week-label">Week 01</span><div><h3>Command a robot</h3><p>Write precise movement instructions, trace state by hand, and ship a tiny terminal robot.</p><span class="week-technique">Decomposition · tests · brute force</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 02</span><div><h3>Build the grid world</h3><p>Model cells, walls, dirt, coordinates, and safe input; render the state as ASCII.</p><span class="week-technique">Types · state · simulation</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 03</span><div><h3>Make it sweep</h3><p>Compare row sweep, wall following, and random walks; define a coverage metric.</p><span class="week-technique">Loops · invariants · randomized algorithms</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 04</span><div><h3>Discover objects</h3><p>Label connected components and animate flood fill one frontier at a time.</p><span class="week-technique">Recursion · DFS · BFS</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 05</span><div><h3>Find a route</h3><p>Turn the grid into a graph, run BFS, reconstruct a shortest path, and test unreachable cases.</p><span class="week-technique">Graph modeling · shortest paths</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 06</span><div><h3>Move to weighted maps</h3><p>Compare BFS, Dijkstra, and a greedy nearest-target policy with visible counterexamples.</p><span class="week-technique">Priority queues · greedy methods</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 07</span><div><h3>Ship Snake</h3><p>Build the timed game, first with sequence state and then constant-time head/tail updates.</p><span class="week-technique">Strings · deques · linked structures</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 08</span><div><h3>Refactor into objects</h3><p>Separate model, renderer, input, and policies; explain and protect each class invariant.</p><span class="week-technique">OOP · interfaces · value semantics</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 09</span><div><h3>Coordinate a fleet</h3><p>Assign cleaning tasks to several agents, detect collisions, and compare fairness strategies.</p><span class="week-technique">Simulation · greedy assignment</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 10</span><div><h3>Search difficult worlds</h3><p>Generate mazes, solve them with backtracking, and use heuristics to prune the search tree.</p><span class="week-technique">Backtracking · search · pruning</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 11</span><div><h3>Remember useful work</h3><p>Optimize repeated subproblems in paths, sequences, or rhythm generation; plot the speedup.</p><span class="week-technique">Dynamic programming · memoization</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 12</span><div><h3>Divide the problem</h3><p>Visualize merge sort or spatial decomposition and compare empirical growth curves.</p><span class="week-technique">Divide and conquer · complexity</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 13</span><div><h3>Publish a visual explainer</h3><p>Replay algorithm events in terminal and HTML/SVG or a modern C++ graphics library.</p><span class="week-technique">Modularity · visualization · documentation</span></div></li>
+                <li class="studio-week"><span class="week-label">Week 14</span><div><h3>Capstone showcase</h3><p>Extend one system, validate it with evidence, teach it live, and submit it to the Hall of Fame.</p><span class="week-technique">Independent learning · synthesis</span></div></li>
+            </ol>
+        </section>
+
+        <section class="first-lecture-section shell" id="first-lecture" aria-labelledby="first-lecture-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Lecture 01 · the launch</p>
+                    <h2 id="first-lecture-title">No “Hello, World” without a world.</h2>
+                </div>
+                <p>The first meeting starts with the end-of-course demos, then students make a robot succeed before learning the C++ needed to express their reasoning.</p>
+            </div>
+            <div class="first-lecture-grid">
+                <article class="lecture-moment" data-time="00–08 min"><h3>See the future</h3><p>Live Snake, robot, route planner, music, and visualization demos. Students predict the hidden state and rules.</p></article>
+                <article class="lecture-moment" data-time="08–20 min"><h3>Model together</h3><p>Human teams act as robots on a drawn grid. Ambiguous instructions fail safely and become precise algorithms.</p></article>
+                <article class="lecture-moment" data-time="20–45 min"><h3>Build in pairs</h3><p>Translate a tiny sweep into C++, trace every variable, test edge cases, and change one rule.</p></article>
+                <article class="lecture-moment" data-time="45–55 min"><h3>Explain &amp; reflect</h3><p>Compare solutions, name an invariant, write the next question, and leave with a runnable artifact.</p></article>
+            </div>
+        </section>
 
         <section class="shell" id="modules" aria-labelledby="modules-title">
             <div class="section-heading">
@@ -1721,7 +2513,14 @@
                     <p class="section-kicker">Assessment</p>
                     <h2 id="assessment-title">How progress is measured.</h2>
                 </div>
-                <p>Five components balance participation, two checkpoints, and comprehensive examinations.</p>
+                <p>The formal weights stay transparent; the learning practice underneath them rewards reasoning, evidence, reflection, and sustained growth.</p>
+            </div>
+
+            <div class="assessment-philosophy" aria-label="Assessment philosophy">
+                <div class="assessment-value"><strong>Reasoning counts</strong><span>State the model, strategy, and invariant—not only the final output.</span></div>
+                <div class="assessment-value"><strong>Evidence counts</strong><span>Use examples, boundary cases, tests, traces, and measurements.</span></div>
+                <div class="assessment-value"><strong>Revision counts</strong><span>Act on feedback, document changes, and compare the improved design.</span></div>
+                <div class="assessment-value"><strong>Growth counts</strong><span>Consistent effort and increasingly independent work matter more than an early stumble.</span></div>
             </div>
 
             <div class="assessment-grid">
@@ -1814,6 +2613,62 @@
             </div>
         </section>
 
+        <section class="hall-section shell" id="hall-of-fame" aria-labelledby="hall-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Hall of Fame</p>
+                    <h2 id="hall-title">Work worth remembering.</h2>
+                </div>
+                <p>With student permission, exceptional projects become a permanent gallery of runnable demos, code, design notes, and lessons learned for future cohorts.</p>
+            </div>
+            <div class="hall-shell">
+                <div class="hall-intro">
+                    <div><h3>Your project can become next year’s first spark.</h3><p>The gallery celebrates many kinds of excellence—not only the highest score. Future students see what peers made possible and begin with a larger sense of possibility.</p></div>
+                    <div class="hall-rule">Selections use published rubrics, credit every collaborator, preserve accessible documentation, and never publish student work without explicit consent.</div>
+                </div>
+                <ul class="hall-categories" aria-label="Hall of Fame award categories">
+                    <li><span>01</span>Best visualization</li>
+                    <li><span>02</span>Fastest algorithm</li>
+                    <li><span>03</span>Most elegant code</li>
+                    <li><span>04</span>Most creative project</li>
+                    <li><span>05</span>Best documentation</li>
+                    <li><span>06</span>People’s choice</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="promise-section shell" id="promise" aria-labelledby="promise-title">
+            <div class="promise-card">
+                <div>
+                    <p class="section-kicker">The instructor’s promise</p>
+                    <h2 id="promise-title">You will not learn alone.</h2>
+                </div>
+                <div class="promise-copy">
+                    <p>By the end of this course, you will be able to meet unfamiliar programming problems with the calm, structured confidence of a strong programmer: make a model, choose a strategy, test your reasoning, and improve what you built.</p>
+                    <p>I will be available to help you learn and to work through the obstacles that serious learning inevitably creates. Ask early, bring imperfect attempts, and show your reasoning. Confusion is not a verdict; it is information we can use.</p>
+                    <p>Our practice follows research-backed principles: active recall, worked examples, deliberate practice, timely feedback, collaboration, and repeated opportunities to transfer an idea into a new setting. Every lecture aims to earn your attention by giving you a new way to think—not another page of syntax to memorize.</p>
+                    <p>Your growth matters more than a single grade. Consistent, honest effort, reflection, and revision will be recognized. I cannot promise that the course will always feel easy. I can promise that the difficulty will have a purpose, that your questions will matter, and that you will leave able to learn far beyond this syllabus.</p>
+                    <p class="promise-signature">— Dr. Debasish Pattanayak</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="community-section shell" id="community" aria-labelledby="community-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Learning community</p>
+                    <h2 id="community-title">A studio, not a spectator sport.</h2>
+                </div>
+                <p>We build a culture where unfinished thinking is welcome, feedback is specific, and explaining an idea strengthens everyone’s understanding.</p>
+            </div>
+            <div class="community-grid">
+                <article class="community-card"><h3>Pair &amp; rotate</h3><p>Driver and navigator roles change often so every student practices implementation and strategic thinking.</p><ul><li>Explain before editing</li><li>Rotate partners across backgrounds</li><li>Credit ideas and assistance</li></ul></article>
+                <article class="community-card"><h3>Demo circles</h3><p>Weekly five-minute showcases normalize partial progress and reveal multiple valid approaches.</p><ul><li>Show one success and one surprise</li><li>Ask “what did you try?”</li><li>Archive useful traces and tests</li></ul></article>
+                <article class="community-card"><h3>Help that teaches</h3><p>Office hours and peer support focus on questions, models, and debugging habits—not copying finished answers.</p><ul><li>Bring the smallest failing example</li><li>Use a shared debugging checklist</li><li>Escalate blockers early</li></ul></article>
+                <article class="community-card"><h3>Choice with belonging</h3><p>Open-ended extensions let interests in games, robotics, art, systems, science, or music shape the same core ideas.</p><ul><li>Accessible formats by default</li><li>Low-bandwidth alternatives</li><li>Community agreements revisited together</li></ul></article>
+            </div>
+        </section>
+
         <section class="schedule-section shell" id="schedule" aria-labelledby="schedule-title">
             <div class="section-heading">
                 <div>
@@ -1876,6 +2731,7 @@
         });
 
         syncThemeControl();
+
     </script>
 </body>
 </html>

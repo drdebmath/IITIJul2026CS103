@@ -9,7 +9,7 @@ public:
     virtual ~Shape() = default;
 };
 
-class Rectangle final : public Shape {
+class Rectangle : public Shape {
     double width_;
     double height_;
 public:
@@ -17,12 +17,12 @@ public:
     double area() const override { return width_ * height_; }
 };
 
-class Circle final : public Shape {
+class Circle : public Shape {
     double radius_;
 public:
     explicit Circle(double radius) : radius_(radius) {}
     double area() const override {
-        constexpr double pi = 3.141592653589793;
+        const double pi = 3.141592653589793;
         return pi * radius_ * radius_;
     }
 };

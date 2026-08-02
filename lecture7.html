@@ -14,6 +14,22 @@
 # Lecture 7: Functions I
 ## Give one operation a clear name and contract
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Give robot actions contracts
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Stop one growing main function from mixing movement, sensing, and display. |
+| **Model** | The controller coordinates small operations with explicit responsibilities. |
+| **Represent** | Function parameters are inputs; return values report results. |
+| **Solve** | Decompose by one explainable task and compose calls into a controller. |
+| **Verify** | Test each contract independently before integrating the functions. |
+| **Improve** | Remove duplication and rename a function whose contract needs “and”. |
+
+**Technique lens:** procedural decomposition
+
+**Compare:** one monolithic procedure versus several testable functions
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A function owns one task
 
@@ -65,6 +81,29 @@ int doubled(int value) {
 
 Changing <code>value</code> does not change the caller's argument.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a scoring contract
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| functions and value parameters | award points for cleaning without changing the caller accidentally |
+
+~~~cpp
+#include <iostream>
+int scoreAfterClean(int score, bool dirtHere) {
+    if (dirtHere) score += 10;
+    return score;
+}
+int main() {
+    int score=0;
+    std::cout << scoreAfterClean(score,true) << ' ' << score << '\n';
+}
+~~~
+
+**Contract test:** the function returns 10, while the caller's original <code>score</code> remains 0.
+
+**Next unlock · L08:** deliberately mutate row and column through references.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Decompose a calculation into named steps
 
@@ -97,7 +136,6 @@ Named functions remain the default for novice code. Lambdas return later as sear
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

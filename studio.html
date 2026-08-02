@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interactive CS103 algorithm studio: cleaning, shortest paths, and Snake.">
+    <title>Algorithm Studio · CS103</title>
+    <link rel="stylesheet" href="studio.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html"><span>CS103</span> Algorithm Studio</a>
+        <nav aria-label="Studio navigation">
+            <a href="index.html">Course</a>
+            <a href="codes/index.html">C++ code</a>
+            <a href="speedrun.html">Concept graph</a>
+            <button id="theme-toggle" type="button" aria-label="Use dark mode">◐ Theme</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <p class="eyebrow">Predict → step → explain → improve</p>
+            <h1>Algorithms should move.</h1>
+            <p>These small worlds expose state one transition at a time. Predict the next frame, take one step, name the invariant, and only then press Run.</p>
+            <div class="loop" aria-label="The course problem-solving loop">
+                <span>Approach</span><span>Model</span><span>Represent</span><span>Choose</span><span>Verify</span><span>Improve</span>
+            </div>
+        </section>
+
+        <section class="lab" id="cleaner" data-demo="cleaner">
+            <div class="lab-heading">
+                <div><p class="eyebrow">Simulation + graph search</p><h2>01 · Cleaning robot</h2></div>
+                <p class="status" data-status aria-live="polite">Ready. Predict the first action.</p>
+            </div>
+            <div class="lab-layout">
+                <div>
+                    <div class="board board-cleaner" data-board role="grid" aria-label="Cleaning robot grid"></div>
+                    <div class="controls">
+                        <button type="button" data-action="step">Step</button>
+                        <button type="button" data-action="run">Run</button>
+                        <button type="button" data-action="reset">Reset</button>
+                        <label>Speed <input data-speed type="range" min="90" max="850" value="360" step="10"></label>
+                    </div>
+                    <p class="legend"><span class="swatch robot"></span> robot <span class="swatch dirt"></span> dirt <span class="swatch wall"></span> wall <span class="swatch trail"></span> visited</p>
+                </div>
+                <article class="model-card">
+                    <dl>
+                        <div><dt>Computational model</dt><dd>One state transition cleans the current cell or moves one edge in a 4-neighbour grid.</dd></div>
+                        <div><dt>Abstraction</dt><dd>The floor is an unweighted graph; reachable cells are vertices and legal moves are edges.</dd></div>
+                        <div><dt>Data structures</dt><dd>Matrix, coordinate pair, queue, predecessor matrix, and a set of dirty cells.</dd></div>
+                        <div><dt>Algorithm</dt><dd>Repeated breadth-first search chooses a shortest route to the nearest dirt.</dd></div>
+                        <div><dt>Correctness idea</dt><dd>BFS explores by distance layers; the first reached dirt has minimum path length.</dd></div>
+                        <div><dt>Extensions</dt><dd>Weighted terrain, battery limits, graph cleaning, competing robots, or a shared task queue.</dd></div>
+                    </dl>
+                </article>
+            </div>
+        </section>
+
+        <section class="lab" id="pathfinder" data-demo="pathfinder">
+            <div class="lab-heading">
+                <div><p class="eyebrow">Search made visible</p><h2>02 · Shortest path</h2></div>
+                <p class="status" data-status aria-live="polite">Frontier contains the start.</p>
+            </div>
+            <div class="lab-layout">
+                <div>
+                    <div class="board board-path" data-board role="grid" aria-label="Breadth-first search grid"></div>
+                    <div class="controls">
+                        <button type="button" data-action="step">Expand one</button>
+                        <button type="button" data-action="run">Run</button>
+                        <button type="button" data-action="reset">Reset</button>
+                        <label>Speed <input data-speed type="range" min="60" max="700" value="260" step="10"></label>
+                    </div>
+                    <p class="legend"><span class="swatch start"></span> start <span class="swatch frontier"></span> frontier <span class="swatch visited"></span> explored <span class="swatch path"></span> shortest path</p>
+                </div>
+                <article class="model-card">
+                    <dl>
+                        <div><dt>Computational model</dt><dd>Each step removes one frontier vertex and discovers its unvisited neighbours.</dd></div>
+                        <div><dt>Abstraction</dt><dd>A maze becomes a graph; geometry matters only when generating neighbours.</dd></div>
+                        <div><dt>Data structures</dt><dd>FIFO queue, visited matrix, distance matrix, and one parent per discovered cell.</dd></div>
+                        <div><dt>Algorithm</dt><dd>Breadth-first search followed by predecessor-chain reconstruction.</dd></div>
+                        <div><dt>Correctness idea</dt><dd>When a vertex leaves the queue, its recorded distance is the fewest possible edges from start.</dd></div>
+                        <div><dt>Extensions</dt><dd>Dijkstra for costs, A* for a heuristic, graph adjacency lists, or multi-source evacuation.</dd></div>
+                    </dl>
+                </article>
+            </div>
+        </section>
+
+        <section class="lab" id="snake" data-demo="snake">
+            <div class="lab-heading">
+                <div><p class="eyebrow">State + linked sequence</p><h2>03 · Playable Snake</h2></div>
+                <p class="status" data-status aria-live="polite">Use arrow keys or direction buttons.</p>
+            </div>
+            <div class="lab-layout">
+                <div>
+                    <div class="board board-snake" data-board role="grid" tabindex="0" aria-label="Playable Snake board; use arrow keys"></div>
+                    <div class="controls snake-controls">
+                        <button type="button" data-direction="up" aria-label="Move up">↑</button>
+                        <button type="button" data-direction="left" aria-label="Move left">←</button>
+                        <button type="button" data-action="run">Play</button>
+                        <button type="button" data-direction="right" aria-label="Move right">→</button>
+                        <button type="button" data-direction="down" aria-label="Move down">↓</button>
+                        <button type="button" data-action="step">Step</button>
+                        <button type="button" data-action="reset">Reset</button>
+                        <label>Speed <input data-speed type="range" min="90" max="650" value="260" step="10"></label>
+                    </div>
+                    <p class="legend"><span class="swatch snake-head"></span> head <span class="swatch snake-body"></span> body <span class="swatch food"></span> food</p>
+                </div>
+                <article class="model-card">
+                    <dl>
+                        <div><dt>Computational model</dt><dd>One tick chooses a direction, creates a new head, and removes the tail unless food is eaten.</dd></div>
+                        <div><dt>Abstraction</dt><dd>The snake is an ordered path embedded in a bounded grid.</dd></div>
+                        <div><dt>Data structures</dt><dd>Ordered coordinate chain plus occupancy set; the C++ version uses linked nodes.</dd></div>
+                        <div><dt>Algorithm</dt><dd>Real-time simulation with collision detection and deterministic food placement.</dd></div>
+                        <div><dt>Correctness idea</dt><dd>After each legal tick, coordinates are in bounds, unique, and consecutive neighbours.</dd></div>
+                        <div><dt>Extensions</dt><dd>AI search, replay strings, obstacles, two snakes, terminal ANSI animation, or a graphical renderer.</dd></div>
+                    </dl>
+                    <a class="code-cta" href="codes/index.html?search=snake#examples">Open the compile-checked C++ game →</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="representation">
+            <p class="eyebrow">One algorithm, many views</p>
+            <h2>Never confuse the model with its picture.</h2>
+            <div>
+                <article><strong>Terminal / ASCII</strong><p>Lowest setup cost; ideal for tracing exact states and remote systems.</p></article>
+                <article><strong>HTML grid</strong><p>Accessible cells, controls, colour, and interaction without changing the underlying algorithm.</p></article>
+                <article><strong>SVG / canvas</strong><p>Useful for graphs, paths, geometry, and animation at larger scale.</p></article>
+                <article><strong>Modern C++ graphics</strong><p>A renderer can consume the same model through a clean interface.</p></article>
+            </div>
+        </section>
+    </main>
+
+    <footer>CS103 · Build it, explain it, test it, improve it.</footer>
+    <script src="studio.js"></script>
+</body>
+</html>

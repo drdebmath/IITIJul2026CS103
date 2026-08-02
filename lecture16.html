@@ -14,6 +14,22 @@
 # Lecture 16: Recursive Decomposition in Practice
 ## Prove a smaller call reaches a base case
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Explore mazes and repeated subproblems
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Search choices, undo dead ends, and avoid recomputing identical states. |
+| **Model** | Each call owns one smaller state and returns an answer to its caller. |
+| **Represent** | The call stack records choices; a memo table stores solved states. |
+| **Solve** | Use recursion for structure, backtracking for reversible choices, and memoization for repeated subproblems. |
+| **Verify** | Prove a decreasing measure reaches a base case and trace each undo. |
+| **Improve** | Replace repeated recursion with memoization or an iterative frontier when useful. |
+
+**Technique lens:** recursion, backtracking, and dynamic programming
+
+**Compare:** direct recursion versus memoized or iterative solutions
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Trace the call stack
 
@@ -56,6 +72,30 @@ Choose one value for the current position, recursively arrange the remainder, th
 
 The data structure is an array; recursion supplies the search order.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · recursive maze search
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| recursion and backtracking | ask whether the Cleaner can reach dirt through open cells |
+
+~~~cpp
+#include <string>
+#include <vector>
+bool reaches(std::vector<std::string>& grid,int row,int column) {
+    if (row<0 || column<0 || row>=static_cast<int>(grid.size()) ||
+        column>=static_cast<int>(grid[0].size()) || grid[row][column]=='#') return false;
+    if (grid[row][column]=='*') return true;
+    grid[row][column]='#';
+    return reaches(grid,row-1,column) || reaches(grid,row+1,column) ||
+           reaches(grid,row,column-1) || reaches(grid,row,column+1);
+}
+~~~
+
+**Progress argument:** every recursive branch either stops or marks one previously open cell.
+
+**Next unlock · L17:** accelerate repeated collision checks and prioritize dirt.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Reference: longest common subsequence
 
@@ -82,7 +122,6 @@ Complexity describes growth, not stopwatch seconds.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

@@ -14,6 +14,22 @@
 # Lecture 2: Types & Representation
 ## Give every stored value a deliberate meaning
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Encode the cleaning world
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store position, dirt, battery, and sensor readings without confusing their meanings. |
+| **Model** | A robot has discrete state plus approximate physical measurements. |
+| **Represent** | int for counts/coordinates, bool for facts, double for measurements, const for limits. |
+| **Solve** | Choose each type from meaning, range, precision, and permitted operations. |
+| **Verify** | Try zero, the largest expected value, a fractional value, and a lossy conversion. |
+| **Improve** | Replace magic values with named constants and document units. |
+
+**Technique lens:** representation before algorithm
+
+**Compare:** one overloaded numeric type versus several meaning-specific types
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Variables and static typing
 
@@ -61,6 +77,28 @@ double reading = 11.8;
 
 <code>const</code> prevents modification through that name after initialization.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · name the state
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| typed variables and constants | remember one actor's row, column, score, and board bounds |
+
+~~~cpp
+#include <iostream>
+int main() {
+    const int rows = 5, columns = 9;
+    int headRow = 2, headColumn = 3;
+    int score = 0;
+    bool dirtHere = true;
+    std::cout << headRow << ' ' << headColumn << ' ' << score << ' ' << dirtHere << '\n';
+}
+~~~
+
+**Model check:** row and column are independent whole-number coordinates; dirt is a yes/no fact.
+
+**Next unlock · L03:** compute a new coordinate from the current state and one movement delta.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Type inference still produces one type
 
@@ -93,7 +131,6 @@ An explicit conversion documents intent. Check the destination range first: frac
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

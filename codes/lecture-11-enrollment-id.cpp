@@ -2,9 +2,8 @@
 #include <cctype>
 #include <iostream>
 #include <string>
-#include <string_view>
 
-bool validEnrollmentId(std::string_view id) {
+bool validEnrollmentId(const std::string& id) {
     if (id.size() != 9 || id.substr(0, 2) != "BT") return false;
     for (std::size_t i = 2; i < id.size(); ++i) {
         const auto character = static_cast<unsigned char>(id[i]);
@@ -15,5 +14,5 @@ bool validEnrollmentId(std::string_view id) {
 
 int main() {
     const std::string candidate = "BT2601034";
-    std::cout << std::boolalpha << validEnrollmentId(candidate) << '\n';
+    std::cout << validEnrollmentId(candidate) << '\n';
 }

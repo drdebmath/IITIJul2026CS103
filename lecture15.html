@@ -14,6 +14,22 @@
 # Lecture 15: Linear Structures & Array Algorithms
 ## Choose operations before representation
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Queue the cells that still need cleaning
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Remember pending dirty cells and service them in a deliberate order. |
+| **Model** | A stored target is waiting, active, or already cleaned. |
+| **Represent** | A vector plus a front index acts as a FIFO queue; an array can act as a stack. |
+| **Solve** | Scan once to collect dirty indices, then process them in stored order. |
+| **Verify** | Test no dirt, one target, repeated targets, and full capacity. |
+| **Improve** | Compare FIFO, LIFO, and direct linear search from the operations each needs. |
+
+**Technique lens:** linear structures, search, and elementary sorting
+
+**Compare:** FIFO service order versus LIFO service order
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## An abstract data type is an operation contract
 
@@ -25,13 +41,11 @@ The contract does not require a class or one specific representation.
 ## Linear search applies traversal to stored data
 
 ~~~cpp
-int found = -1;
-for (std::size_t i = 0; i < values.size(); ++i) {
-    if (values[i] == target) {
-        found = static_cast<int>(i);
-        break;
-    }
-}
+std::vector<int> values{8, 3, 5, 3};
+int target = 5;
+std::size_t found = values.size();
+for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
+    if (values[i] == target) found = i;
 ~~~
 
 Worst case: inspect every element.
@@ -42,8 +56,11 @@ Worst case: inspect every element.
 ~~~cpp
 for (std::size_t end = values.size(); end > 1; --end) {
     for (std::size_t i = 1; i < end; ++i) {
-        if (values[i] < values[i - 1])
-            std::swap(values[i], values[i - 1]);
+        if (values[i] < values[i - 1]) {
+            int temporary = values[i];
+            values[i] = values[i - 1];
+            values[i - 1] = temporary;
+        }
     }
 }
 ~~~
@@ -66,6 +83,31 @@ A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</c
 
 Print jobs and breadth-first exploration are queue applications.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a cleaning queue
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| queue behavior on a linear structure | clean dirty cell IDs in first-discovered, first-served order |
+
+~~~cpp
+#include <iostream>
+#include <vector>
+int main() {
+    std::vector<int> pending{8,13,21};
+    std::size_t front=0;
+    while (front<pending.size()) {
+        int targetCell=pending[front];
+        ++front;
+        std::cout << "clean " << targetCell << '\n';
+    }
+}
+~~~
+
+**Queue invariant:** indices below <code>front</code> are cleaned; indices from <code>front</code> onward are pending.
+
+**Next unlock · L16:** explore choices recursively and undo dead ends.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Compare operations, not names
 
@@ -87,7 +129,6 @@ Print jobs and breadth-first exploration are queue applications.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

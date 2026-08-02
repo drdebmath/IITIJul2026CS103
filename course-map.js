@@ -52,7 +52,7 @@
         'm8-constructor-types': [18, 3], 'm7-overload-ctor': [18, 3],
         'm6-destructors': [18, 5], 'm8-raii': [18, 5], 'm7-copy': [18, 4],
         'm7-operators': [18, 6], 'm7-stream': [18, 6],
-        'm7-comparison': [18, 6], 'm7-assignment': [18, 4], 'm7-friend': [18, 7],
+        'm7-comparison': [18, 6], 'm7-assignment': [18, 4], 'm7-friend': [19, 2],
 
         'm8-inheritance': [19, 3], 'm8-hierarchy': [19, 4],
         'm8-access-inheritance': [20, 2], 'm8-multiple': [20, 3], 'm8-diamond': [20, 3],
@@ -319,7 +319,7 @@
         15: [1, 2, 3, 4, 5, 6, 7, 8],
         16: [1, 2, 3, 4, 5, 7, 8],
         17: [1, 2, 3, 4, 5, 6, 7, 8],
-        18: [1, 2, 3, 4, 5, 7, 8],
+        18: [1, 2, 3, 4, 5, 6, 7],
         19: [1, 2, 3, 4, 5, 6, 7, 8],
         20: [1, 2, 4, 5, 6, 7, 8],
         21: [1, 2, 3, 4, 5, 6, 7, 8],

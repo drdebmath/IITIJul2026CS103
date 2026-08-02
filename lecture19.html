@@ -14,12 +14,35 @@
 # Lecture 19: Friend Access & Inheritance Foundations
 ## Move from one value type to a justified is-a relationship
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Design a family of cleaning agents
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Share genuine agent behavior without claiming false is-a relationships. |
+| **Model** | Specialized agents must remain usable wherever the base contract is expected. |
+| **Represent** | A shallow hierarchy models is-a; member objects model has-a. |
+| **Solve** | Extract only the common promise and compose independent capabilities. |
+| **Verify** | Substitute each derived type in base-level scenarios. |
+| **Improve** | Replace inheritance with composition when substitutability is hard to defend. |
+
+**Technique lens:** object-oriented abstraction
+
+**Compare:** inheritance versus composition
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Friendship should remain exceptional
 
-A friend function is a non-member granted access to private and protected members.
+~~~cpp
+class Complex {
+    double real, imaginary;
+public:
+    Complex(double r, double i) : real(r), imaginary(i) {}
+    friend std::ostream& operator<<(std::ostream&, const Complex&);
+};
+~~~
 
-Use it for symmetric operations such as stream insertion when a normal public interface would be less clear.
+A friend is a non-member granted narrow access. Friendship is not inheritance or a security boundary.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Public inheritance means substitutability
@@ -54,6 +77,8 @@ public:
     int batteryPercent() const { return 80; }
 };
 ~~~
+
+A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Construction proceeds base before derived
@@ -72,6 +97,29 @@ A <code>Car</code> has an <code>Engine</code>; it is not an engine.
 
 Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · Snake meets Cleaner
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| friend, inheritance, and composition | compare two occupants while only Cleaner has a dirt sensor |
+
+~~~cpp
+struct DirtSensor { bool dirty=false; };
+class GridOccupant {
+    unsigned cell_;
+    friend bool sameCell(const GridOccupant&,const GridOccupant&);
+public: explicit GridOccupant(unsigned cell):cell_(cell) {}
+};
+bool sameCell(const GridOccupant& a,const GridOccupant& b){ return a.cell_==b.cell_; }
+class SnakeHead:public GridOccupant { public: explicit SnakeHead(unsigned c):GridOccupant(c){} };
+class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner(unsigned c):GridOccupant(c){} };
+~~~
+
+**Design test:** both derived objects substitute for <code>const GridOccupant&amp;</code>; the sensor remains a has-a member.
+
+**Next unlock · L20:** select different actor behavior through one virtual interface.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Session summary
 
@@ -83,7 +131,6 @@ Composition usually exposes fewer dependencies and is easier to change. Inherita
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

@@ -14,6 +14,22 @@
 # Lecture 8: Functions II
 ## References, overloading, decomposition, and the call stack
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Build a testable controller
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Let functions observe or intentionally change shared robot state. |
+| **Model** | Calls form a stack of unfinished responsibilities. |
+| **Represent** | Values copy small inputs; references alias intentional shared state; const& observes. |
+| **Solve** | Choose a parameter mode from the contract, not from syntax preference. |
+| **Verify** | Trace caller and callee state, including a recursive countdown preview. |
+| **Improve** | Return information instead of mutating when either design is equally clear. |
+
+**Technique lens:** decomposition with controlled aliasing
+
+**Compare:** returning a new state versus updating through a reference
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Value or reference?
 
@@ -45,6 +61,28 @@ double absolute(double value);
 ~~~
 
 The compiler selects from parameter lists. Return type alone cannot distinguish overloads.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a movement operation
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| reference parameters and decomposition | update the caller's two coordinate variables in one named operation |
+
+~~~cpp
+void movePlayer(int& row, int& column, int dRow, int dColumn) {
+    row += dRow;
+    column += dColumn;
+}
+int main() {
+    int row=2, column=3;
+    movePlayer(row,column,0,1);
+}
+~~~
+
+**Mutation contract:** only <code>row</code> and <code>column</code> are aliases; the direction values are copies.
+
+**Next unlock · L09:** store the complete Snake body as sequences of coordinates.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Decomposition keeps main readable
@@ -87,7 +125,6 @@ Every recursive call must move measurably toward a base case.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

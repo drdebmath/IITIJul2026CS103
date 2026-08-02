@@ -9,7 +9,9 @@ Delivery: static GitHub Pages website with local-first Reveal.js lectures
 
 This document defines the pedagogical structure, schedule rules, content dependencies, assessment communication, laboratory coordination, and website behavior for CS103 and its IC151 laboratory companion.
 
-The design has two equal priorities:
+The primary outcome is an independent problem solver who can approach an unfamiliar task, build a computational model, select and justify an algorithmic technique, verify the result, and improve it. C++ syntax is a means to that outcome, not the course identity.
+
+Two commitments support that outcome:
 
 1. Make first-semester programming accessible to a complete novice, including a student who has rarely used a desktop computer.
 2. Preserve a technically correct prerequisite path from elementary program state to data structures, algorithms, object design, and applied systems.
@@ -70,6 +72,59 @@ Students predict output or state before running code. Trace tables, boundary cas
 Each scheduled class has a paced 55-minute core path. Additional historical detail, alternate implementations, extended visualizations, and advanced variants remain available as reference slides, but do not expand the live session.
 
 A concept link may open a reference slide directly. The learner can toggle between the 55-minute core and the complete reference deck.
+
+### 3.6 The algorithmic studio cycle
+
+Syntax is introduced only when it helps solve a visible problem. Every lecture and project uses the same six questions, shown with the same labels so that students gradually internalize them:
+
+1. **Problem —** What must the system accomplish? What are its inputs, outputs, constraints, and success criteria?
+2. **Model —** Which details of the real situation matter, and which can be deliberately ignored?
+3. **Represent —** What state must be stored? Which type or data structure makes the required operations natural?
+4. **Solve —** Which small, precise steps transform the input state into the result? Which algorithmic paradigm fits those steps?
+5. **Verify —** Why should the steps work? State a contract, invariant, decreasing measure, or exhaustive set of cases; then test normal, boundary, and invalid inputs.
+6. **Improve —** Can the solution become clearer, more general, faster, safer, easier to test, or more compelling to watch?
+
+The cycle is not a one-way recipe. A failed test may reveal a poor model; an awkward algorithm may reveal the wrong representation. Students are expected to move backward, revise an assumption, and try again. “I do not know yet” is followed by a concrete learning action: make a tiny example, draw the state, consult the concept DAG, read one diagnostic, compare two techniques, or ask a precise question.
+
+Each deck contains a generated **Algorithmic studio** brief. It names the continuing project thread, answers all six questions for that lecture, identifies the technique lens, and suggests an alternative worth comparing. The brief is context rather than an additional assessed concept, so stable `Lxx · Syy` references and the eight-authored-slide core remain unchanged.
+
+Each deck also contains exactly one **Game evolution sneak peek**. It appears only after the authored slide that teaches every feature used in its code. The slide identifies the precise Grid Snake + Cleaner subsystem unlocked that day, provides a prerequisite-safe snippet or integration trace, states an invariant or test, and names the next capability. The sequence therefore makes growth visible without solving the final game prematurely.
+
+### 3.7 One evolving project spine
+
+Students should feel that they are constructing increasingly capable systems, not discarding one exercise after another. The main spine evolves in visible stages:
+
+`printed command → changing state → animated grid → snake body → linked body → frontier search → shortest route → robot objects → multi-agent graph cleaner → open capstone`
+
+Small weekly branches introduce text processing, component labeling, procedural music, and circuit optimization. Every branch reconnects to the same questions about state, representation, correctness, and trade-offs. Students keep a short engineering log containing the six-question brief, a hand trace, three tests, one failed idea, and one proposed extension.
+
+The instructor routinely presents at least two plausible approaches. Students predict which is clearer or faster, collect evidence, and explain when the conclusion could change. Elegance is treated as explainable structure—not short code.
+
+### 3.8 Recognizing an algorithmic technique
+
+Techniques are introduced as answers to recognizable problem shapes rather than as vocabulary to memorize.
+
+| Signal in a new problem | First technique to consider | Question that verifies the fit |
+|---|---|---|
+| Small search space; need a trustworthy baseline | brute force | Can every candidate be enumerated and checked within the limits? |
+| Same problem appears on smaller independent pieces | divide and conquer | Can the partial answers be combined correctly? |
+| One locally best choice can safely become permanent | greedy | What exchange or staying-ahead argument justifies the choice? |
+| Smaller states repeat | dynamic programming | What state completely describes a reusable subproblem? |
+| Entities connected by relationships | graph algorithm | Are vertices, edges, and the path/coverage objective explicit? |
+| Need a sequence of choices leading to a goal | search | What is a state, a legal move, a goal, and a visited-state rule? |
+| Rules evolve state over time | simulation | Which invariant must every transition preserve? |
+| The domain contains responsible, interacting entities | object-oriented model | Which state and behavior belong together, and is inheritance truly substitutable? |
+| Solution mirrors a smaller instance of itself | recursion | What decreases, and what is the base case? |
+| Choices may need to be undone | backtracking | How is a choice made, explored, and reversed without corrupting state? |
+| Sampling or varied behavior is acceptable | randomized algorithm | What property holds always, and what claim is only probabilistic? |
+
+Students first write a simple baseline whenever feasible. An “improvement” must preserve the same contract and be compared on the same tests; speed alone does not excuse a wrong or opaque solution.
+
+### 3.9 Language choices
+
+C++17 is the implementation language for assessed examples because it lets students connect high-level abstractions to representation, lifetime, performance, games, graphics, scientific computing, and systems work. Standard-library value types and RAII are preferred before manual resource management.
+
+Rust appears in a small, non-assessed comparison after ownership has a concrete motivation. Students see how compiler-checked ownership and borrowing prevent classes of memory and concurrency defects. Python, JavaScript, and domain-specific tools may appear in demonstrations to explain that languages encode different engineering trade-offs. The transferable object of study remains the model, algorithm, correctness argument, and evidence—not loyalty to one syntax.
 
 ## 4. Semester structure
 
@@ -170,7 +225,7 @@ Each checkpoint uses “Think → Pair → Share” and asks for a prediction, d
 - Prefer one primary abstraction per concept chunk.
 - Use no more than eight authored core slides in a live session; generated context, checkpoints, and after-class practice are structured separately.
 - Move extended history, alternate algorithms, long quizzes, and advanced variants to reference mode.
-- Do not use syntax or structures before their prerequisite session unless clearly labeled as a non-assessed preview.
+- Every student-facing code block and standalone example uses only syntax, library types, and structures already taught by that point in the sequence. A motivating preview may show behavior or a rendered result, but it does not expose forward-reference code for students to imitate.
 - Split content that cannot fit legibly in one 1920 × 1080, 16:9 full-screen slide.
 - Outside full-screen mode, every lecture is a vertically scrollable reader.
 
@@ -208,7 +263,86 @@ g++ -std=c++17 -Wall -Wextra -Wpedantic filename.cpp -o program
 
 Support translation units are labeled explicitly. Misleading-but-compiling examples are treated as defects; examples must be technically correct, relevant to the current prerequisites, and safe enough for a novice to imitate.
 
+The same prerequisite rule applies inside a lecture: a code variant is placed after its enabling concept, never before it. In particular, L01–L06 define no user-written functions other than `main`; functions begin in L07, arrays in L09, two-dimensional arrays and vectors in L10, records and pointers in L13, classes in L18, inheritance in L19, runtime polymorphism in L20, and heterogeneous owning containers in L21.
+
+### 7.1 First-lecture demo theatre
+
+Lecture 1 begins with short, pre-built demonstrations before asking students to write syntax. The instructor narrates the changing state and asks, “What information must the program remember?” The implementation is explicitly a preview; students are not expected to understand the C++ yet. Each demonstration remains available for replay in terminal and browser form, with reduced-motion controls.
+
+| Demonstration | Computational model | Abstraction | Data structures | Algorithmic idea | Possible extensions |
+|---|---|---|---|---|---|
+| Cleaning robot on a 2D floor | discrete grid state updated one step at a time | robot, dirty/free/blocked cell, action | 2D array, position pair | simulation, sweep patterns, invariants | batteries, unknown obstacles, noisy sensors |
+| Cleaning a graph | robot moves along connections between locations | location as vertex, passage as edge | adjacency list, queue/stack, visited set | BFS/DFS coverage | weighted roads, partial knowledge, revisit cost |
+| Object discretization into components | pixels/cells are samples with neighborhood rules | foreground component | image grid, component labels, frontier | flood fill, connected components | 8-neighborhood, color regions, area/perimeter |
+| Multi-agent cleaning | several autonomous entities share one environment | common agent interface plus distinct policies | classes, vector of agents, shared map | simulation, task allocation, runtime polymorphism | collisions, communication limits, auctions |
+| Shortest path on a grid | each legal cell is an implicit graph vertex | current cell, neighbor, goal | grid, queue, distance/parent matrices | BFS for equal-cost moves, path reconstruction | weighted terrain, A*, moving obstacles |
+| Shortest path on a graph | routes connect named places with costs | vertex, edge, path cost | weighted adjacency list, heap, parent map | Dijkstra; BFS when weights are equal | multiple objectives, closures, time-dependent edges |
+| Snake game | clock ticks update body, direction, food, and score | game state and legal transition | grid, deque or vector, occupied set | simulation, collision detection, randomized food | levels, replay, autopilot search |
+| Snake as linked text/structure | ordered segments each point to the next | head, body segment, tail | string for a tiny model; linked nodes for ownership | traversal, insertion, removal, reversal | circular body, persistent replay, custom allocator |
+| Terminal ASCII visualization | characters encode the current state | renderer maps state to glyphs | string buffer or 2D character array | full-frame rendering, layering | color, camera window, accessibility palette |
+| ASCII re-rendered animation | repeated frames approximate motion | update/render loop | state object, frame buffer, event queue | simulation clock, redraw, double buffering | pause/step, recorded traces, deterministic replay |
+| HTML/SVG visualization | data becomes browser-native shapes and attributes | model/view separation | arrays of states, SVG element tree | transform state into a frame | scrubber, clickable cells, exported traces |
+| Modern C++ graphical visualization | window events and drawing form an interactive loop | scene, drawable, controller | objects, vectors, textures/shapes | real-time update/render separation | sound, shaders, physics, controller support |
+| Procedural music | time is divided into beats and notes | scale, rhythm, phrase | sequences, grids, event records | rules, recurrence, controlled randomness | Markov melody, MIDI export, multi-voice harmony |
+| Circuit optimization | components and wires form a constrained network | node, component, cost, validity rule | graph, records, candidate assignment | brute-force baseline, greedy heuristic, backtracking/DP | tolerance, reliability, multi-objective Pareto search |
+| Algorithmic art and mazes | a canvas/grid changes under deterministic or random rules | cell, color, wall, seed | grid, stack, disjoint sets | randomized generation, recursive subdivision | reproducible seeds, solver races, student galleries |
+
+The point of the theatre is not spectacle alone. The same five nouns recur—**state, operation, invariant, objective, evidence**—so students see that apparently different applications share computational structure.
+
+### 7.2 Semester build milestones
+
+Weekly projects are deliberately extensible. A complete, small core earns full conceptual credit; optional branches let experienced students go deeper without making novices fall behind.
+
+| Week | Build milestone | New reasoning move | Visible result |
+|---:|---|---|---|
+| 1 | command a virtual robot and print its response | input → process → output; choose representations | first terminal output and demo replay |
+| 2 | robot safety controller | decisions, boundary cases, exhaustive rule tables | safe/blocked movement report |
+| 3 | bounded sweep | iteration, progress measure, loop invariant | ASCII trail across a row/grid |
+| 4 | modular robot controller | contracts and decomposition; compare value/reference | separately tested movement functions |
+| 5 | grid world and snake prototype | indexed sequences and 2D coordinates | rendered board and moving body |
+| 6 | text renderer and replay file | parsing, validation, model/view separation | saved and replayed ASCII animation |
+| 7 | assessment repair studio | classify, minimize, trace, retest | before/after defect report |
+| 8 | entities and linked snake | records, addresses, ownership, traversal | body represented by safe linked nodes |
+| 9 | component cleaner | ADTs, brute-force baseline, frontier search | connected regions labeled/cleaned |
+| 10 | recursive explorer | recursion, backtracking, memoized subproblems | maze or component search trace |
+| 11 | route engine | binary search, heaps, divide-and-conquer sorting | reconstructed shortest grid route |
+| 12 | robot objects and agent family | invariants, composition, safe polymorphism | two policies operating through one interface |
+| 13 | graph-cleaning capstone | graph search, allocation policy, randomized experiments | multi-agent animated cleaner with report |
+| 14 | open showcase branch | integrate and justify a technique | game, music, circuit, visualization, or approved idea |
+
+Each milestone is shown in at least three representations over the semester: a hand trace or table, a terminal/ASCII view, and an HTML/SVG or interactive view. The representation changes; the tested model remains the same.
+
+### 7.3 Open-ended comparison prompts
+
+At least one prompt per milestone has no single prescribed implementation:
+
+- Compare a row-by-row sweep with “move to nearest dirt.” What evidence would make one preferable?
+- Store the snake in a vector, deque, string, or linked structure. Which operations become easier or harder?
+- Label components with recursion, an explicit stack, or a queue. Which version best fits a large grid?
+- Compare BFS, Dijkstra, and a greedy “move closer” policy on the same maps. Which guarantees change?
+- Give agents fixed regions, a shared nearest-task rule, or randomized choices. Measure duplicate work and idle time.
+- Generate a melody or choose circuit components using exhaustive, greedy, and randomized approaches. Define quality before comparing results.
+
+Students must report a counterexample when a tempting method fails. Finding such a counterexample is evidence of learning, not a failed project.
+
 ## 8. Assessment communication
+
+### Assessment philosophy
+
+The published institute weights remain unchanged, but individual tasks and feedback reward the complete problem-solving process. A correct final output with no model, justification, or tests is incomplete evidence. A promising method with a clearly diagnosed defect can earn substantial process credit.
+
+Project and laboratory rubrics examine:
+
+- problem statement, assumptions, and examples;
+- representation and data-structure choice;
+- correct, modular C++17 implementation;
+- contract, invariant, or other correctness reasoning;
+- normal, boundary, invalid, and adversarial tests;
+- comparison with a baseline or alternate method;
+- clarity of explanation, documentation, and reflection;
+- a small, justified improvement after feedback.
+
+Students may use feedback to revise selected formative milestones, submitting the original attempt, evidence of what failed, and the new tests. This rewards consistent effort and learning while keeping summative examinations individual and aligned with institute policy. Speed competitions are optional and never replace correctness, accessibility, or explanation.
 
 ### CS103 weights
 
@@ -264,7 +398,11 @@ The page states the schedule directly without displaying scheduling justificatio
 
 ### Landing page
 
-The landing page provides course identity, instructor, upcoming session, first unstudied lecture, roadmap, assessment, provisional grade guide, lecture schedule, code library, dependency graph, and IC151 entry point.
+The landing page provides course identity, instructor, upcoming session, first unstudied lecture, algorithmic-thinking cycle, end-state demonstrations, fourteen-week project roadmap, compelling first-lecture plan, assessment philosophy, Hall of Fame, instructor promise, learning-community practices, provisional grade guide, lecture schedule, code library, dependency graph, and IC151 entry point. The student questionnaire is maintained and administered separately in Google Forms; the course website does not render, store, export, or transmit survey responses.
+
+### Algorithm Studio
+
+The interactive studio renders cleaning, breadth-first shortest paths, and playable Snake as stepwise HTML grids. Each demonstration states its computational model, abstraction, data structures, algorithm, correctness idea, and extensions. Step, run, pause, reset, speed, keyboard, theme, and reduced-motion behavior support prediction before execution. The browser view complements—not replaces—the compile-checked terminal C++ implementations.
 
 ### Dependency graph page
 
@@ -336,6 +474,13 @@ The design is considered implemented when automated checks confirm:
 9. All local HTML, CSS, JavaScript, lecture, code, and navigation links resolve under a plain HTTP server.
 10. Core decks stay within the 55-minute pacing plan while reference slides remain discoverable.
 11. Dark mode, keyboard focus, touch definitions, reader scrolling, and full-screen 16:9 mode are shared across all scheduled lectures.
+12. All 23 decks contain one non-authored Algorithmic Studio brief, and Lecture 1 contains the motivating demo theatre without changing stable concept references.
+13. The Algorithm Studio can step, run, pause, reset, and explain its cleaner, BFS, and Snake models; the three matching C++ capstones compile cleanly.
+14. The student survey exists as a separate Google Form whose responder link is shared by the instructor; the course website contains no survey fields or response-storage logic.
+12. Every lecture displays a six-question Problem → Model → Represent → Solve → Verify → Improve studio brief without changing authored concept references.
+13. Lecture 1 includes clearly labeled, non-assessed previews of the semester builds and connects one computational model to terminal, HTML/SVG, and modern C++ graphical views.
+14. The project spine progresses from printed commands through grids, Snake, linked structures, component search, shortest paths, agent objects, and graph cleaning to an open capstone.
+15. Brute force, divide and conquer, greedy, dynamic programming, graph algorithms, search, simulation, object-oriented modeling, recursion, backtracking, and randomized algorithms each appear as a justified answer to a recognizable problem shape, with a comparison or counterexample prompt.
 
 ## 15. Change-control rule
 

@@ -4,7 +4,7 @@
 // This ensures proper support for unique_ptr and other modern C++ features
 //
 #include <iostream>
-#include <new> // for std::bad_alloc
+#include <new> // for std::nothrow
 #include <memory> // for smart pointers
 #include <cstdlib> // for malloc, free
 #include <vector> // for storing pointers in memory leak example
@@ -15,7 +15,6 @@ using namespace std;
 struct Node {
     int data;
     Node* next;
-    Node(int val) : data(val), next(nullptr) {}
 };
 
 // ==== 1. Basic Pointers Recap ====
@@ -105,15 +104,13 @@ void cppStyleAllocation() {
 // ==== 4. Handling Allocation Failure ====
 void handleAllocationFailure() {
     cout << "--- Handling Allocation Failure ---" << endl;
-    try {
-        // Try to allocate a large array (might fail)
-        const size_t largeSize = 1000000000L; // 1 billion ints
-        int* huge_array = new int[largeSize];
-        cout << "Allocation succeeded (unusual!)" << endl;
+    const size_t largeSize = 1000000000L; // 1 billion ints
+    int* huge_array = new (nothrow) int[largeSize];
+    if (huge_array == nullptr) {
+        cout << "Allocation failed; the null check handled it" << endl;
+    } else {
+        cout << "Allocation succeeded" << endl;
         delete[] huge_array;
-    } catch (const std::bad_alloc& e) {
-        cout << "Allocation failed: " << e.what() << endl;
-        cout << "Handle the error gracefully" << endl;
     }
     cout << endl;
 }
@@ -197,9 +194,9 @@ void linkedListExample() {
 
     // Insert nodes at front
     cout << "Inserting nodes: 10, 20, 30" << endl;
-    head = new Node(10);
-    head->next = new Node(20);
-    head->next->next = new Node(30);
+    head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
 
     // Traverse and print
     Node* current = head;
@@ -222,7 +219,7 @@ void linkedListExample() {
 
 // ==== 9. Linked List Insert Function ====
 void insertFront(Node*& head, int val) {
-    Node* new_node = new Node(val);
+    Node* new_node = new Node{val, nullptr};
     new_node->next = head;
     head = new_node;
 }

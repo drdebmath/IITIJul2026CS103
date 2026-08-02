@@ -14,6 +14,22 @@
 # Lecture 17: Search Trees, Heaps & Sorting
 ## Preserve an invariant to obtain efficient operations
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Rank routes and accelerate search
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Find ordered data or repeatedly select the most promising route candidate. |
+| **Model** | An invariant rules out impossible regions or keeps the best priority at the front. |
+| **Represent** | Sorted array, BST, or array-backed heap supports different operations. |
+| **Solve** | Use binary search, heap repair, or divide–solve–merge as the operation demands. |
+| **Verify** | Check the ordering/heap invariant before and after every update. |
+| **Improve** | Compare asymptotic growth, stability, storage, and worst-case shape. |
+
+**Technique lens:** divide and conquer, ordered search, and priority-based greedy choice
+
+**Compare:** linear baseline versus binary search; bubble sort versus merge sort
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Binary search requires sorted data
 
@@ -80,7 +96,34 @@ void heapify(std::vector<int>& a, int size, int root) {
 2. Recursively sort each half.
 3. Merge two sorted sequences into temporary storage.
 
-Merge sort is stable and O(n log n); its array implementation uses additional storage. Heap sort is in-place but not stable.
+Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · faster grid decisions
+
+| L17 tool | Exact game part enabled |
+|---|---|
+| binary search | test sorted occupied cell IDs for collision |
+| BST | update occupied IDs as the body changes |
+| max heap | select the highest-priority dirt target |
+| stable merge sort | order equal-priority targets without changing discovery order |
+
+~~~cpp
+bool occupied(const int cells[], int count, int id) {
+    int left=0, right=count-1;
+    while (left<=right) {
+        int middle=left+(right-left)/2;
+        if (cells[middle]==id) return true;
+        if (cells[middle]<id) left=middle+1;
+        else right=middle-1;
+    }
+    return false;
+}
+~~~
+
+**Invariant:** if <code>id</code> exists, it remains inside the current [left,right] interval.
+
+**Next unlock · L18:** package state and operations inside a reliably constructed game object.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Session summary
@@ -93,7 +136,6 @@ Merge sort is stable and O(n log n); its array implementation uses additional st
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

@@ -14,6 +14,22 @@
 # Lecture 23: Recursive & Polymorphic Capstones
 ## Select structures and algorithms for integrated problems
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Open capstone and Hall of Fame candidate
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Integrate a game, cleaner, visualization, music generator, or circuit optimizer. |
+| **Model** | Define state, legal operations, objective, constraints, and audience before coding. |
+| **Represent** | Choose structures from required operations, ownership, and visualization needs. |
+| **Solve** | Combine only justified paradigms: recursion, DP, search, greedy, or polymorphism. |
+| **Verify** | Give a correctness argument, adversarial tests, and a reproducible demonstration. |
+| **Improve** | Profile, simplify, document trade-offs, and add one meaningful extension. |
+
+**Technique lens:** algorithm selection and integration
+
+**Compare:** the first correct baseline versus the final evidence-backed design
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Begin with the required operation
 
@@ -75,6 +91,24 @@ Before implementation, identify:
 - normal, boundary, and invalid tests;
 - expected time and space growth.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · one verified capstone family
+
+| Final build | Exact parts now connected | Concept provenance |
+|---|---|---|
+| linked Snake | command → candidate head → collision check → body/food update → ASCII frame | state and loops L02–L06; functions/tests L07–L12; records and links L13–L14; search L17; game object L18 |
+| grid Cleaner | 2D world → nearest dirt → parent path → legal move → clean and redraw | arrays/strings L09–L11; queue L15; search comparison L16–L17; class invariant L18 |
+| multi-agent graph Cleaner | actors → graph links → distinct reservations → synchronous movement → cleaning | inheritance/polymorphism L19–L21; predicates, ranking, routing, and policy L22 |
+| capstone decision | required operation → representation → algorithm → invariant → adversarial test | L23 integration checklist |
+
+**One-turn correctness gate:** every Snake segment is distinct and in bounds; every Cleaner step follows a real grid or graph edge; reserved targets are distinct; dirt never increases and decreases exactly when a target is cleaned.
+
+**Adversarial tests:** tail-cell movement, unreachable dirt, equal-distance targets, one actor, and an already-clean world.
+
+**Run/play:** <code>codes/lecture-23-snake-linked-game.cpp</code>, <code>codes/lecture-23-grid-cleaning-robot.cpp</code>, and <code>codes/lecture-23-multi-agent-graph-cleaning.cpp</code>.
+
+**Final extension:** replay the same verified state trace in terminal, ASCII animation, or HTML/SVG without changing the game rules.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Course summary
 
@@ -85,7 +119,6 @@ Before implementation, identify:
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>

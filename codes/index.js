@@ -34,6 +34,8 @@
     let copyResetTimer = 0;
     const lectureOrder = Array.from({ length: 23 }, (_, index) => String(index + 1).padStart(2, '0'));
     const groupContainer = document.getElementById('examples');
+    const librarySummary = document.querySelector('.hero .eyebrow');
+    if (librarySummary) librarySummary.textContent = `${cards.length} compile-checked programs · C++17`;
     groups.sort((left, right) => lectureOrder.indexOf(left.dataset.lecture) - lectureOrder.indexOf(right.dataset.lecture))
         .forEach((group) => groupContainer.appendChild(group));
 
@@ -54,6 +56,11 @@
     }
 
     search.addEventListener('input', filter);
+    const initialQuery = new URLSearchParams(window.location.search).get('search');
+    if (initialQuery) {
+        search.value = initialQuery;
+        filter();
+    }
     groupContainer.addEventListener('click', async (event) => {
         const card = event.target.closest('.example-card');
         if (!card) return;

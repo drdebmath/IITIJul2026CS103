@@ -14,6 +14,22 @@
 # Lecture 4: Decisions & Safe Branching
 ## Turn requirements into testable paths
     </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Algorithmic studio · Make movement safe
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Accept a move only when it stays in bounds and avoids an obstacle. |
+| **Model** | Each attempted move belongs to exactly one outcome class. |
+| **Represent** | A decision table maps Boolean conditions to MOVE, BLOCKED, or INVALID. |
+| **Solve** | Translate mutually exclusive rows into a carefully ordered branch chain. |
+| **Verify** | Test every table row, exact boundary, just-outside value, and default case. |
+| **Improve** | Remove overlapping conditions and guard unsafe calculations by short-circuiting. |
+
+**Technique lens:** exhaustive case analysis
+
+**Compare:** nested if statements versus a flat decision table and branch chain
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A condition selects a path
 
@@ -66,18 +82,40 @@ if (resistance != 0.0 && voltage / resistance > limit) {
 
 The division runs only when the left condition is true.
     </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution sneak peek · a legal move
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| switch and guarded branching | translate WASD into a direction and reject a wall crossing |
+
+~~~cpp
+int main() {
+    int row=2, column=3, dRow=0, dColumn=0; char command='d';
+    switch(command) { case 'w': dRow=-1; break; case 's': dRow=1; break;
+        case 'a': dColumn=-1; break; case 'd': dColumn=1; break; default: break; }
+    int nextRow=row+dRow, nextColumn=column+dColumn;
+    bool inside=nextRow>=0 && nextRow<5 && nextColumn>=0 && nextColumn<9;
+    if (inside) { row=nextRow; column=nextColumn; }
+}
+~~~
+
+**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8.
+
+**Next unlock · L05:** repeat commands until the game ends.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Floating-point equality needs a tolerance
 
 ~~~cpp
-#include <cmath>
-
-bool nearlyEqual(double a, double b, double tolerance) {
-    return std::abs(a - b) <= tolerance;
+double difference = measured - expected;
+if (difference < 0.0) {
+    difference = -difference;
 }
+bool nearlyEqual = difference <= tolerance;
 ~~~
 
-Choose tolerance from the measurement or problem—not one universal constant.
+Choose tolerance from the measurement or problem—not one universal constant. A reusable comparison function comes after functions are introduced.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Test the boundaries first
@@ -103,7 +141,6 @@ Also test every <code>switch</code> case and its default.
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
-<script src="course-data.js"></script>
 <script src="course-progress.js"></script>
 <script src="lecture-modern.js"></script>
 </body>
