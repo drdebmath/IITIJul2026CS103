@@ -84,6 +84,17 @@ The initializer supplies the first value.
 
 Sizes are implementation-dependent; inspect them with <code>sizeof</code>.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="static-typing" data-markdown><textarea data-template>
+## The compiler rejects a mislabeled value before it runs
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l02/static-typing.png" alt="A friendly compiler clerk checks labeled bins for a count, temperature, grade, and yes-or-no flag before a small program starts — visual point: No value gets past the clerk without the label it actually deserves." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Four values arrive at the checkpoint wearing the wrong labels.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> No value gets past the clerk without the label it actually deserves.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Signedness and width determine the numeric range
 
@@ -104,6 +115,17 @@ double reading = 11.8;
 ~~~
 
 <code>const</code> prevents modification through that name after initialization.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="meaningful-types" data-markdown><textarea data-template>
+## Four objects, four boxes — habit picks the wrong one
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l02/meaningful-types.png" alt="A student sorts a whole-number counter, a measurement, a single character tile, and a yes-or-no switch into matching containers — visual point: The meaning chooses the container; the habit just grabs the nearest one." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Same-looking storage boxes, four very different meanings.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The meaning chooses the container; the habit just grabs the nearest one.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: Named state gives the world memory
@@ -147,6 +169,17 @@ int whole = static_cast<int>(mean);  // 97
 ~~~
 
 An explicit conversion documents intent. Check the destination range first: fractional information may be truncated, and an out-of-range conversion may be invalid.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="range-precision" data-markdown><textarea data-template>
+## "It is a number" is not a finished type decision
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l02/range-precision.png" alt="A tiny number container overflows when asked to hold a huge range and spills a delicate fractional measurement beside it — visual point: One dimension says what fits; the other says what detail survives." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> A tiny container is asked to hold an enormous range and a delicate fraction at once.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One dimension says what fits; the other says what detail survives.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Type choice follows meaning, range, and precision

@@ -83,6 +83,17 @@ double last = voltage[4];    // fifth element
 
 For size 5, valid indices are 0 through 4.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="array-extent" data-markdown><textarea data-template>
+## The array promises exactly five places
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l09/array-extent.png" alt="A neat row of five identical storage slots holds one kind of object, with its fixed endpoint clearly visible — visual point: Fixed means the extent is part of the object’s identity, not a suggestion." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The array promises exactly five places.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Fixed means the extent is part of the object’s identity, not a suggestion.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Traversal uses the actual bound, never a guessed endpoint
 
@@ -130,6 +141,17 @@ for (double value : voltage) {
 
 Use an explicit index only when the position matters.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="index-bounds" data-markdown><textarea data-template>
+## The robot asks for "the slot after the last one"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l09/index-bounds.png" alt="A small robot safely visits the first and last of five array slots while a sixth slot lies beyond a bright safety rail — visual point: There is no secret sixth element waiting off-screen." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The robot asks for "the slot after the last one."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> There is no secret sixth element waiting off-screen.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Array functions must receive the extent they rely on
 
@@ -149,6 +171,17 @@ double mean(const std::array<double, 5>& values) {
 ~~~
 
 C++ does not automatically protect <code>operator[]</code>. Keep the valid range visible in the loop condition.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="actual-bound" data-markdown><textarea data-template>
+## The guessed endpoint points somewhere over there
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l09/actual-bound.png" alt="A student follows a measuring tape attached to the real end of an array instead of a guessed endpoint sign — visual point: The array already knows its own size — ask it, don’t guess." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> A hand-drawn sign points to a vague "somewhere over there."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The array already knows its own size — ask it, don’t guess.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Safe array work respects index, traversal, and bound

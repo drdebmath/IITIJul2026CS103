@@ -77,6 +77,17 @@ Multiple inheritance gives one derived class more than one direct base.
 
 In a diamond, virtual inheritance can share one common base subobject. Use these mechanisms only when the domain model genuinely requires them; they are not the starting point for polymorphism.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="inheritance-interface" data-markdown><textarea data-template>
+## Two inheritance arrows look identical from far away
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l20/inheritance-interface.png" alt="Two doors from a base workshop lead to different audiences: one public route preserves the shared entrance, while the private route stays inside the implementation area — visual point: Up close, only one door lets outsiders through at all." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Two inheritance arrows look identical from far away.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Up close, only one door lets outsiders through at all.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A virtual function selects the override from the runtime type
 
@@ -104,6 +115,17 @@ double result = shape->area();
 ~~~
 
 The virtual destructor makes deletion through the base interface safe. Lecture 21 will place differently typed objects in one owning container.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="diamond-base" data-markdown><textarea data-template>
+## The diamond has two routes to the same ancestor
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l20/diamond-base.png" alt="Two upper paths merge into one shared central foundation instead of building duplicate foundations beneath a diamond-shaped structure — visual point: Share the foundation, or the structure quietly gets two of them." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The diamond has two routes to the same ancestor.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Share the foundation, or the structure quietly gets two of them.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## A factory centralizes construction behind the interface
@@ -150,6 +172,17 @@ For every derived type, test:
 - cleanup through base ownership;
 - invalid constructor inputs;
 - behavior added by a new derived type without changing existing callers.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="virtual-dispatch" data-markdown><textarea data-template>
+## The controller asks for one action, not one type
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l20/virtual-dispatch.png" alt="One controller sends the same request through a common interface and different runtime-shaped objects respond with their own behavior — visual point: The object picks its own override; the caller never had to ask." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The controller asks for one operation without knowing the concrete type.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The object picks its own override; the caller never had to ask.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Interfaces, safe ownership, and substitutability earn polymorphism

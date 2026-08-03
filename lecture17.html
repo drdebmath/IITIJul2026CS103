@@ -81,6 +81,17 @@ For every node:
 
 Choose and document one policy for duplicate keys.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="binary-search-halves" data-markdown><textarea data-template>
+## One middle question at a time on a very long shelf
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l17/binary-search-halves.png" alt="A student checks the middle of a sorted row and calmly shades away half the impossible tiles after each comparison — visual point: One comparison deletes half the search space." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The sorted shelf is long, but the target gets one middle-question at a time.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One comparison deletes half the search space.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## BST insertion preserves order by following comparisons
 
@@ -101,6 +112,17 @@ Node* insert(Node* root, int key) {
 A max heap is a complete binary tree where every parent is at least its children.
 
 In a zero-based array, children of index <code>i</code> are <code>2*i+1</code> and <code>2*i+2</code>.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="bst-order" data-markdown><textarea data-template>
+## The tree has one rule and refuses to break it
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l17/bst-order.png" alt="A branching tree arranges smaller abstract tokens to the left and larger tokens to the right, with the same rule repeated below — visual point: Every subtree keeps the same ordering promise, no exceptions." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The tree has one rule and refuses to break it locally.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Every subtree keeps the same ordering promise, no exceptions.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## heapify restores parent-child order after one local violation
@@ -123,6 +145,17 @@ void heapify(std::vector<int>& a, int size, int root) {
 3. Merge two sorted sequences into temporary storage.
 
 Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="heap-priority" data-markdown><textarea data-template>
+## The queue has many tasks and one needs attention first
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l17/heap-priority.png" alt="A pyramid-shaped heap places the most urgent glowing token at the top while lower-priority tokens settle beneath it — visual point: The root stays visible; everyone else waits their turn." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The queue has many tasks and one needs attention first.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The root stays visible; everyone else waits their turn.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: Invariants make grid decisions faster

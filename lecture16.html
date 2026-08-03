@@ -77,6 +77,17 @@ int factorial(int n) {
 
 The argument decreases, so a non-negative input reaches the base case.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="call-stack-frames" data-markdown><textarea data-template>
+## The first call asks a smaller call for help
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l16/call-stack-frames.png" alt="A stack of friendly transparent frames grows as each smaller task is handed to the next frame, then unwinds in reverse order — visual point: Every unfinished call waits on the stack until the smallest one comes home." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The first call asks a smaller call for help.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Every unfinished call waits on the stack until the smallest one comes home.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Recursive reversal rewires one node and delegates the suffix
 
@@ -96,6 +107,17 @@ Node* reverse(Node* head) {
 Choose one value for the current position, recursively arrange the remainder, then undo the choice.
 
 The data structure is an array; recursion supplies the search order.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="recursive-progress" data-markdown><textarea data-template>
+## Recursion promises it will stop "eventually"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l16/recursive-progress.png" alt="A series of smaller stepping stones leads a recursive character toward a clear base-case finish platform — visual point: &quot;Eventually&quot; needs a stone that is measurably smaller each time." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Recursion promises it will stop eventually.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> "Eventually" needs a stone that is measurably smaller each time.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: Recursive search explores and undoes choices
@@ -136,6 +158,17 @@ The direct recursive version repeats subproblems. Memoization stores results so 
 - Permutation generation: at least proportional to the number of produced permutations.
 
 Complexity describes growth, not stopwatch seconds.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="recursive-reversal" data-markdown><textarea data-template>
+## The head says the rest of the list can handle itself
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l16/recursive-reversal.png" alt="A linked chain bends backward one connection at a time as each returning helper rewires its local link — visual point: It comes back, rewires one link, and trusts the rest was handled." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The head says the rest of the list can handle itself.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> It comes back, rewires one link, and trusts the rest was handled.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Prove termination, trace frames, and measure recursive cost

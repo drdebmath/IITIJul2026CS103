@@ -80,6 +80,17 @@ double rectangleArea(double length, double width) {
 
 Return type → name → parameters → body.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="function-contract" data-markdown><textarea data-template>
+## The function is asked to do "something useful"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l07/function-contract.png" alt="A student hands a small sealed service booth its required inputs and receives one clearly defined result while a rule card keeps the promise visible — visual point: A contract is how &quot;something useful&quot; becomes testable behavior." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The function is asked to do "something useful."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> A contract is how "something useful" becomes testable behavior.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Declare interfaces once and define each function once
 
@@ -108,6 +119,17 @@ int doubled(int value) {
 ~~~
 
 Changing <code>value</code> does not change the caller's argument.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="read-signature" data-markdown><textarea data-template>
+## A signature is a tiny sentence, if you read it in order
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l07/read-signature.png" alt="A student reads a function blueprint from left to right: result slot, name badge, input slots, and a workroom — visual point: Read the grammar left to right before opening the body." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Four stations sit in a row: result, name, inputs, workroom.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Read the grammar left to right before opening the body.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A scoring contract makes progress measurable
@@ -153,6 +175,17 @@ auto isPositive = [](int value) { return value > 0; };
 ~~~
 
 Named functions remain the default for novice code. Lambdas return later as search and sorting applications.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="declaration-definition" data-markdown><textarea data-template>
+## The caller arrives before the body is finished
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l07/declaration-definition.png" alt="A small signpost announces a service before the service room is built, allowing a caller to walk to the promised location — visual point: A declaration says &quot;this service exists&quot;; the definition does the work later." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The caller arrives before the function body is finished.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> A declaration says "this service exists"; the definition does the work later.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Function contracts make behavior testable

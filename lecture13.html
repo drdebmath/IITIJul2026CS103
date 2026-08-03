@@ -91,6 +91,17 @@ for (const Reading& reading : samples) {
 }
 ~~~
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="struct-coherent-record" data-markdown><textarea data-template>
+## Three parallel arrays try to walk into the lab together
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l13/struct-coherent-record.png" alt="A student clips an identity card, measurement dial, and validity switch into one sturdy record folder instead of carrying them separately — visual point: One folder, one record — nothing has to march in formation." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Three parallel arrays try to walk into the lab together.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One folder, one record — nothing has to march in formation.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A pointer stores where an object lives
 
@@ -111,6 +122,17 @@ if (scorePointer != nullptr) {
 ~~~
 
 Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="array-records" data-markdown><textarea data-template>
+## The lab has many readings with the same shape
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l13/array-records.png" alt="Several matching record folders line up in a tray, and a scanner visits only the valid ones — visual point: Repeat the record, not the confusion between its fields." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The lab has many readings, all the same shape.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Repeat the record, not the confusion between its fields.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Dot selects through an object; arrow selects through a pointer
@@ -151,6 +173,17 @@ int main() {
 Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
 
 Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="pointer-address" data-markdown><textarea data-template>
+## The pointer arrives with a location, not a duplicate score
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l13/pointer-address.png" alt="A small arrow-shaped pointer points from a separate token to the one real score object located on a desk — visual point: One object, one address — the arrow just knows where to look." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The pointer arrives with a location, not a duplicate score.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One object, one address — the arrow just knows where to look.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Safe memory reasoning groups state and validates addresses

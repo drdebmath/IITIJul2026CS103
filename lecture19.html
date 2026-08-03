@@ -84,6 +84,17 @@ If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operat
 
 This is an **is-a** relationship, not merely code reuse.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="friend-narrow-access" data-markdown><textarea data-template>
+## A helper asks for the master key to the whole workshop
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l19/friend-narrow-access.png" alt="A class workshop opens one small side hatch to a trusted helper while the main public door remains the normal entrance — visual point: One narrow hatch, not a second front door." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> A helper asks for the master key to the whole workshop.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One narrow hatch, not a second front door.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A class hierarchy makes shared promises and specialization explicit
 
@@ -113,6 +124,17 @@ public:
 
 A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="substitutability" data-markdown><textarea data-template>
+## The specialized vehicle calls itself an "is-a" version
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l19/substitutability.png" alt="A smaller specialized vehicle safely takes the same marked route and fulfills the same stops as the base vehicle it replaces — visual point: Then it has to keep every stop the original route promised." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The specialized vehicle calls itself an "is-a" version of the base.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Then it has to keep every stop the original route promised.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Base construction completes before derived construction
 
@@ -129,6 +151,17 @@ Destruction occurs in the reverse order.
 A <code>Car</code> has an <code>Engine</code>; it is not an engine.
 
 Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="hierarchy-promises" data-markdown><textarea data-template>
+## The family tree wants to share what is genuinely common
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l19/hierarchy-promises.png" alt="A clear family tree branches from one shared base promise into two specialized but compatible shapes — visual point: Trunk carries the shared promise; branches earn their specialty." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The family tree wants to share what is genuinely common.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Trunk carries the shared promise; branches earn their specialty.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: Snake and Cleaner can share a world

@@ -103,6 +103,17 @@ for (int row = 0; row < 2; ++row) {
 }
 ~~~
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="matrix-dimensions" data-markdown><textarea data-template>
+## A matrix has rows and columns, not one mystery size
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l10/matrix-dimensions.png" alt="A student navigates a rectangular grid using separate row and column rails, with both dimensions clearly guarded — visual point: Two dimensions, two honest bounds — a ruler alone gets lost." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The matrix has rows and columns, not one mysterious "size."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Two dimensions, two honest bounds — a ruler alone gets lost.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## std::vector owns a contiguous sequence whose size can change
 
@@ -127,6 +138,17 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 
 <code>at()</code> checks; <code>operator[]</code> assumes the index is valid.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="row-column-traversal" data-markdown><textarea data-template>
+## The robot promises to visit every cell exactly once
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l10/row-column-traversal.png" alt="A tiny robot completes each row and each column intersection without crossing either grid boundary — visual point: Keep both rails honest and the grid stops being a minefield." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The robot promises to visit every cell exactly once.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Keep both rails honest and the grid stops being a minefield.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Choose array or vector from size and operation requirements
 
@@ -148,6 +170,17 @@ for (const auto& row : scores) {
     std::cout << total << '\n';
 }
 ~~~
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="vector-growth" data-markdown><textarea data-template>
+## Readings keep arriving after the plan was written
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l10/vector-growth.png" alt="A flexible row of connected storage tiles grows by adding a new tile while keeping the existing tiles together — visual point: A vector makes room without abandoning its contiguous neighborhood." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Readings keep arriving after the plan was written.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> A vector makes room without abandoning its contiguous neighborhood.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Storage follows size knowledge, ownership, and access operations

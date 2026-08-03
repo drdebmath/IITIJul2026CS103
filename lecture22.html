@@ -82,6 +82,17 @@ struct Booking { std::size_t flightIndex; std::size_t passengerIndex; };
 
 Indices express associations without ambiguous ownership.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="single-responsibility" data-markdown><textarea data-template>
+## One giant object volunteers for every responsibility
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l22/single-responsibility.png" alt="A student sorts route, passenger, booking, and policy pieces into separate focused workstations instead of one overloaded desk — visual point: Split the reasons to change before the desk collapses." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> One giant object volunteers for every responsibility.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Split the reasons to change before the desk collapses.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A predicate turns a domain question into reusable selection
 
@@ -106,6 +117,17 @@ std::sort(flights.begin(), flights.end(),
 ~~~
 
 The comparator defines one consistent ordering relation.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="domain-model" data-markdown><textarea data-template>
+## The real world arrives with too many details
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l22/domain-model.png" alt="A student turns a real-world scene into a small set of coherent object cards connected by clear association lines — visual point: Keep what affects the decision; leave the wallpaper out." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The real world arrives with too many details.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Keep what affects the decision; leave the wallpaper out.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A comparator chooses the next target
@@ -147,6 +169,17 @@ State the objective before choosing an algorithm.
 - Strategy: supply a pricing or ranking policy through an interface.
 
 Use a design pattern only after the recurring responsibility problem is visible.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="predicate-selection" data-markdown><textarea data-template>
+## "Does this object match the route?"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l22/predicate-selection.png" alt="A small yes-or-no filter checks each flight-shaped object and sends matching ones down a chosen lane — visual point: Make the question callable, and the filter is reusable everywhere." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The question is "does this object match the route?"</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Make the question callable, and the filter is reusable everywhere.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Compose domain objects with explicit predicates, comparators, and policies

@@ -82,6 +82,17 @@ std::getline(std::cin, sentence);
 
 <code>getline</code> preserves spaces. When mixing formatted extraction and line input, consume the pending newline deliberately.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="string-ownership" data-markdown><textarea data-template>
+## The text wants a home, not a loose pile of letters
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l11/string-ownership.png" alt="A friendly string-shaped container keeps its characters together, measures its length, and safely carries them through a program — visual point: One owned container tracks the storage and the size for you." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The text wants a home, not a loose pile of characters.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One owned container tracks the storage and the size for you.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Positions and lengths make text operations explicit
 
@@ -103,6 +114,17 @@ if (std::isdigit(ch)) ++digits;
 ~~~
 
 Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="getline-spaces" data-markdown><textarea data-template>
+## Formatted input quits at the first space
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l11/getline-spaces.png" alt="A line of text-shaped tiles passes through a wide reader that keeps the gaps between groups instead of dropping them — visual point: The wide reader keeps the whole sentence, quiet spaces included." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Formatted input sees a space and thinks the line is finished.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The wide reader keeps the whole sentence, quiet spaces included.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A replay string stores commands
@@ -146,6 +168,17 @@ for (std::size_t i = 2; valid && i < id.size(); ++i) {
 A C-style string is a character array ending at the first null character <code>'\0'</code>.
 
 Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="find-boundary" data-markdown><textarea data-template>
+## The delimiter may be there — or taking the day off
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l11/find-boundary.png" alt="A student searches a character sequence; a found marker is safe to use, while a missing marker is stopped before it becomes an invalid position — visual point: Check the search result before slicing anything." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The delimiter may be there. It may also be taking the day off.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Check the search result before slicing anything.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Safe text processing prefers ownership, parsing rules, and bounds

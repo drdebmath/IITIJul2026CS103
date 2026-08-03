@@ -79,6 +79,17 @@ value = nullptr;
 
 Use <code>delete[]</code> only for storage obtained with <code>new[]</code>.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="ownership-lifetime" data-markdown><textarea data-template>
+## The room closes while the object is still alive
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l14/ownership-lifetime.png" alt="A small object leaves a temporary room and safely follows an owner carrying a key, while an unowned object drifts toward a leak — visual point: Someone has to carry the key if the object can outlive the room." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The local scope closes while the dynamic object is still alive.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Someone has to carry the key if the object can outlive the room.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## unique_ptr makes exclusive ownership and release explicit
 
@@ -113,6 +124,17 @@ head->value = 42;
 head->next = std::make_unique<Node>();
 head->next->value = 57;
 ~~~
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="new-delete-match" data-markdown><textarea data-template>
+## The release tool claims it works for everything
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l14/new-delete-match.png" alt="A mechanic pairs one tool for a single object with one matching release tool, while an array of objects waits for a different paired tool — visual point: Allocation and release are a matched pair, not a guessing game." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The release tool claims it works for everything.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Allocation and release are a matched pair, not a guessing game.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: Linked ownership lets Snake grow safely
@@ -154,6 +176,17 @@ The invariant states that every node before <code>current</code> has been proces
 <code>malloc</code>, <code>calloc</code>, and <code>realloc</code> manage untyped bytes and must be paired with <code>free</code>.
 
 They do not construct or destroy C++ objects. Use them only when a C interface requires them.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="unique-ptr-release" data-markdown><textarea data-template>
+## Who remembers to release this resource?
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l14/unique-ptr-release.png" alt="A single caretaker holds the only key to a resource and automatically returns it when leaving the room, while no forgotten resource is left behind — visual point: &quot;I own it,&quot; says the caretaker, then cleans up on the way out." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The resource asks who will remember to release it.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> "I own it," says the caretaker, then cleans up on the way out.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Make ownership explicit before allocating or linking

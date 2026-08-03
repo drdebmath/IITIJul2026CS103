@@ -73,6 +73,17 @@ Split each matrix into four blocks, recursively multiply compatible block pairs,
 
 The base case multiplies a sufficiently small block directly. A practical implementation must also handle dimensions that are not powers of two.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="operation-structure" data-markdown><textarea data-template>
+## The data structure asks what the program needs to do
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l23/operation-structure.png" alt="A student chooses among a bucket rack, tree, matrix, and hierarchy only after identifying the operation each must support — visual point: Choose the tool from the operation, not from its popularity." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The data structure asks what the program needs to do.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Choose the tool from the operation, not from its popularity.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Stable buckets let radix sort process one digit at a time
 
@@ -98,6 +109,17 @@ Node* invert(Node* root) {
 }
 ~~~
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="matrix-recursion" data-markdown><textarea data-template>
+## The matrix is too large for one bite
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l23/matrix-recursion.png" alt="A large tiled matrix breaks into four smaller matching blocks that recursively produce partial products and recombine into one result — visual point: Cut it into compatible blocks, solve the small ones, recombine." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The matrix is too large for one bite.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Cut it into compatible blocks, solve the small ones, recombine.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A shared Piece interface lets each chess type choose its move
 
@@ -116,6 +138,17 @@ Before implementation, identify:
 - base case or stopping condition;
 - normal, boundary, and invalid tests;
 - expected time and space growth.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="stable-radix-buckets" data-markdown><textarea data-template>
+## Equal items still remember who arrived first
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l23/stable-radix-buckets.png" alt="A row of equal-priority tokens enters digit-based buckets and returns in the same relative order after each pass — visual point: Sort by one position without shuffling the ties out of order." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The current digit decides the bucket for each item.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Sort by one position without shuffling the ties out of order.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: One verified capstone connects every layer

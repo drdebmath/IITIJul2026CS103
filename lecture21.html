@@ -84,6 +84,17 @@ double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
 
 Adding a new shape does not change this traversal.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="heterogeneous-container" data-markdown><textarea data-template>
+## The objects do not match in shape, but they share a promise
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l21/heterogeneous-container.png" alt="One sturdy container safely holds several different shaped objects while each still exposes the same handle for a shared operation — visual point: Many shapes, one handle, one ownership rule for all of them." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The objects do not match in shape, but they do share a promise.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Many shapes, one handle, one ownership rule for all of them.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## An object graph separates entities from their relationships
 
@@ -105,6 +116,17 @@ Vertices model entities; edges model relationships. The graph is a structure, no
 - Matrix: direct pair lookup but quadratic storage.
 
 Polymorphism is useful only when vertex or edge behavior genuinely varies.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="interface-algorithm" data-markdown><textarea data-template>
+## The algorithm asks for an operation, not a family photo
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l21/interface-algorithm.png" alt="A reusable conveyor accepts several differently shaped objects because it uses the same handle and never inspects their hidden interiors — visual point: Promise the operation, and the machine never opens the box." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The algorithm asks for an operation, not a family photo.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Promise the operation, and the machine never opens the box.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Ownership stays independent from graph connectivity
@@ -143,6 +165,17 @@ int main(){ std::vector<std::unique_ptr<Actor>> actors;
 Add a <code>WeightedEdge</code> with a cost and a <code>ScheduledEdge</code> with departure time.
 
 Write one traversal that prints every edge through the base interface, then identify which operations do not require polymorphism.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="graph-relationships" data-markdown><textarea data-template>
+## The links know who is connected, not who owns whom
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l21/graph-relationships.png" alt="Several entity nodes sit independently while colored links describe roads between them without becoming owners of the nodes — visual point: A relationship map, not an ownership receipt." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The links know who is connected, not who owns whom.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> A relationship map, not an ownership receipt.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Polymorphism, ownership, and graph links stay independently testable

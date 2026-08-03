@@ -86,6 +86,17 @@ Before each iteration, ask:
 
 If no state moves toward a false condition, the loop may never terminate.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="while-trace" data-markdown><textarea data-template>
+## The loop runs three times, allegedly
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l05/while-trace.png" alt="A student follows three stepping stones labeled only by visual count marks toward a clear stop line, checking the condition at each step — visual point: Trace the state; do not negotiate with the loop after it starts." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The loop runs three times — allegedly.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Trace the state; do not negotiate with the loop after it starts.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A sentinel lets a loop process an unknown number of inputs
 
@@ -113,6 +124,17 @@ do {
 ~~~
 
 The body runs once before the condition is tested.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="progress-termination" data-markdown><textarea data-template>
+## One robot is on a treadmill and does not know it
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l05/progress-termination.png" alt="A tiny robot walks toward a finish gate while one misleading treadmill sends a second robot endlessly backward — visual point: One is closing the distance; the other found a treadmill." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Both updates claim they are making progress toward the gate.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One is closing the distance; the other found a treadmill.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A loop advances the game until it stops
@@ -160,6 +182,17 @@ while (tested < available && defects < 3) {
 ~~~
 
 Both stopping reasons remain visible in the condition.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="sentinel-input" data-markdown><textarea data-template>
+## The input stream never announces its own length
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l05/sentinel-input.png" alt="A stream of numbered parcels enters a processing machine and a special stop token closes the gate without entering the total pile — visual point: One special token says &quot;we are done,&quot; then stays out of the total." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Parcels keep arriving with no manifest and no final count.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One special token says "we are done," then stays out of the total.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Choose a loop by its stopping rule and prove its progress

@@ -78,6 +78,17 @@ public:
 
 The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="class-invariant" data-markdown><textarea data-template>
+## The caller asks to reach inside and "just change the value"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l18/class-invariant.png" alt="A sturdy class-shaped workshop keeps its internal gauge behind a wall and exposes only a safe control that maintains the gauge rule — visual point: Use the safe control — the invariant lives behind that wall." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The caller asks to reach inside and "just change the value."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Use the safe control — the invariant lives behind that wall.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Constructors establish valid initial state before use
 
@@ -107,6 +118,17 @@ assigned = first;          // copy assignment: existing object
 ~~~
 
 Value members such as numbers and strings usually support the Rule of Zero.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="constructor-state" data-markdown><textarea data-template>
+## The object wants in before anyone checks it
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l18/constructor-state.png" alt="A constructor caretaker checks and sets a new object’s gauges before rolling it onto the program floor — visual point: Construction is the entrance inspection, not a formality." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The object wants to enter the program before it has been checked.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Construction is the entrance inspection, not a formality.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A class protects a valid Cleaner
@@ -152,6 +174,17 @@ Useful value-type operations include:
 - copy assignment safely replacing an existing value.
 
 Do not change an operator's expected meaning.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="copy-assignment" data-markdown><textarea data-template>
+## Two operations both look like "put this value there"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l18/copy-assignment.png" alt="One workshop builds a new duplicate object while another swaps the contents of an already existing object, making the two actions visibly different — visual point: One workshop builds a newcomer; the other renovates a resident." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Two operations both look like "put this value there."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> One workshop builds a newcomer; the other renovates a resident.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Value types depend on invariants, ownership, and predictable lifetime

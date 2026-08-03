@@ -89,6 +89,17 @@ if (emergencyStop || current > safeLimit) {
 
 Place exceptional and narrower cases before the normal fallback.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="decision-table" data-markdown><textarea data-template>
+## The branch code says "trust me"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l04/decision-table.png" alt="A student lays out a neat grid of switches and outcomes so every combination leads to one visible result — visual point: The table says: show me every row you intend to handle." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The branch code says "trust me."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The table says: show me every row you intend to handle.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## switch selects among cases for one discrete value
 
@@ -112,6 +123,17 @@ if (resistance != 0.0 && voltage / resistance > limit) {
 ~~~
 
 The division runs only when the left condition is true.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="exception-first" data-markdown><textarea data-template>
+## Every visitor wants the normal door
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l04/exception-first.png" alt="A careful gatekeeper handles an emergency visitor first, then a warning visitor, and finally lets the ordinary crowd through — visual point: Emergency first, special cases next, ordinary traffic waits its turn." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Every visitor wants to use the "normal" door.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Emergency first, special cases next, ordinary traffic waits its turn.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A legal move respects the boundary
@@ -160,6 +182,17 @@ For a safe limit of 10, test:
 - invalid measurement: negative input.
 
 Also test every <code>switch</code> case and its default.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="switch-discrete" data-markdown><textarea data-template>
+## A switch is asked for "anything between 2.1 and 2.9"
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l04/switch-discrete.png" alt="A small control panel cleanly selects among three distinct buttons while a sliding ramp of continuous values is sent elsewhere — visual point: Buttons like named choices; a ramp needs a range check instead." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The panel has three honest buttons and one confused ramp of values.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Buttons like named choices; a ramp needs a range check instead.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Safe branching names every path and tests every boundary

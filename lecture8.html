@@ -85,6 +85,17 @@ void printReading(const double& reading) {
 
 The syntax matters now; avoiding expensive copies becomes useful when records and strings arrive.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="reference-alias" data-markdown><textarea data-template>
+## The caller sends a value into a function — then what?
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l08/reference-alias.png" alt="A function helper reaches through an alias rope to adjust the same object held by the caller, while separate copies stay untouched — visual point: Copy it for a souvenir; alias it if you mean to change the original." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The caller sends a value into a function.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Copy it for a souvenir; alias it if you mean to change the original.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Overloads share a name only when parameter lists distinguish them
 
@@ -128,6 +139,17 @@ void printFare(double fare);
 
 <code>main</code> coordinates these tasks instead of containing every detail.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="const-reference" data-markdown><textarea data-template>
+## The function needs to look, not rearrange
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l08/const-reference.png" alt="A function helper examines a shared object through a glass window while the object stays unchanged and no duplicate is made — visual point: &quot;Hands off, I am only reading&quot; — no copy, no touch." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The function needs to look, not rearrange.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> "Hands off, I am only reading" — no copy, no touch.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Each active call owns a stack frame until it returns
 
@@ -146,6 +168,17 @@ int factorial(int n) {
 ~~~
 
 Every recursive call must move measurably toward a base case.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="overload-signatures" data-markdown><textarea data-template>
+## Two functions want the same name badge
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l08/overload-signatures.png" alt="Two service doors share one symbol but accept visibly different input shapes; changing only the returned package does not create a third door — visual point: Different inputs earn different doors; a different return alone does not." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Two functions want the same name badge.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Different inputs earn different doors; a different return alone does not.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Choose parameter passing and decomposition from the contract

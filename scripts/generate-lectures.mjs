@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lectureExtras } from './lecture-extras.mjs';
+import { lectureMemes, lectureMemeCount } from './lecture-memes.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const md = String.raw;
@@ -1628,6 +1629,23 @@ if (missingLectureExtras.length > 0) {
     throw new Error(`Missing practical example and practice set for lecture IDs: ${missingLectureExtras.map((lecture) => lecture.id).join(', ')}`);
 }
 
+const missingLectureMemes = lectures.filter((lecture) => !lectureMemes[lecture.id] || lectureMemes[lecture.id].length < 3);
+if (missingLectureMemes.length > 0 || lectureMemeCount !== lectures.length * 3) {
+    throw new Error(`Expected exactly three lecture memes per lecture; missing or incomplete IDs: ${missingLectureMemes.map((lecture) => lecture.id).join(', ') || 'count mismatch'}`);
+}
+
+for (const lecture of lectures) {
+    for (const meme of lectureMemes[lecture.id]) {
+        if (meme.afterSlide < 1 || meme.afterSlide >= lecture.slides.length) {
+            throw new Error(`Invalid meme insertion point for L${lecture.id}: ${meme.slug}`);
+        }
+        const assetPath = path.join(root, 'assets', 'lecture-memes', `l${String(lecture.id).padStart(2, '0')}`, `${meme.slug}.png`);
+        if (!fs.existsSync(assetPath)) {
+            throw new Error(`Missing meme asset for L${lecture.id}: ${assetPath}`);
+        }
+    }
+}
+
 // These generated briefs make the transferable problem-solving routine visible
 // without changing authored slide numbers or the eight-slide live-session limit.
 const studioBriefs = {
@@ -2462,6 +2480,31 @@ function markdownSection(content, className = '', attributes = '') {
     return `    <section${classAttribute}${extraAttributes} data-markdown><textarea data-template>\n${content.trim()}\n    </textarea></section>`;
 }
 
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
+function memeSlide(lectureId, meme) {
+    const lectureSlug = `l${String(lectureId).padStart(2, '0')}`;
+    const imagePath = `assets/lecture-memes/${lectureSlug}/${meme.slug}.png`;
+    const visualPoint = meme.punchline.replace(/[.!?]+$/, '');
+    const memeAlt = `${meme.alt.replace(/[.!?]+$/, '')} — visual point: ${visualPoint}.`;
+    return md`## ${meme.title}
+
+<figure class="course-meme-figure">
+<img src="${imagePath}" alt="${escapeHtml(memeAlt)}" width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> ${meme.setup}</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> ${meme.punchline}</p>
+</figcaption>
+</figure>`;
+}
+
 function studioSlide(brief) {
     return md`## ${brief.problem}
 
@@ -2544,11 +2587,30 @@ function page({ id, title, slides }) {
     if (insertionIndex < 1 || insertionIndex >= authoredSections.length) {
         throw new Error(`Invalid game slide position for lecture ${id}: ${insertionIndex}`);
     }
-    authoredSections.splice(
-        insertionIndex,
-        0,
-        markdownSection(gameEvolutionSlides[id], 'course-extra-slide course-game-evolution-slide')
-    );
+    const courseSections = [];
+    const memesBySlide = new Map();
+    for (const meme of lectureMemes[id]) {
+        const existing = memesBySlide.get(meme.afterSlide) || [];
+        existing.push(meme);
+        memesBySlide.set(meme.afterSlide, existing);
+    }
+    for (let slideIndex = 0; slideIndex < authoredSections.length; slideIndex += 1) {
+        if (slideIndex === insertionIndex) {
+            courseSections.push(
+                markdownSection(gameEvolutionSlides[id], 'course-extra-slide course-game-evolution-slide')
+            );
+        }
+        courseSections.push(authoredSections[slideIndex]);
+        for (const meme of memesBySlide.get(slideIndex) || []) {
+            courseSections.push(
+                markdownSection(
+                    memeSlide(id, meme),
+                    'course-extra-slide course-meme-slide',
+                    `data-course-meme="${escapeHtml(meme.slug)}"`
+                )
+            );
+        }
+    }
     const generatedContext = [
         markdownSection(studioSlide(studioBriefs[id]), 'course-extra-slide course-algorithmic-studio'),
         markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
@@ -2561,7 +2623,7 @@ function page({ id, title, slides }) {
     );
     const verification = markdownSection(verificationSlide(extra));
     const handoff = markdownSection(handoffSlide(extra));
-    const sections = [authoredSections[0], ...generatedContext, ...authoredSections.slice(1), verification, handoff, practice].join('\n');
+    const sections = [courseSections[0], ...generatedContext, ...courseSections.slice(1), verification, handoff, practice].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>

@@ -81,6 +81,17 @@ for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
 
 Worst case: inspect every element.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="adt-operations" data-markdown><textarea data-template>
+## What does the data structure look like?
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l15/adt-operations.png" alt="A student writes a small set of action tokens for a container, while the container’s internal shape remains behind a curtain — visual point: What it promises to do comes first; the costume can wait." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The student asks what the data structure looks like.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> What it promises to do comes first; the costume can wait.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Bubble sort trades simplicity for quadratic time
 
@@ -106,6 +117,17 @@ With an array representation, keep one integer <code>top</code>:
 - top: inspect without removing.
 
 An undo history and function calls are stack applications.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="linear-search" data-markdown><textarea data-template>
+## The shelf is unsorted and gives no hints
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l15/linear-search.png" alt="A careful student checks items one by one along an unsorted shelf and finds the target without making assumptions about where it should be — visual point: Check each item — boring is a reliable baseline." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The shelf is unsorted and the target refuses to give hints.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Check each item — boring is a reliable baseline.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## A queue returns the earliest enqueued item first
@@ -148,6 +170,17 @@ int main() {
 | undo most recent action | stack |
 | serve arrival order | queue |
 | repeatedly exchange adjacent inversions | array + bubble sort |
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="bubble-quadratic" data-markdown><textarea data-template>
+## Every neighbor on the shelf has an opinion
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l15/bubble-quadratic.png" alt="A patient student repeatedly swaps neighboring out-of-order tiles along a row, one small adjacent trip at a time, never skipping ahead — visual point: Only adjacent swaps, over and over — simple, patient, and quadratic." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The list is almost sorted, except every neighbor disagrees with the one beside it.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Only adjacent swaps, over and over — simple, patient, and quadratic.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Match operations, invariants, and cost before choosing a structure
