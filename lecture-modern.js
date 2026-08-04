@@ -585,6 +585,15 @@
         Array.from(document.querySelectorAll('.reveal .slides pre > code')).forEach((code, index) => enhanceCodeBlock(code.parentElement, index));
     }
 
+    // The punchline waits for the presenter to advance: setup and beat land
+    // first, then one arrow press delivers it. Reveal fragments keep their
+    // layout space while hidden, so nothing shifts when it appears.
+    function stageMemePunchlines() {
+        document.querySelectorAll('.course-meme-punchline').forEach((punchline) => {
+            punchline.classList.add('fragment', 'course-meme-reveal');
+        });
+    }
+
     function leafSlides() {
         return Array.from(document.querySelectorAll('.reveal .slides section')).filter((section) => {
             const leaf = !Array.from(section.children).some((child) => child.tagName === 'SECTION');
@@ -963,6 +972,7 @@
         decorateConceptSlides();
         decorateTechnicalTerms();
         enhanceCodeBlocks();
+        stageMemePunchlines();
         paginateDeck();
         window.Reveal.sync();
         window.Reveal.layout();
