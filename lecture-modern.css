@@ -325,14 +325,19 @@ body.course-modern .reveal .course-code-toolbar button {
     caret-color: #8ee8d8;
 }
 
+/* The highlight marks the line being discussed: tinted row plus a teal bar
+   in the number column. Painted with background/box-shadow only, so the
+   active line keeps exactly the same metrics as its neighbours. */
 .course-code-line.is-active {
     color: #f4f7fc;
-    background: var(--course-code-line);
+    background: linear-gradient(to right, rgba(142, 232, 216, 0.14), var(--course-code-line) 42%);
 }
 
 .course-code-line.is-active .course-code-line-number {
     color: #8ee8d8;
+    font-weight: 700;
     background: var(--course-code-line);
+    box-shadow: inset 5px 0 0 0 #8ee8d8;
 }
 
 .course-code-line-text:focus-visible {
