@@ -144,7 +144,14 @@
     }
 
     function injectNoviceOnboardingSlides() {
-        const first = authoredLeafSlides()[0];
+        // Motivation before housekeeping: land these after the authored intro
+        // block when a lecture has one, so students learn why programming
+        // matters before being told where the power button is.
+        // Scope to real slides: Reveal mirrors slide classes onto its
+        // `.backgrounds` children, and appending into those is silently
+        // discarded by the next sync.
+        const intro = revealElement ? revealElement.querySelectorAll(':scope > .slides > .course-intro-slide') : [];
+        const first = intro[intro.length - 1] || authoredLeafSlides()[0];
         if (!first) return;
         let after = first;
         createNoviceOnboardingSlides().forEach((slide) => {

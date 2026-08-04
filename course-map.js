@@ -67,7 +67,7 @@
 
     // [display term, concise definition, optional text aliases...]
     const glossary = {
-        'm1-programming': ['algorithm', 'A finite, unambiguous sequence of steps that transforms input into a result.', 'algorithms'],
+        'm1-programming': ['program', 'A precise set of instructions and data a computer executes to perform a task.', 'programs'],
         'm1-solving': ['problem-solving workflow', 'A repeatable cycle of understanding, planning, implementing, testing, debugging, and refining a solution.', 'problem-solving methodology'],
         'm1-computers': ['CPU', 'The processor that fetches, decodes, and executes machine instructions while coordinating data movement.'],
         'm1-levels': ['abstraction', 'A deliberate hiding of lower-level detail behind a simpler interface or model.'],
@@ -199,7 +199,7 @@
     // graph node. The lecture runtime defines the first occurrence in the
     // specified chronological lecture.
     const supplementalGlossary = [
-        { id: 't-program', lecture: 1, term: 'program', aliases: ['programs'], definition: 'A set of instructions and data written so a computer can perform a task.' },
+        { id: 't-algorithm', lecture: 1, term: 'algorithm', aliases: ['algorithms'], definition: 'The finite, unambiguous sequence of steps a program carries out.' },
         { id: 't-input', lecture: 1, term: 'input', aliases: ['inputs'], definition: 'Information supplied to a program before or during execution.' },
         { id: 't-output', lecture: 1, term: 'output', definition: 'Information a program produces for a person or another system.' },
         { id: 't-window', lecture: 1, term: 'window', definition: 'A rectangular on-screen area belonging to one running application.' },
@@ -302,7 +302,7 @@
     };
 
     const sessionPlans = {
-        1: [1, 2, 3, 4, 5, 7, 8],
+        1: [1, 2, 3, 4, 5, 7, 8, 9],
         2: [1, 2, 3, 5, 6, 7, 8],
         3: [1, 2, 3, 4, 5, 6, 7, 8],
         4: [1, 2, 3, 4, 5, 6, 7, 8],

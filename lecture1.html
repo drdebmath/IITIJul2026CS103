@@ -18,7 +18,7 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide" data-markdown><textarea data-template>
+    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## Programming lets you hand precise thinking to a machine
 
 - A computer is fast and tireless, but it does exactly what it is told — nothing more.
@@ -26,9 +26,9 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 - One person who can program can automate calculations, control robots, test scientific models, and build tools used by millions.
 - In every branch of engineering and science, the people who can program get to ask bigger questions.
 
-This course trains the durable half — modelling problems and designing algorithms. The language is the tool, not the goal.
+By the end of today you will have written, compiled, and run a program of your own. The language is the tool; the skill is turning a problem into precise instructions.
     </textarea></section>
-    <section class="course-extra-slide" data-markdown><textarea data-template>
+    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## High-level languages hide the machine; low-level languages expose it
 
 | Level | You write | Example | Translated by |
@@ -41,7 +41,7 @@ This course trains the durable half — modelling problems and designing algorit
 - **High-level:** readable, portable, and safer — the translator handles the machine's choreography.
 - C++ sits deliberately in between: high-level abstraction, with low-level control when a problem needs it.
     </textarea></section>
-    <section class="course-extra-slide" data-markdown><textarea data-template>
+    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## Each generation of languages moves work from you to the compiler
 
 - **1940s · machine code:** programs entered as raw numbers; one wrong bit meant checking them all.
@@ -62,7 +62,7 @@ Each era automates the previous era's manual discipline — which is why the *id
 | **Problem** | Make a machine carry out one observable action. |
 | **Model** | Input describes a command; a finite process produces output. |
 | **Represent** | Names stand for the few values the action needs. |
-| **Solve** | Write an input → process → output algorithm, then compile it. |
+| **Solve** | Write an input → process → output program, then compile it. |
 | **Verify** | Predict the exact output; compare it with one run and one deliberate error. |
 | **Improve** | Rename vague steps and remove every instruction a partner cannot follow. |
 
@@ -91,44 +91,15 @@ int main() {
 **Takeaways**
 
 - Inputs become named values.
-- The formula is the algorithm.
-- Output makes the result observable.
-    </textarea></section>
-    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
-## Algorithms become concrete when state changes are visible
-
-| Build | State and structure | Algorithmic idea |
-|---|---|---|
-| cleaning robot | grid + position + dirt | simulation and sweep |
-| graph cleaner | vertices + edges + visited set | BFS/DFS coverage |
-| object components | pixels + labels + frontier | flood fill |
-| shortest routes | grid/graph + queue/heap + parents | BFS and weighted search |
-| Snake, two representations | text/linked body + occupied cells | update loop, traversal, collision search |
-| multi-agent cleaner | classes + shared world | policies, allocation, graph coverage |
-| music and circuits | event sequences / component graph | randomized generation and optimization |
-
-These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.
-    </textarea></section>
-    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
-## One verified model can drive every view
-
-~~~text
-Problem → model/state → algorithm → trace
-                            ├─ ASCII terminal animation
-                            ├─ HTML/SVG interactive view
-                            └─ modern C++ graphics window
-~~~
-
-- The **model** is the source of truth; a renderer is only a view.
-- A recorded trace lets every view replay the same run.
-- Extensions can add color, sound, controls, multiple agents, or procedural music without changing a verified core.
-
-By semester end, you should be able to explain not only *what* you built, but *why its representation and algorithm fit the problem*.
+- The formula in the middle is the whole process.
+- Output makes the program's result observable.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## An algorithm is a finite sequence of precise steps
+## A program is a precise set of instructions a computer can execute
 
-Use the same problem-solving workflow every time:
+A program leaves nothing to guess: every step is stated, in order, in a form the machine can carry out. The plan behind those steps is an **algorithm**; the program is that plan written so a computer can run it.
+
+Use the same problem-solving workflow every time you build one:
 
 1. **Problem:** state inputs, outputs, constraints, and success.
 2. **Model:** keep only the details that affect the answer.
@@ -136,6 +107,17 @@ Use the same problem-solving workflow every time:
 4. **Solve:** write precise steps; implement one at a time.
 5. **Verify:** explain why they work; test boundaries.
 6. **Improve:** compare clarity, safety, generality, and cost.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="algorithm-workflow" data-markdown><textarea data-template>
+## A wish is not an algorithm until it has finite steps
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l01/algorithm-workflow.png" alt="A student turns a tangled pile of vague sticky notes into a calm three-step path from input to process to output — visual point: The compiler cannot execute a wish — write the finite steps first." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The problem statement says "just make it work."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The compiler cannot execute a wish — write the finite steps first.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## The CPU executes instructions while RAM holds active state
@@ -147,14 +129,14 @@ Use the same problem-solving workflow every time:
 
 **Abstraction** lets C++ express ideas without writing machine instructions directly.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="algorithm-workflow" data-markdown><textarea data-template>
-## A wish is not an algorithm until it has finite steps
+    <section class="course-extra-slide course-meme-slide" data-course-meme="hardware-abstraction" data-markdown><textarea data-template>
+## One line of C++ replaces a thousand hidden switches
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l01/algorithm-workflow.png" alt="A student turns a tangled pile of vague sticky notes into a calm three-step path from input to process to output — visual point: The compiler cannot execute a wish — write the finite steps first." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l01/hardware-abstraction.png" alt="A student calmly writes a C++ idea while a tiny CPU robot follows a long hidden trail of machine-level steps underneath the desk — visual point: C++ gives you the idea; the hardware handles the microscopic choreography." width="900" height="506" loading="lazy">
 <figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The problem statement says "just make it work."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> The compiler cannot execute a wish — write the finite steps first.</p>
+<p class="course-meme-setup"><strong>Setup</strong> Student: "I want the computer to say hello." The CPU:</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> C++ gives you the idea; the hardware handles the microscopic choreography.</p>
 </figcaption>
 </figure>
     </textarea></section>
@@ -193,6 +175,17 @@ int main() {
 
 **Next unlock · L02:** replace fixed symbols with named coordinates, score, and dirt state.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="main-observable-output" data-markdown><textarea data-template>
+## No output, no proof the program ran
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l01/main-observable-output.png" alt="A tiny program enters through a doorway marked by the main function and proudly turns on a visible terminal result — visual point: Give it a main entrance and an observable result." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> The program has one job: prove it exists.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Give it a main entrance and an observable result.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## The toolchain turns source code into a testable executable
 
@@ -206,17 +199,6 @@ g++ -std=c++17 hello.cpp -o hello
 - A compiler checks and translates the source.
 - A linker combines required compiled parts.
 - The executable is the program you run.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="hardware-abstraction" data-markdown><textarea data-template>
-## One line of C++ replaces a thousand hidden switches
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l01/hardware-abstraction.png" alt="A student calmly writes a C++ idea while a tiny CPU robot follows a long hidden trail of machine-level steps underneath the desk — visual point: C++ gives you the idea; the hardware handles the microscopic choreography." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Student: "I want the computer to say hello." The CPU:</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> C++ gives you the idea; the hardware handles the microscopic choreography.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Choose a language from the problem’s trade-offs
@@ -241,22 +223,11 @@ bool laboratoryOpen = true;
 
 An identifier names something. A declaration introduces a name and its type.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="main-observable-output" data-markdown><textarea data-template>
-## No output, no proof the program ran
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l01/main-observable-output.png" alt="A tiny program enters through a doorway marked by the main function and proudly turns on a visible terminal result — visual point: Give it a main entrance and an observable result." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The program has one job: prove it exists.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Give it a main entrance and an observable result.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Edit → compile → link → run → test is a reliable workflow
 
-- Begin with input, process, and output.
-- An algorithm must be finite and precise.
+- Every program begins with input, process, and output.
+- A program must be finite and precise about every step.
 - The CPU executes the compiled instructions.
 - <code>main</code> is the C++ entry point.
 - Edit → compile → link → run → test.
@@ -289,6 +260,37 @@ Explain today’s idea to a partner without opening the code:
 3. Name the first test you would run after changing the implementation.
 
 If the explanation needs “and then another unrelated thing,” split the design before you code.
+    </textarea></section>
+    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
+## Programs become concrete when state changes are visible
+
+| Build | State and structure | Algorithmic idea |
+|---|---|---|
+| cleaning robot | grid + position + dirt | simulation and sweep |
+| graph cleaner | vertices + edges + visited set | BFS/DFS coverage |
+| object components | pixels + labels + frontier | flood fill |
+| shortest routes | grid/graph + queue/heap + parents | BFS and weighted search |
+| Snake, two representations | text/linked body + occupied cells | update loop, traversal, collision search |
+| multi-agent cleaner | classes + shared world | policies, allocation, graph coverage |
+| music and circuits | event sequences / component graph | randomized generation and optimization |
+
+These are **non-assessed previews**. Today, notice the state change and ask what the program must remember.
+    </textarea></section>
+    <section class="course-extra-slide course-showcase-slide" data-markdown><textarea data-template>
+## One verified model can drive every view
+
+~~~text
+Problem → model/state → algorithm → trace
+                            ├─ ASCII terminal animation
+                            ├─ HTML/SVG interactive view
+                            └─ modern C++ graphics window
+~~~
+
+- The **model** is the source of truth; a renderer is only a view.
+- A recorded trace lets every view replay the same run.
+- Extensions can add color, sound, controls, multiple agents, or procedural music without changing a verified core.
+
+By semester end, you should be able to explain not only *what* you built, but *why its representation and algorithm fit the problem*.
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="1" data-markdown><textarea data-template>
 ## Five lab problems that reuse today’s pattern
