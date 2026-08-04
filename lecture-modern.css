@@ -433,24 +433,40 @@ body.course-modern .course-meme-figure img {
 
 .course-meme-figure figcaption {
     display: grid;
-    gap: 0.75em;
+    gap: 1em;
     margin: 0;
     color: var(--course-muted);
     font-size: 0.66em;
     line-height: 1.45;
 }
 
+/* The pause is the joke: hold a visible beat before the punchline. */
+.course-meme-setup::after {
+    display: block;
+    margin: 0.5em 0 -0.3em;
+    color: var(--course-teal);
+    content: "· · ·";
+    font-size: 1.9em;
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    line-height: 1;
+    opacity: 0.75;
+}
+
 .course-meme-figure figcaption p {
     margin: 0 !important;
 }
 
+/* Announcing "Setup"/"Punchline" kills the joke before it lands. The labels
+   stay in the markup for screen readers — the beat and the teal block already
+   show sighted readers where the punchline starts. */
 .course-meme-figure figcaption strong {
-    display: block;
-    margin-bottom: 0.2em;
-    color: var(--course-primary-strong) !important;
-    font-size: 0.78em;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 .course-meme-punchline {
@@ -459,6 +475,7 @@ body.course-modern .course-meme-figure img {
     border-radius: 0 12px 12px 0;
     color: var(--course-ink) !important;
     background: var(--course-teal-soft);
+    font-weight: 700;
 }
 
 body.course-modern .reveal section > div,
