@@ -511,7 +511,8 @@
         function restore() {
             viewport.replaceChildren(...originalLines.map(createLine));
             renumber();
-            focusLine(0, false);
+            // No line pops until the presenter picks one, so diagrams and
+            // untouched listings stay perfectly aligned by default.
         }
 
         viewport.addEventListener('focusin', (event) => {

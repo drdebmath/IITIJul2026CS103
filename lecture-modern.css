@@ -304,7 +304,7 @@ body.course-modern .reveal .course-code-toolbar button {
     color: #c6d2e4;
     font-size: 26px;
     line-height: 1.42;
-    transition: color 150ms ease, background 150ms ease;
+    transition: color 150ms ease, background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
 }
 
 .course-code-line-number {
@@ -325,12 +325,19 @@ body.course-modern .reveal .course-code-toolbar button {
     caret-color: #8ee8d8;
 }
 
-/* The highlight marks the line being discussed: tinted row plus a teal bar
-   in the number column. Painted with background/box-shadow only, so the
-   active line keeps exactly the same metrics as its neighbours. */
+/* The highlight marks the line being discussed: it pops out — scaled up and
+   lifted with a shadow — plus a teal bar in the number column. The pop uses
+   transform only, so the line's layout box and every other line's monospace
+   alignment stay untouched. No line is active until the presenter picks one. */
 .course-code-line.is-active {
+    position: relative;
+    z-index: 2;
+    transform: scale(1.16);
+    transform-origin: left center;
+    border-radius: 7px;
     color: #f4f7fc;
-    background: linear-gradient(to right, rgba(142, 232, 216, 0.14), var(--course-code-line) 42%);
+    background: linear-gradient(to right, rgba(142, 232, 216, 0.16), var(--course-code-line) 42%);
+    box-shadow: 0 7px 24px rgba(0, 0, 0, 0.5);
 }
 
 .course-code-line.is-active .course-code-line-number {
