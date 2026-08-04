@@ -3,5 +3,8 @@ heapsort_demo
 googlestyle.html
 lecture1_reveal.html
 strassen.html
-scripts.js
-styles.css
+# Anchored to the repo root: bare patterns match at every directory level,
+# which silently excluded codes/styles.css and left the deployed code
+# library with no stylesheet at all.
+/scripts.js
+/styles.css
