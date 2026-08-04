@@ -49,11 +49,17 @@ body.course-modern.reveal-viewport {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Slide body size at the 1920x1080 design resolution. The measure stage below
+   must use the identical value or pagination splits against the wrong height. */
+body.course-modern {
+    --course-slide-font: 42px;
+}
+
 body.course-modern .reveal {
     color: var(--course-ink) !important;
     background: transparent !important;
     font-family: inherit !important;
-    font-size: 34px;
+    font-size: var(--course-slide-font);
 }
 
 body.course-modern .reveal .slides {
@@ -214,7 +220,7 @@ body.course-modern .reveal pre code {
 .course-code-editor {
     width: 100%;
     max-width: 100%;
-    max-height: 550px;
+    max-height: 660px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -228,8 +234,34 @@ body.course-modern .reveal pre code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* In slide mode the slide is a fixed 1080px box, so a code panel with a fixed
+   max-height either wastes room or overflows into a nested safety scroller.
+   Let it absorb exactly the height the rest of the slide leaves: the panel is
+   as large as it can be, and its own viewport does the scrolling.
+   Both selectors below must stay in sync — the second is the offscreen stage
+   pagination measures in, and it forces `display: block !important` on its
+   clones, so without a matching `!important` the deck would be split against a
+   layout that never renders. Only `.present` is targeted in the live deck:
+   Reveal hides the other slides with `display: none`. */
+body.course-modern:not(.course-reader-mode) .reveal .slides > section.present:has(> .course-code-editor),
+body.course-modern .course-measure-stage .slides > section:has(> .course-code-editor) {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.course-modern:not(.course-reader-mode) .reveal .slides > section > .course-code-editor {
+    flex: 1 1 auto;
+    min-height: 240px;
+    max-height: none;
+}
+
+body.course-modern:not(.course-reader-mode) .reveal .slides > section > .course-code-editor .course-code-viewport {
+    flex: 1 1 auto;
+    max-height: none;
+}
+
 .course-code-toolbar {
-    min-height: 42px;
+    min-height: 52px;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -238,34 +270,34 @@ body.course-modern .reveal pre code {
     color: #a8b7ce;
     background: #111c2f;
     font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 13px;
+    font-size: 18px;
     line-height: 1.2;
 }
 
 .course-code-toolbar strong {
     margin-right: auto;
     color: #dce6f6 !important;
-    font-size: 12px;
+    font-size: 16px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 body.course-modern .reveal .course-code-toolbar button {
-    min-height: 30px;
-    padding: 5px 9px;
+    min-height: 38px;
+    padding: 6px 12px;
     border: 1px solid #34445f;
     border-radius: 8px;
     color: #dce6f6 !important;
     background: #1a2941;
-    font-size: 12px;
+    font-size: 17px;
     font-weight: 760;
     line-height: 1 !important;
     cursor: pointer;
 }
 
 .course-code-viewport {
-    min-height: 108px;
-    max-height: 492px;
+    min-height: 140px;
+    max-height: 700px;
     padding: 10px 0 18px;
     overflow: auto;
     overscroll-behavior: contain;
@@ -281,7 +313,7 @@ body.course-modern .reveal .course-code-toolbar button {
     align-items: baseline;
     padding: 0.13em 1em 0.13em 0;
     color: #9eacc1;
-    font-size: 18px;
+    font-size: 24px;
     line-height: 1.38;
     opacity: 0.76;
     transition: color 150ms ease, font-size 150ms ease, opacity 150ms ease, background 150ms ease;
@@ -307,14 +339,14 @@ body.course-modern .reveal .course-code-toolbar button {
 
 .course-code-line.is-near {
     color: #c6d2e4;
-    font-size: 21px;
+    font-size: 28px;
     opacity: 0.92;
 }
 
 .course-code-line.is-active {
     color: #f4f7fc;
     background: var(--course-code-line);
-    font-size: 26px;
+    font-size: 34px;
     opacity: 1;
 }
 
@@ -1245,12 +1277,14 @@ body.course-modern .reveal .lecture-end-nav .is-disabled {
     opacity: 0.55;
 }
 
+/* Last-resort shrink for slides pagination could not split (single indivisible
+   block). Floors at the old 34px base so nothing gets smaller than it used to be. */
 .course-slide-dense {
-    font-size: 30px !important;
+    font-size: 38px !important;
 }
 
 .course-slide-ultra-dense {
-    font-size: 26px !important;
+    font-size: 34px !important;
 }
 
 .course-overflow-safety {
@@ -1278,7 +1312,7 @@ body.course-modern .reveal .lecture-end-nav .is-disabled {
     overflow: hidden !important;
     visibility: hidden !important;
     pointer-events: none !important;
-    font-size: 34px !important;
+    font-size: var(--course-slide-font) !important;
     contain: strict;
 }
 

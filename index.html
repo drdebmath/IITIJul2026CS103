@@ -191,12 +191,12 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 6px;
             margin-left: auto;
         }
 
         .nav-links a {
-            padding: 6px 8px;
+            padding: 6px 10px;
             border-radius: 8px;
             color: var(--muted);
             font-size: 0.8rem;
@@ -214,21 +214,13 @@
             background: var(--surface-soft);
         }
 
-        .nav-links .nav-studio {
-            color: #ffffff;
-            background: var(--primary-strong);
-        }
-
-        .nav-links .nav-studio:hover {
-            color: #ffffff;
-            background: var(--primary);
-        }
-
+        .nav-links .nav-studio,
         .nav-links .nav-lab {
             color: var(--primary-strong);
             background: color-mix(in srgb, var(--primary) 10%, transparent);
         }
 
+        .nav-links .nav-studio:hover,
         .nav-links .nav-lab:hover {
             color: var(--primary-strong);
             background: color-mix(in srgb, var(--primary) 17%, transparent);

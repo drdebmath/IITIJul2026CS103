@@ -619,6 +619,23 @@
         return Array.from(section.children).filter((child) => !child.matches('h1, h2, h3, .course-extra-kicker, .course-continuation-label, aside.notes, script, style')).length;
     }
 
+    // A bare label such as `**Takeaways**` or an h4 introduces the block that
+    // follows it. Splitting between the two strands the label on the old page
+    // above dead space, so it travels with the content it announces.
+    function isOrphanLabel(node) {
+        if (!node) return false;
+        if (node.matches('h4, h5, h6')) return true;
+        return node.matches('p') && node.children.length === 1
+            && node.firstElementChild.matches('strong, em, b, i')
+            && node.textContent.trim() === node.firstElementChild.textContent.trim();
+    }
+
+    function adoptTrailingLabel(from, to) {
+        const last = from.lastElementChild;
+        if (!isOrphanLabel(last) || pageContentCount(from) < 2) return;
+        to.appendChild(last);
+    }
+
     function createContinuation(source, sourceHeading, after, part) {
         const continuation = document.createElement('section');
         Array.from(source.attributes).forEach((attribute) => {
@@ -731,7 +748,11 @@
         movable.forEach((child) => child.remove());
         let current = section;
         let part = 2;
-        const nextPage = (after) => createContinuation(section, heading, after, part++);
+        const nextPage = (after) => {
+            const page = createContinuation(section, heading, after, part++);
+            adoptTrailingLabel(after, page);
+            return page;
+        };
 
         movable.forEach((block) => {
             current.appendChild(block);
