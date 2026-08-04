@@ -18,6 +18,9 @@
     const themeStorageKey = 'cs103-theme';
     const embedded = window.self !== window.top;
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Catches browser-window fullscreen (F11 in Edge/Chrome, menu fullscreen)
+    // which never sets document.fullscreenElement but should still present.
+    const windowFullscreenQuery = window.matchMedia('(display-mode: fullscreen)');
     const sequence = progress?.lectureSequence || window.CS103Data?.lectureSequence || [];
     const sequenceIndex = sequence.findIndex((lecture) => lecture.id === lectureId);
     const scheduledSequence = scheduleSession ? scheduleSession.sequence : Math.max(1, sequenceIndex + 1);
@@ -32,6 +35,7 @@
     let readerMode = false;
     let scrollFrame = 0;
     let preparationTimer = 0;
+    let layoutSettleTimer = 0;
 
     document.body.classList.add('course-modern');
     if (embedded) document.body.classList.add('course-embedded');
@@ -184,6 +188,7 @@
         if (showReferenceSlides) paginateDeck();
         window.Reveal.sync();
         window.Reveal.layout();
+        exposeReaderSlides();
         updateSlideUI(currentSlide());
     }
 
@@ -195,32 +200,29 @@
         const lastTerm = terms[terms.length - 1] || firstTerm;
         const practicalTitle = document.querySelector('.practical-example-slide h2')?.textContent || lectureMeta.title;
         return [
-            `Without looking at the definition, explain “${firstTerm}” in one sentence.`,
+            `Explain “${firstTerm}” in one sentence.`,
             firstTerm === secondTerm
                 ? `What must be true before you can use today’s main idea safely?`
-                : `How is “${secondTerm}” connected to “${firstTerm}”?`,
-            `Before running the practical example “${practicalTitle}”, predict its first observable result.`,
-            `Name one normal case, one boundary case, and one invalid case for today’s code.`,
+                : `How is “${secondTerm}” related to “${firstTerm}”?`,
+            `Predict the first output of “${practicalTitle}”.`,
+            `Give one normal, one boundary, and one invalid input for today’s code.`,
             outcomes[0]
-                ? `Can you now do this outcome without notes: “${outcomes[0]}”? Explain your next step.`
-                : `When would you choose “${lastTerm}” in a new problem, and when would you avoid it?`
+                ? `Can you do this without notes: “${outcomes[0]}”?`
+                : `When would you choose “${lastTerm}” — and when would you avoid it?`
         ];
     }
 
     function createCheckpointSlide(question, index) {
         const minute = (index + 1) * 10;
         const section = document.createElement('section');
+        // Students see only the question; the session structure stays as
+        // invisible metadata for the instructor and tooling.
         section.className = 'course-extra-slide course-checkpoint-slide';
         section.dataset.courseMinute = String(minute);
+        section.dataset.courseCheckpoint = `${index + 1} of 5`;
         section.innerHTML = `
-            <span class="course-extra-kicker">Minute ${minute} · Checkpoint ${index + 1} of 5</span>
-            <h2>Checkpoint: ${question}</h2>
-            <div class="course-checkpoint-routine">
-                <span><strong>Think</strong> 30 seconds</span>
-                <span><strong>Pair</strong> compare reasoning</span>
-                <span><strong>Share</strong> one precise sentence</span>
-            </div>
-            <p>Predict or explain first. Run code only after committing to an answer.</p>`;
+            <!-- Checkpoint ${index + 1} of 5 · minute ${minute} · think 30s → pair → share one sentence -->
+            <h2>${question}</h2>`;
         return section;
     }
 
@@ -454,8 +456,8 @@
         editor.setAttribute('aria-label', `${language} editable focus viewer`);
         editor.innerHTML = `
             <div class="course-code-toolbar">
-                <strong>${language} focus editor</strong>
-                <span>Click or use ↑ ↓ to magnify a line</span>
+                <strong>${language} editor</strong>
+                <span>Editable · click or use ↑ ↓ to highlight a line</span>
                 <button class="course-code-copy" type="button">Copy</button>
                 <button class="course-code-reset" type="button">Reset</button>
             </div>
@@ -790,8 +792,12 @@
         return document.fullscreenElement || document.webkitFullscreenElement || null;
     }
 
+    function displayFullscreen() {
+        return Boolean(fullscreenElement()) || windowFullscreenQuery.matches;
+    }
+
     function updateFullscreenUI() {
-        const active = Boolean(fullscreenElement());
+        const active = displayFullscreen();
         document.body.classList.toggle('course-fullscreen', active);
         const button = document.getElementById('course-fullscreen-button');
         if (button) {
@@ -812,6 +818,21 @@
         } catch (error) {
             console.warn('Full-screen mode was unavailable.', error);
         }
+        // Chromium-based browsers (Edge, Chrome) sometimes complete the
+        // transition without our fullscreenchange handler observing the final
+        // state; re-check explicitly so the deck always switches modes.
+        window.setTimeout(applyDisplayMode, 150);
+    }
+
+    // Reveal stamps every non-present slide hidden/aria-hidden. Reader mode
+    // shows them all via CSS, so the attributes must go too or the scrolling
+    // deck is invisible to assistive technology.
+    function exposeReaderSlides() {
+        if (!readerMode) return;
+        leafSlides().forEach((section) => {
+            section.removeAttribute('hidden');
+            section.removeAttribute('aria-hidden');
+        });
     }
 
     function nearestReaderSlide() {
@@ -869,7 +890,14 @@
 
     function applyDisplayMode() {
         if (!revealReady || !window.Reveal) return;
-        const shouldRead = !embedded && !fullscreenElement();
+        // Chromium can fire resize/fullscreenchange before the viewport
+        // reaches its final size, leaving the deck laid out against stale
+        // dimensions (letterboxed off-center). Re-run layout once settled.
+        window.clearTimeout(layoutSettleTimer);
+        layoutSettleTimer = window.setTimeout(() => {
+            if (revealReady && window.Reveal && !readerMode) window.Reveal.layout();
+        }, 320);
+        const shouldRead = !embedded && !displayFullscreen();
         if (shouldRead === readerMode) {
             updateFullscreenUI();
             window.Reveal.layout();
@@ -900,6 +928,7 @@
             if (indices) window.Reveal.slide(indices.h, indices.v, indices.f);
             window.Reveal.layout();
         } else {
+            exposeReaderSlides();
             window.requestAnimationFrame(() => {
                 if (anchor) anchor.scrollIntoView({ block: 'start' });
                 updateSlideUI(anchor);
@@ -998,6 +1027,7 @@
     });
     document.addEventListener('fullscreenchange', applyDisplayMode);
     document.addEventListener('webkitfullscreenchange', applyDisplayMode);
+    if (typeof windowFullscreenQuery.addEventListener === 'function') windowFullscreenQuery.addEventListener('change', applyDisplayMode);
     document.addEventListener('keydown', (event) => {
         if (!event.shiftKey) {
             const typing = event.target.closest?.('input, textarea, select, [contenteditable="true"], [contenteditable="plaintext-only"]');

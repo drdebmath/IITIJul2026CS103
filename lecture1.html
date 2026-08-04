@@ -18,6 +18,40 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
+    <section class="course-extra-slide" data-markdown><textarea data-template>
+## Programming lets you hand precise thinking to a machine
+
+- A computer is fast and tireless, but it does exactly what it is told — nothing more.
+- Programming is writing instructions precise enough for a machine to carry them out.
+- One person who can program can automate calculations, control robots, test scientific models, and build tools used by millions.
+- In every branch of engineering and science, the people who can program get to ask bigger questions.
+
+This course trains the durable half — modelling problems and designing algorithms. The language is the tool, not the goal.
+    </textarea></section>
+    <section class="course-extra-slide" data-markdown><textarea data-template>
+## High-level languages hide the machine; low-level languages expose it
+
+| Level | You write | Example | Translated by |
+|---|---|---|---|
+| Machine code | binary instructions | `10110000 01100001` | nothing — the CPU runs it directly |
+| Assembly | named instructions | `mov al, 97` | an assembler |
+| High-level (C++, Python) | intent: names and formulas | `price = base + tax;` | a compiler or interpreter |
+
+- **Low-level:** total control and detail, but tied to one processor family.
+- **High-level:** readable, portable, and safer — the translator handles the machine's choreography.
+- C++ sits deliberately in between: high-level abstraction, with low-level control when a problem needs it.
+    </textarea></section>
+    <section class="course-extra-slide" data-markdown><textarea data-template>
+## Each generation of languages moves work from you to the compiler
+
+- **1940s · machine code:** programs entered as raw numbers; one wrong bit meant checking them all.
+- **1950s · assembly and Fortran:** names replaced numbers; Fortran (1957) let scientists write formulas instead of instructions.
+- **1970s · C:** one portable language for systems that had needed a rewrite on every machine.
+- **1980s–90s · C++, Python, Java:** objects, rich libraries, and automatic memory management for much larger programs.
+- **2010s · Rust, Swift, Go:** compilers that prove safety properties before the program ever runs.
+
+Each era automates the previous era's manual discipline — which is why the *ideas* you learn here outlast any single language.
+    </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
 ## Make a machine carry out one observable action.
 
@@ -37,9 +71,9 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 **Compare:** a fixed command list versus a rule-based cleaner (preview only)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## Inputs become named values. · Travel-time estimator
+## Travel-time estimator
 
-Turn a familiar quantity problem into the input → process → output pattern used by every program.
+A familiar question — "how long will the trip take?" — becomes the input → process → output pattern used by every program.
 
 ~~~cpp
 #include <iostream>
@@ -49,7 +83,8 @@ int main() {
     std::cin >> distanceKm >> speedKmph;
 
     double travelHours = distanceKm / speedKmph;
-    std::cout << "Estimated hours: " << travelHours << std::endl;
+    std::cout << "Estimated hours: " << travelHours << "\n";
+    return 0;
 }
 ~~~
 
@@ -92,8 +127,6 @@ By semester end, you should be able to explain not only *what* you built, but *w
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## An algorithm is a finite sequence of precise steps
-
-An **algorithm** is a finite sequence of precise steps.
 
 Use the same problem-solving workflow every time:
 
@@ -229,14 +262,14 @@ An identifier names something. A declaration introduces a name and its type.
 - Edit → compile → link → run → test.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Verify Travel-time estimator with a claim, trace, boundary, and improvement
+## Verify the travel-time estimator
 
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+Treat the example as a small experiment. Before you leave, make the reasoning visible:
 
-- **Claim:** Inputs become named values.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
+- **Claim:** with inputs `120 60`, the program prints exactly `Estimated hours: 2`.
+- **Trace:** write each variable and its value after every line to confirm the claim.
+- **Boundary:** what happens when the speed is `0`? Run it and explain the result.
+- **Improvement:** one change that would make the program clearer or safer.
 
 ### Exit ticket
 
@@ -247,7 +280,7 @@ Choose one problem to solve now and two to attempt in the lab:
 - Read three quiz scores and print their arithmetic mean.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Explain Travel-time estimator without opening the code
+## Explain the travel-time estimator without opening the code
 
 Explain today’s idea to a partner without opening the code:
 
@@ -258,7 +291,7 @@ Explain today’s idea to a partner without opening the code:
 If the explanation needs “and then another unrelated thing,” split the design before you code.
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="1" data-markdown><textarea data-template>
-## Solve five problems to transfer Travel-time estimator
+## Five lab problems that reuse today’s pattern
 
 **IC151 lab practice · 5 problems**
 

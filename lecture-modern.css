@@ -157,7 +157,9 @@ body.course-modern .reveal li {
     margin: 0.2em 0;
 }
 
-body.course-modern .reveal a {
+/* Content links only — the deck bar is chrome inside .reveal and styles its
+   own anchors. */
+body.course-modern .reveal .slides a {
     color: var(--course-primary-strong) !important;
     text-decoration-thickness: 0.07em;
     text-underline-offset: 0.13em;
@@ -220,7 +222,7 @@ body.course-modern .reveal pre code {
 .course-code-editor {
     width: 100%;
     max-width: 100%;
-    max-height: 660px;
+    max-height: 800px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -234,27 +236,11 @@ body.course-modern .reveal pre code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* In slide mode the slide is a fixed 1080px box, so a code panel with a fixed
-   max-height either wastes room or overflows into a nested safety scroller.
-   Let it absorb exactly the height the rest of the slide leaves: the panel is
-   as large as it can be, and its own viewport does the scrolling.
-   Both selectors below must stay in sync — the second is the offscreen stage
-   pagination measures in, and it forces `display: block !important` on its
-   clones, so without a matching `!important` the deck would be split against a
-   layout that never renders. Only `.present` is targeted in the live deck:
-   Reveal hides the other slides with `display: none`. */
-body.course-modern:not(.course-reader-mode) .reveal .slides > section.present:has(> .course-code-editor),
-body.course-modern .course-measure-stage .slides > section:has(> .course-code-editor) {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-body.course-modern:not(.course-reader-mode) .reveal .slides > section > .course-code-editor {
-    flex: 1 1 auto;
-    min-height: 240px;
-    max-height: none;
-}
-
+/* The editor takes its natural height like any other block. It must never
+   flex-shrink to the space a slide happens to leave: that hid code behind an
+   inner scroller AND made the pagination measurer believe the slide fit, so
+   overfull slides were never split. With natural height the paginator sees
+   the true size and moves trailing content to a continuation slide instead. */
 body.course-modern:not(.course-reader-mode) .reveal .slides > section > .course-code-editor .course-code-viewport {
     flex: 1 1 auto;
     max-height: none;
@@ -296,9 +282,8 @@ body.course-modern .reveal .course-code-toolbar button {
 }
 
 .course-code-viewport {
-    min-height: 140px;
-    max-height: 700px;
-    padding: 10px 0 18px;
+    max-height: 744px;
+    padding: 10px 0 14px;
     overflow: auto;
     overscroll-behavior: contain;
     scroll-behavior: smooth;
@@ -306,17 +291,20 @@ body.course-modern .reveal .course-code-toolbar button {
     scrollbar-width: thin;
 }
 
+/* Every line keeps one size: per-line magnification broke ASCII-diagram
+   alignment, drifted the number column, and left non-active lines too dim to
+   read from the back of a lecture hall. The active line is marked by color
+   and background only. */
 .course-code-line {
     min-width: max-content;
     display: grid;
     grid-template-columns: 3.4em minmax(0, 1fr);
     align-items: baseline;
     padding: 0.13em 1em 0.13em 0;
-    color: #9eacc1;
-    font-size: 24px;
-    line-height: 1.38;
-    opacity: 0.76;
-    transition: color 150ms ease, font-size 150ms ease, opacity 150ms ease, background 150ms ease;
+    color: #c6d2e4;
+    font-size: 26px;
+    line-height: 1.42;
+    transition: color 150ms ease, background 150ms ease;
 }
 
 .course-code-line-number {
@@ -337,17 +325,9 @@ body.course-modern .reveal .course-code-toolbar button {
     caret-color: #8ee8d8;
 }
 
-.course-code-line.is-near {
-    color: #c6d2e4;
-    font-size: 28px;
-    opacity: 0.92;
-}
-
 .course-code-line.is-active {
     color: #f4f7fc;
     background: var(--course-code-line);
-    font-size: 34px;
-    opacity: 1;
 }
 
 .course-code-line.is-active .course-code-line-number {
@@ -690,7 +670,11 @@ body.course-fullscreen .reveal .slides > section > section.present {
     line-height: 1;
 }
 
-.course-deck-home {
+/* Must out-rank both `.course-deck-bar a` and its :hover rule, or the muted
+   nav color wins and the white label vanishes on the indigo pill. */
+.course-deck-bar a.course-deck-home,
+.course-deck-bar a.course-deck-home:hover,
+.course-deck-bar a.course-deck-home:focus-visible {
     color: #ffffff !important;
     background: var(--course-primary) !important;
 }
@@ -980,47 +964,25 @@ body.course-show-reference .course-reference-slide::after {
     font-size: 0.54em;
 }
 
+/* A checkpoint is one big question in the middle of the slide — the session
+   structure lives in data attributes, not on screen. `align-content` centers
+   the question vertically in slide mode without fighting the display rules
+   that fullscreen and reader mode force onto sections. */
 body.course-modern .reveal .course-checkpoint-slide {
+    align-content: center;
     background:
         radial-gradient(circle at 91% 8%, rgba(8, 123, 112, 0.12), transparent 22rem),
         var(--course-surface) !important;
 }
 
-.course-checkpoint-slide h2 {
-    max-width: 1320px;
-    margin-top: 0.35em !important;
-    font-size: 1.72em !important;
-    line-height: 1.14 !important;
-}
-
-.course-checkpoint-routine {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5em;
-    margin-top: 1em;
-}
-
-.course-checkpoint-routine span {
-    min-height: 3.4em;
-    display: flex;
-    align-items: center;
-    gap: 0.55em;
-    padding: 0.7em;
-    border: 1px solid var(--course-line);
-    border-radius: 14px;
-    color: var(--course-muted);
-    background: var(--course-surface-soft);
-    font-size: 0.58em;
-}
-
-.course-checkpoint-routine strong {
-    color: var(--course-teal) !important;
-}
-
-.course-checkpoint-slide > p {
-    margin-top: 0.9em !important;
-    color: var(--course-muted) !important;
-    font-size: 0.52em;
+body.course-modern .reveal .course-checkpoint-slide h2 {
+    max-width: 22ch;
+    margin: 0 auto !important;
+    padding-bottom: 0;
+    border-bottom: 0 !important;
+    font-size: 2.2em !important;
+    line-height: 1.16 !important;
+    text-align: center !important;
 }
 
 .course-slide-reference {
@@ -1066,8 +1028,19 @@ body.course-modern .reveal .course-checkpoint-slide {
     font-weight: inherit;
     text-decoration: underline dotted var(--course-primary) 0.07em;
     text-underline-offset: 0.16em;
+    text-decoration-skip-ink: none;
     cursor: help;
     outline: none;
+}
+
+/* At heading sizes the highlight box and thick dots read as a rendering
+   glitch; keep only a slim dotted underline there. */
+body.course-modern .reveal h1 .course-defined-term,
+body.course-modern .reveal h2 .course-defined-term,
+body.course-modern .reveal h3 .course-defined-term {
+    background: none;
+    text-decoration-thickness: 0.045em;
+    text-underline-offset: 0.12em;
 }
 
 .course-defined-term:focus-visible {
@@ -1426,6 +1399,14 @@ body.course-modern.course-reader-mode .reveal h3 {
     font-size: clamp(1.25rem, 5.4vw, 1.65rem) !important;
 }
 
+body.course-modern.course-reader-mode .reveal .course-checkpoint-slide {
+    padding-block: clamp(44px, 9vw, 84px) !important;
+}
+
+body.course-modern.course-reader-mode .reveal .course-checkpoint-slide h2 {
+    font-size: clamp(1.7rem, 6.4vw, 2.5rem) !important;
+}
+
 body.course-modern.course-reader-mode .reveal pre,
 body.course-modern.course-reader-mode .course-code-editor {
     max-height: min(62vh, 560px);
@@ -1437,18 +1418,12 @@ body.course-modern.course-reader-mode .course-code-viewport {
 }
 
 body.course-modern.course-reader-mode .course-code-line {
-    font-size: 13px;
-}
-
-body.course-modern.course-reader-mode .course-code-line.is-near {
     font-size: 15px;
 }
 
-body.course-modern.course-reader-mode .course-code-line.is-active {
-    font-size: 18px;
-}
-
 body.course-modern.course-reader-mode .reveal table {
+    width: fit-content;
+    max-width: 100%;
     display: block;
     overflow-x: auto;
     border-radius: 10px;
@@ -1481,8 +1456,7 @@ body.course-modern.course-reader-mode .lab-practice-list,
 body.course-modern.course-reader-mode .lecture-end-nav,
 body.course-modern.course-reader-mode .course-context-grid,
 body.course-modern.course-reader-mode .course-concept-reference-list ul,
-body.course-modern.course-reader-mode .course-novice-grid,
-body.course-modern.course-reader-mode .course-checkpoint-routine {
+body.course-modern.course-reader-mode .course-novice-grid {
     grid-template-columns: 1fr;
 }
 
