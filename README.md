@@ -12,7 +12,7 @@ The [interactive Algorithm Studio](studio.html) visualizes cleaning, breadth-fir
 
 See the [vision audit](VISION_AUDIT.md) for the before/after requirement trace, deliberate scope boundaries, and verification evidence.
 
-The [IC151 laboratory companion](ic151.html) contains the CITC setup checklist, GitHub Classroom workflow, local C++ commands, and the shared B1–B4 Autumn 2026 batch schedule. The page renders lab dates, timetable exceptions, and final examinations from the same course data source; official announcements supersede the published plan.
+The [IC151 laboratory companion](ic151.html) contains the CITC setup checklist, the [assignment portal](https://ic151jul2026.github.io/assignment-portal/) submission workflow, local C++ commands, and the Autumn 2026 batch schedules for A1–A4 and B1–B4. The page renders lab dates, timetable exceptions, and final examinations from the same course data source; official announcements supersede the published plan.
 
 Reveal.js 5.1.0 is vendored under `vendor/reveal` for reliable static hosting. Every lecture loads the local copy first and falls back to the pinned jsDelivr build if a local asset is unavailable. Lecture pages share one responsive reader/full-screen layout and one persistent light/dark theme.
 

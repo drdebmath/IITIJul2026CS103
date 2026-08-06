@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IC151 laboratory setup, GitHub Classroom workflow, local C++ instructions, and Autumn 2026 batch schedule at IIT Indore.">
+    <meta name="description" content="IC151 laboratory setup, the assignment portal submission workflow, local C++ instructions, and the Autumn 2026 A1–A4 and B1–B4 batch schedules at IIT Indore.">
     <meta name="theme-color" content="#f5f7fb">
     <title>IC151 · Programming Laboratory</title>
     <link rel="stylesheet" href="ic151.css">
@@ -31,7 +31,7 @@
             <div class="nav-links">
                 <a href="#schedule">Schedule</a>
                 <a href="#setup">Lab setup</a>
-                <a href="#classroom">GitHub Classroom</a>
+                <a href="#assignments">Assignments</a>
                 <a href="#local-run">Run locally</a>
                 <a href="index.html">CS103 home</a>
             </div>
@@ -44,9 +44,10 @@
             <div>
                 <p class="eyebrow">IIT Indore · Autumn 2026</p>
                 <h1>Programming <span>Laboratory.</span></h1>
-                <p class="hero-copy">Everything needed to enter the CITC lab, set up the assigned computer, submit through GitHub Classroom, and test C++ code locally.</p>
+                <p class="hero-copy">Everything needed to enter the CITC lab, set up the assigned computer, find your assignment repository, and test C++ code before you submit it.</p>
                 <div class="hero-actions">
-                    <a class="primary-action" href="#setup">Start the setup checklist <span aria-hidden="true">→</span></a>
+                    <a class="primary-action" href="https://ic151jul2026.github.io/assignment-portal/" target="_blank" rel="noopener">Open the assignment portal <span aria-hidden="true">→</span></a>
+                    <a class="secondary-action" href="#setup">Start the setup checklist</a>
                     <a class="secondary-action" href="#schedule">Find your batch time</a>
                 </div>
             </div>
@@ -56,7 +57,7 @@
                 <span>First floor · computers 1–72</span>
                 <dl>
                     <div><dt>First lab</dt><dd id="first-lab-title">Loading schedule…</dd></div>
-                    <div><dt>Duration</dt><dd>2 h 55 min</dd></div>
+                    <div><dt>Duration</dt><dd id="lab-duration">Loading…</dd></div>
                     <div><dt>Environment</dt><dd>Ubuntu · g++</dd></div>
                 </dl>
             </aside>
@@ -72,10 +73,6 @@
                 <label class="batch-picker">Your batch
                     <select id="batch-picker" aria-label="Choose your IC151 batch">
                         <option value="ALL">All batches</option>
-                        <option value="B1">Batch B1</option>
-                        <option value="B2">Batch B2</option>
-                        <option value="B3">Batch B3</option>
-                        <option value="B4">Batch B4</option>
                     </select>
                 </label>
             </div>
@@ -87,28 +84,22 @@
                 <p id="schedule-summary">Loading the twelve regular labs and final examination dates from the course schedule.</p>
             </div>
 
-            <div class="batch-grid" aria-label="Weekly batch slots">
-                    <article data-batch-card="B1"><span>B1</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
-                    <article data-batch-card="B2"><span>B2</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
-                    <article data-batch-card="B3"><span>B3</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
-                    <article data-batch-card="B4"><span>B4</span><strong data-batch-day>Loading…</strong><p data-batch-time>Loading…</p><small data-batch-first>Loading…</small></article>
+            <div class="calendar-note schedule-alert" role="note">
+                <span class="alert-mark" aria-hidden="true">!</span>
+                <p><strong>The schedule is tentative.</strong> A scheduled lab is dropped whenever the lectures have not reached the required material, and whenever the institute holiday schedule takes the slot. Treat every date below as planned rather than fixed, and follow the announcements for the week.</p>
             </div>
 
-            <div class="table-card">
-                <div class="table-scroll">
-                    <table>
-                        <thead><tr><th scope="col">Lab</th><th scope="col">B1 · Mon AM</th><th scope="col">B2 · Mon PM</th><th scope="col">B3 · Thu AM</th><th scope="col">B4 · Sat PM</th></tr></thead>
-                        <tbody id="lab-schedule-body"><tr><td colspan="5">Loading batch dates…</td></tr></tbody>
-                    </table>
-                </div>
+            <div class="batch-grid" id="batch-grid" aria-label="Weekly batch slots">
+                <article><span>··</span><strong>Loading…</strong><p>Loading…</p><small>Loading the batch slots…</small></article>
+            </div>
+
+            <div class="schedule-tables" id="lab-schedule-tables">
+                <div class="table-card"><div class="table-scroll"><table><tbody><tr><td>Loading batch dates…</td></tr></tbody></table></div></div>
             </div>
             <div class="final-exam-card" aria-labelledby="final-exam-title">
                 <div><span>IC151 final lab examination</span><strong id="final-exam-title">Loading final examination dates…</strong></div>
-                <ul>
-                    <li><b>B1</b><span data-batch-exam="B1">Loading…</span></li>
-                    <li><b>B2</b><span data-batch-exam="B2">Loading…</span></li>
-                    <li><b>B3</b><span data-batch-exam="B3">Loading…</span></li>
-                    <li><b>B4</b><span data-batch-exam="B4">Loading…</span></li>
+                <ul id="final-exam-list">
+                    <li><b>··</b><span>Loading…</span></li>
                 </ul>
             </div>
             <p class="schedule-disclaimer">The course data records institute breaks and timetable exceptions. Official announcements supersede this schedule.</p>
@@ -131,66 +122,104 @@
             </div>
         </section>
 
-        <section class="section shell" id="classroom" aria-labelledby="classroom-title">
+        <section class="section shell" id="assignments" aria-labelledby="assignments-title">
             <div class="section-heading">
-                <div><p class="section-kicker">Submission workflow</p><h2 id="classroom-title">Join GitHub Classroom correctly.</h2></div>
-                <p>Your official email and roll-number identity are used to match the repository to the class roster.</p>
+                <div><p class="section-kicker">Submission workflow</p><h2 id="assignments-title">Find your assignment repository.</h2></div>
+                <p>The assignment portal builds the GitHub address from your assignment, lab batch, and roll number. It only constructs a link and stores no roster data — GitHub permissions protect the private repository.</p>
             </div>
+            <p class="portal-cta"><a class="primary-action" href="https://ic151jul2026.github.io/assignment-portal/" target="_blank" rel="noopener">Open the IC151 assignment portal <span aria-hidden="true">→</span></a></p>
             <div class="workflow">
                 <ol>
-                    <li><span>01</span><div><strong>Open the assignment link</strong><p>Use the link shared by the instructor or TA, while signed in to your official Google account.</p></div></li>
-                    <li><span>02</span><div><strong>Create or sign in to GitHub</strong><p>Choose “Continue with Google” and use the official institute email, not a personal address.</p></div></li>
-                    <li><span>03</span><div><strong>Use a recognizable username</strong><p>Your GitHub username must include your roll number. Complete any verification puzzle carefully.</p></div></li>
-                    <li><span>04</span><div><strong>Authorize Classroom</strong><p>Allow GitHub Classroom access, then select your roll number from the roster.</p></div></li>
-                    <li><span>05</span><div><strong>Check the roster match</strong><p>If the roll number is missing—or you selected the wrong one—contact the TA or instructor immediately.</p></div></li>
-                    <li><span>06</span><div><strong>Accept and open the repository</strong><p>Accept the assignment, wait for repository creation, and open the blue repository link.</p></div></li>
+                    <li><span>01</span><div><strong>Sign in to GitHub</strong><p>Use the account whose username you submitted on the registration form, not a second personal account.</p></div></li>
+                    <li><span>02</span><div><strong>Accept the repository invitation</strong><p>GitHub emails it to you, and it also waits at <a href="https://github.com/notifications" target="_blank" rel="noopener">github.com/notifications</a>. A 404 means your account has no access yet, or the invitation is still pending.</p></div></li>
+                    <li><span>03</span><div><strong>Fill in the portal</strong><p>Choose the assignment named in the course announcement, select your lab batch, and enter your roll number exactly as issued. Surrounding spaces are ignored.</p></div></li>
+                    <li><span>04</span><div><strong>Open the generated repository</strong><p>Every repository lives in the <code>IC151Jul2026</code> organization and is named <code>assignment-batch-roll</code>, for example <code>helloworld-A2-260000000</code>.</p></div></li>
                 </ol>
             </div>
         </section>
 
         <section class="section section-soft" id="edit-submit" aria-labelledby="edit-title">
-            <div class="shell split-grid">
+            <div class="shell">
+                <div class="split-grid">
+                    <article>
+                        <p class="section-kicker">Option A · straight on GitHub</p>
+                        <h2 id="edit-title">Edit straight on GitHub.</h2>
+                        <ol class="numbered-steps">
+                            <li>Open <code>main.cpp</code> in your repository and click the pencil.</li>
+                            <li>Replace <code>REPLACE_WITH_YOUR_ROLL_NUMBER</code> with your roll number, and make any other change the assignment asks for.</li>
+                            <li>Keep the branch as <code>main</code> and press “Commit changes”.</li>
+                        </ol>
+                        <p class="temporary-note">Your edit is committed the moment you press the green button, so this submits your work by itself.</p>
+                    </article>
+                    <article>
+                        <p class="section-kicker">Option B · check on your machine</p>
+                        <h2>Download, check, upload.</h2>
+                        <ol class="numbered-steps">
+                            <li>Click “Code”, then “Download ZIP”. Unzip it and keep the folder name exactly as it is.</li>
+                            <li>Edit <code>main.cpp</code> in any editor, then compile, run, and check it in a terminal — the commands are below.</li>
+                            <li>Back on the repository page, choose “Add file” → “Upload files”.</li>
+                            <li>Drag in your edited <code>main.cpp</code>, leave “Commit directly to the <code>main</code> branch” selected, and press “Commit changes”.</li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section shell" id="submission-check" aria-labelledby="submission-check-title">
+            <div class="split-grid">
                 <article>
-                    <p class="section-kicker">Edit and submit</p>
-                    <h2 id="edit-title">Change only <code>hello.cpp</code>.</h2>
-                    <ol class="numbered-steps">
-                        <li>Open <code>hello.cpp</code> in the assignment repository.</li>
-                        <li>Select the pencil icon labeled “Edit this file”.</li>
-                        <li>Make the changes described in the assignment.</li>
-                        <li>Scroll down and enter a clear commit message, for example <code>Edited hello.cpp for assignment</code>.</li>
-                        <li>Select “Commit changes”. Do not create or upload extra files.</li>
-                    </ol>
+                    <p class="section-kicker">Confirm the submission</p>
+                    <h2 id="submission-check-title">Editing locally submits nothing.</h2>
+                    <div class="status-row success"><span aria-hidden="true">✓</span><div><strong>Check GitHub itself</strong><p>After committing, open <code>main.cpp</code> on GitHub and confirm your own code is there.</p></div></div>
+                    <div class="status-row failure"><span aria-hidden="true">!</span><div><strong>Only the repository counts</strong><p>The last commit on <code>main</code> at the deadline is what gets graded. A file that exists only on your laptop is not a submission.</p></div></div>
                 </article>
-                <article class="status-card">
-                    <p class="section-kicker">Testing and resubmitting</p>
-                    <h2>Read the test result.</h2>
-                    <div class="status-row success"><span aria-hidden="true">✓</span><div><strong>Green tick</strong><p>The automated checks passed.</p></div></div>
-                    <div class="status-row failure"><span aria-hidden="true">×</span><div><strong>Red cross</strong><p>A test failed. Edit <code>hello.cpp</code>, commit again, and repeat until it passes.</p></div></div>
-                    <p class="temporary-note"><strong>Current lab note:</strong> automated GitHub Classroom tests may be unavailable during the introductory session. Follow the instructor or TA’s live direction.</p>
+                <article>
+                    <p class="section-kicker">Seeing a 404?</p>
+                    <h2>Work through these in order.</h2>
+                    <ol class="numbered-steps">
+                        <li><strong>Wrong account.</strong> Check the avatar in GitHub’s top-right corner. If it is not the account you registered, sign out and back in with the right one.</li>
+                        <li><strong>Invitation not accepted.</strong> Open <a href="https://github.com/notifications" target="_blank" rel="noopener">github.com/notifications</a> or the invitation email, then accept.</li>
+                        <li><strong>Wrong or misspelled username on the form.</strong> Submit the registration form again with the correct username; your latest response replaces the earlier one, and access is fixed in the next update.</li>
+                        <li><strong>Not released yet.</strong> Repositories are created batch by batch, so the link 404s until your lab batch is released.</li>
+                    </ol>
+                    <p class="temporary-note">GitHub shows the same 404 whether the repository is missing or you simply cannot see it. Still stuck? Contact your lab TA with your roll number and your GitHub username.</p>
                 </article>
             </div>
         </section>
 
         <section class="section shell" id="local-run" aria-labelledby="local-title">
             <div class="section-heading">
-                <div><p class="section-kicker">Run before committing</p><h2 id="local-title">Compile locally with g++.</h2></div>
-                <p>Local testing gives faster feedback and makes compiler errors easier to understand.</p>
+                <div><p class="section-kicker">Run before committing</p><h2 id="local-title">Compile and check with g++.</h2></div>
+                <p>Every repository ships a <code>check.sh</code> that reads your roll number from the folder name, so do not rename the unzipped folder. The <code>chmod</code> line is needed once, because unzipping removes the executable bit.</p>
             </div>
             <div class="terminal-grid">
                 <article class="terminal-card">
                     <header><span></span><span></span><span></span><strong>Ubuntu terminal</strong></header>
-                    <pre><code>mkdir -p ~/yourfirstname
-cp hello.cpp ~/yourfirstname/
-cd ~/yourfirstname
-g++ hello.cpp -o hello
-./hello</code></pre>
+                    <pre><code># go into the folder you unzipped
+# (tip: drag the folder onto the terminal window)
+cd ~/Downloads/helloworld-A2-260000000-main
+
+# compile it and run it yourself
+g++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o main
+./main
+# 260000000
+
+# run the official check
+chmod +x check.sh
+./check.sh
+# PASS: output contains roll number 260000000</code></pre>
                 </article>
                 <article class="terminal-card">
                     <header><span></span><span></span><span></span><strong>Windows terminal</strong></header>
-                    <pre><code>g++ hello.cpp -o hello.exe
-hello.exe</code></pre>
+                    <pre><code># same flags, .exe output
+g++ -std=c++17 -Wall -Wextra -pedantic main.cpp -o main.exe
+main.exe
+
+# check.sh is a shell script:
+# run it from WSL or Git Bash</code></pre>
                 </article>
             </div>
+            <p class="schedule-disclaimer">A <code>FAIL:</code> line means the program did not print what the assignment expects — fix <code>main.cpp</code> and run <code>./check.sh</code> again. If <code>g++</code> is not found, install the compiler for your system first.</p>
         </section>
 
         <section class="section section-soft" id="linux-commands" aria-labelledby="linux-title">

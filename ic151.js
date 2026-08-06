@@ -13,17 +13,66 @@
         return new Intl.DateTimeFormat('en-IN', { timeZone, weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(value);
     }
 
+    function spanRange() {
+        const toMinutes = (value) => Number(value.slice(0, 2)) * 60 + Number(value.slice(3));
+        const spans = Object.values(batches).map((data) => toMinutes(data.end) - toMinutes(data.start));
+        const label = (total) => (total % 60 ? `${Math.floor(total / 60)} h ${total % 60} min` : `${total / 60} h`);
+        return [...new Set([Math.min(...spans), Math.max(...spans)])].map(label).join(' – ');
+    }
+
+    function groupKeys(group) {
+        return Object.keys(batches).filter((batch) => batches[batch].group === group);
+    }
+
+    const groups = [...new Set(Object.values(batches).map((data) => data.group))];
+
     function renderSchedule() {
-        const body = document.getElementById('lab-schedule-body');
-        if (!body) return;
-        body.innerHTML = Array.from({ length: 12 }, (_, index) => `<tr>
-            <th scope="row">${String(index + 1).padStart(2, '0')}</th>
-            ${Object.keys(batches).map((batch) => {
-                const date = meetingDate(batch, index, 'start');
-                const exception = batches[batch].exceptions?.[batches[batch].dates[index]] || '';
-                return `<td${exception ? ' class="special-date"' : ''}><strong>${formatDate(date)}</strong><span>${batches[batch].start}–${batches[batch].end}${exception ? ` · ${exception}` : ''}</span></td>`;
-            }).join('')}
-        </tr>`).join('');
+        const host = document.getElementById('lab-schedule-tables');
+        if (!host) return;
+        host.innerHTML = groups.map((group) => {
+            const keys = groupKeys(group);
+            const labCount = Math.max(...keys.map((batch) => batches[batch].dates.length));
+            const rows = Array.from({ length: labCount }, (_, index) => `<tr>
+                <th scope="row">${String(index + 1).padStart(2, '0')}</th>
+                ${keys.map((batch) => {
+                    const data = batches[batch];
+                    if (index >= data.dates.length) return '<td class="no-date"><strong>—</strong><span>No slot in the academic calendar</span></td>';
+                    const exception = data.exceptions?.[data.dates[index]] || '';
+                    return `<td${exception ? ' class="special-date"' : ''}><strong>${formatDate(meetingDate(batch, index, 'start'))}</strong><span>${data.start}–${data.end}${exception ? ` · ${exception}` : ''}</span></td>`;
+                }).join('')}
+            </tr>`).join('');
+            return `<div class="table-card">
+                <p class="table-title">${group} batches · ${keys.join(', ')}</p>
+                <div class="table-scroll">
+                    <table>
+                        <thead><tr><th scope="col">Lab</th>${keys.map((batch) => `<th scope="col">${batch} · ${batches[batch].day.slice(0, 3)} ${batches[batch].start}</th>`).join('')}</tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderBatchCards() {
+        const grid = document.getElementById('batch-grid');
+        if (!grid) return;
+        grid.innerHTML = Object.entries(batches).map(([batch, data]) => `<article>
+            <span>${batch}</span>
+            <strong>${data.day}</strong>
+            <p>${data.start}–${data.end}</p>
+            <small>First lab · ${formatDate(meetingDate(batch, 0, 'start'))}</small>
+        </article>`).join('');
+
+        const list = document.getElementById('final-exam-list');
+        if (list) {
+            list.innerHTML = Object.entries(batches).map(([batch, data]) => `<li>
+                <b>${batch}</b>
+                <span>${formatDate(new Date(`${data.finalDate}T${data.start}:00+05:30`))} · ${data.start}–${data.end}${data.finalNote ? ` · ${data.finalNote}` : ''}</span>
+            </li>`).join('');
+        }
+
+        const picker = document.getElementById('batch-picker');
+        if (picker) picker.insertAdjacentHTML('beforeend', Object.keys(batches).map((batch) => `<option value="${batch}">Batch ${batch}</option>`).join(''));
     }
 
     function renderScheduleFacts() {
@@ -33,19 +82,13 @@
         const firstLabTitle = document.getElementById('first-lab-title');
         if (firstLabTitle && firstLab) firstLabTitle.textContent = `${formatDate(firstLab.date)} · ${firstLab.batch}`;
 
+        const duration = document.getElementById('lab-duration');
+        if (duration) duration.textContent = spanRange();
+
         const summary = document.getElementById('schedule-summary');
-        if (summary) summary.textContent = `${batches.B1.dates.length} regular labs per batch · final examinations are listed below.`;
-
-        Object.entries(batches).forEach(([batch, data]) => {
-            const card = document.querySelector(`[data-batch-card="${batch}"]`);
-            if (!card) return;
-            card.querySelector('[data-batch-day]').textContent = data.day;
-            card.querySelector('[data-batch-time]').textContent = `${data.start}–${data.end}`;
-            card.querySelector('[data-batch-first]').textContent = `First lab · ${formatDate(meetingDate(batch, 0, 'start'))}`;
-
-            const exam = document.querySelector(`[data-batch-exam="${batch}"]`);
-            if (exam) exam.textContent = `${formatDate(new Date(`${data.finalDate}T${data.start}:00+05:30`))} · ${data.start}–${data.end}`;
-        });
+        const counts = Object.values(batches).map((data) => data.dates.length);
+        const range = Math.min(...counts) === Math.max(...counts) ? `${counts[0]}` : `${Math.min(...counts)}–${Math.max(...counts)}`;
+        if (summary) summary.textContent = `${range} regular labs per batch, after removing assessment weeks, the midsemester break, and institute holidays · final examinations are listed below.`;
 
         const finalTitle = document.getElementById('final-exam-title');
         if (finalTitle) finalTitle.textContent = 'Each batch has one scheduled final laboratory examination.';
@@ -58,7 +101,7 @@
             const data = batches[batch];
             const final = {
                 batch,
-                index: 12,
+                index: data.dates.length,
                 kind: 'final',
                 date: new Date(`${data.finalDate}T${data.start}:00+05:30`),
                 end: new Date(`${data.finalDate}T${data.end}:00+05:30`)
@@ -74,14 +117,15 @@
         if (!picker || !title || !meta) return;
         const upcoming = allMeetings(picker.value).find((meeting) => meeting.end > now);
         if (!upcoming) {
-            title.textContent = 'All twelve scheduled labs are complete.';
+            title.textContent = 'All scheduled labs are complete.';
             meta.textContent = source;
             return;
         }
         const data = batches[upcoming.batch];
         const live = now >= upcoming.date && now <= upcoming.end;
+        const note = upcoming.kind === 'final' ? data.finalNote : data.exceptions?.[data.dates[upcoming.index]];
         title.textContent = `${live ? 'Live now · ' : ''}Batch ${upcoming.batch} · ${upcoming.kind === 'final' ? 'Final lab examination' : `Lab ${String(upcoming.index + 1).padStart(2, '0')}`}`;
-        meta.textContent = `${formatDate(upcoming.date)} · ${data.start}–${data.end} IST · CITC first floor · ${source}`;
+        meta.textContent = `${formatDate(upcoming.date)} · ${data.start}–${data.end} IST · CITC first floor${note ? ` · ${note}` : ''} · ${source}`;
     }
 
     function getCookie(name) {
@@ -126,6 +170,7 @@
     }
 
     function initialize() {
+        renderBatchCards();
         renderSchedule();
         renderScheduleFacts();
         setupChecklist();
@@ -140,6 +185,10 @@
         if (batches[savedBatch] || savedBatch === 'ALL') picker.value = savedBatch;
         tick();
         window.setInterval(tick, 60000);
+
+        // The browser jumps to the hash before the schedule renders, and the injected
+        // tables then push every later section down. Re-apply the target once.
+        if (window.location.hash) document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
     }
 
     window.IC151Schedule = Object.freeze({ batches, allMeetings, timeZone });
