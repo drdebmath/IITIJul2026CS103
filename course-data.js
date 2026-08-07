@@ -33,6 +33,7 @@
 
     const academicEvents = [
         { date: '2026-08-03', title: 'Commencement of classes for the 2026 B.Tech., B.S. and B.Des. batch', kind: 'milestone' },
+        { date: '2026-08-15', title: 'Independence Day · institute holiday', kind: 'holiday' },
         { date: '2026-09-15', title: 'Monday timetable followed instead of Tuesday slots', kind: 'timetable' },
         { date: '2026-09-18', endDate: '2026-09-26', title: 'Midsemester assessment period · no regular lectures', kind: 'assessment' },
         { date: '2026-09-27', endDate: '2026-10-04', title: 'Midsemester break · no classes or laboratories', kind: 'assessment' },
