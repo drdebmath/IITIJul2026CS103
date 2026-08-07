@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 6: Use ranges and invariants to control repetition
 ## for loops, nested loops, and invariants
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Visit each cell of a small room and print an ASCII frame.
 
-**Studio thread:** Sweep and render a grid
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Visit each cell of a small room and print an ASCII frame. |
-| **Model** | A room is rows × columns; the current pair identifies one cell. |
-| **Represent** | Nested counters represent coordinates; characters represent visible cell states. |
-| **Solve** | Enumerate every coordinate with nested for loops. |
-| **Verify** | State the processed-prefix invariant and count expected visits before running. |
-| **Improve** | Separate the sweep order from rendering and diagnose off-by-one bounds. |
-
-**Technique lens:** systematic enumeration
-
-**Compare:** row-major versus column-major traversal
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The counter has one clear valid range. · Print a multiplication table without guessing bounds
@@ -228,6 +212,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Find and repair three non-terminating or off-by-one loops.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Visit each cell of a small room and print an ASCII frame.
+
+**Studio thread:** Sweep and render a grid
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Visit each cell of a small room and print an ASCII frame. |
+| **Model** | A room is rows × columns; the current pair identifies one cell. |
+| **Represent** | Nested counters represent coordinates; characters represent visible cell states. |
+| **Solve** | Enumerate every coordinate with nested for loops. |
+| **Verify** | State the processed-prefix invariant and count expected visits before running. |
+| **Improve** | Separate the sweep order from rendering and diagnose off-by-one bounds. |
+
+**Technique lens:** systematic enumeration
+
+**Compare:** row-major versus column-major traversal
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

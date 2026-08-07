@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 11: Process owned text with explicit boundaries
 ## Prefer owned text values, then study their representation
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Read commands and render complete, validated text frames.
 
-**Studio thread:** Record and replay ASCII animation
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Read commands and render complete, validated text frames. |
-| **Model** | A replay is a sequence of command lines transformed into visible states. |
-| **Represent** | std::string owns text; positions and character classes describe its structure. |
-| **Solve** | Parse one rule at a time, then map model state to an ASCII frame. |
-| **Verify** | Test empty text, spaces, missing delimiters, bad characters, and a valid replay. |
-| **Improve** | Keep parsing, simulation, and rendering as separate functions. |
-
-**Technique lens:** string processing and model–view separation
-
-**Compare:** rebuilding a frame versus incrementally editing the terminal
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## std::string owns and sizes text safely. · Validate an institute enrollment ID
@@ -230,6 +214,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Implement run-length encoding and decoding for a string.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Read commands and render complete, validated text frames.
+
+**Studio thread:** Record and replay ASCII animation
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Read commands and render complete, validated text frames. |
+| **Model** | A replay is a sequence of command lines transformed into visible states. |
+| **Represent** | std::string owns text; positions and character classes describe its structure. |
+| **Solve** | Parse one rule at a time, then map model state to an ASCII frame. |
+| **Verify** | Test empty text, spaces, missing delimiters, bad characters, and a valid replay. |
+| **Improve** | Keep parsing, simulation, and rendering as separate functions. |
+
+**Technique lens:** string processing and model–view separation
+
+**Compare:** rebuilding a frame versus incrementally editing the terminal
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

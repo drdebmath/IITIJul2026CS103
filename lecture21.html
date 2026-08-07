@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 21: Separate polymorphism, ownership, and graph links
 ## Store varied behavior behind one safe interface
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Store Snake and Cleaner objects together while keeping their relationships safe.
 
-**Studio thread:** Own a mixed actor world
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Store Snake and Cleaner objects together while keeping their relationships safe. |
-| **Model** | Actors own behavior; graph links describe relationships but do not own actors. |
-| **Represent** | A vector of unique_ptr-owned actors plus adjacency lists of non-owning indices. |
-| **Solve** | Traverse actors through one interface and validate every stored relationship. |
-| **Verify** | Check non-null ownership, in-range links, isolated actors, and cyclic links. |
-| **Improve** | Keep ownership and graph connectivity independent so either can change safely. |
-
-**Technique lens:** polymorphic containers and object-graph modeling
-
-**Compare:** owning smart pointers versus non-owning indices
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Polymorphism lets one structure store varied behavior. · Store heterogeneous shapes safely
@@ -227,6 +211,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Compare a polymorphic container with std::variant for this problem.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Store Snake and Cleaner objects together while keeping their relationships safe.
+
+**Studio thread:** Own a mixed actor world
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store Snake and Cleaner objects together while keeping their relationships safe. |
+| **Model** | Actors own behavior; graph links describe relationships but do not own actors. |
+| **Represent** | A vector of unique_ptr-owned actors plus adjacency lists of non-owning indices. |
+| **Solve** | Traverse actors through one interface and validate every stored relationship. |
+| **Verify** | Check non-null ownership, in-range links, isolated actors, and cyclic links. |
+| **Improve** | Keep ownership and graph connectivity independent so either can change safely. |
+
+**Technique lens:** polymorphic containers and object-graph modeling
+
+**Compare:** owning smart pointers versus non-owning indices
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

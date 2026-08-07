@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 17: Preserve invariants to search and sort efficiently
 ## Preserve an invariant to obtain efficient operations
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Find ordered data or repeatedly select the most promising route candidate.
 
-**Studio thread:** Rank routes and accelerate search
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Find ordered data or repeatedly select the most promising route candidate. |
-| **Model** | An invariant rules out impossible regions or keeps the best priority at the front. |
-| **Represent** | Sorted array, BST, or array-backed heap supports different operations. |
-| **Solve** | Use binary search, heap repair, or divide–solve–merge as the operation demands. |
-| **Verify** | Check the ordering/heap invariant before and after every update. |
-| **Improve** | Compare asymptotic growth, stability, storage, and worst-case shape. |
-
-**Technique lens:** divide and conquer, ordered search, and priority-based greedy choice
-
-**Compare:** linear baseline versus binary search; bubble sort versus merge sort
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## A heap encodes priority as a structural invariant. · Prioritize emergency maintenance
@@ -234,6 +218,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Choose the best structure for a dictionary, task scheduler, and undo history.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Find ordered data or repeatedly select the most promising route candidate.
+
+**Studio thread:** Rank routes and accelerate search
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Find ordered data or repeatedly select the most promising route candidate. |
+| **Model** | An invariant rules out impossible regions or keeps the best priority at the front. |
+| **Represent** | Sorted array, BST, or array-backed heap supports different operations. |
+| **Solve** | Use binary search, heap repair, or divide–solve–merge as the operation demands. |
+| **Verify** | Check the ordering/heap invariant before and after every update. |
+| **Improve** | Compare asymptotic growth, stability, storage, and worst-case shape. |
+
+**Technique lens:** divide and conquer, ordered search, and priority-based greedy choice
+
+**Compare:** linear baseline versus binary search; bubble sort versus merge sort
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

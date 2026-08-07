@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 20: Select runtime behavior through safe interfaces
 ## Select behavior from the runtime object safely
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Let sweep, nearest-dirt, and cautious agents act through one controller.
 
-**Studio thread:** Run multiple agent policies
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Let sweep, nearest-dirt, and cautious agents act through one controller. |
-| **Model** | The environment requests an action without knowing the concrete policy type. |
-| **Represent** | A virtual interface and one unique_ptr-owned agent. |
-| **Solve** | Use dynamic dispatch; centralize concrete creation in a factory. |
-| **Verify** | Call through the base interface and test cleanup plus invalid construction. |
-| **Improve** | Add a policy without changing the simulation loop. |
-
-**Technique lens:** runtime polymorphism and simulation
-
-**Compare:** a growing type switch versus virtual dispatch
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The caller depends on an abstraction. · Create notifications through one interface
@@ -234,6 +218,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Trace construction and destruction order in multiple inheritance.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Let sweep, nearest-dirt, and cautious agents act through one controller.
+
+**Studio thread:** Run multiple agent policies
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Let sweep, nearest-dirt, and cautious agents act through one controller. |
+| **Model** | The environment requests an action without knowing the concrete policy type. |
+| **Represent** | A virtual interface and one unique_ptr-owned agent. |
+| **Solve** | Use dynamic dispatch; centralize concrete creation in a factory. |
+| **Verify** | Call through the base interface and test cleanup plus invalid construction. |
+| **Improve** | Add a policy without changing the simulation loop. |
+
+**Technique lens:** runtime polymorphism and simulation
+
+**Compare:** a growing type switch versus virtual dispatch
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

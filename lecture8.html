@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 8: Choose copy, alias, and recursion deliberately
 ## References, overloading, decomposition, and the call stack
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Let functions observe or intentionally change shared robot state.
 
-**Studio thread:** Build a testable controller
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Let functions observe or intentionally change shared robot state. |
-| **Model** | Calls form a stack of unfinished responsibilities. |
-| **Represent** | Values copy small inputs; references alias intentional shared state; const& observes. |
-| **Solve** | Choose a parameter mode from the contract, not from syntax preference. |
-| **Verify** | Trace caller and callee state, including a recursive countdown preview. |
-| **Improve** | Return information instead of mutating when either design is equally clear. |
-
-**Technique lens:** decomposition with controlled aliasing
-
-**Compare:** returning a new state versus updating through a reference
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Parameter roles are visible at the interface. · Return two results without global state
@@ -230,6 +214,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Write factorial recursively and identify its base case.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Let functions observe or intentionally change shared robot state.
+
+**Studio thread:** Build a testable controller
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Let functions observe or intentionally change shared robot state. |
+| **Model** | Calls form a stack of unfinished responsibilities. |
+| **Represent** | Values copy small inputs; references alias intentional shared state; const& observes. |
+| **Solve** | Choose a parameter mode from the contract, not from syntax preference. |
+| **Verify** | Trace caller and callee state, including a recursive countdown preview. |
+| **Improve** | Return information instead of mutating when either design is equally clear. |
+
+**Technique lens:** decomposition with controlled aliasing
+
+**Compare:** returning a new state versus updating through a reference
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

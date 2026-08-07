@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 19: Use inheritance only when substitution is safe
 ## Move from one value type to a justified is-a relationship
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Share genuine agent behavior without claiming false is-a relationships.
 
-**Studio thread:** Design a family of cleaning agents
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Share genuine agent behavior without claiming false is-a relationships. |
-| **Model** | Specialized agents must remain usable wherever the base contract is expected. |
-| **Represent** | A shallow hierarchy models is-a; member objects model has-a. |
-| **Solve** | Extract only the common promise and compose independent capabilities. |
-| **Verify** | Substitute each derived type in base-level scenarios. |
-| **Improve** | Replace inheritance with composition when substitutability is hard to defend. |
-
-**Technique lens:** object-oriented abstraction
-
-**Compare:** inheritance versus composition
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Inheritance reuses a stable base abstraction. · Calibrate inherited energy meters
@@ -236,6 +220,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Refactor duplicated derived-class behavior into a base class.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Share genuine agent behavior without claiming false is-a relationships.
+
+**Studio thread:** Design a family of cleaning agents
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Share genuine agent behavior without claiming false is-a relationships. |
+| **Model** | Specialized agents must remain usable wherever the base contract is expected. |
+| **Represent** | A shallow hierarchy models is-a; member objects model has-a. |
+| **Solve** | Extract only the common promise and compose independent capabilities. |
+| **Verify** | Substitute each derived type in base-level scenarios. |
+| **Improve** | Replace inheritance with composition when substitutability is hard to defend. |
+
+**Technique lens:** object-oriented abstraction
+
+**Compare:** inheritance versus composition
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

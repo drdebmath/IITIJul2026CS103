@@ -2589,7 +2589,13 @@ If the explanation needs “and then another unrelated thing,” split the desig
 
 function page({ id, title, slides }) {
     const extra = lectureExtras[id];
-    const authoredSections = slides.map((slide) => markdownSection(slide));
+    const instructorByline = '**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)';
+    const authoredSections = slides.map((slide, slideIndex) => {
+        const content = slideIndex === 0 && !slide.includes(instructorByline)
+            ? `${slide}\n\n${instructorByline}`
+            : slide;
+        return markdownSection(content);
+    });
     const insertionIndex = gameVariantAfter[id];
     if (insertionIndex < 1 || insertionIndex >= authoredSections.length) {
         throw new Error(`Invalid game slide position for lecture ${id}: ${insertionIndex}`);
@@ -2619,10 +2625,13 @@ function page({ id, title, slides }) {
         }
     }
     const generatedContext = [
-        markdownSection(studioSlide(studioBriefs[id]), 'course-extra-slide course-algorithmic-studio'),
         markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
         ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
     ];
+    const studio = markdownSection(
+        studioSlide(studioBriefs[id]),
+        'course-extra-slide course-algorithmic-studio'
+    );
     const practice = markdownSection(
         practiceSlide(extra),
         'course-extra-slide lab-practice-slide',
@@ -2630,7 +2639,7 @@ function page({ id, title, slides }) {
     );
     const verification = markdownSection(verificationSlide(extra));
     const handoff = markdownSection(handoffSlide(extra));
-    const sections = [courseSections[0], ...generatedContext, ...courseSections.slice(1), verification, handoff, practice].join('\n');
+    const sections = [courseSections[0], ...generatedContext, ...courseSections.slice(1), verification, handoff, practice, studio].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>

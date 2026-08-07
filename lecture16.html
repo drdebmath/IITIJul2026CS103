@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 16: Prove recursive progress to a base case
 ## Prove a smaller call reaches a base case
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Search choices, undo dead ends, and avoid recomputing identical states.
 
-**Studio thread:** Explore mazes and repeated subproblems
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Search choices, undo dead ends, and avoid recomputing identical states. |
-| **Model** | Each call owns one smaller state and returns an answer to its caller. |
-| **Represent** | The call stack records choices; a memo table stores solved states. |
-| **Solve** | Use recursion for structure, backtracking for reversible choices, and memoization for repeated subproblems. |
-| **Verify** | Prove a decreasing measure reaches a base case and trace each undo. |
-| **Improve** | Replace repeated recursion with memoization or an iterative frontier when useful. |
-
-**Technique lens:** recursion, backtracking, and dynamic programming
-
-**Compare:** direct recursion versus memoized or iterative solutions
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The base case handles an empty or one-node list. · Reverse a linked chain recursively
@@ -219,6 +203,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Implement bucket sort for normalized decimal values.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Search choices, undo dead ends, and avoid recomputing identical states.
+
+**Studio thread:** Explore mazes and repeated subproblems
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Search choices, undo dead ends, and avoid recomputing identical states. |
+| **Model** | Each call owns one smaller state and returns an answer to its caller. |
+| **Represent** | The call stack records choices; a memo table stores solved states. |
+| **Solve** | Use recursion for structure, backtracking for reversible choices, and memoization for repeated subproblems. |
+| **Verify** | Prove a decreasing measure reaches a base case and trace each undo. |
+| **Improve** | Replace repeated recursion with memoization or an iterative frontier when useful. |
+
+**Technique lens:** recursion, backtracking, and dynamic programming
+
+**Compare:** direct recursion versus memoized or iterative solutions
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 15: Choose structures from operations and cost
 ## Choose operations before representation
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Remember pending dirty cells and service them in a deliberate order.
 
-**Studio thread:** Queue the cells that still need cleaning
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Remember pending dirty cells and service them in a deliberate order. |
-| **Model** | A stored target is waiting, active, or already cleaned. |
-| **Represent** | A vector plus a front index acts as a FIFO queue; an array can act as a stack. |
-| **Solve** | Scan once to collect dirty indices, then process them in stored order. |
-| **Verify** | Test no dirt, one target, repeated targets, and full capacity. |
-| **Improve** | Compare FIFO, LIFO, and direct linear search from the operations each needs. |
-
-**Technique lens:** linear structures, search, and elementary sorting
-
-**Compare:** FIFO service order versus LIFO service order
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The structure supplies the ordering guarantee. · Dispatch print jobs with a queue
@@ -232,6 +216,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Sort student records by score using bubble sort and a comparator.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Remember pending dirty cells and service them in a deliberate order.
+
+**Studio thread:** Queue the cells that still need cleaning
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Remember pending dirty cells and service them in a deliberate order. |
+| **Model** | A stored target is waiting, active, or already cleaned. |
+| **Represent** | A vector plus a front index acts as a FIFO queue; an array can act as a stack. |
+| **Solve** | Scan once to collect dirty indices, then process them in stored order. |
+| **Verify** | Test no dirt, one target, repeated targets, and full capacity. |
+| **Improve** | Compare FIFO, LIFO, and direct linear search from the operations each needs. |
+
+**Technique lens:** linear structures, search, and elementary sorting
+
+**Compare:** FIFO service order versus LIFO service order
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

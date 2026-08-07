@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 12: Repair programs with evidence and tests
 ## Turn feedback into a repair strategy
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Find why a program compiles or runs yet violates its promised behavior.
 
-**Studio thread:** Repair the simulator from evidence
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Find why a program compiles or runs yet violates its promised behavior. |
-| **Model** | A defect is the earliest point where observed state diverges from expected state. |
-| **Represent** | A minimal failing input and trace table capture reproducible evidence. |
-| **Solve** | Classify, minimize, trace, change one assumption, and retest. |
-| **Verify** | Run the failing case plus the boundary and regression cases after repair. |
-| **Improve** | Turn every lost mark or discovered defect into a reusable test. |
-
-**Technique lens:** systematic debugging
-
-**Compare:** evidence-guided repair versus editing several guesses at once
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## State preconditions explicitly. · Debug a safe average function
@@ -242,6 +226,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Create a ten-case test plan for binary search.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Find why a program compiles or runs yet violates its promised behavior.
+
+**Studio thread:** Repair the simulator from evidence
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Find why a program compiles or runs yet violates its promised behavior. |
+| **Model** | A defect is the earliest point where observed state diverges from expected state. |
+| **Represent** | A minimal failing input and trace table capture reproducible evidence. |
+| **Solve** | Classify, minimize, trace, change one assumption, and retest. |
+| **Verify** | Run the failing case plus the boundary and regression cases after repair. |
+| **Improve** | Turn every lost mark or discovered defect into a reusable test. |
+
+**Technique lens:** systematic debugging
+
+**Compare:** evidence-guided repair versus editing several guesses at once
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

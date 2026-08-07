@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 18: Protect object invariants across their lifetime
 ## Protect invariants and make object lifetime predictable
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Prevent any caller from creating or leaving an invalid robot state.
 
-**Studio thread:** Turn the robot into a reliable object
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Prevent any caller from creating or leaving an invalid robot state. |
-| **Model** | A robot owns state and exposes only invariant-preserving operations. |
-| **Represent** | A class, constructor, private members, and Rule-of-Zero value members. |
-| **Solve** | Move responsibility beside the state it governs. |
-| **Verify** | Test construction, copied values, assignment, destruction, and invalid inputs. |
-| **Improve** | Prefer composition and library-owned resources over handwritten ownership. |
-
-**Technique lens:** object-oriented modeling and RAII
-
-**Compare:** public record mutation versus a small invariant-preserving interface
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## A constructor establishes invariants. · Encapsulate a bank account
@@ -236,6 +220,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Implement a dynamic Buffer class using the rule of three.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Prevent any caller from creating or leaving an invalid robot state.
+
+**Studio thread:** Turn the robot into a reliable object
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Prevent any caller from creating or leaving an invalid robot state. |
+| **Model** | A robot owns state and exposes only invariant-preserving operations. |
+| **Represent** | A class, constructor, private members, and Rule-of-Zero value members. |
+| **Solve** | Move responsibility beside the state it governs. |
+| **Verify** | Test construction, copied values, assignment, destruction, and invalid inputs. |
+| **Improve** | Prefer composition and library-owned resources over handwritten ownership. |
+
+**Technique lens:** object-oriented modeling and RAII
+
+**Compare:** public record mutation versus a small invariant-preserving interface
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

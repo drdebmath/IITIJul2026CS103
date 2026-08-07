@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 14: Make dynamic ownership explicit
 ## Make ownership and lifetime explicit
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Grow and shrink an ordered body without a fixed maximum size.
 
-**Studio thread:** Rebuild snake as a linked body
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Grow and shrink an ordered body without a fixed maximum size. |
-| **Model** | Each segment owns the next segment; the head owns the complete chain. |
-| **Represent** | Linked nodes and unique_ptr make links and ownership explicit. |
-| **Solve** | Build and traverse an exclusively owned chain; ownership transfer is deferred. |
-| **Verify** | Test empty, one-node, and multi-node bodies; trace object lifetime. |
-| **Improve** | Compare operation cost and safety against the already-known vector representation. |
-
-**Technique lens:** linked structure and automatic resource release
-
-**Compare:** contiguous body storage versus linked nodes
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Ownership determines who releases memory. · Ownership-safe linked sample log
@@ -237,6 +221,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Detect whether a linked list contains a cycle.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Grow and shrink an ordered body without a fixed maximum size.
+
+**Studio thread:** Rebuild snake as a linked body
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Grow and shrink an ordered body without a fixed maximum size. |
+| **Model** | Each segment owns the next segment; the head owns the complete chain. |
+| **Represent** | Linked nodes and unique_ptr make links and ownership explicit. |
+| **Solve** | Build and traverse an exclusively owned chain; ownership transfer is deferred. |
+| **Verify** | Test empty, one-node, and multi-node bodies; trace object lifetime. |
+| **Improve** | Compare operation cost and safety against the already-known vector representation. |
+
+**Technique lens:** linked structure and automatic resource release
+
+**Compare:** contiguous body storage versus linked nodes
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

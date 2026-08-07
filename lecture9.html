@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 9: Traverse fixed sequences within exact bounds
 ## Store and traverse one fixed sequence safely
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Store ordered body segments and detect whether the head touches one.
 
-**Studio thread:** Prototype a snake body
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Store ordered body segments and detect whether the head touches one. |
-| **Model** | A snake is a bounded sequence whose position order matters. |
-| **Represent** | A fixed array stores segments; an index selects one position. |
-| **Solve** | Traverse all valid indices and use a linear scan as a trustworthy baseline. |
-| **Verify** | Test the first segment, last segment, no match, and the smallest valid body. |
-| **Improve** | Use the actual size as the bound and state what the processed prefix means. |
-
-**Technique lens:** brute-force linear search
-
-**Compare:** indexed traversal versus whole-sequence range traversal
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The structure makes a complete data window available. · Find an anomalous temperature in a week
@@ -232,6 +216,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Implement linear search on a fixed array and report the first matching index.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Store ordered body segments and detect whether the head touches one.
+
+**Studio thread:** Prototype a snake body
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store ordered body segments and detect whether the head touches one. |
+| **Model** | A snake is a bounded sequence whose position order matters. |
+| **Represent** | A fixed array stores segments; an index selects one position. |
+| **Solve** | Traverse all valid indices and use a linear scan as a trustworthy baseline. |
+| **Verify** | Test the first segment, last segment, no match, and the smallest valid body. |
+| **Improve** | Use the actual size as the bound and state what the processed prefix means. |
+
+**Technique lens:** brute-force linear search
+
+**Compare:** indexed traversal versus whole-sequence range traversal
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

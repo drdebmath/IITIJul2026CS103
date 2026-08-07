@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 2: Choose types from meaning, range, and precision
 ## Give every stored value a deliberate meaning
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Store position, dirt, battery, and sensor readings without confusing their meanings.
 
-**Studio thread:** Encode the cleaning world
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Store position, dirt, battery, and sensor readings without confusing their meanings. |
-| **Model** | A robot has discrete state plus approximate physical measurements. |
-| **Represent** | int for counts/coordinates, bool for facts, double for measurements, const for limits. |
-| **Solve** | Choose each type from meaning, range, precision, and permitted operations. |
-| **Verify** | Try zero, the largest expected value, a fractional value, and a lossy conversion. |
-| **Improve** | Replace magic values with named constants and document units. |
-
-**Technique lens:** representation before algorithm
-
-**Compare:** one overloaded numeric type versus several meaning-specific types
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Range and precision guide type choice. · Choose types for a sensor packet
@@ -240,6 +224,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Use const and auto to model the radius and area of a circle.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Store position, dirt, battery, and sensor readings without confusing their meanings.
+
+**Studio thread:** Encode the cleaning world
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store position, dirt, battery, and sensor readings without confusing their meanings. |
+| **Model** | A robot has discrete state plus approximate physical measurements. |
+| **Represent** | int for counts/coordinates, bool for facts, double for measurements, const for limits. |
+| **Solve** | Choose each type from meaning, range, precision, and permitted operations. |
+| **Verify** | Try zero, the largest expected value, a fractional value, and a lossy conversion. |
+| **Improve** | Replace magic values with named constants and document units. |
+
+**Technique lens:** representation before algorithm
+
+**Compare:** one overloaded numeric type versus several meaning-specific types
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

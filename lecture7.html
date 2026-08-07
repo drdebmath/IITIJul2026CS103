@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 7: Give each operation a clear function contract
 ## Give one operation a clear name and contract
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Stop one growing main function from mixing movement, sensing, and display.
 
-**Studio thread:** Give robot actions contracts
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Stop one growing main function from mixing movement, sensing, and display. |
-| **Model** | The controller coordinates small operations with explicit responsibilities. |
-| **Represent** | Function parameters are inputs; return values report results. |
-| **Solve** | Decompose by one explainable task and compose calls into a controller. |
-| **Verify** | Test each contract independently before integrating the functions. |
-| **Improve** | Remove duplication and rename a function whose contract needs “and”. |
-
-**Technique lens:** procedural decomposition
-
-**Compare:** one monolithic procedure versus several testable functions
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## A function owns one clear responsibility. · Travel estimate behind a function contract
@@ -236,6 +220,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. State the inputs, output, and precondition of a safe division function.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Stop one growing main function from mixing movement, sensing, and display.
+
+**Studio thread:** Give robot actions contracts
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Stop one growing main function from mixing movement, sensing, and display. |
+| **Model** | The controller coordinates small operations with explicit responsibilities. |
+| **Represent** | Function parameters are inputs; return values report results. |
+| **Solve** | Decompose by one explainable task and compose calls into a controller. |
+| **Verify** | Test each contract independently before integrating the functions. |
+| **Improve** | Remove duplication and rename a function whose contract needs “and”. |
+
+**Technique lens:** procedural decomposition
+
+**Compare:** one monolithic procedure versus several testable functions
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

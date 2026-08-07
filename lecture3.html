@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 3: Track expressions, scope, storage, and lifetime
 ## Names, values, visibility, and lifetime
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Update a robot pose and score while keeping temporary calculations local.
 
-**Studio thread:** Track robot state
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Update a robot pose and score while keeping temporary calculations local. |
-| **Model** | A transition maps old state plus one action to new state. |
-| **Represent** | Scoped names hold row, column, direction, score, and intermediate expressions. |
-| **Solve** | Evaluate one transition in dependency order. |
-| **Verify** | Build a before/after state table and evaluate expressions by hand first. |
-| **Improve** | Reduce mutable scope and make grouping explicit with names or parentheses. |
-
-**Technique lens:** state-transition simulation
-
-**Compare:** many unrelated variables versus one coherent state model introduced later
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Expressions transform program state. · Update game state without leaking temporary names
@@ -245,6 +229,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Refactor a program to remove an unnecessary global variable.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Update a robot pose and score while keeping temporary calculations local.
+
+**Studio thread:** Track robot state
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Update a robot pose and score while keeping temporary calculations local. |
+| **Model** | A transition maps old state plus one action to new state. |
+| **Represent** | Scoped names hold row, column, direction, score, and intermediate expressions. |
+| **Solve** | Evaluate one transition in dependency order. |
+| **Verify** | Build a before/after state table and evaluate expressions by hand first. |
+| **Improve** | Reduce mutable scope and make grouping explicit with names or parentheses. |
+
+**Technique lens:** state-transition simulation
+
+**Compare:** many unrelated variables versus one coherent state model introduced later
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

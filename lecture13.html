@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 13: Group state and validate addresses
 ## Group related state and inspect addresses safely
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Keep each sampled cell and its related properties coherent.
 
-**Studio thread:** Model cells, components, and entities
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Keep each sampled cell and its related properties coherent. |
-| **Model** | One entity has identity, value, validity, and possibly a location. |
-| **Represent** | A struct groups fields; a pointer can refer to an existing entity. |
-| **Solve** | Traverse records and follow only valid, non-null relationships. |
-| **Verify** | Check member invariants, null pointers, and first/last record access. |
-| **Improve** | Prefer IDs or references when ownership does not need to move. |
-
-**Technique lens:** record-based modeling
-
-**Compare:** parallel arrays versus an array of coherent records
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## A struct models one domain record. · Represent and filter sensor records
@@ -235,6 +219,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Build a singly linked list node and insert at the front.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Keep each sampled cell and its related properties coherent.
+
+**Studio thread:** Model cells, components, and entities
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Keep each sampled cell and its related properties coherent. |
+| **Model** | One entity has identity, value, validity, and possibly a location. |
+| **Represent** | A struct groups fields; a pointer can refer to an existing entity. |
+| **Solve** | Traverse records and follow only valid, non-null relationships. |
+| **Verify** | Check member invariants, null pointers, and first/last record access. |
+| **Improve** | Prefer IDs or references when ownership does not need to move. |
+
+**Technique lens:** record-based modeling
+
+**Compare:** parallel arrays versus an array of coherent records
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

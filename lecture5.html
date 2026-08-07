@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 5: Make loop state progress toward termination
 ## while, do-while, progress, and stopping
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Continue cleaning until the wall, battery limit, or input sentinel is reached.
 
-**Studio thread:** Clean an unknown-length corridor
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Continue cleaning until the wall, battery limit, or input sentinel is reached. |
-| **Model** | Repeated transitions change measurable state toward a stopping condition. |
-| **Represent** | Position, battery, dirt count, and stop reason are loop state. |
-| **Solve** | Use while for an event-controlled run and do-while for validated input. |
-| **Verify** | Trace zero iterations, one iteration, normal progress, and every stop reason. |
-| **Improve** | Make progress and termination visible in the condition and update. |
-
-**Technique lens:** iteration and simulation
-
-**Compare:** event-controlled repetition versus a guessed fixed number of steps
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## while repeats while a condition stays true. · Production-line quality scan
@@ -244,6 +228,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Trace and repair a while loop whose control variable never changes.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Continue cleaning until the wall, battery limit, or input sentinel is reached.
+
+**Studio thread:** Clean an unknown-length corridor
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Continue cleaning until the wall, battery limit, or input sentinel is reached. |
+| **Model** | Repeated transitions change measurable state toward a stopping condition. |
+| **Represent** | Position, battery, dirt count, and stop reason are loop state. |
+| **Solve** | Use while for an event-controlled run and do-while for validated input. |
+| **Verify** | Trace zero iterations, one iteration, normal progress, and every stop reason. |
+| **Improve** | Make progress and termination visible in the condition and update. |
+
+**Technique lens:** iteration and simulation
+
+**Compare:** event-controlled repetition versus a guessed fixed number of steps
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

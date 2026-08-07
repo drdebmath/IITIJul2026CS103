@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 22: Compose domain objects with explicit policies
 ## Compose domain objects, collections, and algorithms
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Separate actors, tasks, relationships, and the policy that ranks candidates.
 
-**Studio thread:** Rank tasks and model routes
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Separate actors, tasks, relationships, and the policy that ranks candidates. |
-| **Model** | A task has constraints and a measurable key; a route has vertices and edges. |
-| **Represent** | Domain records, index associations, predicates, comparators, and a strategy interface. |
-| **Solve** | Filter with a predicate, rank with a comparator, and isolate policy selection. |
-| **Verify** | Test empty collections, invalid indices, equal keys, and comparator consistency. |
-| **Improve** | Swap ranking policies without changing the stored domain objects. |
-
-**Technique lens:** applied object modeling, collection algorithms, and policy separation
-
-**Compare:** hard-coded selection versus an explicit replaceable policy
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Domain objects are the data structure’s elements. · Search and rank available flights
@@ -231,6 +215,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Apply one design pattern to make payment processing extensible.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Separate actors, tasks, relationships, and the policy that ranks candidates.
+
+**Studio thread:** Rank tasks and model routes
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Separate actors, tasks, relationships, and the policy that ranks candidates. |
+| **Model** | A task has constraints and a measurable key; a route has vertices and edges. |
+| **Represent** | Domain records, index associations, predicates, comparators, and a strategy interface. |
+| **Solve** | Filter with a predicate, rank with a comparator, and isolate policy selection. |
+| **Verify** | Test empty collections, invalid indices, equal keys, and comparator consistency. |
+| **Improve** | Swap ranking policies without changing the stored domain objects. |
+
+**Technique lens:** applied object modeling, collection algorithms, and policy separation
+
+**Compare:** hard-coded selection versus an explicit replaceable policy
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

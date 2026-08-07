@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 10: Match matrices and vectors to their operations
 ## Matrices and runtime-sized contiguous sequences
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Store rooms and paths whose dimensions are known only at runtime.
 
-**Studio thread:** Grow the grid world
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Store rooms and paths whose dimensions are known only at runtime. |
-| **Model** | A grid is a sequence of rows; each row is a sequence of cells. |
-| **Represent** | A matrix models fixed geometry; vectors model runtime-sized or ragged data. |
-| **Solve** | Select fixed or dynamic storage, then traverse using each real bound. |
-| **Verify** | Test 1×1, one row, unequal row lengths, and checked invalid access. |
-| **Improve** | Pass the grid to a renderer instead of mixing storage with output. |
-
-**Technique lens:** data-driven simulation
-
-**Compare:** fixed 2D array versus nested vectors
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Each index stays within its own dimension. · Summarize a classroom score matrix
@@ -231,6 +215,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Choose array or vector for four stated storage requirements.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Store rooms and paths whose dimensions are known only at runtime.
+
+**Studio thread:** Grow the grid world
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Store rooms and paths whose dimensions are known only at runtime. |
+| **Model** | A grid is a sequence of rows; each row is a sequence of cells. |
+| **Represent** | A matrix models fixed geometry; vectors model runtime-sized or ragged data. |
+| **Solve** | Select fixed or dynamic storage, then traverse using each real bound. |
+| **Verify** | Test 1×1, one row, unequal row lengths, and checked invalid access. |
+| **Improve** | Pass the grid to a renderer instead of mixing storage with output. |
+
+**Technique lens:** data-driven simulation
+
+**Compare:** fixed 2D array versus nested vectors
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

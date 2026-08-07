@@ -13,24 +13,8 @@
     <section data-markdown><textarea data-template>
 # Lecture 4: Turn requirements into safe, testable branches
 ## Turn requirements into testable paths
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Accept a move only when it stays in bounds and avoids an obstacle.
 
-**Studio thread:** Make movement safe
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Accept a move only when it stays in bounds and avoids an obstacle. |
-| **Model** | Each attempted move belongs to exactly one outcome class. |
-| **Represent** | A decision table maps Boolean conditions to MOVE, BLOCKED, or INVALID. |
-| **Solve** | Translate mutually exclusive rows into a carefully ordered branch chain. |
-| **Verify** | Test every table row, exact boundary, just-outside value, and default case. |
-| **Improve** | Remove overlapping conditions and guard unsafe calculations by short-circuiting. |
-
-**Technique lens:** exhaustive case analysis
-
-**Compare:** nested if statements versus a flat decision table and branch chain
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Order branches from exceptional to normal. · Over-current protection controller
@@ -244,6 +228,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Design boundary tests for an elevator load controller.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
+## Accept a move only when it stays in bounds and avoids an obstacle.
+
+**Studio thread:** Make movement safe
+
+| Ask | Today’s answer |
+|---|---|
+| **Problem** | Accept a move only when it stays in bounds and avoids an obstacle. |
+| **Model** | Each attempted move belongs to exactly one outcome class. |
+| **Represent** | A decision table maps Boolean conditions to MOVE, BLOCKED, or INVALID. |
+| **Solve** | Translate mutually exclusive rows into a carefully ordered branch chain. |
+| **Verify** | Test every table row, exact boundary, just-outside value, and default case. |
+| **Improve** | Remove overlapping conditions and guard unsafe calculations by short-circuiting. |
+
+**Technique lens:** exhaustive case analysis
+
+**Compare:** nested if statements versus a flat decision table and branch chain
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
