@@ -12,7 +12,7 @@ const { labBatches, academicEvents } = scope.window.CS103Data;
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 // The announced first lab and final examination per batch. Both are fixed by the
 // institute, so they are asserted against the data rather than derived from it.
-const FIRST_LAB = { A1: '2026-08-13', A2: '2026-08-11', A3: '2026-08-12', A4: '2026-08-14', B1: '2026-08-10', B2: '2026-08-10', B3: '2026-08-13', B4: '2026-08-15' };
+const FIRST_LAB = { A1: '2026-08-13', A2: '2026-08-11', A3: '2026-08-12', A4: '2026-08-14', B1: '2026-08-10', B2: '2026-08-10', B3: '2026-08-13', B4: '2026-08-08' };
 const FINAL_EXAM = { A1: '2026-11-19', A2: '2026-11-23', A3: '2026-11-18', A4: '2026-11-20', B1: '2026-11-16', B2: '2026-11-16', B3: '2026-11-19', B4: '2026-11-21' };
 
 // Days on which the named weekday's timetable is not followed, so its batches cannot meet.
