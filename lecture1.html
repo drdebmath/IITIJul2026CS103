@@ -18,7 +18,7 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
+    <section id="slide-what-is-programming" class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## Programming lets you hand precise thinking to a machine
 
 - A computer is fast and tireless, but it does exactly what it is told — nothing more.
@@ -28,7 +28,7 @@ Bring one problem you can explain in plain language; we will turn it into a smal
 
 By the end of today you will have written, compiled, and run a program of your own. The language is the tool; the skill is turning a problem into precise instructions.
     </textarea></section>
-    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
+    <section id="slide-high-low-level" class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## High-level languages hide the machine; low-level languages expose it
 
 | Level | You write | Example | Translated by |
@@ -41,7 +41,7 @@ By the end of today you will have written, compiled, and run a program of your o
 - **High-level:** readable, portable, and safer — the translator handles the machine's choreography.
 - C++ sits deliberately in between: high-level abstraction, with low-level control when a problem needs it.
     </textarea></section>
-    <section class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
+    <section id="slide-history" class="course-extra-slide course-intro-slide" data-markdown><textarea data-template>
 ## Each generation of languages moves work from you to the compiler
 
 - **1940s · machine code:** programs entered as raw numbers; one wrong bit meant checking them all.
@@ -94,7 +94,7 @@ int main() {
 - The formula in the middle is the whole process.
 - Output makes the program's result observable.
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-problem-solving" data-markdown><textarea data-template>
 ## A program is a precise set of instructions a computer can execute
 
 A program leaves nothing to guess: every step is stated, in order, in a form the machine can carry out. The plan behind those steps is an **algorithm**; the program is that plan written so a computer can run it.
@@ -119,7 +119,7 @@ Use the same problem-solving workflow every time you build one:
 </figcaption>
 </figure>
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-how-computers-work" data-markdown><textarea data-template>
 ## The CPU executes instructions while RAM holds active state
 
 - The **CPU** executes machine instructions.
@@ -140,7 +140,7 @@ Use the same problem-solving workflow every time you build one:
 </figcaption>
 </figure>
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-hello-world" data-markdown><textarea data-template>
 ## main starts the program and output makes the result observable
 
 ~~~cpp
@@ -186,7 +186,7 @@ int main() {
 </figcaption>
 </figure>
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-dev-setup" data-markdown><textarea data-template>
 ## The toolchain turns source code into a testable executable
 
 Save the source as <code>hello.cpp</code>, then use the toolchain:
@@ -200,7 +200,7 @@ g++ -std=c++17 hello.cpp -o hello
 - A linker combines required compiled parts.
 - The executable is the program you run.
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-why-cpp" data-markdown><textarea data-template>
 ## Choose a language from the problem’s trade-offs
 
 A **programming language** makes some kinds of thinking and engineering easier than others.
@@ -211,7 +211,7 @@ A **programming language** makes some kinds of thinking and engineering easier t
 
 There is no universally best language. We learn transferable models and algorithms, then choose tools from the problem.
     </textarea></section>
-    <section data-markdown><textarea data-template>
+    <section id="slide-comments-variables" data-markdown><textarea data-template>
 ## Names and declarations make program state readable
 
 ~~~cpp

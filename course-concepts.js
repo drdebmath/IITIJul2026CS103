@@ -51,7 +51,7 @@
                         c('m2-types', 'Data types & static typing', 'lecture2.html', 'compile time type checking representation'),
                         c('m2-primitives', 'Primitive types', 'lecture2.html', 'int float double char bool'),
                         c('m2-modifiers', 'Type modifiers and signedness', 'lecture2.html', 'signed unsigned short long range'),
-                        c('m2-variables', 'Variables, initialization & assignment', 'lecture3.html', 'state variable initialize assign'),
+                        c('m2-variables', 'Variables, initialization & assignment', 'lecture2.html', 'state variable initialize assign'),
                         c('m2-const', 'Immutable values with const', 'lecture2.html', 'const qualifier immutability'),
                         c('m2-inference', 'Type inference with auto', 'lecture2.html', 'auto inference compile time'),
                         c('m2-casting', 'Explicit type conversion', 'lecture2.html', 'static cast conversion truncation'),

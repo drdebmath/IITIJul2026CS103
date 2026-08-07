@@ -19,7 +19,7 @@ export const lectureExtras = {
     "2": {
         "title": "Choose types for a sensor packet",
         "context": "A weather station mixes counts, precise measurements, status flags, and identifiers—each deserves an intentional type.",
-        "code": "#include <iostream>\n\nint main() {\n    int stationId = 2048;\n    double temperature = 31.625;\n    float humidity = 68.4f;\n    bool batteryLow = false;\n    char quality = 'A';\n\n    std::cout << stationId << \" \" << temperature << \" \"\n              << humidity << \" \" << quality << \" \" << batteryLow;\n}",
+        "code": "#include <iostream>\n\nint main() {\n    int stationId = 2048;\n    int samples = 86400;\n    double temperature = 31.625;\n    float humidity = 68.4f;\n    bool batteryLow = false;\n    char quality = 'A';\n\n    std::cout << std::boolalpha  // print bools as true/false\n              << stationId << \" \" << samples << \" \" << temperature << \" \"\n              << humidity << \" \" << quality << \" \" << batteryLow << '\\n';\n}",
         "takeaways": [
             "Range and precision guide type choice.",
             "A type documents intent.",

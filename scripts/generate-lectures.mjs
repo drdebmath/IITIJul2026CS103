@@ -108,19 +108,24 @@ bool submitted = false;
 ~~~
 
 The initializer supplies the first value.`,
-            md`## Choose int, double, char, or bool from the value’s meaning
+            md`## Choose the fundamental type from the value’s meaning
 
 | Requirement | Suitable type | Example |
 |---|---|---|
 | whole-number count | <code>int</code> | students |
 | fractional measurement | <code>double</code> | voltage |
+| the same in half the storage | <code>float</code> | humidity |
 | one character | <code>char</code> | grade |
 | true/false state | <code>bool</code> | connected |
 
-Sizes are implementation-dependent; inspect them with <code>sizeof</code>.`,
+<code>double</code> is the default for fractional values; <code>float</code> halves the storage and the precision, and its literals carry an <code>f</code> suffix (<code>68.4f</code>).
+
+Sizes are implementation-dependent: inspect them with <code>sizeof</code>, and inspect the ranges with <code>std::numeric_limits&lt;T&gt;::min()</code> and <code>::max()</code> from <code>&lt;limits&gt;</code>.`,
             md`## Signedness and width determine the numeric range
 
-<code>signed</code> supports negative and positive values. <code>unsigned</code> represents only non-negative values but wraps at its maximum.
+<code>signed</code> supports negative and positive values. <code>unsigned</code> represents only non-negative values.
+
+Unsigned arithmetic is modular, so it wraps at both ends: <code>0u - 1</code> is not <code>-1</code> but the largest representable value.
 
 <code>short</code>, <code>long</code>, and <code>long long</code> change minimum range requirements.
 
@@ -1230,7 +1235,7 @@ Merge sort is **stable**: records with equal keys keep their original relative o
         id: 18,
         title: 'Protect object invariants across their lifetime',
         slides: [
-            md`# Lecture 18: Protect object invariants across its lifetime
+            md`# Lecture 18: Protect object invariants across their lifetime
 ## Protect invariants and make object lifetime predictable`,
             md`## A class protects state by combining data, behavior, and access control
 
@@ -1975,7 +1980,9 @@ int main() {
     int headRow = 2, headColumn = 3;
     int score = 0;
     bool dirtHere = true;
-    std::cout << headRow << ' ' << headColumn << ' ' << score << ' ' << dirtHere << '\n';
+    std::cout << std::boolalpha  // print bools as true/false
+              << rows << ' ' << columns << ' ' << headRow << ' '
+              << headColumn << ' ' << score << ' ' << dirtHere << '\n';
 }
 ~~~
 
