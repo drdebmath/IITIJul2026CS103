@@ -10,7 +10,10 @@ new Function('window', readFileSync(`${root}course-data.js`, 'utf8'))(scope.wind
 const { labBatches, academicEvents } = scope.window.CS103Data;
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const FIRST_LAB_DAY = '2026-08-06';
+// The announced first lab and final examination per batch. Both are fixed by the
+// institute, so they are asserted against the data rather than derived from it.
+const FIRST_LAB = { A1: '2026-08-13', A2: '2026-08-11', A3: '2026-08-12', A4: '2026-08-14', B1: '2026-08-10', B2: '2026-08-10', B3: '2026-08-13', B4: '2026-08-15' };
+const FINAL_EXAM = { A1: '2026-11-19', A2: '2026-11-23', A3: '2026-11-18', A4: '2026-11-20', B1: '2026-11-16', B2: '2026-11-16', B3: '2026-11-19', B4: '2026-11-21' };
 
 // Days on which the named weekday's timetable is not followed, so its batches cannot meet.
 const timetableSwaps = { '2026-09-15': 'Tuesday', '2026-09-17': 'Thursday', '2026-11-23': 'Monday' };
@@ -41,9 +44,13 @@ for (const [batch, data] of Object.entries(labBatches)) {
     }
     assert.deepEqual(meetings, [...meetings].sort(), `${batch} dates are out of order`);
     assert.equal(new Set(meetings).size, meetings.length, `${batch} has a duplicate date`);
-    assert.ok(data.dates[0] >= FIRST_LAB_DAY, `${batch} starts on ${data.dates[0]}, before labs begin on ${FIRST_LAB_DAY}`);
+    assert.equal(data.dates[0], FIRST_LAB[batch], `${batch} first lab moved`);
+    assert.equal(data.finalDate, FINAL_EXAM[batch], `${batch} final examination moved`);
     assert.ok(data.finalDate > data.dates.at(-1), `${batch} final examination is not after its last lab`);
     console.log(`${batch}  ${data.day.padEnd(9)} ${data.start}–${data.end}  ${String(data.dates.length).padStart(2)} labs  ${data.dates[0]} → ${data.dates.at(-1)}  final ${data.finalDate}`);
 }
 
-console.log(`\nOK · ${Object.keys(labBatches).length} batches clear the Autumn 2026 academic calendar.`);
+const counts = new Set(Object.values(labBatches).map((data) => data.dates.length));
+assert.equal(counts.size, 1, `batches have unequal lab counts: ${[...counts].join(', ')}`);
+
+console.log(`\nOK · ${Object.keys(labBatches).length} batches, ${[...counts][0]} labs each, all clearing the Autumn 2026 academic calendar.`);

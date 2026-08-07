@@ -9,7 +9,7 @@ account to all registered students. Update the bracketed items before sending.
 
 Dear students,
 
-The IC151 Programming Laboratory begins on **Thursday, 6 August 2026**. Please read
+The IC151 Programming Laboratory begins on **Monday, 10 August 2026**. Please read
 this fully before you come to your first session — a few minutes now will save you
 most of the first lab hour.
 
@@ -25,14 +25,14 @@ The laboratory is in the **CITC building, first floor**, on computers numbered
 
 | Batch | Day | Time | First lab |
 | --- | --- | --- | --- |
-| A1 | Thursday | 14:30–17:30 | Thu, 6 Aug 2026 |
+| A1 | Thursday | 14:30–17:30 | Thu, 13 Aug 2026 |
 | A2 | Tuesday | 13:30–16:30 | Tue, 11 Aug 2026 |
 | A3 | Wednesday | 13:30–16:30 | Wed, 12 Aug 2026 |
-| A4 | Friday | 14:30–17:30 | Fri, 7 Aug 2026 |
+| A4 | Friday | 14:30–17:30 | Fri, 14 Aug 2026 |
 | B1 | Monday | 08:30–11:25 | Mon, 10 Aug 2026 |
 | B2 | Monday | 13:30–16:25 | Mon, 10 Aug 2026 |
-| B3 | Thursday | 08:30–11:25 | Thu, 6 Aug 2026 |
-| B4 | Saturday | 13:30–16:25 | Sat, 8 Aug 2026 |
+| B3 | Thursday | 08:30–11:25 | Thu, 13 Aug 2026 |
+| B4 | Saturday | 13:30–16:25 | Sat, 15 Aug 2026 |
 
 Attend **only your own batch**. If you believe you are in the wrong batch, contact
 [the course office / your TA] before the session rather than switching on your own.
