@@ -51,6 +51,17 @@ bool safe = total < 20 && grouped > 0;
 
 Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
     </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="expression-grouping" data-markdown><textarea data-template>
+## Two readers, one line, two different answers
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l03/expression-grouping.png" alt="Two students interpret the same arithmetic expression differently until one adds clear parentheses and both see the same grouped path — visual point: Parentheses are the road signs of expression evaluation." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Two people read the same arithmetic line and take different routes.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Parentheses are the road signs of expression evaluation.</p>
+</figcaption>
+</figure>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Namespaces keep same-named declarations from colliding
 
@@ -66,14 +77,14 @@ int main() {
 
 The scope-resolution operator <code>::</code> selects a name from a namespace.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="expression-grouping" data-markdown><textarea data-template>
-## Two readers, one line, two different answers
+    <section class="course-extra-slide course-meme-slide" data-course-meme="namespace-collision" data-markdown><textarea data-template>
+## Two labs, one tool name, one traffic jam
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l03/expression-grouping.png" alt="Two students interpret the same arithmetic expression differently until one adds clear parentheses and both see the same grouped path — visual point: Parentheses are the road signs of expression evaluation." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l03/namespace-collision.png" alt="Two friendly workshops each contain a tool with the same shape, separated by colored namespace doors so they do not collide — visual point: Give each tool its own door before the names start bumping into each other." width="900" height="506" loading="lazy">
 <figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Two people read the same arithmetic line and take different routes.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Parentheses are the road signs of expression evaluation.</p>
+<p class="course-meme-setup"><strong>Setup</strong> Two laboratories both have a tool named "completed."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Give each tool its own door before the names start bumping into each other.</p>
 </figcaption>
 </figure>
     </textarea></section>
@@ -128,17 +139,6 @@ int main() {
 - **Linkage:** whether declarations in different files name the same entity.
 
 A local static object has block scope but program-long storage duration.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="namespace-collision" data-markdown><textarea data-template>
-## Two labs, one tool name, one traffic jam
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l03/namespace-collision.png" alt="Two friendly workshops each contain a tool with the same shape, separated by colored namespace doors so they do not collide — visual point: Give each tool its own door before the names start bumping into each other." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Two laboratories both have a tool named "completed."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Give each tool its own door before the names start bumping into each other.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Storage duration explains when an object is created and destroyed
