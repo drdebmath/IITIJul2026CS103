@@ -172,28 +172,6 @@ An explicit conversion documents intent. Check the destination range first: frac
         slides: [
             md`# Lecture 3: Track expressions, scope, storage, and lifetime
 ## Names, values, visibility, and lifetime`,
-            md`## Operators combine values into expressions
-
-~~~cpp
-int total = 5 + 3 * 2;       // 11
-int grouped = (5 + 3) * 2;   // 16
-bool safe = total < 20 && grouped > 0;
-~~~
-
-Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.`,
-            md`## Namespaces keep same-named declarations from colliding
-
-~~~cpp
-namespace laboratory {
-int completed = 0;
-}
-
-int main() {
-    laboratory::completed = 1;
-}
-~~~
-
-The scope-resolution operator <code>::</code> selects a name from a namespace.`,
             md`## A name is usable only inside its scope
 
 ~~~cpp
@@ -242,6 +220,28 @@ extern int sharedCount;
 ~~~
 
 <code>extern</code> declares an entity defined elsewhere. A complete executable must still contain <code>main</code> and link every required definition.`,
+            md`## Namespaces keep same-named declarations from colliding
+
+~~~cpp
+namespace laboratory {
+int completed = 0;
+}
+
+int main() {
+    laboratory::completed = 1;
+}
+~~~
+
+The scope-resolution operator <code>::</code> selects a name from a namespace.`,
+            md`## Operators combine values into expressions
+
+~~~cpp
+int total = 5 + 3 * 2;       // 11
+int grouped = (5 + 3) * 2;   // 16
+bool safe = total < 20 && grouped > 0;
+~~~
+
+Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.`,
             md`## Track every name by meaning, visibility, lifetime, and linkage
 
 - Expressions compute values or effects.
@@ -2470,7 +2470,7 @@ if (!dirt.empty()) next=dirt[0];
 };
 
 const gameVariantAfter = {
-    1: 4, 2: 5, 3: 4, 4: 5, 5: 5, 6: 4, 7: 5,
+    1: 4, 2: 5, 3: 7, 4: 5, 5: 5, 6: 4, 7: 5,
     8: 4, 9: 4, 10: 2, 11: 5, 12: 5, 13: 6, 14: 6,
     15: 6, 16: 5, 17: 7, 18: 4, 19: 7, 20: 6, 21: 6, 22: 5, 23: 7
 };
@@ -2639,7 +2639,10 @@ function page({ id, title, slides }) {
     );
     const verification = markdownSection(verificationSlide(extra));
     const handoff = markdownSection(handoffSlide(extra));
-    const sections = [courseSections[0], ...generatedContext, ...courseSections.slice(1), verification, handoff, practice, studio].join('\n');
+    const orderedSections = id === 3
+        ? [courseSections[0], ...courseSections.slice(1, -1), ...generatedContext, courseSections.at(-1)]
+        : [courseSections[0], ...generatedContext, ...courseSections.slice(1)];
+    const sections = [...orderedSections, verification, handoff, practice, studio].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>

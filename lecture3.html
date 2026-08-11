@@ -16,78 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## Expressions transform program state. · Update game state without leaking temporary names
-
-A small block holds one reward calculation while the score remains available to the rest of the program.
-
-~~~cpp
-#include <iostream>
-
-int main() {
-    int score = 4;
-    {
-        int collectedReward = 3;
-        score += collectedReward;
-    }
-    std::cout << score << std::endl;
-}
-~~~
-
-**Takeaways**
-
-- Expressions transform program state.
-- Scope hides transition-only names.
-- The longer-lived score remains available afterward.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Operators combine values into expressions
-
-~~~cpp
-int total = 5 + 3 * 2;       // 11
-int grouped = (5 + 3) * 2;   // 16
-bool safe = total < 20 && grouped > 0;
-~~~
-
-Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="expression-grouping" data-markdown><textarea data-template>
-## Two readers, one line, two different answers
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l03/expression-grouping.png" alt="Two students interpret the same arithmetic expression differently until one adds clear parentheses and both see the same grouped path — visual point: Parentheses are the road signs of expression evaluation." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Two people read the same arithmetic line and take different routes.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Parentheses are the road signs of expression evaluation.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Namespaces keep same-named declarations from colliding
-
-~~~cpp
-namespace laboratory {
-int completed = 0;
-}
-
-int main() {
-    laboratory::completed = 1;
-}
-~~~
-
-The scope-resolution operator <code>::</code> selects a name from a namespace.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="namespace-collision" data-markdown><textarea data-template>
-## Two labs, one tool name, one traffic jam
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l03/namespace-collision.png" alt="Two friendly workshops each contain a tool with the same shape, separated by colored namespace doors so they do not collide — visual point: Give each tool its own door before the names start bumping into each other." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Two laboratories both have a tool named "completed."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Give each tool its own door before the names start bumping into each other.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A name is usable only inside its scope
 
@@ -107,29 +35,16 @@ int main() {
 
 Keep names in the smallest scope that contains every required use.
     </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: One transition updates the world
+    <section class="course-extra-slide course-meme-slide" data-course-meme="scope-visibility" data-markdown><textarea data-template>
+## A helper reaches for the whole building
 
-| Today's concept | Exact game part enabled |
-|---|---|
-| expressions and block scope | calculate one candidate move, then commit it |
-
-~~~cpp
-#include <iostream>
-int main() {
-    int row = 2, column = 3;
-    int dRow = 0, dColumn = 1;
-    {
-        int nextRow = row + dRow, nextColumn = column + dColumn;
-        row = nextRow; column = nextColumn;
-    }
-    std::cout << row << ' ' << column << '\n';
-}
-~~~
-
-**Invariant:** outside the inner block, only the committed position remains visible.
-
-**Next unlock · L04:** accept different directions and reject unsafe moves.
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l03/scope-visibility.png" alt="A student keeps a temporary object inside a small fenced workspace while a long-lived outer object remains visible beyond the fence — visual point: The fence is a polite &quot;please stay here&quot; — nothing personal." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> A temporary helper tries to wander into the whole program.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The fence is a polite "please stay here" — nothing personal.</p>
+</figcaption>
+</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Scope controls visibility while lifetime controls existence
@@ -168,16 +83,101 @@ extern int sharedCount;
 
 <code>extern</code> declares an entity defined elsewhere. A complete executable must still contain <code>main</code> and link every required definition.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="scope-visibility" data-markdown><textarea data-template>
-## A helper reaches for the whole building
+    <section data-markdown><textarea data-template>
+## Namespaces keep same-named declarations from colliding
+
+~~~cpp
+namespace laboratory {
+int completed = 0;
+}
+
+int main() {
+    laboratory::completed = 1;
+}
+~~~
+
+The scope-resolution operator <code>::</code> selects a name from a namespace.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="namespace-collision" data-markdown><textarea data-template>
+## Two labs, one tool name, one traffic jam
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l03/scope-visibility.png" alt="A student keeps a temporary object inside a small fenced workspace while a long-lived outer object remains visible beyond the fence — visual point: The fence is a polite &quot;please stay here&quot; — nothing personal." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l03/namespace-collision.png" alt="Two friendly workshops each contain a tool with the same shape, separated by colored namespace doors so they do not collide — visual point: Give each tool its own door before the names start bumping into each other." width="900" height="506" loading="lazy">
 <figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> A temporary helper tries to wander into the whole program.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> The fence is a polite "please stay here" — nothing personal.</p>
+<p class="course-meme-setup"><strong>Setup</strong> Two laboratories both have a tool named "completed."</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Give each tool its own door before the names start bumping into each other.</p>
 </figcaption>
 </figure>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Operators combine values into expressions
+
+~~~cpp
+int total = 5 + 3 * 2;       // 11
+int grouped = (5 + 3) * 2;   // 16
+bool safe = total < 20 && grouped > 0;
+~~~
+
+Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
+    </textarea></section>
+    <section class="course-extra-slide course-meme-slide" data-course-meme="expression-grouping" data-markdown><textarea data-template>
+## Two readers, one line, two different answers
+
+<figure class="course-meme-figure">
+<img src="assets/lecture-memes/l03/expression-grouping.png" alt="Two students interpret the same arithmetic expression differently until one adds clear parentheses and both see the same grouped path — visual point: Parentheses are the road signs of expression evaluation." width="900" height="506" loading="lazy">
+<figcaption>
+<p class="course-meme-setup"><strong>Setup</strong> Two people read the same arithmetic line and take different routes.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Parentheses are the road signs of expression evaluation.</p>
+</figcaption>
+</figure>
+    </textarea></section>
+    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
+## Game evolution: One transition updates the world
+
+| Today's concept | Exact game part enabled |
+|---|---|
+| expressions and block scope | calculate one candidate move, then commit it |
+
+~~~cpp
+#include <iostream>
+int main() {
+    int row = 2, column = 3;
+    int dRow = 0, dColumn = 1;
+    {
+        int nextRow = row + dRow, nextColumn = column + dColumn;
+        row = nextRow; column = nextColumn;
+    }
+    std::cout << row << ' ' << column << '\n';
+}
+~~~
+
+**Invariant:** outside the inner block, only the committed position remains visible.
+
+**Next unlock · L04:** accept different directions and reject unsafe moves.
+    </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Expressions transform program state. · Update game state without leaking temporary names
+
+A small block holds one reward calculation while the score remains available to the rest of the program.
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int score = 4;
+    {
+        int collectedReward = 3;
+        score += collectedReward;
+    }
+    std::cout << score << std::endl;
+}
+~~~
+
+**Takeaways**
+
+- Expressions transform program state.
+- Scope hides transition-only names.
+- The longer-lived score remains available afterward.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Track every name by meaning, visibility, lifetime, and linkage
