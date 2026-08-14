@@ -12,8 +12,8 @@
         'm2-types': [2, 2], 'm2-primitives': [2, 3], 'm2-modifiers': [2, 4],
         'm2-variables': [2, 2], 'm2-const': [2, 5],
         'm2-inference': [2, 6], 'm2-casting': [2, 7],
-        'm2-operators': [3, 2], 'm2-precedence': [3, 2],
-        'm2-namespaces': [3, 3], 'm2-scope': [3, 4], 'm2-storage': [3, 5],
+        'm2-scope': [3, 2], 'm2-storage': [3, 4], 'm2-namespaces': [3, 6],
+        'm2-operators': [3, 7], 'm2-precedence': [3, 7],
 
         'm3-conditionals': [4, 2], 'm3-if-else': [4, 3],
         'm3-switch': [4, 4], 'm3-short-circuit': [4, 5], 'm3-comparison': [4, 6],

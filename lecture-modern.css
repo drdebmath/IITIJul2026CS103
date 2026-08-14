@@ -1598,6 +1598,51 @@ body.course-modern.course-reader-mode .course-meme-figure figcaption {
     }
 }
 
+.course-quiz-options {
+    display: grid;
+    gap: 0.5em;
+    width: 100%;
+    margin: 0.7em 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Options reuse the deck's in-slide button styling above; only the full-width
+   layout and the answered states are quiz-specific. The state rules carry the
+   same body/.reveal prefix so they outrank that generic button background. */
+body.course-modern .reveal section .course-quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+
+/* Reveal the whole key on the first answer: in a lecture the point is to see
+   which option was right, not to keep guessing. */
+body.course-modern .reveal .course-quiz-answered .course-quiz-option {
+    cursor: default;
+}
+
+body.course-modern .reveal .course-quiz-answered .is-correct {
+    border-color: var(--course-teal);
+    background: var(--course-teal-soft);
+}
+
+body.course-modern .reveal .course-quiz-answered .is-chosen:not(.is-correct) {
+    border-color: var(--course-muted);
+    background: var(--course-surface-soft);
+    text-decoration: line-through;
+}
+
+.course-quiz-explanation {
+    color: var(--course-muted);
+    font-size: 0.72em;
+    visibility: hidden;
+}
+
+.course-quiz-answered .course-quiz-explanation {
+    visibility: visible;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .course-deck-bar,
     .course-code-line,

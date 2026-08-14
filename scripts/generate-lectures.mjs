@@ -235,13 +235,21 @@ int main() {
 The scope-resolution operator <code>::</code> selects a name from a namespace.`,
             md`## Operators combine values into expressions
 
+| Group | Operators | Example | What to remember |
+|---|---|---|---|
+| Arithmetic | <code>+ - * / %</code> | <code>7 / 2</code> is 3 | integer division truncates; <code>%</code> needs integer operands |
+| Relational | <code>&lt; &lt;= &gt; &gt;= == !=</code> | <code>total &lt; 20</code> | the result is a <code>bool</code> |
+| Logical | <code>&amp;&amp; \|\| !</code> | <code>a &amp;&amp; b</code> | short-circuits: the right operand may never run |
+| Assignment | <code>= += -= *= /= %=</code> | <code>total += 5</code> | modifies the left operand in place |
+| Increment | <code>++ --</code> | <code>++i</code> versus <code>i++</code> | prefix yields the new value, postfix the old |
+
+Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
+
 ~~~cpp
 int total = 5 + 3 * 2;       // 11
 int grouped = (5 + 3) * 2;   // 16
 bool safe = total < 20 && grouped > 0;
-~~~
-
-Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.`,
+~~~`,
             md`## Track every name by meaning, visibility, lifetime, and linkage
 
 - Expressions compute values or effects.
@@ -262,16 +270,20 @@ Operator precedence decides binding when parentheses are absent. Prefer parenthe
 Write the rule before the syntax:
 
 | Current | Emergency stop | Result |
-|---:|:---:|---|
+|---|:---:|---|
+| negative | either | invalid |
 | above limit | either | trip |
-| within limit | true | trip |
-| within limit | false | normal |
+| at or below limit | true | trip |
+| above 90% of limit | false | warning |
+| at or below 90% of limit | false | normal |
 
-Every row should correspond to a test.`,
+The rows are mutually exclusive and cover every reading. Every row should correspond to a test.`,
             md`## Order branches from exceptional cases to the normal case
 
 ~~~cpp
-if (emergencyStop || current > safeLimit) {
+if (current < 0.0) {
+    std::cout << "INVALID\n";
+} else if (emergencyStop || current > safeLimit) {
     std::cout << "TRIP\n";
 } else if (current > 0.9 * safeLimit) {
     std::cout << "WARNING\n";
@@ -280,7 +292,7 @@ if (emergencyStop || current > safeLimit) {
 }
 ~~~
 
-Place exceptional and narrower cases before the normal fallback.`,
+Place exceptional and narrower cases before the normal fallback. One branch per table row, in the same order.`,
             md`## switch selects among cases for one discrete value
 
 ~~~cpp
@@ -295,12 +307,12 @@ default: std::cout << "invalid choice\n";
             md`## Short-circuiting protects operations behind a valid guard
 
 ~~~cpp
-if (resistance != 0.0 && voltage / resistance > limit) {
+if (resistance > minimumResistance && voltage / resistance > limit) {
     std::cout << "over current\n";
 }
 ~~~
 
-The division runs only when the left condition is true.`,
+The division runs only when the left condition is true. Guard with a problem-chosen minimum: a resistance of 1e-300 passes <code>!= 0.0</code> and still overflows the division.`,
             md`## Floating-point comparisons need a problem-chosen tolerance
 
 ~~~cpp
@@ -314,15 +326,17 @@ bool nearlyEqual = difference <= tolerance;
 Choose tolerance from the measurement or problem—not one universal constant. A reusable comparison function comes after functions are introduced.`,
             md`## Boundary tests reveal wrong comparisons early
 
-For a safe limit of 10, test:
+For a safe limit of 10, test each input and its expected output:
 
-- normal: 6;
-- lower boundary: 0;
-- exact boundary: 10;
-- just above: 10.01;
-- invalid measurement: negative input.
+- normal: 6 → NORMAL;
+- lower boundary: 0 → NORMAL;
+- invalid measurement: -0.1 → INVALID;
+- warning boundary: 9 → NORMAL;
+- just inside the warning band: 9.01 → WARNING;
+- exact limit: 10 → WARNING;
+- just above the limit: 10.01 → TRIP.
 
-Also test every <code>switch</code> case and its default.`,
+A boundary needs both sides. Also test every <code>switch</code> case and its default.`,
             md`## Safe branching names every path and tests every boundary
 
 - Translate decision tables into branches.
@@ -2017,7 +2031,7 @@ int main() {
 
 | Today's concept | Exact game part enabled |
 |---|---|
-| switch and guarded branching | translate WASD into a direction and reject a wall crossing |
+| switch and guarded branching | translate WASD into a direction, reject a wall crossing, and block an obstacle |
 
 ~~~cpp
 int main() {
@@ -2026,11 +2040,12 @@ int main() {
         case 'a': dColumn=-1; break; case 'd': dColumn=1; break; default: break; }
     int nextRow=row+dRow, nextColumn=column+dColumn;
     bool inside=nextRow>=0 && nextRow<5 && nextColumn>=0 && nextColumn<9;
-    if (inside) { row=nextRow; column=nextColumn; }
+    bool blocked=(nextRow==2 && nextColumn==4);
+    if (inside && !blocked) { row=nextRow; column=nextColumn; }
 }
 ~~~
 
-**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8.
+**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8; from (2,3), command <code>d</code> must stop at the obstacle.
 
 **Next unlock · L05:** repeat commands until the game ends.`,
 
@@ -2481,6 +2496,63 @@ if (missingGameVariants.length > 0) {
     throw new Error(`Missing game evolution slide for lecture IDs: ${missingGameVariants.map((lecture) => lecture.id).join(', ')}`);
 }
 
+// Multiple-choice checks. Like the memes, `afterSlide` is the zero-based index
+// of the authored slide each check follows — a quiz belongs against the concept
+// it tests, while the idea is still on the screen behind it, and it goes in
+// before that slide's meme so nothing separates concept from question.
+const quizSlides = {
+    3: [{ afterSlide: 6, content: md`## Check yourself: make every binding explicit
+
+Which line parenthesizes <code>total &lt; 20 &amp;&amp; grouped &gt; 0</code> exactly as C++ already evaluates it?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>total &lt; (20 &amp;&amp; grouped) &gt; 0</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>(total &lt; 20) &amp;&amp; (grouped &gt; 0)</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>((total &lt; 20) &amp;&amp; grouped) &gt; 0</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>total &lt; ((20 &amp;&amp; grouped) &gt; 0)</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation">Relational operators bind tighter than <code>&amp;&amp;</code>, so both comparisons finish before the logical operator combines them.</p>` }],
+    4: [
+        { afterSlide: 2, content: md`## Check yourself: which branch claims the boundary?
+
+The controller rejects a negative reading, trips above <code>safeLimit</code>, and warns above <code>0.9 * safeLimit</code>. With <code>safeLimit</code> of 10 and no emergency stop, what does a reading of exactly 10 print?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>INVALID: bad measurement</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>TRIP: disconnect supply</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>WARNING: near limit</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>NORMAL</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation">The trip test is <code>current &gt; safeLimit</code>, and 10 is not greater than 10 — so the reading falls through to the warning band above 9. An exact boundary belongs to whichever branch uses <code>&gt;=</code>.</p>` },
+        { afterSlide: 3, content: md`## Check yourself: what can a switch select on?
+
+Which one of these cannot control a <code>switch</code> statement?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>char command</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>double reading</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>int menuChoice</code></button></li>
+<li><button class="course-quiz-option" type="button">an enumeration value</button></li>
+</ol>
+
+<p class="course-quiz-explanation">A <code>switch</code> compares one discrete value against constant cases, so it accepts integral and enumeration types. A measurement belongs in a branch chain that tests ranges.</p>` },
+        { afterSlide: 4, content: md`## Check yourself: why is the guarded division safe?
+
+In <code>resistance &gt; minimumResistance &amp;&amp; voltage / resistance &gt; limit</code>, what stops the division from running on an unusable resistance?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">The compiler reorders the operands into a safe order.</button></li>
+<li><button class="course-quiz-option" type="button">C++ checks every division for a zero denominator.</button></li>
+<li><button class="course-quiz-option" type="button">Both operands are evaluated and the second result is discarded.</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>&amp;&amp;</code> skips its right operand once the left one is false.</button></li>
+</ol>
+
+<p class="course-quiz-explanation">Short-circuiting is what makes the guard work: the left test decides the result on its own, so the division is never reached. Order the operands accordingly — the guard has to come first.</p>` }
+    ]
+};
+
 function markdownSection(content, className = '', attributes = '') {
     const classAttribute = className ? ` class="${className}"` : '';
     const extraAttributes = attributes ? ` ${attributes}` : '';
@@ -2607,6 +2679,15 @@ function page({ id, title, slides }) {
         existing.push(meme);
         memesBySlide.set(meme.afterSlide, existing);
     }
+    const quizzesBySlide = new Map();
+    for (const quiz of quizSlides[id] || []) {
+        if (quiz.afterSlide < 1 || quiz.afterSlide >= authoredSections.length) {
+            throw new Error(`Invalid quiz position for lecture ${id}: ${quiz.afterSlide}`);
+        }
+        const existing = quizzesBySlide.get(quiz.afterSlide) || [];
+        existing.push(quiz);
+        quizzesBySlide.set(quiz.afterSlide, existing);
+    }
     for (let slideIndex = 0; slideIndex < authoredSections.length; slideIndex += 1) {
         if (slideIndex === insertionIndex) {
             courseSections.push(
@@ -2614,6 +2695,9 @@ function page({ id, title, slides }) {
             );
         }
         courseSections.push(authoredSections[slideIndex]);
+        for (const quiz of quizzesBySlide.get(slideIndex) || []) {
+            courseSections.push(markdownSection(quiz.content, 'course-extra-slide course-quiz-slide'));
+        }
         for (const meme of memesBySlide.get(slideIndex) || []) {
             courseSections.push(
                 markdownSection(

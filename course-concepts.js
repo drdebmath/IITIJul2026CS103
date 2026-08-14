@@ -55,11 +55,11 @@
                         c('m2-const', 'Immutable values with const', 'lecture2.html', 'const qualifier immutability'),
                         c('m2-inference', 'Type inference with auto', 'lecture2.html', 'auto inference compile time'),
                         c('m2-casting', 'Explicit type conversion', 'lecture2.html', 'static cast conversion truncation'),
-                        c('m2-operators', 'Operators & expressions', 'lecture3.html', 'arithmetic logical relational expression'),
-                        c('m2-precedence', 'Operator precedence & associativity', 'lecture3.html', 'precedence associativity parentheses'),
-                        c('m2-namespaces', 'Namespaces & qualified names', 'lecture3.html', 'namespace std scope resolution collision'),
                         c('m2-scope', 'Block, local & global scope', 'lecture3.html', 'scope visibility lifetime block local global'),
-                        c('m2-storage', 'Storage duration & linkage', 'lecture3.html', 'local global static extern linkage duration')
+                        c('m2-storage', 'Storage duration & linkage', 'lecture3.html', 'local global static extern linkage duration'),
+                        c('m2-namespaces', 'Namespaces & qualified names', 'lecture3.html', 'namespace std scope resolution collision'),
+                        c('m2-operators', 'Operators & expressions', 'lecture3.html', 'arithmetic logical relational expression'),
+                        c('m2-precedence', 'Operator precedence & associativity', 'lecture3.html', 'precedence associativity parentheses')
                     ]
                 },
                 {

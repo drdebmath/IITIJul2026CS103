@@ -26,10 +26,13 @@ A controller must classify current readings and disconnect equipment only when t
 
 int main() {
     double current, safeLimit;
-    bool emergencyStop;
-    std::cin >> current >> safeLimit >> emergencyStop;
+    int stopFlag;
+    std::cin >> current >> safeLimit >> stopFlag;
+    bool emergencyStop = (stopFlag != 0);
 
-    if (emergencyStop || current > safeLimit) {
+    if (current < 0.0) {
+        std::cout << "INVALID: bad measurement";
+    } else if (emergencyStop || current > safeLimit) {
         std::cout << "TRIP: disconnect supply";
     } else if (current > 0.9 * safeLimit) {
         std::cout << "WARNING: near limit";
@@ -51,18 +54,22 @@ int main() {
 Write the rule before the syntax:
 
 | Current | Emergency stop | Result |
-|---:|:---:|---|
+|---|:---:|---|
+| negative | either | invalid |
 | above limit | either | trip |
-| within limit | true | trip |
-| within limit | false | normal |
+| at or below limit | true | trip |
+| above 90% of limit | false | warning |
+| at or below 90% of limit | false | normal |
 
-Every row should correspond to a test.
+The rows are mutually exclusive and cover every reading. Every row should correspond to a test.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Order branches from exceptional cases to the normal case
 
 ~~~cpp
-if (emergencyStop || current > safeLimit) {
+if (current < 0.0) {
+    std::cout << "INVALID\n";
+} else if (emergencyStop || current > safeLimit) {
     std::cout << "TRIP\n";
 } else if (current > 0.9 * safeLimit) {
     std::cout << "WARNING\n";
@@ -71,7 +78,21 @@ if (emergencyStop || current > safeLimit) {
 }
 ~~~
 
-Place exceptional and narrower cases before the normal fallback.
+Place exceptional and narrower cases before the normal fallback. One branch per table row, in the same order.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: which branch claims the boundary?
+
+The controller rejects a negative reading, trips above <code>safeLimit</code>, and warns above <code>0.9 * safeLimit</code>. With <code>safeLimit</code> of 10 and no emergency stop, what does a reading of exactly 10 print?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>INVALID: bad measurement</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>TRIP: disconnect supply</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>WARNING: near limit</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>NORMAL</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation">The trip test is <code>current &gt; safeLimit</code>, and 10 is not greater than 10 — so the reading falls through to the warning band above 9. An exact boundary belongs to whichever branch uses <code>&gt;=</code>.</p>
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="decision-table" data-markdown><textarea data-template>
 ## The branch code says "trust me"
@@ -97,16 +118,44 @@ default: std::cout << "invalid choice\n";
 
 <code>switch</code> is for integral or enumeration values, not numeric ranges.
     </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: what can a switch select on?
+
+Which one of these cannot control a <code>switch</code> statement?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>char command</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>double reading</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>int menuChoice</code></button></li>
+<li><button class="course-quiz-option" type="button">an enumeration value</button></li>
+</ol>
+
+<p class="course-quiz-explanation">A <code>switch</code> compares one discrete value against constant cases, so it accepts integral and enumeration types. A measurement belongs in a branch chain that tests ranges.</p>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Short-circuiting protects operations behind a valid guard
 
 ~~~cpp
-if (resistance != 0.0 && voltage / resistance > limit) {
+if (resistance > minimumResistance && voltage / resistance > limit) {
     std::cout << "over current\n";
 }
 ~~~
 
-The division runs only when the left condition is true.
+The division runs only when the left condition is true. Guard with a problem-chosen minimum: a resistance of 1e-300 passes <code>!= 0.0</code> and still overflows the division.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: why is the guarded division safe?
+
+In <code>resistance &gt; minimumResistance &amp;&amp; voltage / resistance &gt; limit</code>, what stops the division from running on an unusable resistance?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">The compiler reorders the operands into a safe order.</button></li>
+<li><button class="course-quiz-option" type="button">C++ checks every division for a zero denominator.</button></li>
+<li><button class="course-quiz-option" type="button">Both operands are evaluated and the second result is discarded.</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>&amp;&amp;</code> skips its right operand once the left one is false.</button></li>
+</ol>
+
+<p class="course-quiz-explanation">Short-circuiting is what makes the guard work: the left test decides the result on its own, so the division is never reached. Order the operands accordingly — the guard has to come first.</p>
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="exception-first" data-markdown><textarea data-template>
 ## Every visitor wants the normal door
@@ -124,7 +173,7 @@ The division runs only when the left condition is true.
 
 | Today's concept | Exact game part enabled |
 |---|---|
-| switch and guarded branching | translate WASD into a direction and reject a wall crossing |
+| switch and guarded branching | translate WASD into a direction, reject a wall crossing, and block an obstacle |
 
 ~~~cpp
 int main() {
@@ -133,11 +182,12 @@ int main() {
         case 'a': dColumn=-1; break; case 'd': dColumn=1; break; default: break; }
     int nextRow=row+dRow, nextColumn=column+dColumn;
     bool inside=nextRow>=0 && nextRow<5 && nextColumn>=0 && nextColumn<9;
-    if (inside) { row=nextRow; column=nextColumn; }
+    bool blocked=(nextRow==2 && nextColumn==4);
+    if (inside && !blocked) { row=nextRow; column=nextColumn; }
 }
 ~~~
 
-**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8.
+**Boundary test:** from column 8, command <code>d</code> must leave the actor at column 8; from (2,3), command <code>d</code> must stop at the obstacle.
 
 **Next unlock · L05:** repeat commands until the game ends.
     </textarea></section>
@@ -157,15 +207,17 @@ Choose tolerance from the measurement or problem—not one universal constant. A
     <section data-markdown><textarea data-template>
 ## Boundary tests reveal wrong comparisons early
 
-For a safe limit of 10, test:
+For a safe limit of 10, test each input and its expected output:
 
-- normal: 6;
-- lower boundary: 0;
-- exact boundary: 10;
-- just above: 10.01;
-- invalid measurement: negative input.
+- normal: 6 → NORMAL;
+- lower boundary: 0 → NORMAL;
+- invalid measurement: -0.1 → INVALID;
+- warning boundary: 9 → NORMAL;
+- just inside the warning band: 9.01 → WARNING;
+- exact limit: 10 → WARNING;
+- just above the limit: 10.01 → TRIP.
 
-Also test every <code>switch</code> case and its default.
+A boundary needs both sides. Also test every <code>switch</code> case and its default.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="switch-discrete" data-markdown><textarea data-template>
 ## A switch is asked for "anything between 2.1 and 2.9"

@@ -53,7 +53,7 @@ export const lectureExtras = {
     "4": {
         "title": "Over-current protection controller",
         "context": "A controller must classify current readings and disconnect equipment only when the safety rule is satisfied.",
-        "code": "#include <iostream>\n\nint main() {\n    double current, safeLimit;\n    bool emergencyStop;\n    std::cin >> current >> safeLimit >> emergencyStop;\n\n    if (emergencyStop || current > safeLimit) {\n        std::cout << \"TRIP: disconnect supply\";\n    } else if (current > 0.9 * safeLimit) {\n        std::cout << \"WARNING: near limit\";\n    } else {\n        std::cout << \"NORMAL\";\n    }\n}",
+        "code": "#include <iostream>\n\nint main() {\n    double current, safeLimit;\n    int stopFlag;\n    std::cin >> current >> safeLimit >> stopFlag;\n    bool emergencyStop = (stopFlag != 0);\n\n    if (current < 0.0) {\n        std::cout << \"INVALID: bad measurement\";\n    } else if (emergencyStop || current > safeLimit) {\n        std::cout << \"TRIP: disconnect supply\";\n    } else if (current > 0.9 * safeLimit) {\n        std::cout << \"WARNING: near limit\";\n    } else {\n        std::cout << \"NORMAL\";\n    }\n}",
         "takeaways": [
             "Order branches from exceptional to normal.",
             "Short-circuiting expresses safety logic clearly.",

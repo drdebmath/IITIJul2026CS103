@@ -241,7 +241,14 @@
         const questions = checkpointQuestions();
         questions.forEach((question, index) => {
             const anchorIndex = Math.min(coreSlides.length - 1, Math.ceil(((index + 1) * coreSlides.length) / questions.length) - 1);
-            coreSlides[anchorIndex].after(createCheckpointSlide(question, index));
+            // A quiz is generated against the slide that taught it, so step
+            // past any that directly follow: a checkpoint must never land
+            // between a concept and its own check.
+            let anchor = coreSlides[anchorIndex];
+            while (anchor.nextElementSibling && anchor.nextElementSibling.classList.contains('course-quiz-slide')) {
+                anchor = anchor.nextElementSibling;
+            }
+            anchor.after(createCheckpointSlide(question, index));
         });
     }
 
@@ -1035,6 +1042,23 @@
         if (typeof window.Reveal.isReady === 'function' && window.Reveal.isReady()) onRevealReady();
         else window.Reveal.on('ready', onRevealReady);
     }
+
+    // Quiz options are plain buttons in the generated markup; one delegated
+    // listener marks the choice and reveals the explanation. Answering is
+    // self-check only — nothing is stored or reported.
+    document.addEventListener('click', (event) => {
+        const option = event.target.closest('.course-quiz-option');
+        if (!option) return;
+        const slide = option.closest('.course-quiz-slide');
+        if (!slide) return;
+        slide.querySelectorAll('.course-quiz-option').forEach((button) => {
+            const correct = button.hasAttribute('data-course-quiz-correct');
+            button.classList.toggle('is-correct', correct);
+            button.classList.toggle('is-chosen', button === option);
+            button.setAttribute('aria-pressed', String(button === option));
+        });
+        slide.classList.add('course-quiz-answered');
+    });
 
     window.addEventListener('cs103:progresschange', updateProgressUI);
     window.addEventListener('scroll', handleReaderScroll, { passive: true });

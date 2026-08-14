@@ -112,13 +112,35 @@ The scope-resolution operator <code>::</code> selects a name from a namespace.
     <section data-markdown><textarea data-template>
 ## Operators combine values into expressions
 
+| Group | Operators | Example | What to remember |
+|---|---|---|---|
+| Arithmetic | <code>+ - * / %</code> | <code>7 / 2</code> is 3 | integer division truncates; <code>%</code> needs integer operands |
+| Relational | <code>&lt; &lt;= &gt; &gt;= == !=</code> | <code>total &lt; 20</code> | the result is a <code>bool</code> |
+| Logical | <code>&amp;&amp; \|\| !</code> | <code>a &amp;&amp; b</code> | short-circuits: the right operand may never run |
+| Assignment | <code>= += -= *= /= %=</code> | <code>total += 5</code> | modifies the left operand in place |
+| Increment | <code>++ --</code> | <code>++i</code> versus <code>i++</code> | prefix yields the new value, postfix the old |
+
+Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
+
 ~~~cpp
 int total = 5 + 3 * 2;       // 11
 int grouped = (5 + 3) * 2;   // 16
 bool safe = total < 20 && grouped > 0;
 ~~~
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: make every binding explicit
 
-Operator precedence decides binding when parentheses are absent. Prefer parentheses when a reader might hesitate.
+Which line parenthesizes <code>total &lt; 20 &amp;&amp; grouped &gt; 0</code> exactly as C++ already evaluates it?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>total &lt; (20 &amp;&amp; grouped) &gt; 0</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>(total &lt; 20) &amp;&amp; (grouped &gt; 0)</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>((total &lt; 20) &amp;&amp; grouped) &gt; 0</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>total &lt; ((20 &amp;&amp; grouped) &gt; 0)</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation">Relational operators bind tighter than <code>&amp;&amp;</code>, so both comparisons finish before the logical operator combines them.</p>
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="expression-grouping" data-markdown><textarea data-template>
 ## Two readers, one line, two different answers

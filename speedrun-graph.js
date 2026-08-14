@@ -39,7 +39,7 @@
         'm2-precedence': ['m2-operators'],
         'm2-namespaces': ['m1-hello'],
         'm2-scope': ['m2-variables'],
-        'm2-storage': ['m2-scope', 'm2-namespaces'],
+        'm2-storage': ['m2-scope'],
 
         'm3-conditionals': ['m2-operators', 'm2-variables'],
         'm3-if-else': ['m3-conditionals'],
