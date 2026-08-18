@@ -47,6 +47,27 @@ int main() {
 - break is appropriate when the result is already known.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## The general form of a while and a do-while
+
+~~~cpp
+while (condition) {
+    // must change the state the condition inspects
+}
+
+do {
+    // body: always runs at least once
+} while (condition);   // note the semicolon
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>condition</code> | A bool expression, tested before every iteration (<code>while</code>) or after every one (<code>do-while</code>). |
+| body | The statements repeated. Braces are optional for a single statement, but write them anyway. |
+| update | Not part of the syntax. You must place it in the body yourself, on every path. |
+
+<code>do-while</code> runs at least once, and ends with a semicolon.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## Trace the condition and update to predict every while iteration
 
 ~~~cpp
