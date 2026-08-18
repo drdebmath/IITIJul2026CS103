@@ -70,6 +70,29 @@ Before each iteration, ask:
 
 If no state moves toward a false condition, the loop may never terminate.
     </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: does this loop make progress?
+
+~~~cpp
+int i = 0;
+while (i < 5) {
+    std::cout << i;
+    if (i == 2) continue;
+    ++i;
+}
+~~~
+
+What does this loop do?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">Prints <code>01234</code> and stops.</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct>Prints <code>012</code> and then never stops.</button></li>
+<li><button class="course-quiz-option" type="button">Prints <code>012</code> and stops.</button></li>
+<li><button class="course-quiz-option" type="button">Fails to compile.</button></li>
+</ol>
+
+<p class="course-quiz-explanation"><code>continue</code> jumps straight back to the condition, skipping <code>++i</code>. Once <code>i</code> reaches 2 the state stops changing, so the condition stays true forever. A loop needs its update on every path, not just the ordinary one.</p>
+    </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="while-trace" data-markdown><textarea data-template>
 ## The loop runs three times, allegedly
 
@@ -96,6 +119,28 @@ while (value != -1) {
 
 The sentinel <code>-1</code> ends input and is not added.
     </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: where does the sentinel stop the sum?
+
+~~~cpp
+int sum = 0, x;
+while (std::cin >> x) {
+    if (x == -1) break;
+    sum += x;
+}
+~~~
+
+The input is <code>4 7 -1 9</code>. What is <code>sum</code> at the end?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>11</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>20</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>10</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>19</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation">The <code>break</code> fires before <code>sum += x</code>, so the sentinel is never added, and the loop ends before it ever reads the <code>9</code>. A sentinel marks the end of the data — it is not part of the data.</p>
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## do-while validates input after the first attempt
 
@@ -108,6 +153,20 @@ do {
 ~~~
 
 The body runs once before the condition is tested.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: which loop fits this stopping rule?
+
+A program must read a number and keep re-asking until the user finally enters a positive one. Which loop matches?
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>while</code>, because the condition must be checked before reading anything.</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>do-while</code>, because there is nothing to judge until one value has been read.</button></li>
+<li><button class="course-quiz-option" type="button">Either one; the two forms are equivalent here.</button></li>
+<li><button class="course-quiz-option" type="button">None of the above.</button></li>
+</ol>
+
+<p class="course-quiz-explanation">The test depends on input that does not exist yet, so the body must run once before the condition can mean anything — that is exactly <code>do-while</code>. A plain <code>while</code> would have to test <code>height</code> before anything was ever read into it.</p>
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="progress-termination" data-markdown><textarea data-template>
 ## One robot is on a treadmill and does not know it
