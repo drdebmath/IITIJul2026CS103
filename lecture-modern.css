@@ -1295,6 +1295,38 @@ body.course-modern .reveal .lecture-end-nav .is-disabled {
     overscroll-behavior: contain;
 }
 
+/* "Main point · supporting detail" headings: the detail gets its own line. */
+.course-heading-subtitle {
+    display: block;
+    margin-top: 0.22em;
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    opacity: 0.8;
+}
+
+.course-heading-suffix {
+    font-size: 0.6em;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    opacity: 0.65;
+}
+
+body.course-frozen-deck .course-heading-suffix {
+    font-size: inherit;
+    font-weight: inherit;
+    opacity: 1;
+}
+
+body.course-modern:not(.course-frozen-deck) .reveal h1 + h2 {
+    margin-top: -0.2em !important;
+    padding-bottom: 0 !important;
+    border-bottom: 0 !important;
+    font-size: 1.15em !important;
+    font-weight: 700 !important;
+    opacity: 0.78;
+}
+
 .course-continuation-label {
     color: var(--course-primary);
     font-size: 0.45em;

@@ -38,6 +38,10 @@
     let layoutSettleTimer = 0;
 
     document.body.classList.add('course-modern');
+    // ponytail: lectures 1-5 are already delivered, so styling/content changes
+    // land from lecture 6 onward only.
+    const frozenDeck = lectureId <= 5;
+    document.body.classList.toggle('course-frozen-deck', frozenDeck);
     if (embedded) document.body.classList.add('course-embedded');
 
     function preferredTheme() {
@@ -205,9 +209,10 @@
         const firstTerm = terms[0] || lectureMeta.title;
         const secondTerm = terms[1] || firstTerm;
         const lastTerm = terms[terms.length - 1] || firstTerm;
-        const practicalTitle = document.querySelector('.practical-example-slide h2')?.textContent || lectureMeta.title;
+        const practicalHeading = document.querySelector('.practical-example-slide h2')?.textContent || lectureMeta.title;
+        const practicalTitle = frozenDeck ? practicalHeading : practicalHeading.split(' · ').pop().trim();
         return [
-            `Explain “${firstTerm}” in one sentence.`,
+            frozenDeck ? `Explain “${firstTerm}” in one sentence.` : null,
             firstTerm === secondTerm
                 ? `What must be true before you can use today’s main idea safely?`
                 : `How is “${secondTerm}” related to “${firstTerm}”?`,
@@ -216,19 +221,19 @@
             outcomes[0]
                 ? `Can you do this without notes: “${outcomes[0]}”?`
                 : `When would you choose “${lastTerm}” — and when would you avoid it?`
-        ];
+        ].filter(Boolean);
     }
 
-    function createCheckpointSlide(question, index) {
+    function createCheckpointSlide(question, index, total) {
         const minute = (index + 1) * 10;
         const section = document.createElement('section');
         // Students see only the question; the session structure stays as
         // invisible metadata for the instructor and tooling.
         section.className = 'course-extra-slide course-checkpoint-slide';
         section.dataset.courseMinute = String(minute);
-        section.dataset.courseCheckpoint = `${index + 1} of 5`;
+        section.dataset.courseCheckpoint = `${index + 1} of ${total}`;
         section.innerHTML = `
-            <!-- Checkpoint ${index + 1} of 5 · minute ${minute} · think 30s → pair → share one sentence -->
+            <!-- Checkpoint ${index + 1} of ${total} · minute ${minute} · think 30s → pair → share one sentence -->
             <h2>${question}</h2>`;
         return section;
     }
@@ -248,7 +253,7 @@
             while (anchor.nextElementSibling && anchor.nextElementSibling.classList.contains('course-quiz-slide')) {
                 anchor = anchor.nextElementSibling;
             }
-            anchor.after(createCheckpointSlide(question, index));
+            anchor.after(createCheckpointSlide(question, index, questions.length));
         });
     }
 
@@ -674,7 +679,12 @@
         label.className = 'course-continuation-label';
         label.textContent = `Part ${part}`;
         const heading = document.createElement(sourceHeading ? sourceHeading.tagName : 'h2');
-        heading.textContent = `${sourceHeading ? sourceHeading.textContent.replace(/\s+· continued.*$/i, '') : lectureMeta.title} · continued`;
+        const sourceTitle = sourceHeading ? (sourceHeading.querySelector('.course-heading-subtitle') ? sourceHeading.firstChild.textContent : sourceHeading.textContent) : lectureMeta.title;
+        heading.textContent = sourceTitle.replace(/\s+· continued.*$/i, '').trim();
+        const suffix = document.createElement('span');
+        suffix.className = 'course-heading-suffix';
+        suffix.textContent = ' · continued';
+        heading.append(suffix);
         continuation.append(label, heading);
         after.after(continuation);
         return continuation;
@@ -972,10 +982,28 @@
         practiceObserver.observe(practiceSlide);
     }
 
+    // A heading written as "Main point · supporting detail" reads as a title
+    // plus subtitle; give the tail its own line at a smaller size.
+    function splitHeadingSubtitles() {
+        if (frozenDeck) return;
+        document.querySelectorAll('.reveal h2').forEach((heading) => {
+            if (heading.querySelector('.course-heading-subtitle, .course-heading-suffix')) return;
+            const node = Array.from(heading.childNodes).reverse().find((child) => child.nodeType === Node.TEXT_NODE && child.textContent.includes(' · '));
+            if (!node) return;
+            const index = node.textContent.indexOf(' · ');
+            const subtitle = document.createElement('span');
+            subtitle.className = 'course-heading-subtitle';
+            subtitle.textContent = node.textContent.slice(index + 3).trim();
+            node.textContent = node.textContent.slice(0, index);
+            heading.append(subtitle);
+        });
+    }
+
     function prepareDeck() {
         if (deckPrepared || !revealReady || !window.Reveal) return;
         deckPrepared = true;
         window.clearTimeout(preparationTimer);
+        splitHeadingSubtitles();
         decorateConceptSlides();
         decorateTechnicalTerms();
         enhanceCodeBlocks();
