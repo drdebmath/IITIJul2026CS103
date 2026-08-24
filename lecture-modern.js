@@ -6,7 +6,12 @@
 
     const conceptTree = Array.isArray(window.CS103ConceptTree) ? window.CS103ConceptTree : [];
     const allConcepts = conceptTree.flatMap((phase) => phase.modules.flatMap((module) => module.concepts));
-    const lectureConcepts = allConcepts.filter((concept) => concept.lecture === lectureId);
+    // A supplement deck (lecture5-5.html) has no integer id, so match it by file name.
+    const deckFile = window.location.pathname.split('/').pop();
+    const isQuizDeck = deckFile === 'quiz.html';
+    const lectureConcepts = allConcepts.filter((concept) => (lectureId === null
+        ? concept.href.split('?')[0] === deckFile
+        : concept.lecture === lectureId));
     const requestedConceptId = new URLSearchParams(window.location.search).get('concept');
     const requestedConcept = lectureConcepts.find((concept) => concept.id === requestedConceptId) || null;
     const lectureContext = (window.CS103LectureContexts && window.CS103LectureContexts[lectureId]) || null;
@@ -14,7 +19,8 @@
     const coreAuthoredSlides = sessionPlan ? new Set(sessionPlan) : null;
     let showReferenceSlides = new URLSearchParams(window.location.search).get('mode') === 'reference'
         || Boolean(requestedConcept && coreAuthoredSlides && !coreAuthoredSlides.has(requestedConcept.slide));
-    const scheduleSession = window.CS103Schedule && window.CS103Schedule.sessions.find((session) => session.lectureId === lectureId);
+    const scheduleSession = lectureId !== null && window.CS103Schedule
+        && window.CS103Schedule.sessions.find((session) => session.lectureId === lectureId);
     const themeStorageKey = 'cs103-theme';
     const embedded = window.self !== window.top;
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -24,9 +30,20 @@
     const sequence = progress?.lectureSequence || window.CS103Data?.lectureSequence || [];
     const sequenceIndex = sequence.findIndex((lecture) => lecture.id === lectureId);
     const scheduledSequence = scheduleSession ? scheduleSession.sequence : Math.max(1, sequenceIndex + 1);
-    const lectureMeta = sequence[sequenceIndex] || { title: `Lecture ${lectureId}` };
-    const previousLecture = sequenceIndex > 0 ? sequence[sequenceIndex - 1] : null;
-    const nextLecture = sequenceIndex >= 0 && sequenceIndex < sequence.length - 1 ? sequence[sequenceIndex + 1] : null;
+    const lectureMeta = sequence[sequenceIndex] || { title: lectureId === null ? document.title.replace(/^Lecture [\d.]+:\s*/, '') : `Lecture ${lectureId}` };
+    // Supplement decks carry a fractional number and sit between two numbered
+    // lectures, so lecture-to-lecture navigation has to step through them.
+    const supplements = [{ after: 3, file: 'lecture3-5.html', title: 'Read ++i and i++ as expressions with a value' }];
+    const onSupplement = supplements.find((item) => item.file === deckFile) || null;
+    const lectureAt = (id) => sequence.find((lecture) => lecture.id === id) || null;
+    const supplementAfter = (id) => supplements.find((item) => item.after === id) || null;
+    const previousLecture = onSupplement
+        ? lectureAt(onSupplement.after)
+        : (supplementAfter(lectureId - 1) || (sequenceIndex > 0 ? sequence[sequenceIndex - 1] : null));
+    const nextLecture = onSupplement
+        ? lectureAt(onSupplement.after + 1)
+        : (supplementAfter(lectureId)
+            || (sequenceIndex >= 0 && sequenceIndex < sequence.length - 1 ? sequence[sequenceIndex + 1] : null));
     const revealElement = document.querySelector('.reveal');
     let practiceSlide;
     let practiceObserver;
@@ -38,9 +55,9 @@
     let layoutSettleTimer = 0;
 
     document.body.classList.add('course-modern');
-    // ponytail: lectures 1-5 are already delivered, so styling/content changes
-    // land from lecture 6 onward only.
-    const frozenDeck = lectureId <= 5;
+    // ponytail: lectures 1-6 are already delivered, so styling/content changes
+    // land from lecture 7 onward only.
+    const frozenDeck = lectureId !== null && lectureId <= 6;
     document.body.classList.toggle('course-frozen-deck', frozenDeck);
     if (embedded) document.body.classList.add('course-embedded');
 
@@ -239,7 +256,7 @@
     }
 
     function injectCheckpoints() {
-        if (document.querySelector('[data-course-minute]')) return;
+        if (isQuizDeck || document.querySelector('[data-course-minute]')) return;
         const coreSlides = Array.from(document.querySelectorAll('[data-course-authored-slide]'))
             .filter((slide) => !slide.classList.contains('course-reference-slide'));
         if (!coreSlides.length) return;
@@ -459,7 +476,7 @@
 
     function enhanceCodeBlock(pre, editorIndex) {
         const code = pre.querySelector(':scope > code');
-        if (!code || pre.closest('.course-code-editor')) return;
+        if (!code || pre.closest('.course-code-editor') || pre.hasAttribute('data-course-static-output')) return;
         const original = code.textContent.replace(/^\n/, '').replace(/\n\s*$/, '');
         const originalLines = original.split('\n');
         const languageClass = Array.from(code.classList).find((name) => /^(language-|lang-|cpp$|c\+\+$)/i.test(name));
@@ -899,12 +916,12 @@
         const authored = Number(active.dataset.courseAuthoredSlide);
         const continuation = Number(active.dataset.courseContinuation);
         let reference = `Slide ${position.index + 1} of ${position.total}`;
-        if (authored) reference = `L${String(lectureId).padStart(2, '0')} · S${String(authored).padStart(2, '0')}${continuation ? String.fromCharCode(95 + continuation) : ''}`;
+        if (authored && lectureId !== null) reference = `L${String(lectureId).padStart(2, '0')} · S${String(authored).padStart(2, '0')}${continuation ? String.fromCharCode(95 + continuation) : ''}`;
         else if (active.matches('[data-course-context]')) reference = 'Learning path';
         else if (active.matches('[data-course-practice]')) reference = 'Practice set';
         else if (active.matches('[data-course-navigation]')) reference = 'Course navigation';
         else if (active.matches('.practical-example-slide')) reference = 'Practical application';
-        if (location) location.textContent = `Session ${String(scheduledSequence).padStart(2, '0')} · ${reference}`;
+        if (location) location.textContent = lectureId === null ? reference : `Session ${String(scheduledSequence).padStart(2, '0')} · ${reference}`;
         if (previous) previous.disabled = position.index === 0;
         if (next) next.disabled = position.index >= position.total - 1;
     }

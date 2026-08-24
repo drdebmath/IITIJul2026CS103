@@ -52,6 +52,30 @@ for (int step = 1; step <= 5; ++step) {
 Read it as initialize → test → body → update → test again.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## The general form of a for and a nested for
+
+~~~cpp
+for (<initialization>; <condition>; <update>) {
+    // body, repeated while <condition> stays true
+}
+
+for (<outer initialization>; <outer condition>; <outer update>) {
+    for (<inner initialization>; <inner condition>; <inner update>) {
+        // runs once for every pair of outer and inner values
+    }
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;initialization&gt;</code> | Runs once, before the first test. A counter declared here is visible only inside the loop. |
+| <code>&lt;condition&gt;</code> | Tested before every iteration, including the first. |
+| <code>&lt;update&gt;</code> | Runs after every iteration, before the next test. |
+| nesting | The inner loop completes in full for each single iteration of the outer loop. |
+
+The inner loop may depend on the outer counter; that is what makes triangles and tables.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## A correct counter states its valid range
 
 For five zero-based positions, valid indices are 0, 1, 2, 3, 4.

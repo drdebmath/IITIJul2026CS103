@@ -128,6 +128,30 @@ int grouped = (5 + 3) * 2;   // 16
 bool safe = total < 20 && grouped > 0;
 ~~~
     </textarea></section>
+    <section data-markdown><textarea data-template>
+## The general form of a declaration, a block, and a namespace
+
+~~~cpp
+<type> <name> = <initial value>;   // a declaration introduces a name
+
+{                                  // a block opens a new scope
+    <type> <inner name> = <value>; // visible only until the closing brace
+}                                  // the inner name is destroyed here
+
+namespace <namespace name> {
+    <declarations>                 // reached as <namespace name>::<name>
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;type&gt;</code> | What the name means and what operations it allows. |
+| <code>&lt;name&gt;</code> | The identifier. It exists from its declaration to the end of its enclosing block. |
+| <code>{ }</code> | A block. Names declared inside it are invisible outside it. |
+| <code>&lt;namespace name&gt;::</code> | The qualification that distinguishes same-named declarations. |
+
+Declare each name in the smallest block that still contains every use.
+    </textarea></section>
     <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
 ## Check yourself: make every binding explicit
 

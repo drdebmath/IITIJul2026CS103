@@ -51,10 +51,12 @@
             if (row.type === 'session') {
                 const session = row.data;
                 const reference = session.kind === 'quiz' ? `Q${session.quizNumber}` : `L${String(session.lectureId).padStart(2, '0')}`;
+                const resources = (session.resources || []).map((resource) => `
+                    <span class="schedule-resource"><strong>Extra content</strong><a href="${resource.file}">${resource.label}</a></span>`).join('');
                 return `<tr>
                     <td>${formatSessionDate(session)}</td>
                     <td><span class="module-badge">${session.module}</span></td>
-                    <td><a href="${session.file}">${reference} · ${session.title}</a><span class="schedule-time">${formatSessionTime(session)}</span></td>
+                    <td><a href="${session.file}">${reference} · ${session.scheduleLabel || session.title}</a><span class="schedule-time">${formatSessionTime(session)}</span>${resources}</td>
                 </tr>`;
             }
 

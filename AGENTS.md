@@ -28,8 +28,14 @@ inspect the diff and ensure that frozen lectures have not changed incidentally.
 
 - Lecture 1 (`lecture1.html`) is frozen.
 - Lecture 2 (`lecture2.html`) is frozen.
+- Lecture 3 (`lecture3.html`) is frozen.
+- Lecture 3.5 (`lecture3-5.html`) is frozen.
+- Lecture 4 (`lecture4.html`) is frozen.
+- Lecture 5 (`lecture5.html`) is frozen.
+- Lecture 6 (`lecture6.html`) is frozen.
 
-This restriction also applies to Lecture 1 and Lecture 2 entries in generator files, shared data,
-extras, concept mappings, and other sources whenever changing them would alter the
-delivered content. Concept mappings may still be repaired when only the link or
-target is wrong and the lecture itself remains unchanged.
+This restriction also applies to Lecture 1 through Lecture 6 entries, including
+Lecture 3.5, in generator files, shared data, extras, concept mappings, and other
+sources whenever changing them would alter the delivered content. Concept mappings
+may still be repaired when only the link or target is wrong and the lecture itself
+remains unchanged.

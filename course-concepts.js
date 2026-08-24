@@ -3,15 +3,19 @@
 
     const c = (id, title, href, keywords = '', application = false) => {
         const authoredReference = window.CS103SlideReferences && window.CS103SlideReferences[id];
-        const fallbackLecture = Number((href.match(/lecture(\d+)\.html/i) || [])[1]);
+        // A deck such as lecture5-5.html is a supplement: its number is 5.5 and its
+        // file name cannot be rebuilt from that number, so keep the href as given.
+        const parts = href.match(/lecture(\d+)(?:-(\d+))?\.html/i) || [];
+        const fallbackLecture = Number(parts[2] ? `${parts[1]}.${parts[2]}` : parts[1]);
         const lecture = authoredReference ? authoredReference[0] : fallbackLecture;
+        const deck = (href.match(/^[^#?]+\.html/i) || [])[0] || `lecture${lecture}.html`;
         const slide = authoredReference ? authoredReference[1] : 1;
         const glossary = (window.CS103Glossary && window.CS103Glossary[id]) || [title, `A core concept in ${title}.`];
         const reference = `L${String(lecture).padStart(2, '0')} · S${String(slide).padStart(2, '0')}`;
         return {
             id,
             title,
-            href: `lecture${lecture}.html?concept=${encodeURIComponent(id)}`,
+            href: `${deck}?concept=${encodeURIComponent(id)}`,
             keywords,
             application,
             lecture,
@@ -59,7 +63,8 @@
                         c('m2-storage', 'Storage duration & linkage', 'lecture3.html', 'local global static extern linkage duration'),
                         c('m2-namespaces', 'Namespaces & qualified names', 'lecture3.html', 'namespace std scope resolution collision'),
                         c('m2-operators', 'Operators & expressions', 'lecture3.html', 'arithmetic logical relational expression'),
-                        c('m2-precedence', 'Operator precedence & associativity', 'lecture3.html', 'precedence associativity parentheses')
+                        c('m2-precedence', 'Operator precedence & associativity', 'lecture3.html', 'precedence associativity parentheses'),
+                        c('m2-increment', 'Pre-increment vs. post-increment', 'lecture3-5.html', 'increment decrement prefix postfix sequencing unsequenced')
                     ]
                 },
                 {

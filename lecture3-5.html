@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Lecture 3.5: Read ++i and i++ as expressions with a value">
+    <title>Lecture 3.5: Read ++i and i++ as expressions with a value</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Lecture 3.5: Read ++i and i++ as expressions with a value
+## Pre-increment, post-increment, and where the difference shows
+
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Both forms add one; they differ in the value handed back
+
+| Form | Name | Effect on the variable | Value of the expression |
+| --- | --- | --- | --- |
+| <code>++i</code> | pre-increment | <code>i</code> becomes <code>i + 1</code> | the <strong>new</strong> value |
+| <code>i++</code> | post-increment | <code>i</code> becomes <code>i + 1</code> | the <strong>old</strong> value |
+
+The variable ends up the same either way. Only the value the expression *produces* differs.
+
+Written as a statement of its own — <code>i++;</code> or <code>++i;</code> — the produced value is discarded, so the two are identical.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## The general form of the increment and decrement operators
+
+~~~cpp
+++<variable>    // increment first, then yield the new value
+<variable>++    // yield the old value first, then increment
+--<variable>    // the same two rules, subtracting one
+<variable>--
+
+<variable>++;   // as a whole statement, the yielded value is discarded
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;variable&gt;</code> | A name you are allowed to modify. A constant or a literal cannot be incremented. |
+| position of <code>++</code> | Before the name yields the new value; after the name yields the old one. |
+| the statement | Either form changes the variable by exactly one. |
+
+Write at most one <code>++</code> per variable in any single expression.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Example 1 · The difference appears the moment you assign it
+
+~~~cpp
+int i = 5, a;
+a = ++i;   // i becomes 6 first, so a = 6
+
+int j = 5, b;
+b = j++;   // b takes the old 5, then j becomes 6
+~~~
+
+**Verified output:** <code>a = 6, i = 6</code> and <code>b = 5, j = 6</code>
+
+Both <code>i</code> and <code>j</code> end at 6. Only <code>a</code> and <code>b</code> disagree.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Example 2 · cout prints the value of the expression, not the variable
+
+~~~cpp
+int n = 3;
+std::cout << n++ << '\n';   // prints 3, n is now 4
+std::cout << n    << '\n';  // prints 4
+
+int m = 3;
+std::cout << ++m << '\n';   // prints 4, m is now 4
+~~~
+
+**Verified output:** <code>3</code>, then <code>4</code>, then <code>4</code>
+
+<code>n++</code> printed 3 while already having changed <code>n</code>. Printing is not the same as reading the variable afterwards.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Check yourself: what does this print?
+
+~~~cpp
+int p = 7;
+std::cout << p++ << ' ' << p << '\n';
+~~~
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button"><code>7 7</code></button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct><code>7 8</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>8 8</code></button></li>
+<li><button class="course-quiz-option" type="button"><code>8 7</code></button></li>
+</ol>
+
+<p class="course-quiz-explanation"><code>p++</code> hands back the old 7; by the time the next <code>&lt;&lt;</code> reads <code>p</code>, the increment has already happened, so it reads 8.</p>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Example 3 · Inside a condition, the comparison sees the expression's value
+
+~~~cpp
+int c = 4;
+if (c++ > 4)                       // compares 4 > 4 — false; c is now 5
+    std::cout << "yes\n";
+std::cout << "c = " << c << '\n';  // c = 5
+
+int d = 4;
+if (++d > 4)                       // d becomes 5 first; 5 > 4 — true
+    std::cout << "yes\n";          // this one prints
+~~~
+
+**Verified output:** <code>c = 5</code>, then <code>yes</code>, then <code>d = 5</code>
+
+The increment happens in both branches — even the one whose body never ran.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Choose the form that says what you mean
+
+- Need the value *before* the step — the item you are about to consume, the count before it grew? Use <code>i++</code>.
+- Need the value *after* the step — the new total, the next index? Use <code>++i</code>.
+- Need neither, as in a loop update? <code>for (int i = 0; i &lt; n; ++i)</code> and <code>i++</code> behave identically, because the value is thrown away.
+
+When both read equally well, prefer <code>++i</code>: it is the habit that stays correct once you increment things larger than an <code>int</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Never modify the same variable twice in one expression
+
+~~~cpp
+int i = 1;
+i = i++ + ++i;   // undefined behaviour — not "some value you can predict"
+~~~
+
+The compiler warns: <code>warning: multiple unsequenced modifications to 'i' [-Wunsequenced]</code>
+
+The language does not say which order these happen in, so the compiler may produce anything at all, and two compilers may disagree.
+
+One <code>++</code> per variable per statement, and this can never bite you.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Read every ++ twice: once for the variable, once for the value
+
+- <code>++i</code> increments, then yields the **new** value.
+- <code>i++</code> yields the **old** value, then increments.
+- On its own line the two are the same; inside a larger expression they are not.
+- The variable always ends one higher, whichever form you wrote.
+- Two changes to one variable in one expression is undefined behaviour — do not write it.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

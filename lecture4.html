@@ -64,6 +64,36 @@ Write the rule before the syntax:
 The rows are mutually exclusive and cover every reading. Every row should correspond to a test.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## The general form of an if chain and a switch
+
+~~~cpp
+if (<condition>) {
+    // runs when <condition> is true
+} else if (<other condition>) {
+    // runs when the first was false and this one is true
+} else {
+    // runs when every condition above was false
+}
+
+switch (<integer or char expression>) {
+    case <constant>:
+        // statements
+        break;              // without it, execution falls into the next case
+    default:
+        // statements when no case matched
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;condition&gt;</code> | An expression usable as a <code>bool</code>, tested in order from the top. |
+| <code>else</code> | Optional. Without it, no path runs when every condition is false. |
+| <code>case &lt;constant&gt;</code> | A compile-time constant. Ranges and floating-point values are not allowed. |
+| <code>break</code> | Ends the <code>switch</code>. Omitting it is legal and falls through deliberately. |
+
+Only the first true branch of an <code>if</code> chain runs, so order the conditions from exceptional to normal.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## Order branches from exceptional cases to the normal case
 
 ~~~cpp

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Quiz 1: sample questions in the three formats used on the paper">
+    <title>Quiz 1 practice: sample questions in every format</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Quiz 1 practice: sample questions in every format
+## Three question types, worked answers, Lectures 1–6
+
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## The paper asks three kinds of question
+
+| Type | What you write |
+| --- | --- |
+| True or false | The verdict **and** one sentence saying why. A bare "False" earns nothing. |
+| Predict the output | Exactly what the program prints, including spaces and line breaks. |
+| Complete the code | The missing fragment, written so the program meets the stated goal. |
+
+Every question below is a sample in that format, with the answer on the same slide. Cover the answer, commit to yours, then compare.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Type 1 · True or false, with one sentence of reason
+
+The reason carries the marks. It must name the rule, not restate the verdict.
+
+- Weak: "False, because it does not work that way."
+- Strong: "False, because <code>do-while</code> tests its condition *after* the body, so the body always runs at least once."
+
+One sentence is enough. Name the mechanism.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Sample 1 · True or false
+
+"A <code>do-while</code> loop can finish without ever executing its body."
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">True</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct>False</button></li>
+</ol>
+
+<p class="course-quiz-explanation"><strong>False</strong> — the condition is tested after the body, so the body always runs at least once.</p>
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Sample 2 · True or false
+
+"After <code>int x = 7 / 2;</code> the variable <code>x</code> holds <code>3</code>."
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct>True</button></li>
+<li><button class="course-quiz-option" type="button">False</button></li>
+</ol>
+
+<p class="course-quiz-explanation"><strong>True</strong> — both operands are <code>int</code>, so integer division discards the fractional part rather than rounding.</p>
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Sample 3 · True or false
+
+"In <code>if (a != 0 &amp;&amp; b(a))</code>, the function <code>b</code> is called every time the <code>if</code> is reached."
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">True</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct>False</button></li>
+</ol>
+
+<p class="course-quiz-explanation"><strong>False</strong> — <code>&amp;&amp;</code> short-circuits, so when <code>a != 0</code> is false the right operand is never evaluated.</p>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Type 2 · Predict the output
+
+Write what the program prints, exactly. Trace on paper: one column per variable, one row per iteration.
+
+Marks are lost for missing spaces and missing line breaks, so write <code>_</code> for a space if your handwriting is ambiguous.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 4 · What does this print?
+
+~~~cpp
+int count = 0;
+for (int i = 1; i <= 4; ++i) {
+    if (i % 2 == 0) continue;
+    count += i;
+}
+std::cout << count;
+~~~
+
+**Answer:** <code>4</code>
+
+<code>continue</code> skips the even values, so only <code>1</code> and <code>3</code> are added.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 5 · What does this print?
+
+~~~cpp
+for (int r = 1; r <= 3; ++r) {
+    for (int c = 1; c <= r; ++c) std::cout << '*';
+    std::cout << '\n';
+}
+~~~
+
+<pre data-course-static-output aria-label="Program output"><code>*
+**
+***</code></pre>
+
+The inner bound is <code>r</code>, so row <code>r</code> prints exactly <code>r</code> stars.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 6 · What does this print?
+
+~~~cpp
+int grade = 2;
+switch (grade) {
+    case 1: std::cout << "one ";
+    case 2: std::cout << "two ";
+    case 3: std::cout << "three "; break;
+    default: std::cout << "other ";
+}
+~~~
+
+**Answer:** <code>two three </code>
+
+Execution enters at <code>case 2</code> and falls through into <code>case 3</code>, because only <code>case 3</code> has a <code>break</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Type 3 · Complete the missing code
+
+The comment states the goal. Write the fragment that meets it — not a whole rewritten program.
+
+Check three things before moving on: the loop still terminates, the boundary value is on the correct side of the comparison, and every declared name is spelled as declared.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 7 · Fill the missing condition
+
+~~~cpp
+int value = 0, total = 0;
+std::cin >> value;
+while (__________) {   // stop at the sentinel -1, do not add it
+    total += value;
+    std::cin >> value;
+}
+std::cout << total;
+~~~
+
+**Missing code:** <code>value != -1</code>
+
+For input <code>5 8 -1 4</code> this prints <code>13</code>: the sentinel ends the loop before it is added, and the <code>4</code> is never read.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 8 · Fill the missing loop tail
+
+~~~cpp
+int age = 0;
+do {
+    std::cin >> age;
+} __________          // keep asking until age is positive
+std::cout << age;
+~~~
+
+**Missing code:** <code>while (age &lt;= 0);</code>
+
+The semicolon is part of the answer. For input <code>-3 0 12</code> the program prints <code>12</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Sample 9 · Fill the missing update
+
+~~~cpp
+for (int n = 4; n >= 1; __________) {   // print 4 3 2 1
+    std::cout << n << ' ';
+}
+~~~
+
+**Missing code:** <code>--n</code>
+
+The bound is <code>n &gt;= 1</code>, so the update must decrease <code>n</code>; <code>++n</code> here would never terminate.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## What Quiz 1 covers
+
+Lectures 1–6, including the supplement:
+
+- **L01–L02** program structure, types, conversions, and constants.
+- **L03 · L3.5** expressions, scope, lifetime, and <code>++i</code> versus <code>i++</code>.
+- **L04** boolean conditions, <code>if</code>/<code>else if</code>/<code>else</code>, <code>switch</code>, and short-circuiting.
+- **L05** <code>while</code>, <code>do-while</code>, sentinels, and termination.
+- **L06** <code>for</code>, nested loops, invariants, and boundaries.
+
+Every lecture has a syntax-template slide. If you cannot write the template from memory, start your revision there.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Before you hand the paper in
+
+1. Every true/false answer carries a reason naming a rule.
+2. Every predicted output shows its spaces and line breaks.
+3. Every completed fragment still terminates and respects its boundary.
+4. Trace one boundary case per program: the smallest, the largest, or the empty input.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

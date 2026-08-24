@@ -6,11 +6,11 @@
     const sessions = [
         { sequence: 1, lectureId: 1, date: '2026-08-04', start: '10:30', end: '11:25', title: 'Turn a precise problem into a running C++ program', file: 'lecture1.html', module: '1' },
         { sequence: 2, lectureId: 2, date: '2026-08-07', start: '11:30', end: '12:25', title: 'Choose types from meaning, range, and precision', file: 'lecture2.html', module: '2' },
-        { sequence: 3, lectureId: 3, date: '2026-08-11', start: '10:30', end: '11:25', title: 'Track expressions, scope, storage, and lifetime', file: 'lecture3.html', module: '2' },
+        { sequence: 3, lectureId: 3, date: '2026-08-11', start: '10:30', end: '11:25', title: 'Track expressions, scope, storage, and lifetime', file: 'lecture3.html', module: '2', resources: [{ label: 'Lecture 3.5 · Pre-increment vs post-increment', file: 'lecture3-5.html' }] },
         { sequence: 4, lectureId: 4, date: '2026-08-14', start: '11:30', end: '12:25', title: 'Turn requirements into safe, testable branches', file: 'lecture4.html', module: '3' },
         { sequence: 5, lectureId: 5, date: '2026-08-18', start: '10:30', end: '11:25', title: 'Make loop state progress toward termination', file: 'lecture5.html', module: '3' },
         { sequence: 6, lectureId: 6, date: '2026-08-21', start: '11:30', end: '12:25', title: 'Use ranges and invariants to control repetition', file: 'lecture6.html', module: '3' },
-        { sequence: 7, lectureId: null, date: '2026-08-25', start: '10:30', end: '11:25', title: 'Prove the foundations with code and reasoning', file: 'index.html#assessment', module: 'Quiz', kind: 'quiz', quizNumber: 1 },
+        { sequence: 7, lectureId: null, date: '2026-08-25', start: '10:30', end: '11:25', title: 'Prove the foundations with code and reasoning', scheduleLabel: 'Quiz 1 sample questions and worked answers', file: 'quiz.html', module: 'Quiz', kind: 'quiz', quizNumber: 1 },
         { sequence: 8, lectureId: 7, date: '2026-08-28', start: '11:30', end: '12:25', title: 'Give each operation a clear function contract', file: 'lecture7.html', module: '4' },
         { sequence: 9, lectureId: 8, date: '2026-09-01', start: '10:30', end: '11:25', title: 'Choose copy, alias, and recursion deliberately', file: 'lecture8.html', module: '4' },
         { sequence: 10, lectureId: 9, date: '2026-09-04', start: '11:30', end: '12:25', title: 'Traverse fixed sequences within exact bounds', file: 'lecture9.html', module: '5' },

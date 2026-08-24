@@ -15,10 +15,10 @@
         'm2-scope': [3, 2], 'm2-storage': [3, 4], 'm2-namespaces': [3, 6],
         'm2-operators': [3, 7], 'm2-precedence': [3, 7],
 
-        'm3-conditionals': [4, 2], 'm3-if-else': [4, 3],
-        'm3-switch': [4, 4], 'm3-short-circuit': [4, 5], 'm3-comparison': [4, 6],
+        'm3-conditionals': [4, 2], 'm3-if-else': [4, 4],
+        'm3-switch': [4, 5], 'm3-short-circuit': [4, 6], 'm3-comparison': [4, 7],
         'm3-while': [5, 2], 'm3-do-while': [5, 5],
-        'm3-for': [6, 2], 'm3-loop-choice': [6, 6], 'm3-loop-pitfalls': [6, 7],
+        'm3-for': [6, 2], 'm3-loop-choice': [6, 7], 'm3-loop-pitfalls': [6, 8],
 
         'm4-function-anatomy': [7, 3], 'm4-parameters': [7, 5], 'm4-lambdas': [7, 7],
         'm4-reference': [8, 2], 'm4-const-reference': [8, 3],
