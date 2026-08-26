@@ -34,6 +34,7 @@
     const academicEvents = [
         { date: '2026-08-03', title: 'Commencement of classes for the 2026 B.Tech., B.S. and B.Des. batch', kind: 'milestone' },
         { date: '2026-08-15', title: 'Independence Day · institute holiday', kind: 'holiday' },
+        { date: '2026-08-26', title: 'Institute holiday', kind: 'holiday' },
         { date: '2026-09-15', title: 'Monday timetable followed instead of Tuesday slots', kind: 'timetable' },
         { date: '2026-09-18', endDate: '2026-09-26', title: 'Midsemester assessment period · no regular lectures', kind: 'assessment' },
         { date: '2026-09-27', endDate: '2026-10-04', title: 'Midsemester break · no classes or laboratories', kind: 'assessment' },
@@ -49,7 +50,7 @@
     const labBatches = {
         A1: { group: 'A', day: 'Thursday', start: '14:30', end: '17:30', finalDate: '2026-11-19', dates: ['2026-08-13', '2026-08-20', '2026-08-27', '2026-09-03', '2026-09-10', '2026-10-08', '2026-10-15', '2026-10-22', '2026-10-29', '2026-11-05', '2026-11-12'] },
         A2: { group: 'A', day: 'Tuesday', start: '13:30', end: '16:30', finalDate: '2026-11-23', finalNote: 'Tuesday slot on Monday', dates: ['2026-08-11', '2026-08-18', '2026-08-25', '2026-09-01', '2026-09-08', '2026-10-06', '2026-10-13', '2026-10-27', '2026-11-03', '2026-11-10', '2026-11-17'] },
-        A3: { group: 'A', day: 'Wednesday', start: '13:30', end: '16:30', finalDate: '2026-11-18', dates: ['2026-08-12', '2026-08-19', '2026-08-26', '2026-09-02', '2026-09-09', '2026-10-07', '2026-10-14', '2026-10-21', '2026-10-28', '2026-11-04', '2026-11-11'] },
+        A3: { group: 'A', day: 'Wednesday', start: '13:30', end: '16:30', finalDate: '2026-11-18', dates: ['2026-08-12', '2026-08-19', '2026-09-02', '2026-09-09', '2026-10-07', '2026-10-14', '2026-10-21', '2026-10-28', '2026-11-04', '2026-11-11'] },
         A4: { group: 'A', day: 'Friday', start: '14:30', end: '17:30', finalDate: '2026-11-20', dates: ['2026-08-14', '2026-08-21', '2026-08-28', '2026-09-04', '2026-09-11', '2026-10-09', '2026-10-16', '2026-10-23', '2026-10-30', '2026-11-06', '2026-11-13'] },
         B1: { group: 'B', day: 'Monday', start: '08:30', end: '11:25', finalDate: '2026-11-16', dates: ['2026-08-10', '2026-08-17', '2026-08-24', '2026-08-31', '2026-09-07', '2026-09-14', '2026-10-05', '2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02'] },
         B2: { group: 'B', day: 'Monday', start: '13:30', end: '16:25', finalDate: '2026-11-16', dates: ['2026-08-10', '2026-08-17', '2026-08-24', '2026-08-31', '2026-09-07', '2026-09-14', '2026-10-05', '2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02'] },
