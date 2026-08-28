@@ -1,0 +1,327 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[margin=15mm,top=14mm,bottom=15mm,headheight=13pt,headsep=5mm,footskip=8mm]{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{microtype}
+\DisableLigatures{encoding=T1,family=cmtt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textbf{CS 103 -- Quiz 1}}
+\rhead{\small IIT Indore -- Autumn 2026}
+\cfoot{\small Page \thepage\ of \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist[enumerate]{leftmargin=*,itemsep=5pt,topsep=3pt}
+
+\lstdefinestyle{cpp}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  frame=single,
+  framesep=4pt,
+  xleftmargin=2pt,
+  xrightmargin=2pt,
+  aboveskip=3pt,
+  belowskip=3pt,
+  showstringspaces=false,
+  upquote=true,
+  keepspaces=true,
+  columns=fullflexible,
+  tabsize=4
+}
+
+\lstdefinestyle{cppfill}{
+  style=cpp,
+  basicstyle=\ttfamily\fontsize{20}{24}\selectfont,
+  framesep=7pt
+}
+
+\newcommand{\answerline}{%
+  \par\vspace{4mm}\noindent\rule{\linewidth}{0.35pt}\vspace{1pt}}
+
+\newcommand{\tfcode}[1]{%
+  \begingroup
+  \setlength{\fboxsep}{1pt}%
+  \setlength{\fboxrule}{0.3pt}%
+  \fcolorbox{black}{gray!18}{\footnotesize\ttfamily\strut\detokenize{#1}}%
+  \endgroup}
+
+\newcommand{\outputbox}[1]{%
+  \par\smallskip
+  \noindent\textbf{Exact output:}\par
+  \vspace{#1}
+  \noindent\rule{\linewidth}{0.45pt}%
+}
+
+\newcommand{\tfanswer}{%
+  \par\noindent
+  \textbf{T/F: }\begingroup\setlength{\fboxsep}{1pt}%
+  \fbox{\rule{0pt}{4mm}\hspace{15mm}}\endgroup\hspace{4mm}%
+  \textbf{Reason: }\rule{0.62\linewidth}{0.35pt}}
+
+\begin{document}
+
+\begin{center}
+  {\large\textbf{Indian Institute of Technology Indore}}\\[2pt]
+  {\LARGE\textbf{CS 103: Introduction to Programming}}\\[2pt]
+  {\Large\textbf{Quiz 1}}
+\end{center}
+
+\vspace{2pt}
+\begin{tabularx}{\linewidth}{@{}X X r@{}}
+  \textbf{Date:} 25 August 2026 &
+  \textbf{Time:} 10:35--11:20 (45 minutes) &
+  \textbf{Maximum marks:} 42
+\end{tabularx}
+
+\vspace{3pt}
+\begin{tabularx}{\linewidth}{@{}X X@{}}
+  \textbf{Name:} \rule{0.72\linewidth}{0.4pt} &
+  \textbf{Roll no.:} \rule{0.62\linewidth}{0.4pt}
+\end{tabularx}
+
+\vspace{4pt}
+\noindent\fbox{%
+  \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+    \textbf{Instructions}
+    \begin{enumerate}[label=\arabic*.,leftmargin=5mm,itemsep=1pt,topsep=2pt]
+      \item Answer every question in the space provided. Assume C++17 and that all required headers are present.
+      \item For True/False, give the verdict and explain why C++ produces that result. Rephrasing the statement is not a reason.
+      \item For output questions, reproduce every character, space, and line break exactly. Use an underscore to make a handwritten space visible if needed.
+      \item For code completion, write only the missing fragment. It must satisfy the stated goal and terminate.
+    \end{enumerate}
+  }}
+
+\textbf{Question 1. True or False, with a one-sentence reason.}\hfill
+\textbf{12 $\times$ 1 = 12}
+
+Each part needs a correct verdict and an explanation of why C++ produces that result. Merely restating the claim earns no mark.
+
+\begin{enumerate}[label=\textbf{(\alph*)},itemsep=1pt]
+  \item A file containing only \tfcode{std::cout << "Hi";} is a complete runnable C++ program.
+  \tfanswer
+
+  \item After \tfcode{int x = 9 / 4;}, the variable \tfcode{x} holds \tfcode{2}.
+  \tfanswer
+
+  \item After \tfcode{const int limit = 10;}, the statement \tfcode{limit = 12;} is valid because \tfcode{limit} is still an \tfcode{int}.
+  \tfanswer
+
+  \item This use of \tfcode{steps} is valid: \tfcode{{ int steps = 3; } std::cout << steps;}.
+  \tfanswer
+
+  \item With \tfcode{int x = 8;}, an \tfcode{if (x > 0)}--\tfcode{else if (x > 5)} chain can execute both branches.
+  \tfanswer
+
+  \item The expression \tfcode{switch (2.5)} can directly choose a case such as \tfcode{case 2:}.
+  \tfanswer
+
+  \item When \tfcode{code} is 1, a \tfcode{case 1} without \tfcode{break} followed by \tfcode{case 2} executes only \tfcode{case 1}.
+  \tfanswer
+
+  \item With \tfcode{x = 0}, the condition \tfcode{x != 0 && 12 / x > 2} attempts division by zero.
+  \tfanswer
+
+  \item With \tfcode{n = 0}, \tfcode{while (n > 0) { std::cout << n; }} prints \tfcode{0} once.
+  \tfanswer
+
+  \item With \tfcode{n = 0}, \tfcode{do { std::cout << n; } while (n > 0);} prints \tfcode{0} once.
+  \tfanswer
+
+  \item After reading \tfcode{x}, \tfcode{while (x != -1) { total += x; std::cin >> x; }} adds the sentinel \tfcode{-1} to \tfcode{total}.
+  \tfanswer
+
+  \item The loop \tfcode{for (int i = 5; i < 5; i += 1) std::cout << i;} prints \tfcode{5} once.
+  \tfanswer
+\end{enumerate}
+\newpage
+\textbf{Question 2. Predict the exact output.}\hfill\textbf{16 marks}
+
+Parts (a)--(e) carry 2 marks each; parts (f)--(g) carry 3 marks each.
+
+\noindent\begin{minipage}[t]{0.485\linewidth}
+\textbf{(a)}
+\begin{lstlisting}[style=cpp]
+int distance = 7, time = 2;
+double speed = distance / time;
+std::cout << speed << '\n';
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\textbf{(b)}
+\begin{lstlisting}[style=cpp]
+int score = 7;
+if (score > 7) std::cout << "A ";
+else if (score >= 5) std::cout << "B ";
+else std::cout << "C ";
+std::cout << score % 4 << '\n';
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}
+
+\vspace{4pt}
+\noindent\begin{minipage}[t]{0.485\linewidth}
+\textbf{(c)}
+\begin{lstlisting}[style=cpp]
+int n = 3;
+while (n > 0) {
+    std::cout << n << ' ';
+    n -= 1;
+}
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\textbf{(d)}
+\begin{lstlisting}[style=cpp]
+int total = 0;
+for (int i = 1; i <= 6; i += 1) {
+    if (i % 2 == 0) continue;
+    total += i;
+}
+std::cout << total << '\n';
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}
+
+\vspace{4pt}
+\noindent\begin{minipage}[t]{0.485\linewidth}
+\textbf{(e)}
+\begin{lstlisting}[style=cpp]
+int code = 1;
+switch (code) {
+ case 0: std::cout << "zero "; break;
+ case 1: std::cout << "one ";
+ case 2: std::cout << "two "; break;
+ default: std::cout << "other ";
+}
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\textbf{(f)}
+\begin{lstlisting}[style=cpp]
+int total = 0;
+for (int r = 1; r <= 3; r += 1) {
+    for (int c = 1; c <= r; c += 1) {
+        if (c == 2) continue;
+        total += r + c;
+    }
+    std::cout << total << ' ';
+}
+std::cout << '\n';
+\end{lstlisting}
+\outputbox{7mm}
+\end{minipage}
+
+\vspace{4pt}
+\noindent\textbf{(g)}
+\begin{lstlisting}[style=cpp]
+int x = 0;
+if (x != 0 && 12 / x > 2)
+    std::cout << "A ";
+else
+    std::cout << "B ";
+
+switch (x + 1) {
+    case 0: std::cout << "zero ";
+    case 1: std::cout << "one ";
+    case 2: std::cout << "two "; break;
+    default: std::cout << "other ";
+}
+std::cout << '\n';
+\end{lstlisting}
+\outputbox{7mm}
+
+\newpage
+\textbf{Question 3. Complete the missing code.}\hfill\textbf{14 marks}
+
+Write each answer directly in its code blank. Parts (a)--(d) carry 2 marks each; parts (e)--(f) carry 3 marks each.
+
+\textbf{(a)} Stop at the sentinel \lstinline|0| and do not add it.
+\begin{lstlisting}[style=cppfill]
+int value = 0, total = 0;
+std::cin >> value;
+while (__________________) {
+    total += value;
+    std::cin >> value;
+}
+std::cout << total;
+\end{lstlisting}
+
+\vspace{5pt}
+\textbf{(b)} Keep asking until \lstinline|choice| is from 1 through 4.
+\begin{lstlisting}[style=cppfill]
+int choice = 0;
+do {
+    std::cin >> choice;
+} while (____________________);
+\end{lstlisting}
+
+\vspace{5pt}
+\textbf{(c)} Print \lstinline|2 4 6 8 10|, with a space after each.
+\begin{lstlisting}[style=cppfill]
+for (int k = 2; k <= 10; ________) {
+    std::cout << k << ' ';
+}
+\end{lstlisting}
+
+\vspace{5pt}
+\textbf{(d)} Run the division only for a nonzero denominator.
+\begin{lstlisting}[style=cppfill]
+if (__________________ &&
+    numerator / denominator > 2) {
+    std::cout << "large quotient";
+}
+\end{lstlisting}
+
+\newpage
+\textbf{Question 3. Complete the missing code (continued).}\hfill\textbf{14 marks}
+
+\begin{enumerate}[label=\textbf{(\alph*)},start=5,itemsep=8pt]
+\item The input is a sequence of integers ending with \lstinline|-1|. Complete the three blanks so the program prints the integer average of the \emph{positive even} values before the sentinel, or \lstinline|none| if there are no such values. \hfill\textbf{3 marks}
+
+\begin{lstlisting}[style=cppfill]
+int x = 0;
+int total = 0;
+int count = 0;
+std::cin >> x;
+while (__________________) {
+    if (__________________) {
+        total += x;
+        __________________;
+    }
+    std::cin >> x;
+}
+if (count == 0)
+    std::cout << "none\n";
+else
+    std::cout << total / count << '\n';
+\end{lstlisting}
+
+\item Complete all three blanks so the program prints \lstinline|1| if the input integer $n$ has a divisor from 2 through $n-1$, and \lstinline|0| otherwise. \hfill\textbf{3 marks}
+\begin{lstlisting}[style=cppfill]
+int n = 0;
+std::cin >> n;
+bool hasDivisor = false;
+for (int d = 2; __________; d += 1) {
+    if (________________) {
+        ________________;
+        break;
+    }
+}
+std::cout << hasDivisor;
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}
