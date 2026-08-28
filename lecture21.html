@@ -44,6 +44,35 @@ double totalArea(const std::vector<std::unique_ptr<Shape>>& shapes) {
 - unique_ptr makes ownership explicit.
 - The aggregation algorithm depends only on the interface.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="21" data-markdown><textarea data-template>
+## The general form of a polymorphic container and a generic algorithm
+
+~~~cpp
+std::vector<std::unique_ptr<Base>> <items>;          // owns objects of varied types
+<items>.push_back(std::make_unique<Derived>(<arguments>));
+
+for (const auto& <item> : <items>)
+    <item>-><operation>();      // one call, the runtime type chooses the behavior
+
+template <typename T>
+<return type> <algorithm>(const T& <value>) {
+    // may use only the operations every T is promised to support
+}
+
+struct <Edge> { int <from>; int <to>; };             // a link, stored apart from the objects
+std::vector<std::vector<int>> <adjacency>;           // <adjacency>[<v>] lists v's neighbours
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>unique_ptr&lt;Base&gt;</code> | Stores derived objects without slicing, and releases each one when the container is destroyed. |
+| <code>const auto&amp;</code> | Binds without copying. Copying a <code>unique_ptr</code> is not allowed, and copying here would be wrong anyway. |
+| <code>template &lt;typename T&gt;</code> | The algorithm is written once against promised operations, then compiled for each type actually used. |
+| identity vs link | An object knows what it is; the graph knows how objects connect. Keeping them apart lets either change alone. |
+| adjacency list | Costs space proportional to the edges that exist, and makes "the neighbours of <code>&lt;v&gt;</code>" a direct lookup. |
+
+Store what varies behind one promised interface, and the container, the algorithm, and the graph stop depending on the concrete types.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A heterogeneous container owns varied objects through one interface
 

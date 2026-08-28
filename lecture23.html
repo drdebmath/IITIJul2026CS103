@@ -40,6 +40,35 @@ void digitPass(std::vector<int>& values, int place) {
 - Stable passes preserve earlier digit order.
 - The array of vectors is the structure that makes the algorithm direct.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="23" data-markdown><textarea data-template>
+## The general form of a stable counting pass and a recursive decomposition
+
+~~~cpp
+int <count>[<radix>] = {};                              // one bucket per key value
+for (int <i> = 0; <i> < <n>; ++<i>) ++<count>[<key>(<a>[<i>])];
+
+for (int <d> = 1; <d> < <radix>; ++<d>)                 // prefix sums give each
+    <count>[<d>] += <count>[<d> - 1];                   // bucket its end offset
+
+for (int <i> = <n> - 1; <i> >= 0; --<i>)                // right to left keeps it stable
+    <out>[--<count>[<key>(<a>[<i>])]] = <a>[<i>];
+
+<result> <solve>(<region>) {
+    if (<region is small enough>) return <direct answer>;
+    return <combine>(<solve>(<sub-region>), ..., <solve>(<sub-region>));
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;key&gt;(&lt;x&gt;)</code> | Extracts the one digit or field this pass sorts on. The key choice is what decides the bucket count. |
+| <code>&lt;radix&gt;</code> | The number of distinct key values. Cost is one pass over the data plus one over the buckets. |
+| stability | Equal keys keep their earlier relative order. Radix sort is only correct because each pass is stable. |
+| right-to-left fill | Walking the input backwards while decrementing the offset is what makes the pass stable. |
+| <code>&lt;region is small enough&gt;</code> | The base case. Sub-regions must be compatible with <code>&lt;combine&gt;</code>, or the recursion cannot reassemble the answer. |
+
+Pick the structure from the operation the program actually needs, then let the invariant that structure maintains carry the correctness argument.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## The required operation determines the candidate structures
 

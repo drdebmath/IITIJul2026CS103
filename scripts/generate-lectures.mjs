@@ -493,10 +493,10 @@ These are diagnosis examples. Do not run the second loop unchanged.`,
     },
     {
         id: 7,
-        title: 'Give each operation a clear function contract',
+        title: 'Declare, define, and call functions',
         slides: [
-            md`# Lecture 7: Give each operation a clear function contract
-## Give one operation a clear name and contract`,
+            md`# Lecture 7: Declare, define, and call functions
+## Declarations, definitions, parameters, and return values`,
             md`## One function performs one explainable operation
 
 A function contract states:

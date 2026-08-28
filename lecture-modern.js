@@ -14,6 +14,9 @@
         : concept.lecture === lectureId));
     const requestedConceptId = new URLSearchParams(window.location.search).get('concept');
     const requestedConcept = lectureConcepts.find((concept) => concept.id === requestedConceptId) || null;
+    // ?syntax opens the deck on its generic-syntax slide. The speedrun links here
+    // when a learner wants the form of a construct rather than its explanation.
+    const requestedSyntax = new URLSearchParams(window.location.search).get('syntax') !== null;
     const lectureContext = (window.CS103LectureContexts && window.CS103LectureContexts[lectureId]) || null;
     const sessionPlan = (window.CS103SessionPlans && window.CS103SessionPlans[lectureId]) || null;
     const coreAuthoredSlides = sessionPlan ? new Set(sessionPlan) : null;
@@ -384,10 +387,10 @@
         });
     }
 
-    function focusRequestedConcept() {
-        if (!requestedConcept || !window.Reveal) return;
-        const target = document.querySelector(`[data-course-authored-slide="${requestedConcept.slide}"]`);
-        if (!target) return;
+    // Reader mode scrolls the deck; presentation mode navigates it. Both the
+    // ?concept= and ?syntax entry points need the same two-path handling.
+    function openSlide(target) {
+        if (!target || !window.Reveal) return;
         target.classList.add('course-requested-concept');
         if (readerMode) {
             target.scrollIntoView({ behavior: reduceMotionQuery.matches ? 'auto' : 'smooth', block: 'start' });
@@ -396,6 +399,15 @@
         }
         const indices = window.Reveal.getIndices(target);
         if (indices) window.Reveal.slide(indices.h, indices.v, indices.f);
+    }
+
+    function focusRequestedSyntax() {
+        openSlide(document.querySelector('[data-course-syntax]'));
+    }
+
+    function focusRequestedConcept() {
+        if (!requestedConcept) return;
+        openSlide(document.querySelector(`[data-course-authored-slide="${requestedConcept.slide}"]`));
     }
 
     function createNavigationSlide() {
@@ -494,6 +506,11 @@
             <div class="course-code-toolbar">
                 <strong>${language} editor</strong>
                 <span>Editable · click or use ↑ ↓ to highlight a line</span>
+                <div class="course-code-zoom" role="group" aria-label="${language} zoom">
+                    <button class="course-code-zoom-out" type="button" title="Zoom out" aria-label="Zoom code out">&minus;</button>
+                    <button class="course-code-zoom-level" type="button" title="Reset zoom" aria-label="Reset code zoom to 100 percent">100%</button>
+                    <button class="course-code-zoom-in" type="button" title="Zoom in" aria-label="Zoom code in">+</button>
+                </div>
                 <button class="course-code-copy" type="button">Copy</button>
                 <button class="course-code-reset" type="button">Reset</button>
             </div>
@@ -595,6 +612,39 @@
                 focusLine(index - 1);
             }
         });
+        // Zoom scales the type without touching the DOM, so edits, the active
+        // line, and monospace alignment all survive a size change. The editor
+        // keeps its max-height, so zooming in scrolls the viewport rather than
+        // pushing the listing past the bottom of the slide.
+        const zoomSteps = [0.7, 0.8, 0.9, 1, 1.15, 1.3, 1.5, 1.75, 2];
+        const zoomOutButton = editor.querySelector('.course-code-zoom-out');
+        const zoomInButton = editor.querySelector('.course-code-zoom-in');
+        const zoomLevelButton = editor.querySelector('.course-code-zoom-level');
+        let zoomIndex = zoomSteps.indexOf(1);
+
+        function applyZoom(shouldScroll) {
+            const scale = zoomSteps[zoomIndex];
+            editor.style.setProperty('--course-code-zoom', String(scale));
+            zoomLevelButton.textContent = `${Math.round(scale * 100)}%`;
+            zoomOutButton.disabled = zoomIndex === 0;
+            zoomInButton.disabled = zoomIndex === zoomSteps.length - 1;
+            const active = viewport.querySelector('.course-code-line.is-active');
+            if (shouldScroll !== false && active) focusLine(Number(active.dataset.line));
+        }
+
+        function stepZoom(delta) {
+            const next = Math.max(0, Math.min(zoomSteps.length - 1, zoomIndex + delta));
+            if (next === zoomIndex) return;
+            zoomIndex = next;
+            applyZoom();
+        }
+
+        zoomOutButton.addEventListener('click', () => stepZoom(-1));
+        zoomInButton.addEventListener('click', () => stepZoom(1));
+        zoomLevelButton.addEventListener('click', () => {
+            zoomIndex = zoomSteps.indexOf(1);
+            applyZoom();
+        });
         editor.querySelector('.course-code-copy').addEventListener('click', async (event) => {
             const value = lineElements().map((line) => line.querySelector('.course-code-line-text').textContent).join('\n');
             try {
@@ -607,6 +657,7 @@
         });
         editor.querySelector('.course-code-reset').addEventListener('click', restore);
         restore();
+        applyZoom(false);
         pre.replaceWith(editor);
     }
 
@@ -1031,7 +1082,8 @@
         updateSlideUI(window.Reveal.getCurrentSlide());
         applyDisplayMode();
         watchPracticeSlide();
-        if (requestedConcept) window.requestAnimationFrame(focusRequestedConcept);
+        if (requestedSyntax) window.requestAnimationFrame(focusRequestedSyntax);
+        else if (requestedConcept) window.requestAnimationFrame(focusRequestedConcept);
     }
 
     function onRevealReady() {

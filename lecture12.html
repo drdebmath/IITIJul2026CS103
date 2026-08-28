@@ -46,6 +46,34 @@ int main() {
 - Initialize every accumulator.
 - Test empty, one-element, and boundary cases.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="12" data-markdown><textarea data-template>
+## The general form of a precondition and a test
+
+~~~cpp
+#include <cassert>
+
+<return type> <name>(<parameters>) {
+    assert(<precondition>);      // states what the caller must already guarantee
+    // body may now rely on <precondition> being true
+}
+
+void <test name>() {                                  // one test = one named claim
+    assert(<name>(<known input>) == <expected result>);
+    assert(<name>(<boundary input>) == <expected result>);
+}
+
+// main() calls each test; reaching the end means every assert held
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>assert(&lt;precondition&gt;)</code> | Documents and checks a caller obligation. It aborts on failure, so it reports the defect at its source. |
+| <code>&lt;known input&gt;</code> | An input whose correct answer you worked out by hand, independently of the code. |
+| <code>&lt;boundary input&gt;</code> | The empty, smallest, largest, or just-invalid case — where off-by-one and precision defects live. |
+| failure | An assert names the file and line. That location is evidence, not yet the cause. |
+
+A test that cannot fail proves nothing: write the input whose expected answer you knew before you ran the program.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Classifying the defect narrows the repair
 

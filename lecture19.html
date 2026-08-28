@@ -47,6 +47,38 @@ public:
 - protected exposes only what derived classes need.
 - Friend access remains narrow and purposeful.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="19" data-markdown><textarea data-template>
+## The general form of a base, a derived class, and a friend
+
+~~~cpp
+class <Base> {
+public:
+    <return type> <operation>();
+    friend <return type> <function>(<parameters>);   // one named exception
+protected:
+    <T> <field>;          // reachable by derived classes, not by outside code
+private:
+    <U> <hidden>;         // not even derived classes may touch this
+};
+
+class <Derived> : public <Base> {      // "<Derived> is-a <Base>"
+public:
+    <Derived>(<parameters>)
+        : <Base>(<base arguments>),    // the base is constructed first
+          <field>(<value>) {}
+};
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>: public &lt;Base&gt;</code> | Promises substitutability: a <code>&lt;Derived&gt;</code> must work anywhere a <code>&lt;Base&gt;</code> is expected. |
+| <code>protected</code> | The interface offered to derived classes only. Wider than <code>private</code>, narrower than <code>public</code>. |
+| construction order | Base subobject first, then members in declaration order, then the derived body. |
+| destruction order | Exactly the reverse, so a derived part is never torn down after the base it relies on. |
+| <code>friend</code> | Grants one named function or class access. It is a targeted exception, not a way to open the class up. |
+
+Inheritance is for reusing a promise, not for reusing code: if a <code>&lt;Derived&gt;</code> cannot honour every <code>&lt;Base&gt;</code> guarantee, it is not one.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Friend access is a narrow exception, not an interface
 

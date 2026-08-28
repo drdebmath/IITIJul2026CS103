@@ -44,6 +44,34 @@ int main() {
 - Validation is a sequence of explicit predicates.
 - cctype functions require careful character conversion.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="11" data-markdown><textarea data-template>
+## The general form of std::string construction, measurement, and input
+
+~~~cpp
+std::string <name>;                    // empty, size 0
+std::string <name> = "<text>";
+std::string <name>(<count>, '<ch>');   // <count> copies of one character
+
+<name>.size()                  // number of characters
+<name>.empty()                 // true exactly when size() == 0
+<name>[<i>]                    // 0 <= <i> < size(), unchecked
+<name>.at(<i>)                 // checked: throws std::out_of_range
+<name>.substr(<pos>, <length>) // <pos> must satisfy <pos> <= size()
+<name>.find("<needle>")        // returns std::string::npos when not found
+
+std::cin >> <name>;                 // one whitespace-delimited word
+std::getline(std::cin, <name>);     // the rest of the line, spaces included
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;i&gt;</code> | Zero-based, so the last character is at <code>size() - 1</code>. |
+| <code>substr(&lt;pos&gt;, &lt;length&gt;)</code> | Takes a position and a <em>length</em>, not two positions. A short tail is truncated, not an error. |
+| <code>find</code> | Compare the result against <code>std::string::npos</code>. It is not <code>-1</code>, and it is unsigned. |
+| <code>&gt;&gt;</code> vs <code>getline</code> | <code>&gt;&gt;</code> stops at the first space and leaves the newline behind; <code>getline</code> consumes the whole line. |
+
+A <code>std::string</code> owns and sizes its own characters, so length is a question you ask the object rather than compute.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## std::string owns, sizes, and edits its character sequence
 

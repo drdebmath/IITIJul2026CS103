@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 7: Give each operation a clear function contract">
-    <title>Lecture 7: Give each operation a clear function contract</title>
+    <meta name="description" content="CS103 Lecture 7: Declare, define, and call functions">
+    <title>Lecture 7: Declare, define, and call functions</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 7: Give each operation a clear function contract
-## Give one operation a clear name and contract
+# Lecture 7: Declare, define, and call functions
+## Declarations, definitions, parameters, and return values
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## A function owns one clear responsibility. · Travel estimate behind a function contract
+## A function owns one clear responsibility. · Travel estimate behind a function interface
 
 The caller validates input, then a small function receives two values and returns one calculated result.
 
@@ -39,22 +39,46 @@ int main() {
 **Takeaways**
 
 - A function owns one clear responsibility.
-- Parameters are inputs to this contract.
+- Parameters receive the arguments passed by the caller.
 - The return value is the calculated output.
+    </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="7" data-markdown><textarea data-template>
+## The general form of a declaration, a definition, and a call
+
+~~~cpp
+<return type> <name>(<parameter type> <parameter>, ...);   // declaration (prototype)
+
+<return type> <name>(<parameter type> <parameter>, ...) {  // definition: the body
+    return <expression>;        // type must convert to <return type>
+}
+
+<name>(<argument>, ...)         // call: arguments are copied into the parameters
+
+auto <name> = [](<parameter type> <parameter>) { return <expression>; };   // lambda
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;return type&gt;</code> | The type handed back to the caller. <code>void</code> returns nothing, so its <code>return;</code> carries no value. |
+| <code>&lt;name&gt;(&lt;parameters&gt;)</code> | The signature. Name plus parameter list is what a caller has to match. |
+| declaration vs definition | A declaration ends at the semicolon and may repeat; exactly one definition supplies the body. |
+| <code>&lt;argument&gt;</code> | Copied into the parameter, so assigning to the parameter leaves the caller's variable unchanged. |
+
+Put the declaration above <code>main</code> whenever the definition sits below it: the compiler must see the declaration before the first call.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## One function performs one explainable operation
 
-A function contract states:
+A function's specification states:
 
-- required inputs;
-- any preconditions;
-- returned result or visible effect.
+- its parameters and their types;
+- any preconditions the caller must satisfy;
+- its return value or visible effect.
 
-Small contracts reduce copy-paste and can be tested independently.
+Small, clearly specified functions reduce duplication and can be tested independently.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Read a function’s contract before its implementation
+## Read a function’s declaration before its definition
 
 ~~~cpp
 double rectangleArea(double length, double width) {
@@ -68,10 +92,10 @@ Return type → name → parameters → body.
 ## The function is asked to do "something useful"
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l07/function-contract.png" alt="A student hands a small sealed service booth its required inputs and receives one clearly defined result while a rule card keeps the promise visible — visual point: A contract is how &quot;something useful&quot; becomes testable behavior." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l07/function-contract.png" alt="A student hands a small sealed service booth its required inputs and receives one clearly defined result while a rule card keeps the promise visible — visual point: A specification is how &quot;something useful&quot; becomes testable behavior." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> The function is asked to do "something useful."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> A contract is how "something useful" becomes testable behavior.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> A specification is how "something useful" becomes testable behavior.</p>
 </figcaption>
 </figure>
     </textarea></section>
@@ -116,7 +140,7 @@ Changing <code>value</code> does not change the caller's argument.
 </figure>
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: A scoring contract makes progress measurable
+## Game evolution: A scoring function makes progress measurable
 
 | Today's concept | Exact game part enabled |
 |---|---|
@@ -134,7 +158,7 @@ int main() {
 }
 ~~~
 
-**Contract test:** the function returns 10, while the caller's original <code>score</code> remains 0.
+**Test:** the function returns 10, while the caller's original <code>score</code> remains 0.
 
 **Next unlock · L08:** deliberately mutate row and column through references.
     </textarea></section>
@@ -172,15 +196,15 @@ Named functions remain the default for novice code. Lambdas return later as sear
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Function contracts make behavior testable
+## Clear declarations and specifications make behavior testable
 
-- A function contract states inputs, preconditions, and output.
+- A function's specification states its parameters, preconditions, and return value.
 - A declaration makes a function known before its definition.
 - Value parameters are copies.
 - Prefer short functions with one explainable responsibility.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Verify Travel estimate behind a function contract with a claim, trace, boundary, and improvement
+## Verify Travel estimate behind a function interface with a claim, trace, boundary, and improvement
 
 Use the practical example as a small experiment. Before you leave, make the reasoning visible:
 
@@ -198,7 +222,7 @@ Choose one problem to solve now and two to attempt in the lab:
 - Write a boolean function that reports whether an integer is even.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Explain Travel estimate behind a function contract without opening the code
+## Explain Travel estimate behind a function interface without opening the code
 
 Explain today’s idea to a partner without opening the code:
 
@@ -209,7 +233,7 @@ Explain today’s idea to a partner without opening the code:
 If the explanation needs “and then another unrelated thing,” split the design before you code.
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="7" data-markdown><textarea data-template>
-## Solve five problems to transfer Travel estimate behind a function contract
+## Solve five problems to transfer Travel estimate behind a function interface
 
 **IC151 lab practice · 5 problems**
 
@@ -224,7 +248,7 @@ Reaching this set marks the lecture as studied in this browser. [Open the IC151 
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
 ## Stop one growing main function from mixing movement, sensing, and display.
 
-**Studio thread:** Give robot actions contracts
+**Studio thread:** Give robot actions clear interfaces
 
 | Ask | Today’s answer |
 |---|---|
@@ -232,8 +256,8 @@ Reaching this set marks the lecture as studied in this browser. [Open the IC151 
 | **Model** | The controller coordinates small operations with explicit responsibilities. |
 | **Represent** | Function parameters are inputs; return values report results. |
 | **Solve** | Decompose by one explainable task and compose calls into a controller. |
-| **Verify** | Test each contract independently before integrating the functions. |
-| **Improve** | Remove duplication and rename a function whose contract needs “and”. |
+| **Verify** | Test each function independently before integrating them. |
+| **Improve** | Remove duplication and rename a function whose description needs “and”. |
 
 **Technique lens:** procedural decomposition
 

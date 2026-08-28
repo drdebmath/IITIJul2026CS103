@@ -47,6 +47,30 @@ int main() {
 - References avoid hidden global state.
 - One function performs one testable job.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="8" data-markdown><textarea data-template>
+## The general form of the three parameter modes and an overload set
+
+~~~cpp
+void <name>(<T> <p>);           // by value: the function works on a copy
+void <name>(<T>& <p>);          // by reference: the function shares the caller's object
+void <name>(const <T>& <p>);    // by const reference: shared, read-only, not copied
+
+<return type> <name>(<T> <p>, <U> <q> = <default>);   // trailing default argument
+
+void <name>(<T>);               // an overload set: one name,
+void <name>(<T>, <U>);          // distinguished only by the parameter lists
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;T&gt; &lt;p&gt;</code> | A copy. Changes stay inside the function; safe, but costs a copy. |
+| <code>&lt;T&gt;&amp; &lt;p&gt;</code> | An alias for the caller's object. Writes are visible outside, so the caller must expect them. |
+| <code>const &lt;T&gt;&amp; &lt;p&gt;</code> | No copy and no mutation. The default for anything large you only need to read. |
+| <code>= &lt;default&gt;</code> | Defaults must be trailing, and are written on the declaration only, never repeated on the definition. |
+| overloading | Parameter lists must differ. A different return type alone is not enough and will not compile. |
+
+Choose the parameter-passing mode from what the function does with the argument: pass by value for a small input, by <code>const</code> reference to read only, and by reference only when the caller expects the argument to be modified.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## The parameter contract decides copy, alias, or read-only access
 

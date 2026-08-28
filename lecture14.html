@@ -46,6 +46,32 @@ int main() {
 - Links turn separate allocations into a structure.
 - Leaving scope releases the complete owned chain automatically.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="14" data-markdown><textarea data-template>
+## The general form of dynamic allocation, ownership, and a node
+
+~~~cpp
+<T>* <p> = new <T>(<arguments>);      delete <p>;
+<T>* <a> = new <T>[<count>];          delete[] <a>;   // the [] must match
+
+std::unique_ptr<T> <p> = std::make_unique<T>(<arguments>);
+// no delete: <p> releases the object when it goes out of scope
+
+struct <Node> {
+    <T> <value>;
+    <Node>* <next>;        // nullptr marks the end of the chain
+};
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>new</code> / <code>delete</code> | Must pair exactly once. Zero deletes leaks; two deletes is undefined behavior. |
+| <code>new[]</code> / <code>delete[]</code> | A separate pair. Mixing the two forms is undefined even when it appears to work. |
+| dangling pointer | A pointer that outlives what it pointed at. Deleting does not change the pointer's value. |
+| <code>unique_ptr</code> | Exclusive ownership tied to scope, so the release cannot be forgotten or repeated. |
+| <code>&lt;Node&gt;* &lt;next&gt;</code> | Each node stores where the next one lives, so the sequence needs no contiguous block. |
+
+Ownership is the question to answer first: decide who releases the object, and the matching <code>delete</code> follows from that.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Automatic storage follows scope; dynamic storage follows ownership
 

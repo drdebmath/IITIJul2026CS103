@@ -40,6 +40,36 @@ int main() {
 - The largest stored severity is exposed first.
 - The application inherits logarithmic insertion.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="17" data-markdown><textarea data-template>
+## The general form of binary search, a BST node, and a priority queue
+
+~~~cpp
+int <lo> = 0, <hi> = <n>;                       // search the half-open range [<lo>, <hi>)
+while (<lo> < <hi>) {
+    int <mid> = <lo> + (<hi> - <lo>) / 2;       // this form cannot overflow
+    if (<a>[<mid>] == <target>) return <mid>;
+    if (<a>[<mid>] < <target>) <lo> = <mid> + 1;   // discard the left half
+    else                       <hi> = <mid>;       // discard the right half
+}
+return -1;
+
+struct <Node> { <T> <key>; <Node>* <left>; <Node>* <right>; };
+// invariant: every key in <left> < <key> < every key in <right>
+
+std::priority_queue<T> <pq>;
+<pq>.push(<value>);   <pq>.top();   <pq>.pop();   // top() is the largest
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| sorted input | Binary search is defined only on a sorted range. On unsorted data it returns a wrong answer, not an error. |
+| <code>&lt;lo&gt; + (&lt;hi&gt; - &lt;lo&gt;) / 2</code> | Equals the midpoint but never forms <code>&lt;lo&gt; + &lt;hi&gt;</code>, which can overflow <code>int</code>. |
+| half-open <code>[&lt;lo&gt;, &lt;hi&gt;)</code> | One convention throughout: <code>&lt;hi&gt;</code> is past the end, and the loop ends when the range is empty. |
+| BST invariant | Holds for every node, not just the root. It is what makes a lookup a sequence of comparisons. |
+| heap | Keeps only the top element in a known place — enough for priority, too little for sorted traversal. |
+
+Each structure is an invariant plus the operations that preserve it; break the invariant and every operation built on it becomes wrong.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Binary search halves a sorted range without overflow
 

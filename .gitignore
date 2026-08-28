@@ -8,3 +8,6 @@ strassen.html
 # library with no stylesheet at all.
 /scripts.js
 /styles.css
+
+# LaTeX build output for the quiz papers; quiz.tex is the source.
+/output/

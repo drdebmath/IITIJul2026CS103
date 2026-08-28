@@ -45,6 +45,34 @@ int main() {
 - Comparators encode a user-facing ranking rule.
 - Algorithms compose with the object model.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="22" data-markdown><textarea data-template>
+## The general form of a predicate, a comparator, and their algorithms
+
+~~~cpp
+auto <predicate> = [](const <T>& <x>) {
+    return <condition>;          // must yield bool: one question about one element
+};
+
+auto <comparator> = [](const <T>& <a>, const <T>& <b>) {
+    return <a>.<key> < <b>.<key>;   // true means "<a> comes strictly before <b>"
+};
+
+std::sort(<first>, <last>, <comparator>);
+std::stable_sort(<first>, <last>, <comparator>);    // keeps the order of equal elements
+std::count_if(<first>, <last>, <predicate>);
+std::copy_if(<first>, <last>, std::back_inserter(<out>), <predicate>);
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;predicate&gt;</code> | Names one domain question, so it can be tested on its own and reused by several algorithms. |
+| <code>&lt;comparator&gt;</code> | Names one ordering policy. Changing how results rank becomes a change in one place. |
+| strict weak ordering | <code>&lt;comparator&gt;(a, a)</code> must be false. Using <code>&lt;=</code> here lets <code>std::sort</code> run past the end of the range. |
+| <code>[]</code> | The capture list. Empty means the lambda uses only its parameters, which keeps it reusable. |
+| <code>stable_sort</code> | Preserves the previous order among equal elements, which is what makes ranking by two keys in turn work. |
+
+Give the question and the ordering their own names: a filter and a rank you can test separately are what keep the search readable.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## One component owns one reason to change
 

@@ -39,6 +39,37 @@ Node* reverse(Node* head) {
 - The call stack remembers each old head.
 - The algorithm is meaningful because of the linked structure.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="16" data-markdown><textarea data-template>
+## The general form of a recursive function and a backtracking search
+
+~~~cpp
+<return type> <name>(<parameters>) {
+    if (<base case condition>)
+        return <base case result>;      // returns without calling <name> again
+
+    return <combine>(<name>(<strictly smaller argument>));
+}
+
+void <solve>(<state>) {
+    if (<state is complete>) { <record the solution>; return; }
+    for (<each candidate choice>) {
+        <apply the choice>;             // change the state
+        <solve>(<state after the choice>);
+        <undo the choice>;              // restore it for the next candidate
+    }
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;base case condition&gt;</code> | The case answered outright. Without one, the recursion never stops. |
+| <code>&lt;strictly smaller&gt;</code> | Every call must move measurably closer to the base case — smaller <code>n</code>, shorter list, fewer choices. |
+| <code>&lt;combine&gt;</code> | What this call adds to the answer the smaller call returns. |
+| <code>&lt;undo the choice&gt;</code> | Backtracking's defining step. Skip it and later branches search a state the earlier branch dirtied. |
+| the stack | Each active call holds a frame until it returns, so depth costs memory as well as time. |
+
+State the base case and the shrinking measure before writing the recursive call; those two facts are the termination proof.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Each recursive call adds a frame and must eventually return
 

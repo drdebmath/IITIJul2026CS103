@@ -42,6 +42,36 @@ int main() {
 - size() supplies the actual bound.
 - The structure matches rows containing columns.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="10" data-markdown><textarea data-template>
+## The general form of a matrix and a std::vector
+
+~~~cpp
+<T> <name>[<rows>][<cols>];       // one bound per dimension
+<name>[<r>][<c>]                  // needs 0 <= <r> < <rows> AND 0 <= <c> < <cols>
+
+for (int <r> = 0; <r> < <rows>; ++<r>)
+    for (int <c> = 0; <c> < <cols>; ++<c>)
+        // visits <name>[<r>][<c>] exactly once
+
+std::vector<T> <name>;                    // size 0
+std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
+
+<name>.push_back(<value>);   // appends, size grows by one
+<name>.size()                // the current number of elements
+<name>[<i>]                  // unchecked, like an array
+<name>.at(<i>)               // checked: throws std::out_of_range
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>T</code> | The element type. Write the real type: <code>int</code>, <code>double</code>, <code>std::string</code>. |
+| <code>&lt;rows&gt;</code>, <code>&lt;cols&gt;</code> | Independent bounds. Each index must be checked against its own dimension, not against the other. |
+| nesting order | The outer index selects the row, the inner walks that row. Swapping them traverses a different shape. |
+| <code>size()</code> | A vector carries its own extent, so no separate count parameter is needed. |
+| <code>[]</code> vs <code>at()</code> | Both index; only <code>at()</code> checks the bound and reports the failure. |
+
+A vector's size can change at run time, which removes the fixed extent but not the need to stay inside it.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A matrix needs one bound for each dimension
 

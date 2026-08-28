@@ -45,6 +45,36 @@ int main() {
 - The algorithm uses only front, push, and pop.
 - Choosing a structure simplifies the application.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="15" data-markdown><textarea data-template>
+## The general form of a stack, a queue, and a linear search
+
+~~~cpp
+#include <stack>
+#include <queue>
+
+std::stack<T> <s>;
+<s>.push(<value>);   <s>.top();     <s>.pop();   <s>.empty();   <s>.size();
+
+std::queue<T> <q>;
+<q>.push(<value>);   <q>.front();   <q>.pop();   <q>.empty();   <q>.size();
+
+int <search>(const <T> <a>[], int <n>, const <T>& <target>) {
+    for (int <i> = 0; <i> < <n>; ++<i>)
+        if (<a>[<i>] == <target>) return <i>;
+    return -1;                      // one agreed value meaning "absent"
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>push</code> | Adds one element. Both containers grow at the end they own. |
+| <code>top</code> vs <code>front</code> | A stack exposes the most recent element, a queue the earliest. That difference is the whole abstraction. |
+| <code>pop</code> | Removes, and returns nothing. Read the element first, then pop it. |
+| <code>empty()</code> | Calling <code>top</code>, <code>front</code>, or <code>pop</code> on an empty container is undefined — test first. |
+| linear search | Needs no ordering, examines at most <code>&lt;n&gt;</code> elements, and is the baseline every faster search must beat. |
+
+Choose the structure from the ordering guarantee the problem needs, then let that choice decide which operations are cheap.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## An abstract data type specifies operations before representation
 

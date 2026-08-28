@@ -797,6 +797,21 @@ input {
     text-decoration: none;
 }
 
+.selection-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+#selection-syntax-link {
+    color: var(--concept);
+}
+
+#selection-syntax-link[hidden] {
+    display: none;
+}
+
 .tree-toolbar {
     position: absolute;
     left: 50%;
@@ -1031,7 +1046,7 @@ input {
 
 .index-concept {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
     align-items: center;
     gap: 8px;
     min-height: 47px;
@@ -1063,7 +1078,8 @@ input {
 }
 
 .locate-concept,
-.open-concept {
+.open-concept,
+.syntax-concept {
     padding: 5px 7px;
     border: 0;
     border-radius: 8px;
@@ -1083,6 +1099,11 @@ input {
 .open-concept:hover {
     color: var(--pre);
     background: var(--pre-soft);
+}
+
+.syntax-concept:hover {
+    color: var(--concept);
+    background: var(--concept-soft);
 }
 
 .empty-results {

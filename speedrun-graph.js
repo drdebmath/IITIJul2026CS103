@@ -174,6 +174,7 @@
     const selectionTitle = document.getElementById('selection-title');
     const selectionCopy = document.getElementById('selection-copy');
     const selectionLink = document.getElementById('selection-link');
+    const selectionSyntaxLink = document.getElementById('selection-syntax-link');
     const selectionIframe = document.getElementById('selection-iframe');
     const zoomSlider = document.getElementById('graph-zoom');
     const zoomValue = document.getElementById('graph-zoom-value');
@@ -476,6 +477,15 @@
         selectionCopy.textContent = item.definition;
         selectionLink.href = item.href;
         selectionLink.innerHTML = `Open ${escapeHTML(item.reference)} <span aria-hidden="true">↗</span>`;
+        // The general-form slide answers "how is it written?" without making the
+        // learner read the explanation slide first.
+        if (selectionSyntaxLink) {
+            selectionSyntaxLink.hidden = !item.syntaxHref;
+            if (item.syntaxHref) {
+                selectionSyntaxLink.href = item.syntaxHref;
+                selectionSyntaxLink.setAttribute('aria-label', `Open the general form of ${item.title} in L${String(item.lecture).padStart(2, '0')}`);
+            }
+        }
         if (selectionIframe.getAttribute('src') !== item.href) selectionIframe.setAttribute('src', item.href);
         renderNodes();
         drawEdges();
@@ -532,6 +542,7 @@
                             <span class="concept-name">${item.application ? '<b>Application</b>' : ''}${escapeHTML(item.title)}<small class="concept-reference">${escapeHTML(item.reference)}</small></span>
                             <button class="locate-concept" type="button" data-locate-concept="${item.id}">Graph</button>
                             <a class="open-concept" href="${item.href}" aria-label="Open ${escapeHTML(item.title)} at ${escapeHTML(item.reference)}">${escapeHTML(item.reference)} ↗</a>
+                            ${item.syntaxHref ? `<a class="syntax-concept" href="${item.syntaxHref}" aria-label="Open the general form of ${escapeHTML(item.title)}">Syntax</a>` : '<span class="syntax-concept-empty" aria-hidden="true"></span>'}
                         </li>
                     `).join('')}
                 </ul>

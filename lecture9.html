@@ -46,6 +46,35 @@ int main() {
 - Traversal applies one rule to every element.
 - Searching is an application of array access.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="9" data-markdown><textarea data-template>
+## The general form of an array declaration, an index, and a traversal
+
+~~~cpp
+<element type> <name>[<constant extent>];               // uninitialized, fixed size
+<element type> <name>[] = { <value>, <value>, ... };    // extent taken from the initializer
+
+<name>[<index>]                 // defined only while 0 <= <index> < <extent>
+
+for (int <i> = 0; <i> < <extent>; ++<i>) {              // index traversal
+    // use <name>[<i>]
+}
+
+for (<element type> <e> : <name>) {                     // range-for: no bound to state
+    // use <e>
+}
+
+void <fn>(<element type> <name>[], int <extent>);       // the size does not travel with it
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>&lt;constant extent&gt;</code> | A compile-time constant. The extent is fixed for the array's whole lifetime. |
+| <code>&lt;index&gt;</code> | Zero-based, so the last valid index is <code>&lt;extent&gt; - 1</code>, never <code>&lt;extent&gt;</code>. |
+| range-for | Visits every element exactly once, which removes the chance of stating the bound wrongly. |
+| array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass <code>&lt;extent&gt;</code> beside it. |
+
+An out-of-bounds index is undefined behavior, not a reported error: the program may print nonsense and keep running.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## An array fixes its element type and extent
 

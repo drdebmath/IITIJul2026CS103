@@ -47,6 +47,36 @@ int main() {
 - Member names replace parallel loose variables.
 - References avoid unnecessary record copies.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="13" data-markdown><textarea data-template>
+## The general form of a struct, a record array, and a pointer
+
+~~~cpp
+struct <Name> {
+    <T> <field>;
+    <U> <field>;
+};                                  // the semicolon is part of the declaration
+
+<Name> <object>{ <value>, <value> };   // members initialized in declaration order
+<object>.<field>                       // select through an object
+
+<Name> <records>[<extent>];            // many values of one shape, kept together
+
+<T>* <p> = &<object>;      // <p> holds the address of <object>
+*<p>                       // the object stored at that address
+<p>-><field>               // shorthand for (*<p>).<field>
+<p> = nullptr;             // holds no address; dereferencing it is undefined
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>struct</code> | Groups the fields of one record so they travel and stay consistent together. |
+| trailing <code>;</code> | Omitting it is one of the most common compile errors in this lecture. |
+| <code>&amp;&lt;object&gt;</code> | Yields the address. A pointer stores where a value lives, not the value. |
+| <code>.</code> vs <code>-&gt;</code> | <code>.</code> selects through an object, <code>-&gt;</code> through a pointer to one. |
+| <code>nullptr</code> | The one address value you can safely test for. Check before you dereference. |
+
+One array of records beats several parallel arrays: the fields of a record cannot drift out of step if they never live apart.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A struct keeps the fields of one record coherent
 

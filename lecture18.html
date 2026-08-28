@@ -47,6 +47,37 @@ public:
 - Private state changes through controlled operations.
 - Methods express domain rules, not just setters.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="18" data-markdown><textarea data-template>
+## The general form of a class, its constructor, and its lifetime operations
+
+~~~cpp
+class <Name> {
+public:
+    <Name>(<parameters>);                        // establishes the invariant
+    <Name>(const <Name>& <other>);               // copy: makes a new object
+    <Name>& operator=(const <Name>& <other>);    // assignment: replaces an existing one
+    ~<Name>();                                   // releases what the object owns
+    <return type> <query>() const;               // const: promises not to modify
+private:
+    <T> <field>;                                 // the invariant lives here
+};
+
+<Name>::<Name>(<parameters>)
+    : <field>(<value>) {          // member initializer list, runs before the body
+    // reject arguments that would break the invariant
+}
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>private</code> | Outside code cannot reach the field, so it cannot put the object into an invalid state. |
+| constructor | The only way in. If it refuses invalid arguments, no valid-looking object is ever invalid. |
+| initializer list | Initializes members before the body runs. Assigning in the body initializes twice. |
+| <code>const</code> member | Callable on a <code>const</code> object, and the compiler enforces the promise. |
+| destructor | Runs automatically at end of scope, which is what ties resource release to lifetime (RAII). |
+
+An invariant is a statement true of the object from the end of its constructor to the start of its destructor — name it before writing the class.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A class protects state by combining data, behavior, and access control
 

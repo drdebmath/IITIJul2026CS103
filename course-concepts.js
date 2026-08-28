@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    // Every deck carries a "general form" slide except the first two, which
+    // introduce programs and types before any construct has a syntax to show.
+    const decksWithoutSyntax = new Set(['lecture1.html', 'lecture2.html']);
+
     const c = (id, title, href, keywords = '', application = false) => {
         const authoredReference = window.CS103SlideReferences && window.CS103SlideReferences[id];
         // A deck such as lecture5-5.html is a supplement: its number is 5.5 and its
@@ -16,6 +20,7 @@
             id,
             title,
             href: `${deck}?concept=${encodeURIComponent(id)}`,
+            syntaxHref: decksWithoutSyntax.has(deck) ? null : `${deck}?syntax`,
             keywords,
             application,
             lecture,

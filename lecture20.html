@@ -46,6 +46,36 @@ std::unique_ptr<Notifier> makeNotifier() {
 - Virtual dispatch replaces type-switching.
 - The factory centralizes object creation.
     </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="20" data-markdown><textarea data-template>
+## The general form of a virtual function, an override, and an interface
+
+~~~cpp
+class <Base> {
+public:
+    virtual <return type> <operation>() = 0;   // pure virtual: no default behavior
+    virtual ~<Base>() = default;               // required to delete through a base pointer
+};
+
+class <Derived> : public <Base> {
+public:
+    <return type> <operation>() override;      // override: the compiler checks the match
+};
+
+<Base>* <p> = new <Derived>();
+<p>-><operation>();     // selects <Derived>'s version from the runtime type
+delete <p>;             // safe only because ~<Base>() is virtual
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>virtual</code> | The call selects the override from the object's runtime type, not from the pointer's declared type. |
+| <code>= 0</code> | Makes the class abstract: it cannot be instantiated, and every derived type must supply the operation. |
+| <code>override</code> | Optional but always worth writing — a signature that fails to match becomes a compile error instead of a silent second function. |
+| <code>virtual ~&lt;Base&gt;()</code> | Without it, <code>delete &lt;p&gt;</code> through a base pointer is undefined and the derived part is never destroyed. |
+| slicing | Copying a <code>&lt;Derived&gt;</code> into a <code>&lt;Base&gt;</code> <em>value</em> discards the derived part. Use a pointer or reference. |
+
+Polymorphism needs a pointer or a reference: a by-value <code>&lt;Base&gt;</code> can only ever behave as a <code>&lt;Base&gt;</code>.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Public and private inheritance make different interface promises
 
