@@ -59,10 +59,10 @@ auto <name> = [](<parameter type> <parameter>) { return <expression>; };   // la
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;return type&gt;</code> | The type handed back to the caller. <code>void</code> returns nothing, so its <code>return;</code> carries no value. |
-| <code>&lt;name&gt;(&lt;parameters&gt;)</code> | The signature. Name plus parameter list is what a caller has to match. |
+| `<return type>` | The type handed back to the caller. <code>void</code> returns nothing, so its <code>return;</code> carries no value. |
+| `<name>(<parameters>)` | The signature. Name plus parameter list is what a caller has to match. |
 | declaration vs definition | A declaration ends at the semicolon and may repeat; exactly one definition supplies the body. |
-| <code>&lt;argument&gt;</code> | Copied into the parameter, so assigning to the parameter leaves the caller's variable unchanged. |
+| `<argument>` | Copied into the parameter, so assigning to the parameter leaves the caller's variable unchanged. |
 
 Put the declaration above <code>main</code> whenever the definition sits below it: the compiler must see the declaration before the first call.
     </textarea></section>
@@ -116,6 +116,20 @@ double rectangleArea(double length, double width) {
 }
 ~~~
     </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: What does this line do?
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+~~~cpp
+double rectangleArea(double length, double width);
+~~~
+
+- **A)** Defines the function with an empty body
+- **B)** Calls the function with default arguments
+- **C)** Declares a prototype so callers can use it before the definition
+- **D)** Causes an error — a body is required
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Value parameters isolate small inputs as local copies
 
@@ -161,6 +175,21 @@ int main() {
 **Test:** the function returns 10, while the caller's original <code>score</code> remains 0.
 
 **Next unlock · L08:** deliberately mutate row and column through references.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: What is printed?
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+~~~cpp
+int doubled(int v){ v*=2; return v; }
+int main(){ int x=5; doubled(x); cout<<x; }
+~~~
+
+- **A)** 10
+- **B)** 5
+- **C)** 20
+- **D)** Compilation error
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Named functions turn a calculation into testable steps
@@ -244,6 +273,18 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. State the inputs, output, and precondition of a safe division function.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: Spot the design smell
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+You explain your function as: "It computes the tax, and then it also prints the receipt." What does this signal about the design?
+
+- **A)** Good design — related work is bundled together
+- **B)** Split it — the function mixes two responsibilities
+- **C)** Add a bool parameter to toggle the printing
+- **D)** Convert the function to a lambda
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
 ## Stop one growing main function from mixing movement, sensing, and display.
