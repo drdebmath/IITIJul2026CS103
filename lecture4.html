@@ -86,9 +86,9 @@ switch (<integer or char expression>) {
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;condition&gt;</code> | An expression usable as a <code>bool</code>, tested in order from the top. |
+| `<condition>` | An expression usable as a <code>bool</code>, tested in order from the top. |
 | <code>else</code> | Optional. Without it, no path runs when every condition is false. |
-| <code>case &lt;constant&gt;</code> | A compile-time constant. Ranges and floating-point values are not allowed. |
+| `case <constant>` | A compile-time constant. Ranges and floating-point values are not allowed. |
 | <code>break</code> | Ends the <code>switch</code>. Omitting it is legal and falls through deliberately. |
 
 Only the first true branch of an <code>if</code> chain runs, so order the conditions from exceptional to normal.

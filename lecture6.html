@@ -68,9 +68,9 @@ for (<outer initialization>; <outer condition>; <outer update>) {
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;initialization&gt;</code> | Runs once, before the first test. A counter declared here is visible only inside the loop. |
-| <code>&lt;condition&gt;</code> | Tested before every iteration, including the first. |
-| <code>&lt;update&gt;</code> | Runs after every iteration, before the next test. |
+| `<initialization>` | Runs once, before the first test. A counter declared here is visible only inside the loop. |
+| `<condition>` | Tested before every iteration, including the first. |
+| `<update>` | Runs after every iteration, before the next test. |
 | nesting | The inner loop completes in full for each single iteration of the outer loop. |
 
 The inner loop may depend on the outer counter; that is what makes triangles and tables.
