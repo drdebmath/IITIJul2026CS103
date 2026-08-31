@@ -71,13 +71,13 @@ public:
 
 | Part | Meaning |
 | --- | --- |
-| <code>: public &lt;Base&gt;</code> | Promises substitutability: a <code>&lt;Derived&gt;</code> must work anywhere a <code>&lt;Base&gt;</code> is expected. |
+| `: public <Base>` | Promises substitutability: a `<Derived>` must work anywhere a `<Base>` is expected. |
 | <code>protected</code> | The interface offered to derived classes only. Wider than <code>private</code>, narrower than <code>public</code>. |
 | construction order | Base subobject first, then members in declaration order, then the derived body. |
 | destruction order | Exactly the reverse, so a derived part is never torn down after the base it relies on. |
 | <code>friend</code> | Grants one named function or class access. It is a targeted exception, not a way to open the class up. |
 
-Inheritance is for reusing a promise, not for reusing code: if a <code>&lt;Derived&gt;</code> cannot honour every <code>&lt;Base&gt;</code> guarantee, it is not one.
+Inheritance is for reusing a promise, not for reusing code: if a `<Derived>` cannot honour every `<Base>` guarantee, it is not one.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Friend access is a narrow exception, not an interface

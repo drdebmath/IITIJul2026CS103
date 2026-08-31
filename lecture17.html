@@ -63,8 +63,8 @@ std::priority_queue<T> <pq>;
 | Part | Meaning |
 | --- | --- |
 | sorted input | Binary search is defined only on a sorted range. On unsorted data it returns a wrong answer, not an error. |
-| <code>&lt;lo&gt; + (&lt;hi&gt; - &lt;lo&gt;) / 2</code> | Equals the midpoint but never forms <code>&lt;lo&gt; + &lt;hi&gt;</code>, which can overflow <code>int</code>. |
-| half-open <code>[&lt;lo&gt;, &lt;hi&gt;)</code> | One convention throughout: <code>&lt;hi&gt;</code> is past the end, and the loop ends when the range is empty. |
+| `<lo> + (<hi> - <lo>) / 2` | Equals the midpoint but never forms `<lo> + <hi>`, which can overflow <code>int</code>. |
+| half-open `[<lo>, <hi>)` | One convention throughout: `<hi>` is past the end, and the loop ends when the range is empty. |
 | BST invariant | Holds for every node, not just the root. It is what makes a lookup a sequence of comparisons. |
 | heap | Keeps only the top element in a known place — enough for priority, too little for sorted traversal. |
 
@@ -125,7 +125,7 @@ Node* insert(Node* root, int key) {
 
 A max heap is a complete binary tree where every parent is at least its children.
 
-In a zero-based array, children of index <code>i</code> are <code>2*i+1</code> and <code>2*i+2</code>.
+In a zero-based array, children of index <code>i</code> are `2*i+1` and `2*i+2`.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="bst-order" data-markdown><textarea data-template>
 ## The tree has one rule and refuses to break it

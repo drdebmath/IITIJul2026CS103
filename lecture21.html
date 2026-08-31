@@ -65,11 +65,11 @@ std::vector<std::vector<int>> <adjacency>;           // <adjacency>[<v>] lists v
 
 | Part | Meaning |
 | --- | --- |
-| <code>unique_ptr&lt;Base&gt;</code> | Stores derived objects without slicing, and releases each one when the container is destroyed. |
+| `unique_ptr<Base>` | Stores derived objects without slicing, and releases each one when the container is destroyed. |
 | <code>const auto&amp;</code> | Binds without copying. Copying a <code>unique_ptr</code> is not allowed, and copying here would be wrong anyway. |
-| <code>template &lt;typename T&gt;</code> | The algorithm is written once against promised operations, then compiled for each type actually used. |
+| `template <typename T>` | The algorithm is written once against promised operations, then compiled for each type actually used. |
 | identity vs link | An object knows what it is; the graph knows how objects connect. Keeping them apart lets either change alone. |
-| adjacency list | Costs space proportional to the edges that exist, and makes "the neighbours of <code>&lt;v&gt;</code>" a direct lookup. |
+| adjacency list | Costs space proportional to the edges that exist, and makes "the neighbours of `<v>`" a direct lookup. |
 
 Store what varies behind one promised interface, and the container, the algorithm, and the graph stop depending on the concrete types.
     </textarea></section>

@@ -65,7 +65,7 @@ std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
 | Part | Meaning |
 | --- | --- |
 | <code>T</code> | The element type. Write the real type: <code>int</code>, <code>double</code>, <code>std::string</code>. |
-| <code>&lt;rows&gt;</code>, <code>&lt;cols&gt;</code> | Independent bounds. Each index must be checked against its own dimension, not against the other. |
+| `<rows>`, `<cols>` | Independent bounds. Each index must be checked against its own dimension, not against the other. |
 | nesting order | The outer index selects the row, the inner walks that row. Swapping them traverses a different shape. |
 | <code>size()</code> | A vector carries its own extent, so no separate count parameter is needed. |
 | <code>[]</code> vs <code>at()</code> | Both index; only <code>at()</code> checks the bound and reports the failure. |

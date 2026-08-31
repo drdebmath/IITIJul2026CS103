@@ -62,10 +62,10 @@ void <solve>(<state>) {
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;base case condition&gt;</code> | The case answered outright. Without one, the recursion never stops. |
-| <code>&lt;strictly smaller&gt;</code> | Every call must move measurably closer to the base case — smaller <code>n</code>, shorter list, fewer choices. |
-| <code>&lt;combine&gt;</code> | What this call adds to the answer the smaller call returns. |
-| <code>&lt;undo the choice&gt;</code> | Backtracking's defining step. Skip it and later branches search a state the earlier branch dirtied. |
+| `<base case condition>` | The case answered outright. Without one, the recursion never stops. |
+| `<strictly smaller>` | Every call must move measurably closer to the base case — smaller <code>n</code>, shorter list, fewer choices. |
+| `<combine>` | What this call adds to the answer the smaller call returns. |
+| `<undo the choice>` | Backtracking's defining step. Skip it and later branches search a state the earlier branch dirtied. |
 | the stack | Each active call holds a frame until it returns, so depth costs memory as well as time. |
 
 State the base case and the shrinking measure before writing the recursive call; those two facts are the termination proof.

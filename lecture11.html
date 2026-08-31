@@ -65,8 +65,8 @@ std::getline(std::cin, <name>);     // the rest of the line, spaces included
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;i&gt;</code> | Zero-based, so the last character is at <code>size() - 1</code>. |
-| <code>substr(&lt;pos&gt;, &lt;length&gt;)</code> | Takes a position and a <em>length</em>, not two positions. A short tail is truncated, not an error. |
+| `<i>` | Zero-based, so the last character is at <code>size() - 1</code>. |
+| `substr(<pos>, <length>)` | Takes a position and a <em>length</em>, not two positions. A short tail is truncated, not an error. |
 | <code>find</code> | Compare the result against <code>std::string::npos</code>. It is not <code>-1</code>, and it is unsigned. |
 | <code>&gt;&gt;</code> vs <code>getline</code> | <code>&gt;&gt;</code> stops at the first space and leaves the newline behind; <code>getline</code> consumes the whole line. |
 
@@ -125,7 +125,7 @@ unsigned char ch = static_cast<unsigned char>(text[i]);
 if (std::isdigit(ch)) ++digits;
 ~~~
 
-Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.
+Character classification comes from `<cctype>`. Convert through <code>unsigned char</code> before calling it.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="getline-spaces" data-markdown><textarea data-template>
 ## Formatted input quits at the first space
@@ -179,7 +179,7 @@ for (std::size_t i = 2; valid && i < id.size(); ++i) {
 
 A C-style string is a character array ending at the first null character <code>'\0'</code>.
 
-Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.
+Functions from `<cstring>` cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="find-boundary" data-markdown><textarea data-template>
 ## The delimiter may be there — or taking the day off

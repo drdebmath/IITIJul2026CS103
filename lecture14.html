@@ -68,7 +68,7 @@ struct <Node> {
 | <code>new[]</code> / <code>delete[]</code> | A separate pair. Mixing the two forms is undefined even when it appears to work. |
 | dangling pointer | A pointer that outlives what it pointed at. Deleting does not change the pointer's value. |
 | <code>unique_ptr</code> | Exclusive ownership tied to scope, so the release cannot be forgotten or repeated. |
-| <code>&lt;Node&gt;* &lt;next&gt;</code> | Each node stores where the next one lives, so the sequence needs no contiguous block. |
+| `<Node>* <next>` | Each node stores where the next one lives, so the sequence needs no contiguous block. |
 
 Ownership is the question to answer first: decide who releases the object, and the matching <code>delete</code> follows from that.
     </textarea></section>

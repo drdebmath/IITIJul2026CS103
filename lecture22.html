@@ -65,9 +65,9 @@ std::copy_if(<first>, <last>, std::back_inserter(<out>), <predicate>);
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;predicate&gt;</code> | Names one domain question, so it can be tested on its own and reused by several algorithms. |
-| <code>&lt;comparator&gt;</code> | Names one ordering policy. Changing how results rank becomes a change in one place. |
-| strict weak ordering | <code>&lt;comparator&gt;(a, a)</code> must be false. Using <code>&lt;=</code> here lets <code>std::sort</code> run past the end of the range. |
+| `<predicate>` | Names one domain question, so it can be tested on its own and reused by several algorithms. |
+| `<comparator>` | Names one ordering policy. Changing how results rank becomes a change in one place. |
+| strict weak ordering | `<comparator>(a, a)` must be false. Using <code>&lt;=</code> here lets <code>std::sort</code> run past the end of the range. |
 | <code>[]</code> | The capture list. Empty means the lambda uses only its parameters, which keeps it reusable. |
 | <code>stable_sort</code> | Preserves the previous order among equal elements, which is what makes ranking by two keys in turn work. |
 

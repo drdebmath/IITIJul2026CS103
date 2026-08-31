@@ -68,10 +68,10 @@ void <fn>(<element type> <name>[], int <extent>);       // the size does not tra
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;constant extent&gt;</code> | A compile-time constant. The extent is fixed for the array's whole lifetime. |
-| <code>&lt;index&gt;</code> | Zero-based, so the last valid index is <code>&lt;extent&gt; - 1</code>, never <code>&lt;extent&gt;</code>. |
+| `<constant extent>` | A compile-time constant. The extent is fixed for the array's whole lifetime. |
+| `<index>` | Zero-based, so the last valid index is `<extent> - 1`, never `<extent>`. |
 | range-for | Visits every element exactly once, which removes the chance of stating the bound wrongly. |
-| array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass <code>&lt;extent&gt;</code> beside it. |
+| array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass `<extent>` beside it. |
 
 An out-of-bounds index is undefined behavior, not a reported error: the program may print nonsense and keep running.
     </textarea></section>
