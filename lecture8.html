@@ -63,10 +63,10 @@ void <name>(<T>, <U>);          // distinguished only by the parameter lists
 
 | Part | Meaning |
 | --- | --- |
-| <code>&lt;T&gt; &lt;p&gt;</code> | A copy. Changes stay inside the function; safe, but costs a copy. |
-| <code>&lt;T&gt;&amp; &lt;p&gt;</code> | An alias for the caller's object. Writes are visible outside, so the caller must expect them. |
-| <code>const &lt;T&gt;&amp; &lt;p&gt;</code> | No copy and no mutation. The default for anything large you only need to read. |
-| <code>= &lt;default&gt;</code> | Defaults must be trailing, and are written on the declaration only, never repeated on the definition. |
+| `<T> <p>` | A copy. Changes stay inside the function; safe, but costs a copy. |
+| `<T>& <p>` | An alias for the caller's object. Writes are visible outside, so the caller must expect them. |
+| `const <T>& <p>` | No copy and no mutation. The default for anything large you only need to read. |
+| `= <default>` | Defaults must be trailing, and are written on the declaration only, never repeated on the definition. |
 | overloading | Parameter lists must differ. A different return type alone is not enough and will not compile. |
 
 Choose the parameter-passing mode from what the function does with the argument: pass by value for a small input, by <code>const</code> reference to read only, and by reference only when the caller expects the argument to be modified.
