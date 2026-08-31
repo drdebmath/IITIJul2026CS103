@@ -17,9 +17,9 @@
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## Parameter roles are visible at the interface. · Return two results without global state
+## Parameter roles are visible at the interface. · Return two results without global variables
 
-Input values are copied; output references name the caller’s existing variables. The contract makes both roles explicit.
+Input parameters are passed by value; output parameters are passed by reference and name the caller’s existing variables. The function declaration makes both roles explicit.
 
 ~~~cpp
 #include <iostream>
@@ -44,11 +44,11 @@ int main() {
 **Takeaways**
 
 - Parameter roles are visible at the interface.
-- References avoid hidden global state.
+- Reference parameters avoid hidden global variables.
 - One function performs one testable job.
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="8" data-markdown><textarea data-template>
-## The general form of the three parameter modes and an overload set
+## The general form of the three parameter-passing mechanisms and an overload set
 
 ~~~cpp
 void <name>(<T> <p>);           // by value: the function works on a copy
@@ -69,10 +69,10 @@ void <name>(<T>, <U>);          // distinguished only by the parameter lists
 | `= <default>` | Defaults must be trailing, and are written on the declaration only, never repeated on the definition. |
 | overloading | Parameter lists must differ. A different return type alone is not enough and will not compile. |
 
-Choose the parameter-passing mode from what the function does with the argument: pass by value for a small input, by <code>const</code> reference to read only, and by reference only when the caller expects the argument to be modified.
+Choose the parameter-passing mechanism from what the function does with the argument: pass by value for a small input, by <code>const</code> reference to read only, and by reference only when the caller expects the argument to be modified.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## The parameter contract decides copy, alias, or read-only access
+## The parameter declaration decides copy, alias, or read-only access
 
 ~~~cpp
 void clampToZero(double& value) {
@@ -80,7 +80,7 @@ void clampToZero(double& value) {
 }
 ~~~
 
-A reference is another name for the caller's object. Mutation must be part of the contract.
+A reference is another name for the caller's object. Modifying the argument must be part of the function's specification.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## const reference reads without copying or mutating
@@ -132,7 +132,7 @@ int main() {
 }
 ~~~
 
-**Mutation contract:** only <code>row</code> and <code>column</code> are aliases; the direction values are copies.
+**Parameter passing:** <code>row</code> and <code>column</code> are passed by reference; the direction values are passed by value.
 
 **Next unlock · L09:** store the complete Snake body as sequences of coordinates.
     </textarea></section>
@@ -161,7 +161,7 @@ void printFare(double fare);
     <section data-markdown><textarea data-template>
 ## Each active call owns a stack frame until it returns
 
-Each active call has a stack frame containing parameters, locals, and return state.
+Each active call has a stack frame containing parameters, local variables, and the return address.
 
 The most recent unfinished call completes first—last in, first out.
     </textarea></section>
@@ -189,7 +189,7 @@ Every recursive call must move measurably toward a base case.
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Choose parameter passing and decomposition from the contract
+## Choose parameter passing and decomposition from the specification
 
 - References can expose caller state intentionally.
 - <code>const&</code> provides read-only access through an alias.
@@ -198,7 +198,7 @@ Every recursive call must move measurably toward a base case.
 - Recursive design requires a base case and progress.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Verify Return two results without global state with a claim, trace, boundary, and improvement
+## Verify Return two results without global variables with a claim, trace, boundary, and improvement
 
 Use the practical example as a small experiment. Before you leave, make the reasoning visible:
 
@@ -216,7 +216,7 @@ Choose one problem to solve now and two to attempt in the lab:
 - Split a bill calculator into input, calculation, and output functions.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Explain Return two results without global state without opening the code
+## Explain Return two results without global variables without opening the code
 
 Explain today’s idea to a partner without opening the code:
 
@@ -227,7 +227,7 @@ Explain today’s idea to a partner without opening the code:
 If the explanation needs “and then another unrelated thing,” split the design before you code.
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="8" data-markdown><textarea data-template>
-## Solve five problems to transfer Return two results without global state
+## Solve five problems to transfer Return two results without global variables
 
 **IC151 lab practice · 5 problems**
 
@@ -248,8 +248,8 @@ Reaching this set marks the lecture as studied in this browser. [Open the IC151 
 |---|---|
 | **Problem** | Let functions observe or intentionally change shared robot state. |
 | **Model** | Calls form a stack of unfinished responsibilities. |
-| **Represent** | Values copy small inputs; references alias intentional shared state; const& observes. |
-| **Solve** | Choose a parameter mode from the contract, not from syntax preference. |
+| **Represent** | Small inputs are passed by value; shared state is passed by reference; a const reference gives read-only access. |
+| **Solve** | Choose a parameter-passing mechanism from the specification, not from syntax preference. |
 | **Verify** | Trace caller and callee state, including a recursive countdown preview. |
 | **Improve** | Return information instead of mutating when either design is equally clear. |
 

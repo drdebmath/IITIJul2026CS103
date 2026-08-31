@@ -107,7 +107,7 @@
         'm4-const-reference': ['const reference', 'A read-only alias that avoids copying while preventing mutation through the parameter.', 'const&'],
         'm4-overloading': ['function overloading', 'Multiple functions sharing a name but having distinguishable parameter lists.', 'overloading'],
         'm4-lambdas': ['lambda expression', 'An unnamed callable object defined inline, optionally capturing names from its surrounding scope.', 'lambda', 'lambdas'],
-        'm4-call-stack': ['call stack', 'The last-in-first-out sequence of active function frames, including parameters, locals, and return state.', 'stack frame'],
+        'm4-call-stack': ['call stack', 'The last-in-first-out sequence of active function frames, including parameters, local variables, and the return address.', 'stack frame'],
         'm4-recursion': ['base case', 'A recursive input handled directly without making another recursive call.', 'recursive case'],
         'm4-recursive-design': ['recursive decomposition', 'Solving a problem by reducing it to smaller instances of the same problem until a base case is reached.', 'recursion vs iteration'],
         'm4-complexity': ['time complexity', 'A description of how an algorithm’s operation count grows with input size.', 'space complexity', 'complexity'],
@@ -244,7 +244,7 @@
         { id: 't-precondition', lecture: 7, term: 'precondition', aliases: ['preconditions'], definition: 'A requirement that must hold before an operation is called.' },
         { id: 't-return-value', lecture: 7, term: 'return value', aliases: ['returned result'], definition: 'The result a function sends back to its caller.' },
         { id: 't-callable', lecture: 7, term: 'callable', definition: 'An entity that can be invoked with function-call syntax.' },
-        { id: 't-stack-frame', lecture: 8, term: 'stack frame', aliases: ['stack frames'], definition: 'The storage and return state associated with one active function call.' },
+        { id: 't-stack-frame', lecture: 8, term: 'stack frame', aliases: ['stack frames'], definition: 'The storage and return address associated with one active function call.' },
 
         { id: 't-contiguous', lecture: 9, term: 'contiguous', definition: 'Stored in adjacent memory locations without gaps between elements.' },
         { id: 't-undefined', lecture: 9, term: 'undefined behavior', definition: 'A situation for which the C++ standard imposes no required program behavior.' },

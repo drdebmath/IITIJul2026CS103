@@ -1,4 +1,4 @@
-// Lecture 8 · Output references and function decomposition
+// Lecture 8 · Reference parameters and function decomposition
 #include <iostream>
 
 void orderPair(int first, int second, int& smaller, int& larger) {
