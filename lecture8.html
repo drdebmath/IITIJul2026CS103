@@ -93,6 +93,21 @@ void printReading(const double& reading) {
 
 The syntax matters now; avoiding expensive copies becomes useful when records and strings arrive.
     </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: What is printed?
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+~~~cpp
+void bump(int& value) { value += 1; }
+int main() { int x = 5; bump(x); std::cout << x; }
+~~~
+
+- **A)** 5
+- **B)** 6
+- **C)** Compile error
+- **D)** Undefined behavior
+    </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="reference-alias" data-markdown><textarea data-template>
 ## The caller sends a value into a function — then what?
 
@@ -135,6 +150,20 @@ int main() {
 **Parameter passing:** <code>row</code> and <code>column</code> are passed by reference; the direction values are passed by value.
 
 **Next unlock · L09:** store the complete Snake body as sequences of coordinates.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: Which second declaration overloads absolute legally?
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+~~~cpp
+int absolute(int value);   // already declared
+~~~
+
+- **A)** `double absolute(int value);` — a different return type
+- **B)** `int absolute(double value);` — a different parameter list
+- **C)** `int absolute(int number);` — a different parameter name
+- **D)** Any of these
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Decomposition keeps main readable and each step testable
@@ -238,6 +267,24 @@ If the explanation needs “and then another unrelated thing,” split the desig
 1. Write factorial recursively and identify its base case.
 
 Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Quick check: Which call returns first?
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 2032157</span>
+
+~~~cpp
+int factorial(int n) {
+    if (n <= 1) return 1;          // base case
+    return n * factorial(n - 1);
+}
+int main() { factorial(3); }
+~~~
+
+- **A)** factorial(3) — it was called first
+- **B)** factorial(1) — last in, first out
+- **C)** factorial(2) — the middle call
+- **D)** They all return together
     </textarea></section>
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
 ## Let functions observe or intentionally change shared robot state.
