@@ -19,21 +19,21 @@
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## The array holds every reading at once. · Find an anomalous temperature in a week
 
-An array stores the whole week of readings; one traversal computes the mean and locates the largest deviation.
+A plain array stores the whole week of readings; one traversal computes the mean and locates the largest deviation.
 
 ~~~cpp
-#include <array>
 #include <cmath>
 #include <iostream>
 
 int main() {
-    std::array<double, 7> t{31.2, 31.5, 37.8, 31.1, 30.9, 31.4, 31.0};
+    const int n = 7;              // the size, written once
+    double t[n] = {31.2, 31.5, 37.8, 31.1, 30.9, 31.4, 31.0};
     double sum = 0;
-    for (double value : t) sum += value;
-    double mean = sum / t.size();
+    for (int i = 0; i < n; ++i) sum += t[i];
+    double mean = sum / n;
 
-    std::size_t anomaly = 0;
-    for (std::size_t i = 1; i < t.size(); ++i)
+    int anomaly = 0;
+    for (int i = 1; i < n; ++i)
         if (std::abs(t[i] - mean) > std::abs(t[anomaly] - mean)) anomaly = i;
 
     std::cout << "Anomaly index: " << anomaly;
@@ -44,6 +44,7 @@ int main() {
 
 - The array holds every reading at once.
 - Traversal applies one rule to every element.
+- The array does not carry its size, so `n` is written once and reused as the bound.
 - Searching is an application of array access.
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="9" data-markdown><textarea data-template>
@@ -51,18 +52,18 @@ int main() {
 
 ~~~cpp
 #include <array>
-std::array<T, <constant size>> <name>{ <value>, ... };
+std::array<T, <constant size>> <name>{ <value>, ... };  // preferred
+T <name>[<constant size>] = { <value>, ... };           // C-style
+T <name>[] = { <value>, ... };        // size taken from the list
 
-<name>[<index>]     // 0 <= <index> < <name>.size()
-<name>.size()       // the size, carried by the array
-
+<name>[<index>]     // 0 <= <index> < <constant size>
+<name>.size()       // std::array only
 for (std::size_t <i> = 0; <i> < <name>.size(); ++<i>) {
     // use <name>[<i>]
 }
 for (T <e> : <name>) {
     // use <e>
 }
-
 void <fn>(const std::array<T, <constant size>>& <name>);
 void <fn>(T <name>[], int <size>);   // C-style: pass the size
 ~~~
@@ -73,6 +74,7 @@ void <fn>(T <name>[], int <size>);   // C-style: pass the size
 | `<index>` | Zero-based, so the last valid index is `<name>.size() - 1`, never `<name>.size()`. |
 | counter-controlled `for` | Names each position, so use it when the index itself matters. |
 | range-based `for` | Visits every element exactly once, which removes the chance of stating the bound wrongly. |
+| C-style array | `int <name>[5] = {1,2,3,4,5};` works and is what C uses, but it has no `.size()` — you must track the size yourself. |
 | C-style array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass the size beside it. |
 
 An out-of-bounds index is undefined behavior, not a reported error: the program may print nonsense and keep running.
