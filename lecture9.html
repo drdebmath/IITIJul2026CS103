@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 9: Traverse fixed sequences within exact bounds">
-    <title>Lecture 9: Traverse fixed sequences within exact bounds</title>
+    <meta name="description" content="CS103 Lecture 9: Traverse fixed-size arrays within bounds">
+    <title>Lecture 9: Traverse fixed-size arrays within bounds</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 9: Traverse fixed sequences within exact bounds
-## Store and traverse one fixed sequence safely
+# Lecture 9: Traverse fixed-size arrays within bounds
+## Store and traverse one fixed-size array safely
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## The structure makes a complete data window available. · Find an anomalous temperature in a week
+## The array holds every reading at once. · Find an anomalous temperature in a week
 
-An array stores a fixed measurement window; one traversal computes the mean and locates the largest deviation.
+An array stores the whole week of readings; one traversal computes the mean and locates the largest deviation.
 
 ~~~cpp
 #include <array>
@@ -42,7 +42,7 @@ int main() {
 
 **Takeaways**
 
-- The structure makes a complete data window available.
+- The array holds every reading at once.
 - Traversal applies one rule to every element.
 - Searching is an application of array access.
     </textarea></section>
@@ -50,33 +50,35 @@ int main() {
 ## The general form of an array declaration, an index, and a traversal
 
 ~~~cpp
-<element type> <name>[<constant extent>];               // uninitialized, fixed size
-<element type> <name>[] = { <value>, <value>, ... };    // extent taken from the initializer
+#include <array>
+std::array<T, <constant size>> <name>{ <value>, ... };
 
-<name>[<index>]                 // defined only while 0 <= <index> < <extent>
+<name>[<index>]     // 0 <= <index> < <name>.size()
+<name>.size()       // the size, carried by the array
 
-for (int <i> = 0; <i> < <extent>; ++<i>) {              // index traversal
+for (std::size_t <i> = 0; <i> < <name>.size(); ++<i>) {
     // use <name>[<i>]
 }
-
-for (<element type> <e> : <name>) {                     // range-for: no bound to state
+for (T <e> : <name>) {
     // use <e>
 }
 
-void <fn>(<element type> <name>[], int <extent>);       // the size does not travel with it
+void <fn>(const std::array<T, <constant size>>& <name>);
+void <fn>(T <name>[], int <size>);   // C-style: pass the size
 ~~~
 
 | Part | Meaning |
 | --- | --- |
-| `<constant extent>` | A compile-time constant. The extent is fixed for the array's whole lifetime. |
-| `<index>` | Zero-based, so the last valid index is `<extent> - 1`, never `<extent>`. |
-| range-for | Visits every element exactly once, which removes the chance of stating the bound wrongly. |
-| array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass `<extent>` beside it. |
+| `<constant size>` | A compile-time constant. The size is fixed for the array's whole lifetime, and for `std::array` it is part of the type. |
+| `<index>` | Zero-based, so the last valid index is `<name>.size() - 1`, never `<name>.size()`. |
+| counter-controlled `for` | Names each position, so use it when the index itself matters. |
+| range-based `for` | Visits every element exactly once, which removes the chance of stating the bound wrongly. |
+| C-style array parameter | Decays to a pointer at the call, so the function cannot recover the size — pass the size beside it. |
 
 An out-of-bounds index is undefined behavior, not a reported error: the program may print nonsense and keep running.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## An array fixes its element type and extent
+## An array fixes its element type and size
 
 ~~~cpp
 #include <array>
@@ -87,7 +89,7 @@ std::array<double, 5> voltage{2.1, 2.3, 2.0, 2.4, 2.2};
 The five elements occupy a contiguous sequence.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## An index is valid only inside the array’s exact bounds
+## An index is valid only inside the array’s bounds
 
 ~~~cpp
 voltage[0] = 2.5;            // first element
@@ -100,15 +102,15 @@ For size 5, valid indices are 0 through 4.
 ## The array promises exactly five places
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l09/array-extent.png" alt="A neat row of five identical storage slots holds one kind of object, with its fixed endpoint clearly visible — visual point: Fixed means the extent is part of the object’s identity, not a suggestion." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l09/array-extent.png" alt="A neat row of five identical storage slots holds one kind of object, with its fixed endpoint clearly visible — visual point: Fixed means the size is part of the array’s type, not a suggestion." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> The array promises exactly five places.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Fixed means the extent is part of the object’s identity, not a suggestion.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Fixed means the size is part of the array’s type, not a suggestion.</p>
 </figcaption>
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Traversal uses the actual bound, never a guessed endpoint
+## Traversal uses the array’s own size, never an off-by-one guess
 
 ~~~cpp
 double sum = 0.0;
@@ -166,7 +168,7 @@ Use an explicit index only when the position matters.
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Array functions must receive the extent they rely on
+## A std::array parameter carries its own size
 
 ~~~cpp
 double mean(const std::array<double, 5>& values) {
@@ -175,6 +177,8 @@ double mean(const std::array<double, 5>& values) {
     return sum / values.size();
 }
 ~~~
+
+A C-style parameter (`double values[]`) decays to a pointer, so that version needs the size passed beside it.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Out-of-bounds access has no reliable result
@@ -186,10 +190,10 @@ double mean(const std::array<double, 5>& values) {
 C++ does not automatically protect <code>operator[]</code>. Keep the valid range visible in the loop condition.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="actual-bound" data-markdown><textarea data-template>
-## The guessed endpoint points somewhere over there
+## The off-by-one guess points somewhere over there
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l09/actual-bound.png" alt="A student follows a measuring tape attached to the real end of an array instead of a guessed endpoint sign — visual point: The array already knows its own size — ask it, don’t guess." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l09/actual-bound.png" alt="A student follows a measuring tape attached to the real end of an array instead of a hand-drawn sign guessing where it ends — visual point: The array already knows its own size — ask it, don’t guess." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> A hand-drawn sign points to a vague "somewhere over there."</p>
 <p class="course-meme-punchline"><strong>Punchline</strong> The array already knows its own size — ask it, don’t guess.</p>
@@ -199,17 +203,17 @@ C++ does not automatically protect <code>operator[]</code>. Keep the valid range
     <section data-markdown><textarea data-template>
 ## Safe array work respects index, traversal, and bound
 
-- A fixed array has one type, one extent, and contiguous elements.
+- A fixed array has one type, one size, and contiguous elements.
 - Zero is the first index.
 - Use <code>size()</code> as the traversal bound.
-- State the invariant and test empty-boundary logic before coding.
+- State the invariant and test the first and last index before coding.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Verify Find an anomalous temperature in a week with a claim, trace, boundary, and improvement
 
 Use the practical example as a small experiment. Before you leave, make the reasoning visible:
 
-- **Claim:** The structure makes a complete data window available.
+- **Claim:** The array holds every reading at once.
 - **Trace:** name the state that changes and the observation that would confirm it.
 - **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
 - **Improvement:** explain one change that would make the solution clearer or safer.
