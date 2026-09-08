@@ -2592,6 +2592,169 @@ std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
 
 In a built-in array declaration such as <code>int image[2][3]</code>, both bounds are positive compile-time constants. A vector can change size during execution, but every element access must still use a valid index.`;
 
+// Lecture 10 companion: one program that grows step by step. `highlight`
+// lists the lines (1-based, ranges allowed) that this step added or changed;
+// the focus editor marks them so the diff from the previous step is visible.
+const lectureTenProgression = [
+    {
+        title: 'Step 1: A fixed-size array holds a known number of readings',
+        highlight: '4-5',
+        code: `#include <iostream>
+
+int main() {
+    int readings[3]{10, 20, 30};
+    for (int i = 0; i < 3; ++i) {
+        std::cout << readings[i] << ' ';
+    }
+}`,
+        note: 'Three readings, three slots, one loop bound. Everything is fixed before the program runs. <code>int readings[3] = {10, 20, 30};</code> (copy-list-initialization, with <code>=</code>) gives the same array; the two forms differ only for class types with <code>explicit</code> constructors, which we meet when we study classes and constructors.'
+    },
+    {
+        title: 'Step 2: Add a dimension — rows and columns need two indices',
+        highlight: '4,6-9',
+        code: `#include <iostream>
+
+int main() {
+    int image[2][3]{{10, 20, 30}, {40, 50, 60}};
+    for (int row = 0; row < 2; ++row) {
+        for (int col = 0; col < 3; ++col) {
+            std::cout << image[row][col] << ' ';
+        }
+        std::cout << '\\n';
+    }
+}`,
+        note: 'Added: a second bound and an inner loop. Each index is checked against its own dimension.'
+    },
+    {
+        title: 'Step 3: Delete the fixed bound — std::vector grows as input arrives',
+        highlight: '2,5-10',
+        code: `#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> readings;
+    int value;
+    while (std::cin >> value) {
+        readings.push_back(value);
+    }
+    for (std::size_t i = 0; i < readings.size(); ++i) {
+        std::cout << readings[i] << ' ';
+    }
+}`,
+        note: 'Deleted: the literal 3. The count is now <code>readings.size()</code>, known only at run time.'
+    },
+    {
+        title: 'Step 4: Swap [] for at() — make an invalid index fail loudly',
+        highlight: '10-13,15',
+        code: `#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> readings;
+    int value;
+    while (std::cin >> value) {
+        readings.push_back(value);
+    }
+    if (readings.empty()) {
+        std::cout << "no readings\\n";
+        return 0;
+    }
+    for (std::size_t i = 0; i < readings.size(); ++i) {
+        std::cout << readings.at(i) << ' ';
+    }
+}`,
+        note: 'Added: an empty check and <code>at(i)</code>. An empty vector has no valid index; <code>at</code> throws instead of causing undefined behavior.'
+    },
+    {
+        title: 'Step 5: Nest vectors — rows may differ in length',
+        highlight: '5-6,8',
+        code: `#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10}};
+    for (const auto& row : scores) {
+        int total = 0;
+        for (int score : row) {
+            total += score;
+        }
+        std::cout << total << '\\n';
+    }
+}`,
+        note: 'Replaced: the flat vector with a vector of rows. Each row is traversed with its own size, so a ragged shape is safe.'
+    }
+];
+
+function progressionSection({ title, code, note, highlight }) {
+    return `    <section class="course-extra-slide course-progression-slide">
+<h2>${title}</h2>
+<pre data-course-highlight="${highlight}"><code class="language-cpp">${escapeHtml(code)}</code></pre>
+<p>${note}</p>
+    </section>`;
+}
+
+// Live polls live in sli.do; the slide only says "vote now". Keyed by
+// lecture id, then by the authored slide the poll follows.
+const slidoEvents = { 10: '3016463' };
+
+function pollSlide(lectureId, number) {
+    return md`## Poll ${number}
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code ${slidoEvents[lectureId]}</span>
+
+Answer on your phone; results appear on screen.`;
+}
+
+// int a[4] laid out in memory: the array name is the address of element 0,
+// and each later element sits sizeof(int) bytes further along.
+const arrayAddressSlide = md`## An array name is the address of its first element
+
+<svg class="course-array-address-figure" viewBox="0 0 900 300" role="img" aria-label="Four int boxes at consecutive addresses 1000, 1004, 1008, 1012; the name a points at the first box, and a[2] is two elements past it." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-array-address-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-array-address-figure .cell { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-array-address-figure .cell.hit { fill: rgba(255, 214, 102, 0.28); }
+    .course-array-address-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-array-arrow); }
+    .course-array-address-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-array-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="90" y="52" font-size="28">int a[4]{1, 2, 3, 4};</text>
+  <rect class="cell" x="150" y="110" width="150" height="80"/>
+  <rect class="cell" x="300" y="110" width="150" height="80"/>
+  <rect class="cell hit" x="450" y="110" width="150" height="80"/>
+  <rect class="cell" x="600" y="110" width="150" height="80"/>
+  <text x="225" y="162" font-size="34" text-anchor="middle">1</text>
+  <text x="375" y="162" font-size="34" text-anchor="middle">2</text>
+  <text x="525" y="162" font-size="34" text-anchor="middle">3</text>
+  <text x="675" y="162" font-size="34" text-anchor="middle">4</text>
+  <text class="dim" x="225" y="100" font-size="20" text-anchor="middle">a[0]</text>
+  <text class="dim" x="375" y="100" font-size="20" text-anchor="middle">a[1]</text>
+  <text x="525" y="100" font-size="20" text-anchor="middle">a[2]</text>
+  <text class="dim" x="675" y="100" font-size="20" text-anchor="middle">a[3]</text>
+  <text class="dim" x="150" y="222" font-size="20" text-anchor="middle">1000</text>
+  <text class="dim" x="300" y="222" font-size="20" text-anchor="middle">1004</text>
+  <text class="dim" x="450" y="222" font-size="20" text-anchor="middle">1008</text>
+  <text class="dim" x="600" y="222" font-size="20" text-anchor="middle">1012</text>
+  <text class="dim" x="750" y="222" font-size="20" text-anchor="middle">1016</text>
+  <path class="arrow" d="M60 150 H140"/>
+  <text x="20" y="158" font-size="28" font-weight="700">a</text>
+  <text x="150" y="266" font-size="22">a == &amp;a[0] == 1000</text>
+  <text x="450" y="266" font-size="22">&amp;a[2] == 1000 + 2 × 4 == 1008</text>
+</svg>
+
+Elements sit one after another. The name <code>a</code> converts to the address of <code>a[0]</code>; element <code>i</code> is <code>i × sizeof(int)</code> bytes further on — an index is an offset.`;
+
+// Extra authored companions per lecture: keyed by the authored slide they
+// follow, inserted before that slide's quiz and meme slides.
+const companionSlides = {
+    10: {
+        1: [{ content: pollSlide(10, 1), className: 'course-extra-slide course-poll-slide' }],
+        4: [{ content: pollSlide(10, 2), className: 'course-extra-slide course-poll-slide' }],
+        5: [{ content: arrayAddressSlide, className: 'course-extra-slide course-illustration-slide' }],
+        6: [{ content: pollSlide(10, 3), className: 'course-extra-slide course-poll-slide' }]
+    }
+};
+
 function markdownSection(content, className = '', attributes = '') {
     const classAttribute = className ? ` class="${className}"` : '';
     const extraAttributes = attributes ? ` ${attributes}` : '';
@@ -2734,6 +2897,9 @@ function page({ id, title, slides }) {
             );
         }
         courseSections.push(authoredSections[slideIndex]);
+        for (const companion of (companionSlides[id] || {})[slideIndex] || []) {
+            courseSections.push(markdownSection(companion.content, companion.className));
+        }
         for (const quiz of quizzesBySlide.get(slideIndex) || []) {
             courseSections.push(markdownSection(quiz.content, 'course-extra-slide course-quiz-slide'));
         }
@@ -2749,7 +2915,7 @@ function page({ id, title, slides }) {
     }
     const generatedContext = [
         markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
-        ...(id === 10 ? [markdownSection(lectureTenSyntaxSlide, 'course-extra-slide course-syntax-slide', 'data-course-syntax="10"')] : []),
+        ...(id === 10 ? [markdownSection(lectureTenSyntaxSlide, 'course-extra-slide course-syntax-slide', 'data-course-syntax="10"'), ...lectureTenProgression.map(progressionSection)] : []),
         ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
     ];
     const studio = markdownSection(

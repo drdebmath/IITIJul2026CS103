@@ -72,6 +72,88 @@ std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
 
 In a built-in array declaration such as <code>int image[2][3]</code>, both bounds are positive compile-time constants. A vector can change size during execution, but every element access must still use a valid index.
     </textarea></section>
+    <section class="course-extra-slide course-progression-slide">
+<h2>Step 1: A fixed-size array holds a known number of readings</h2>
+<pre data-course-highlight="4-5"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int readings[3]{10, 20, 30};
+    for (int i = 0; i &lt; 3; ++i) {
+        std::cout &lt;&lt; readings[i] &lt;&lt; &#39; &#39;;
+    }
+}</code></pre>
+<p>Three readings, three slots, one loop bound. Everything is fixed before the program runs. <code>int readings[3] = {10, 20, 30};</code> (copy-list-initialization, with <code>=</code>) gives the same array; the two forms differ only for class types with <code>explicit</code> constructors, which we meet when we study classes and constructors.</p>
+    </section>
+    <section class="course-extra-slide course-progression-slide">
+<h2>Step 2: Add a dimension — rows and columns need two indices</h2>
+<pre data-course-highlight="4,6-9"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int image[2][3]{{10, 20, 30}, {40, 50, 60}};
+    for (int row = 0; row &lt; 2; ++row) {
+        for (int col = 0; col &lt; 3; ++col) {
+            std::cout &lt;&lt; image[row][col] &lt;&lt; &#39; &#39;;
+        }
+        std::cout &lt;&lt; &#39;\n&#39;;
+    }
+}</code></pre>
+<p>Added: a second bound and an inner loop. Each index is checked against its own dimension.</p>
+    </section>
+    <section class="course-extra-slide course-progression-slide">
+<h2>Step 3: Delete the fixed bound — std::vector grows as input arrives</h2>
+<pre data-course-highlight="2,5-10"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; readings;
+    int value;
+    while (std::cin &gt;&gt; value) {
+        readings.push_back(value);
+    }
+    for (std::size_t i = 0; i &lt; readings.size(); ++i) {
+        std::cout &lt;&lt; readings[i] &lt;&lt; &#39; &#39;;
+    }
+}</code></pre>
+<p>Deleted: the literal 3. The count is now <code>readings.size()</code>, known only at run time.</p>
+    </section>
+    <section class="course-extra-slide course-progression-slide">
+<h2>Step 4: Swap [] for at() — make an invalid index fail loudly</h2>
+<pre data-course-highlight="10-13,15"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; readings;
+    int value;
+    while (std::cin &gt;&gt; value) {
+        readings.push_back(value);
+    }
+    if (readings.empty()) {
+        std::cout &lt;&lt; &quot;no readings\n&quot;;
+        return 0;
+    }
+    for (std::size_t i = 0; i &lt; readings.size(); ++i) {
+        std::cout &lt;&lt; readings.at(i) &lt;&lt; &#39; &#39;;
+    }
+}</code></pre>
+<p>Added: an empty check and <code>at(i)</code>. An empty vector has no valid index; <code>at</code> throws instead of causing undefined behavior.</p>
+    </section>
+    <section class="course-extra-slide course-progression-slide">
+<h2>Step 5: Nest vectors — rows may differ in length</h2>
+<pre data-course-highlight="5-6,8"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;std::vector&lt;int&gt;&gt; scores{{8, 7, 9}, {6, 10}};
+    for (const auto&amp; row : scores) {
+        int total = 0;
+        for (int score : row) {
+            total += score;
+        }
+        std::cout &lt;&lt; total &lt;&lt; &#39;\n&#39;;
+    }
+}</code></pre>
+<p>Replaced: the flat vector with a vector of rows. Each row is traversed with its own size, so a ragged shape is safe.</p>
+    </section>
     <section data-markdown><textarea data-template>
 ## Two-dimensional arrays represent matrices
 
@@ -81,6 +163,13 @@ int pixel = image[1][2];  // row 1, column 2
 ~~~
 
 A matrix is a rectangular arrangement of values. Here, the array has 2 rows and 3 columns. Row indices are 0 and 1; column indices are 0, 1, and 2.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 1
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 3016463</span>
+
+Answer on your phone; results appear on screen.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A 2D structure represents the world
@@ -156,6 +245,13 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 
 <code>at(i)</code> throws <code>std::out_of_range</code> when the index is invalid. In C++17, <code>operator[]</code> does not perform bounds checking; an invalid element index causes undefined behavior.
     </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 2
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 3016463</span>
+
+Answer on your phone; results appear on screen.
+    </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="row-column-traversal" data-markdown><textarea data-template>
 ## The robot promises to visit every cell exactly once
 
@@ -177,6 +273,44 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 | fixed 3 × 3 transform | two-dimensional array |
 | rows whose lengths may differ | vector of vectors (jagged or ragged structure) |
     </textarea></section>
+    <section class="course-extra-slide course-illustration-slide" data-markdown><textarea data-template>
+## An array name is the address of its first element
+
+<svg class="course-array-address-figure" viewBox="0 0 900 300" role="img" aria-label="Four int boxes at consecutive addresses 1000, 1004, 1008, 1012; the name a points at the first box, and a[2] is two elements past it." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-array-address-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-array-address-figure .cell { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-array-address-figure .cell.hit { fill: rgba(255, 214, 102, 0.28); }
+    .course-array-address-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-array-arrow); }
+    .course-array-address-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-array-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="90" y="52" font-size="28">int a[4]{1, 2, 3, 4};</text>
+  <rect class="cell" x="150" y="110" width="150" height="80"/>
+  <rect class="cell" x="300" y="110" width="150" height="80"/>
+  <rect class="cell hit" x="450" y="110" width="150" height="80"/>
+  <rect class="cell" x="600" y="110" width="150" height="80"/>
+  <text x="225" y="162" font-size="34" text-anchor="middle">1</text>
+  <text x="375" y="162" font-size="34" text-anchor="middle">2</text>
+  <text x="525" y="162" font-size="34" text-anchor="middle">3</text>
+  <text x="675" y="162" font-size="34" text-anchor="middle">4</text>
+  <text class="dim" x="225" y="100" font-size="20" text-anchor="middle">a[0]</text>
+  <text class="dim" x="375" y="100" font-size="20" text-anchor="middle">a[1]</text>
+  <text x="525" y="100" font-size="20" text-anchor="middle">a[2]</text>
+  <text class="dim" x="675" y="100" font-size="20" text-anchor="middle">a[3]</text>
+  <text class="dim" x="150" y="222" font-size="20" text-anchor="middle">1000</text>
+  <text class="dim" x="300" y="222" font-size="20" text-anchor="middle">1004</text>
+  <text class="dim" x="450" y="222" font-size="20" text-anchor="middle">1008</text>
+  <text class="dim" x="600" y="222" font-size="20" text-anchor="middle">1012</text>
+  <text class="dim" x="750" y="222" font-size="20" text-anchor="middle">1016</text>
+  <path class="arrow" d="M60 150 H140"/>
+  <text x="20" y="158" font-size="28" font-weight="700">a</text>
+  <text x="150" y="266" font-size="22">a == &amp;a[0] == 1000</text>
+  <text x="450" y="266" font-size="22">&amp;a[2] == 1000 + 2 × 4 == 1008</text>
+</svg>
+
+Elements sit one after another. The name <code>a</code> converts to the address of <code>a[0]</code>; element <code>i</code> is <code>i × sizeof(int)</code> bytes further on — an index is an offset.
+    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Compute row sums using a vector of vectors
 
@@ -192,6 +326,13 @@ for (const auto& row : scores) {
 Each row stores its integers contiguously, but the integers across all rows are not guaranteed to occupy one contiguous block.
 
 Equal row lengths give a rectangular matrix. Unequal row lengths give a jagged or ragged structure; traverse each row using its own size.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 3
+
+<span class="course-extra-kicker">📊 Head to sli.do — event code 3016463</span>
+
+Answer on your phone; results appear on screen.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="vector-growth" data-markdown><textarea data-template>
 ## Readings keep arriving after the plan was written

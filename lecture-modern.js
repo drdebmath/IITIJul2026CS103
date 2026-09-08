@@ -477,10 +477,21 @@
 
     function placeCaret(element, offset) {
         element.focus({ preventScroll: true });
-        const node = element.firstChild || element.appendChild(document.createTextNode(''));
+        // Highlighted lines hold several text nodes; walk to the one that
+        // contains the offset.
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        let node = walker.nextNode();
+        let remaining = offset;
+        while (node && remaining > node.textContent.length) {
+            remaining -= node.textContent.length;
+            const next = walker.nextNode();
+            if (!next) break;
+            node = next;
+        }
+        if (!node) node = element.appendChild(document.createTextNode(''));
         const range = document.createRange();
         const selection = window.getSelection();
-        range.setStart(node, Math.min(offset, node.textContent.length));
+        range.setStart(node, Math.min(remaining, node.textContent.length));
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
@@ -493,6 +504,15 @@
         const originalLines = original.split('\n');
         const languageClass = Array.from(code.classList).find((name) => /^(language-|lang-|cpp$|c\+\+$)/i.test(name));
         const language = languageClass ? languageClass.replace(/^(language-|lang-)/i, '').toUpperCase() : 'CODE';
+        const hljs = window.hljs || (window.Reveal && window.Reveal.getPlugin && window.Reveal.getPlugin('highlight') || {}).hljs;
+        const hljsLanguage = hljs && hljs.getLanguage(language.toLowerCase()) ? language.toLowerCase() : null;
+
+        // Syntax colouring per line via the highlight.js that Reveal already
+        // loads. Line-at-a-time, so a multi-line comment colours line by line.
+        function paint(editable) {
+            if (!hljsLanguage) return;
+            editable.innerHTML = hljs.highlight(editable.textContent, { language: hljsLanguage }).value;
+        }
         const editor = document.createElement('div');
         editor.className = 'course-code-editor';
         Array.from(pre.classList).forEach((className) => editor.classList.add(className));
@@ -543,6 +563,7 @@
             editable.setAttribute('autocapitalize', 'off');
             editable.setAttribute('role', 'textbox');
             editable.textContent = text || '';
+            paint(editable);
             line.append(number, editable);
             return line;
         }
@@ -561,9 +582,17 @@
             }
         }
 
+        // data-course-highlight="2,5-7" pre-marks the lines a slide is about
+        // (1-based, ranges allowed) so a listing can show what changed.
+        const highlighted = new Set((pre.dataset.courseHighlight || '').split(',').flatMap((part) => {
+            const [start, end = start] = part.split('-').map(Number);
+            return Number.isFinite(start) ? Array.from({ length: end - start + 1 }, (_, i) => start + i) : [];
+        }));
+
         function restore() {
             viewport.replaceChildren(...originalLines.map(createLine));
             renumber();
+            lineElements().forEach((line, index) => line.classList.toggle('is-marked', highlighted.has(index + 1)));
             // No line pops until the presenter picks one, so diagrams and
             // untouched listings stay perfectly aligned by default.
         }
@@ -575,6 +604,13 @@
         viewport.addEventListener('pointerdown', (event) => {
             const line = event.target.closest('.course-code-line');
             if (line) focusLine(Number(line.dataset.line));
+        });
+        viewport.addEventListener('input', (event) => {
+            const editable = event.target.closest('.course-code-line-text');
+            if (!editable || !hljsLanguage) return;
+            const offset = caretOffset(editable);
+            paint(editable);
+            placeCaret(editable, offset);
         });
         viewport.addEventListener('keydown', (event) => {
             const editable = event.target.closest('.course-code-line-text');
@@ -596,6 +632,7 @@
                 const offset = caretOffset(editable);
                 const value = editable.textContent;
                 editable.textContent = value.slice(0, offset);
+                paint(editable);
                 const newLine = createLine(value.slice(offset));
                 line.after(newLine);
                 renumber();
@@ -606,6 +643,7 @@
                 const previous = lines[index - 1].querySelector('.course-code-line-text');
                 const previousLength = previous.textContent.length;
                 previous.textContent += editable.textContent;
+                paint(previous);
                 line.remove();
                 renumber();
                 placeCaret(previous, previousLength);

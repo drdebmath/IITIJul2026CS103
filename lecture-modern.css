@@ -1715,3 +1715,23 @@ body.course-modern .reveal .course-quiz-answered .is-chosen:not(.is-correct) {
         display: none !important;
     }
 }
+
+/* Lines pre-marked by data-course-highlight: the part of a listing that a
+   step added or changed. Tint only, no scale, so alignment is untouched. */
+.course-code-line.is-marked {
+    background: linear-gradient(to right, rgba(255, 214, 102, 0.22), var(--course-code-line) 60%);
+}
+
+.course-code-line.is-marked .course-code-line-number {
+    color: #ffd666;
+    box-shadow: inset 5px 0 0 0 #ffd666;
+}
+
+.course-array-address-figure {
+    display: block;
+    width: 100%;
+    max-width: 820px;
+    height: auto;
+    margin: 0.2em auto;
+    color: var(--course-ink, currentColor);
+}
