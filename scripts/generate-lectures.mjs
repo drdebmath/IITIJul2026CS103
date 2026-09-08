@@ -700,19 +700,19 @@ C++ does not automatically protect <code>operator[]</code>. Keep the valid range
     },
     {
         id: 10,
-        title: 'Match matrices and vectors to their operations',
+        title: 'Two-Dimensional Arrays and std::vector',
         slides: [
-            md`# Lecture 10: Match matrices and vectors to their operations
-## Matrices and runtime-sized contiguous sequences`,
-            md`## A matrix needs one bound for each dimension
+            md`# Lecture 10: Two-Dimensional Arrays and std::vector
+## Matrices, nested loops, and dynamically sized arrays`,
+            md`## Two-dimensional arrays represent matrices
 
 ~~~cpp
 int image[2][3]{{10, 20, 30}, {40, 50, 60}};
 int pixel = image[1][2];  // row 1, column 2
 ~~~
 
-Both dimensions are zero-based.`,
-            md`## Matching bounds keep row and column traversal safe
+A matrix is a rectangular arrangement of values. Here, the array has 2 rows and 3 columns. Row indices are 0 and 1; column indices are 0, 1, and 2.`,
+            md`## Traverse a matrix with nested loops
 
 ~~~cpp
 for (int row = 0; row < 2; ++row) {
@@ -721,7 +721,7 @@ for (int row = 0; row < 2; ++row) {
     }
 }
 ~~~`,
-            md`## std::vector owns a contiguous sequence whose size can change
+            md`## std::vector is a dynamically sized array
 
 ~~~cpp
 #include <vector>
@@ -731,8 +731,10 @@ readings.push_back(17);
 readings.push_back(21);
 ~~~
 
-The vector grows while preserving contiguous element storage.`,
-            md`## Dynamic size does not remove the need for bounds checks
+The vector manages its element storage automatically. The integers in <code>readings</code> occupy contiguous memory.
+
+Appending an element may reallocate storage and move the elements to new addresses. The integers remain contiguous after the operation.`,
+            md`## Vector size and bounds checking
 
 ~~~cpp
 for (std::size_t i = 0; i < readings.size(); ++i) {
@@ -740,16 +742,18 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 }
 ~~~
 
-<code>at()</code> checks; <code>operator[]</code> assumes the index is valid.`,
-            md`## Choose array or vector from size and operation requirements
+<code>size()</code> returns the number of elements. Valid indices satisfy <code>0 &lt;= i &amp;&amp; i &lt; readings.size()</code>; an empty vector has no valid element index.
+
+<code>at(i)</code> throws <code>std::out_of_range</code> when the index is invalid. In C++17, <code>operator[]</code> does not perform bounds checking; an invalid element index causes undefined behavior.`,
+            md`## Choose a fixed-size array or std::vector
 
 | Requirement | Representation |
 |---|---|
-| exactly seven daily readings | fixed array |
-| readings until input ends | vector |
-| fixed 3 × 3 transform | 2D array |
-| rows whose lengths may differ | nested vectors |`,
-            md`## Nested traversal makes each row total testable
+| exactly seven daily readings | fixed-size array |
+| readings until input ends | <code>std::vector</code> |
+| fixed 3 × 3 transform | two-dimensional array |
+| rows whose lengths may differ | vector of vectors (jagged or ragged structure) |`,
+            md`## Compute row sums using a vector of vectors
 
 ~~~cpp
 std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
@@ -758,13 +762,18 @@ for (const auto& row : scores) {
     for (int score : row) total += score;
     std::cout << total << '\n';
 }
-~~~`,
-            md`## Storage follows size knowledge, ownership, and access operations
+~~~
 
-- A matrix needs row and column bounds.
-- A vector owns a contiguous sequence whose size is known at runtime.
-- <code>size()</code> states the valid upper bound.
-- Choose fixed or dynamic storage from the requirement.`
+Each row stores its integers contiguously, but the integers across all rows are not guaranteed to occupy one contiguous block.
+
+Equal row lengths give a rectangular matrix. Unequal row lengths give a jagged or ragged structure; traverse each row using its own size.`,
+            md`## Summary: dimensions, size, and storage
+
+- Check each row and column index against its corresponding dimension.
+- A vector manages its storage automatically, and its size can change during execution.
+- <code>size()</code> is the number of elements and the exclusive upper bound for valid indices.
+- Vector growth may change element addresses; a vector of vectors stores each row separately.
+- Choose a fixed-size array or a vector according to the required operations.`
         ]
     },
     {
@@ -1771,12 +1780,12 @@ const studioBriefs = {
         thread: 'Grow the grid world',
         problem: 'Store rooms and paths whose dimensions are known only at runtime.',
         model: 'A grid is a sequence of rows; each row is a sequence of cells.',
-        represent: 'A matrix models fixed geometry; vectors model runtime-sized or ragged data.',
-        solve: 'Select fixed or dynamic storage, then traverse using each real bound.',
+        represent: 'A two-dimensional array stores a fixed-size grid. A vector of vectors can store a rectangular matrix or rows of unequal lengths.',
+        solve: 'Choose a fixed-size array or a vector of vectors, then check each index against its corresponding dimension.',
         verify: 'Test 1×1, one row, unequal row lengths, and checked invalid access.',
         improve: 'Pass the grid to a renderer instead of mixing storage with output.',
-        lens: 'data-driven simulation',
-        compare: 'fixed 2D array versus nested vectors'
+        lens: 'grid-based simulation',
+        compare: 'fixed-size two-dimensional array versus vector of vectors'
     },
     11: {
         thread: 'Record and replay ASCII animation',
@@ -2182,7 +2191,7 @@ int main() {
 
 **Invariant:** every access uses one row in [0,3) and one column in [0,5).
 
-**Next unlock · L11:** record and validate a replay as owned text.`,
+**Next lecture · L11:** record and validate a replay using <code>std::string</code>.`,
 
     11: md`## Game evolution: A replay string stores commands
 
@@ -2553,6 +2562,36 @@ In <code>resistance &gt; minimumResistance &amp;&amp; voltage / resistance &gt; 
     ]
 };
 
+// Keep the Lecture 10 syntax reference when regenerating its deck.
+const lectureTenSyntaxSlide = md`## Two-dimensional array and vector syntax
+
+~~~cpp
+<T> <name>[<rows>][<cols>];       // one bound per dimension
+<name>[<r>][<c>]                  // needs 0 <= <r> < <rows> AND 0 <= <c> < <cols>
+
+for (int <r> = 0; <r> < <rows>; ++<r>)
+    for (int <c> = 0; <c> < <cols>; ++<c>)
+        // visits <name>[<r>][<c>] exactly once
+
+std::vector<T> <name>;                    // size 0
+std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
+
+<name>.push_back(<value>);   // appends, size grows by one
+<name>.size()                // the current number of elements
+<name>[<i>]                  // unchecked, like an array
+<name>.at(<i>)               // throws std::out_of_range if the index is invalid
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| <code>T</code> | The element type. Write the real type: <code>int</code>, <code>double</code>, <code>std::string</code>. |
+| <code>rows</code>, <code>cols</code> | Independent bounds. Each index must be checked against its own dimension, not against the other. |
+| loop nesting order | With the row loop outside, each row is traversed in turn. Reversing the loops with appropriate bounds changes traversal order, not matrix dimensions. |
+| <code>size()</code> | Number of elements; valid indices range from 0 up to, but excluding, this value. An empty vector has no valid element index. |
+| <code>[]</code> vs <code>at()</code> | Both access an element. In C++17, <code>[]</code> is unchecked; <code>at()</code> checks the index and throws <code>std::out_of_range</code> if it is invalid. |
+
+In a built-in array declaration such as <code>int image[2][3]</code>, both bounds are positive compile-time constants. A vector can change size during execution, but every element access must still use a valid index.`;
+
 function markdownSection(content, className = '', attributes = '') {
     const classAttribute = className ? ` class="${className}"` : '';
     const extraAttributes = attributes ? ` ${attributes}` : '';
@@ -2710,10 +2749,11 @@ function page({ id, title, slides }) {
     }
     const generatedContext = [
         markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
+        ...(id === 10 ? [markdownSection(lectureTenSyntaxSlide, 'course-extra-slide course-syntax-slide', 'data-course-syntax="10"')] : []),
         ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
     ];
     const studio = markdownSection(
-        studioSlide(studioBriefs[id]),
+        id === 10 ? studioSlide(studioBriefs[id]).replace('**Studio thread:**', '**Application:**').replace('**Technique lens:**', '**Technique:**') : studioSlide(studioBriefs[id]),
         'course-extra-slide course-algorithmic-studio'
     );
     const practice = markdownSection(

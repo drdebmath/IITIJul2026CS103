@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 10: Match matrices and vectors to their operations">
-    <title>Lecture 10: Match matrices and vectors to their operations</title>
+    <meta name="description" content="CS103 Lecture 10: Two-Dimensional Arrays and std::vector">
+    <title>Lecture 10: Two-Dimensional Arrays and std::vector</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 10: Match matrices and vectors to their operations
-## Matrices and runtime-sized contiguous sequences
+# Lecture 10: Two-Dimensional Arrays and std::vector
+## Matrices, nested loops, and dynamically sized arrays
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Each index stays within its own dimension. · Summarize a classroom score matrix
 
-A matrix needs one loop per dimension; a vector is useful when the number of stored values is known only at runtime.
+Use nested loops to traverse a matrix. A vector supports a number of elements that can change during execution.
 
 ~~~cpp
 #include <iostream>
@@ -39,11 +39,11 @@ int main() {
 **Takeaways**
 
 - Each index stays within its own dimension.
-- size() supplies the actual bound.
-- The structure matches rows containing columns.
+- size() gives the number of elements; valid indices are smaller than size().
+- The outer vector contains rows; each inner vector contains that row’s values.
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="10" data-markdown><textarea data-template>
-## The general form of a matrix and a std::vector
+## Two-dimensional array and vector syntax
 
 ~~~cpp
 <T> <name>[<rows>][<cols>];       // one bound per dimension
@@ -59,28 +59,28 @@ std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
 <name>.push_back(<value>);   // appends, size grows by one
 <name>.size()                // the current number of elements
 <name>[<i>]                  // unchecked, like an array
-<name>.at(<i>)               // checked: throws std::out_of_range
+<name>.at(<i>)               // throws std::out_of_range if the index is invalid
 ~~~
 
 | Part | Meaning |
 | --- | --- |
 | <code>T</code> | The element type. Write the real type: <code>int</code>, <code>double</code>, <code>std::string</code>. |
-| `<rows>`, `<cols>` | Independent bounds. Each index must be checked against its own dimension, not against the other. |
-| nesting order | The outer index selects the row, the inner walks that row. Swapping them traverses a different shape. |
-| <code>size()</code> | A vector carries its own size, so no separate count parameter is needed. |
-| <code>[]</code> vs <code>at()</code> | Both index; only <code>at()</code> checks the bound and reports the failure. |
+| <code>rows</code>, <code>cols</code> | Independent bounds. Each index must be checked against its own dimension, not against the other. |
+| loop nesting order | With the row loop outside, each row is traversed in turn. Reversing the loops with appropriate bounds changes traversal order, not matrix dimensions. |
+| <code>size()</code> | Number of elements; valid indices range from 0 up to, but excluding, this value. An empty vector has no valid element index. |
+| <code>[]</code> vs <code>at()</code> | Both access an element. In C++17, <code>[]</code> is unchecked; <code>at()</code> checks the index and throws <code>std::out_of_range</code> if it is invalid. |
 
-A vector's size can change at run time, which removes the fixed size but not the need to stay inside it.
+In a built-in array declaration such as <code>int image[2][3]</code>, both bounds are positive compile-time constants. A vector can change size during execution, but every element access must still use a valid index.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A matrix needs one bound for each dimension
+## Two-dimensional arrays represent matrices
 
 ~~~cpp
 int image[2][3]{{10, 20, 30}, {40, 50, 60}};
 int pixel = image[1][2];  // row 1, column 2
 ~~~
 
-Both dimensions are zero-based.
+A matrix is a rectangular arrangement of values. Here, the array has 2 rows and 3 columns. Row indices are 0 and 1; column indices are 0, 1, and 2.
     </textarea></section>
     <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
 ## Game evolution: A 2D structure represents the world
@@ -104,10 +104,10 @@ int main() {
 
 **Invariant:** every access uses one row in [0,3) and one column in [0,5).
 
-**Next unlock · L11:** record and validate a replay as owned text.
+**Next lecture · L11:** record and validate a replay using <code>std::string</code>.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Matching bounds keep row and column traversal safe
+## Traverse a matrix with nested loops
 
 ~~~cpp
 for (int row = 0; row < 2; ++row) {
@@ -118,18 +118,18 @@ for (int row = 0; row < 2; ++row) {
 ~~~
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="matrix-dimensions" data-markdown><textarea data-template>
-## A matrix has rows and columns, not one mystery size
+## Matrix dimensions: rows and columns
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l10/matrix-dimensions.png" alt="A student navigates a rectangular grid using separate row and column rails, with both dimensions clearly guarded — visual point: Two dimensions, two honest bounds — a ruler alone gets lost." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l10/matrix-dimensions.png" alt="A student navigates a rectangular grid using separate row and column rails, with both dimensions clearly guarded — visual point: Check each index against its corresponding dimension." width="900" height="506" loading="lazy">
 <figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The matrix has rows and columns, not one mysterious "size."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Two dimensions, two honest bounds — a ruler alone gets lost.</p>
+<p class="course-meme-setup"><strong>Setup</strong> A matrix has a row count and a column count.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Check each index against its corresponding dimension.</p>
 </figcaption>
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## std::vector owns a contiguous sequence whose size can change
+## std::vector is a dynamically sized array
 
 ~~~cpp
 #include <vector>
@@ -139,10 +139,12 @@ readings.push_back(17);
 readings.push_back(21);
 ~~~
 
-The vector grows while preserving contiguous element storage.
+The vector manages its element storage automatically. The integers in <code>readings</code> occupy contiguous memory.
+
+Appending an element may reallocate storage and move the elements to new addresses. The integers remain contiguous after the operation.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Dynamic size does not remove the need for bounds checks
+## Vector size and bounds checking
 
 ~~~cpp
 for (std::size_t i = 0; i < readings.size(); ++i) {
@@ -150,31 +152,33 @@ for (std::size_t i = 0; i < readings.size(); ++i) {
 }
 ~~~
 
-<code>at()</code> checks; <code>operator[]</code> assumes the index is valid.
+<code>size()</code> returns the number of elements. Valid indices satisfy <code>0 &lt;= i &amp;&amp; i &lt; readings.size()</code>; an empty vector has no valid element index.
+
+<code>at(i)</code> throws <code>std::out_of_range</code> when the index is invalid. In C++17, <code>operator[]</code> does not perform bounds checking; an invalid element index causes undefined behavior.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="row-column-traversal" data-markdown><textarea data-template>
 ## The robot promises to visit every cell exactly once
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l10/row-column-traversal.png" alt="A tiny robot completes each row and each column intersection without crossing either grid boundary — visual point: Keep both rails honest and the grid stops being a minefield." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l10/row-column-traversal.png" alt="A tiny robot completes each row and each column intersection without crossing either grid boundary — visual point: Nested loops visit each cell once when both indices stay within bounds." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> The robot promises to visit every cell exactly once.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Keep both rails honest and the grid stops being a minefield.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Nested loops visit each cell once when both indices stay within bounds.</p>
 </figcaption>
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Choose array or vector from size and operation requirements
+## Choose a fixed-size array or std::vector
 
 | Requirement | Representation |
 |---|---|
-| exactly seven daily readings | fixed array |
-| readings until input ends | vector |
-| fixed 3 × 3 transform | 2D array |
-| rows whose lengths may differ | nested vectors |
+| exactly seven daily readings | fixed-size array |
+| readings until input ends | <code>std::vector</code> |
+| fixed 3 × 3 transform | two-dimensional array |
+| rows whose lengths may differ | vector of vectors (jagged or ragged structure) |
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Nested traversal makes each row total testable
+## Compute row sums using a vector of vectors
 
 ~~~cpp
 std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};
@@ -184,25 +188,30 @@ for (const auto& row : scores) {
     std::cout << total << '\n';
 }
 ~~~
+
+Each row stores its integers contiguously, but the integers across all rows are not guaranteed to occupy one contiguous block.
+
+Equal row lengths give a rectangular matrix. Unequal row lengths give a jagged or ragged structure; traverse each row using its own size.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="vector-growth" data-markdown><textarea data-template>
 ## Readings keep arriving after the plan was written
 
 <figure class="course-meme-figure">
-<img src="assets/lecture-memes/l10/vector-growth.png" alt="A flexible row of connected storage tiles grows by adding a new tile while keeping the existing tiles together — visual point: A vector makes room without abandoning its contiguous neighborhood." width="900" height="506" loading="lazy">
+<img src="assets/lecture-memes/l10/vector-growth.png" alt="A flexible row of connected storage tiles grows by adding a new tile while keeping the existing tiles together — visual point: The elements remain contiguous, but growth may move them to new addresses." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> Readings keep arriving after the plan was written.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> A vector makes room without abandoning its contiguous neighborhood.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> The elements remain contiguous, but growth may move them to new addresses.</p>
 </figcaption>
 </figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Storage follows size knowledge, ownership, and access operations
+## Summary: dimensions, size, and storage
 
-- A matrix needs row and column bounds.
-- A vector owns a contiguous sequence whose size is known at runtime.
-- <code>size()</code> states the valid upper bound.
-- Choose fixed or dynamic storage from the requirement.
+- Check each row and column index against its corresponding dimension.
+- A vector manages its storage automatically, and its size can change during execution.
+- <code>size()</code> is the number of elements and the exclusive upper bound for valid indices.
+- Vector growth may change element addresses; a vector of vectors stores each row separately.
+- Choose a fixed-size array or a vector according to the required operations.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Verify Summarize a classroom score matrix with a claim, trace, boundary, and improvement
@@ -249,20 +258,20 @@ Reaching this set marks the lecture as studied in this browser. [Open the IC151 
     <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
 ## Store rooms and paths whose dimensions are known only at runtime.
 
-**Studio thread:** Grow the grid world
+**Application:** Grow the grid world
 
 | Ask | Today’s answer |
 |---|---|
 | **Problem** | Store rooms and paths whose dimensions are known only at runtime. |
 | **Model** | A grid is a sequence of rows; each row is a sequence of cells. |
-| **Represent** | A matrix models fixed geometry; vectors model runtime-sized or ragged data. |
-| **Solve** | Select fixed or dynamic storage, then traverse using each real bound. |
+| **Represent** | A two-dimensional array stores a fixed-size grid. A vector of vectors can store a rectangular matrix or rows of unequal lengths. |
+| **Solve** | Choose a fixed-size array or a vector of vectors, then check each index against its corresponding dimension. |
 | **Verify** | Test 1×1, one row, unequal row lengths, and checked invalid access. |
 | **Improve** | Pass the grid to a renderer instead of mixing storage with output. |
 
-**Technique lens:** data-driven simulation
+**Technique:** grid-based simulation
 
-**Compare:** fixed 2D array versus nested vectors
+**Compare:** fixed-size two-dimensional array versus vector of vectors
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

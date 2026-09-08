@@ -154,12 +154,12 @@ export const lectureExtras = {
     },
     "10": {
         "title": "Summarize a classroom score matrix",
-        "context": "A matrix needs one loop per dimension; a vector is useful when the number of stored values is known only at runtime.",
+        "context": "Use nested loops to traverse a matrix. A vector supports a number of elements that can change during execution.",
         "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<std::vector<int>> scores{{8, 7, 9}, {6, 10, 8}};\n    for (std::size_t row = 0; row < scores.size(); ++row) {\n        int total = 0;\n        for (std::size_t col = 0; col < scores[row].size(); ++col)\n            total += scores[row][col];\n        std::cout << \"row \" << row << \" total=\" << total << '\\n';\n    }\n}",
         "takeaways": [
             "Each index stays within its own dimension.",
-            "size() supplies the actual bound.",
-            "The structure matches rows containing columns."
+            "size() gives the number of elements; valid indices are smaller than size().",
+            "The outer vector contains rows; each inner vector contains that row’s values."
         ],
         "problems": [
             "Compute every row sum and column sum of a matrix.",

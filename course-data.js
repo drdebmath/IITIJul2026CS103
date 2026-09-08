@@ -14,7 +14,7 @@
         { sequence: 8, lectureId: 7, date: '2026-08-28', start: '11:30', end: '12:25', title: 'Declare, define, and call functions', file: 'lecture7.html', module: '4' },
         { sequence: 9, lectureId: 8, date: '2026-09-01', start: '10:30', end: '11:25', title: 'Choose copy, alias, and recursion deliberately', file: 'lecture8.html', module: '4' },
         { sequence: 10, lectureId: 9, date: '2026-09-04', start: '11:30', end: '12:25', title: 'Traverse fixed-size arrays within bounds', file: 'lecture9.html', module: '5' },
-        { sequence: 11, lectureId: 10, date: '2026-09-08', start: '10:30', end: '11:25', title: 'Match matrices and vectors to their operations', file: 'lecture10.html', module: '5' },
+        { sequence: 11, lectureId: 10, date: '2026-09-08', start: '10:30', end: '11:25', title: 'Two-Dimensional Arrays and std::vector', file: 'lecture10.html', module: '5' },
         { sequence: 12, lectureId: 11, date: '2026-09-11', start: '11:30', end: '12:25', title: 'Process owned text with explicit boundaries', file: 'lecture11.html', module: '5' },
         { sequence: 13, lectureId: 12, date: '2026-10-06', start: '10:30', end: '11:25', title: 'Repair programs with evidence and tests', file: 'lecture12.html', module: 'Review' },
         { sequence: 14, lectureId: 13, date: '2026-10-09', start: '11:30', end: '12:25', title: 'Group state and validate addresses', file: 'lecture13.html', module: '6' },

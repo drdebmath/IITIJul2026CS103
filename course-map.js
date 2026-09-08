@@ -27,7 +27,7 @@
         'm4-complexity': [16, 7],
 
         'm4-arrays': [9, 2], 'm4-array-access': [9, 3],
-        'm5-multidimensional': [10, 2], 'm4-vector': [10, 3],
+        'm5-multidimensional': [10, 2], 'm4-vector': [10, 4],
         'm4-cstrings': [11, 7], 'm4-cstring-lib': [11, 7],
         'm4-std-string': [11, 2], 'm4-string-ops': [11, 4],
         'm4-string-io': [11, 3], 'm4-cctype': [11, 5], 'm4-string-safety': [11, 7],
@@ -115,7 +115,7 @@
         'm4-arrays': ['array', 'A fixed-size contiguous sequence of elements of one type, accessed by integer index.', 'arrays'],
         'm4-array-access': ['index', 'An integer position used to select an element in an indexed sequence.', 'indexing', 'bounds'],
         'm5-multidimensional': ['multidimensional array', 'An array whose elements are themselves arrays, commonly used for matrices and image grids.', 'two-dimensional array'],
-        'm4-vector': ['std::vector', 'A standard-library contiguous sequence that owns dynamically resizable storage.', 'vector'],
+        'm4-vector': ['std::vector', 'A standard-library sequence container that manages its element storage automatically and can change size. Elements are contiguous except in the bool specialization.', 'vector'],
         'm4-cstrings': ['C-style string', 'A character array whose logical text ends at the first null character.', 'C-style strings', 'null terminator'],
         'm4-cstring-lib': ['cstring', 'The C++ header exposing length, copy, comparison, and concatenation operations for null-terminated character arrays.'],
         'm4-std-string': ['std::string', 'A standard-library value type that owns, sizes, and manages a sequence of characters.'],
