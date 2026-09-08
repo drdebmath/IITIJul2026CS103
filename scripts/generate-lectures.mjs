@@ -2744,11 +2744,54 @@ const arrayAddressSlide = md`## An array name is the address of its first elemen
 
 Elements sit one after another. The name <code>a</code> converts to the address of <code>a[0]</code>; element <code>i</code> is <code>i × sizeof(int)</code> bytes further on — an index is an offset.`;
 
+// Memory as one byte-addressed strip, then a std::vector: a small fixed-size
+// object (pointer, size, capacity) whose elements live in a separate block.
+const vectorStorageSlide = md`## Memory is a numbered strip; a vector keeps its elements elsewhere
+
+<svg class="course-array-address-figure course-vector-storage-figure" viewBox="0 0 900 380" role="img" aria-label="Top: memory drawn as byte cells numbered 0 upward, with four highlighted bytes forming one int. Bottom: a std::vector object holding a pointer, size 3 and capacity 4, with an arrow to a separate block of four int slots where three hold values." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-vector-storage-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-vector-storage-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-vector-storage-figure .cell.spare { stroke-dasharray: 6 5; opacity: 0.6; }
+    .course-vector-storage-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-vector-storage-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-vector-storage-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-vector-arrow); }
+    .course-vector-storage-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-vector-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="20" y="28" font-size="20" font-weight="700">Memory: every byte has an address</text>
+  <rect class="cell" x="20" y="42" width="60" height="40"/><rect class="cell" x="80" y="42" width="60" height="40"/><rect class="cell" x="140" y="42" width="60" height="40"/><rect class="cell" x="200" y="42" width="60" height="40"/><rect class="cell heap" x="260" y="42" width="60" height="40"/><rect class="cell heap" x="320" y="42" width="60" height="40"/><rect class="cell heap" x="380" y="42" width="60" height="40"/><rect class="cell heap" x="440" y="42" width="60" height="40"/><rect class="cell" x="500" y="42" width="60" height="40"/><rect class="cell" x="560" y="42" width="60" height="40"/><rect class="cell" x="620" y="42" width="60" height="40"/><rect class="cell" x="680" y="42" width="60" height="40"/><rect class="cell" x="740" y="42" width="60" height="40"/><rect class="cell" x="800" y="42" width="60" height="40"/>
+  <text class="dim" x="50" y="101" font-size="15" text-anchor="middle">0</text><text class="dim" x="110" y="101" font-size="15" text-anchor="middle">1</text><text class="dim" x="170" y="101" font-size="15" text-anchor="middle">2</text><text class="dim" x="230" y="101" font-size="15" text-anchor="middle">3</text><text class="dim" x="290" y="101" font-size="15" text-anchor="middle">4</text><text class="dim" x="350" y="101" font-size="15" text-anchor="middle">5</text><text class="dim" x="410" y="101" font-size="15" text-anchor="middle">6</text><text class="dim" x="470" y="101" font-size="15" text-anchor="middle">7</text><text class="dim" x="530" y="101" font-size="15" text-anchor="middle">8</text><text class="dim" x="650" y="101" font-size="15" text-anchor="middle">…</text><text class="dim" x="830" y="101" font-size="15" text-anchor="middle">2⁶⁴−1</text>
+  <text class="dim" x="380" y="124" font-size="16" text-anchor="middle">one int = 4 consecutive bytes; its address is the first, 4</text>
+  <text x="20" y="172" font-size="20" font-weight="700">std::vector&lt;int&gt; v{7, 9, 4};</text>
+  <rect class="cell obj" x="20" y="187" width="130" height="50"/>
+  <rect class="cell obj" x="150" y="187" width="90" height="50"/>
+  <rect class="cell obj" x="240" y="187" width="90" height="50"/>
+  <text x="85" y="218" font-size="18" text-anchor="middle">data → 5000</text>
+  <text x="195" y="218" font-size="18" text-anchor="middle">size 3</text>
+  <text x="285" y="218" font-size="18" text-anchor="middle">cap 4</text>
+  <text class="dim" x="20" y="262" font-size="15">the object v: 24 bytes, fixed size, at 1000</text>
+  <path class="arrow" d="M330 212 H460"/>
+  <rect class="cell heap" x="470" y="187" width="100" height="50"/>
+  <rect class="cell heap" x="570" y="187" width="100" height="50"/>
+  <rect class="cell heap" x="670" y="187" width="100" height="50"/>
+  <rect class="cell spare" x="770" y="187" width="100" height="50"/>
+  <text x="520" y="220" font-size="26" text-anchor="middle">7</text>
+  <text x="620" y="220" font-size="26" text-anchor="middle">9</text>
+  <text x="720" y="220" font-size="26" text-anchor="middle">4</text>
+  <text class="dim" x="820" y="220" font-size="16" text-anchor="middle">spare</text>
+  <text class="dim" x="470" y="262" font-size="15" text-anchor="middle">5000</text><text class="dim" x="570" y="262" font-size="15" text-anchor="middle">5004</text><text class="dim" x="670" y="262" font-size="15" text-anchor="middle">5008</text><text class="dim" x="770" y="262" font-size="15" text-anchor="middle">5012</text><text class="dim" x="870" y="262" font-size="15" text-anchor="middle">5016</text>
+  <text x="20" y="312" font-size="18">v[i] lives at data + i × 4: the elements are contiguous, like an array.</text>
+  <text class="dim" x="20" y="342" font-size="18">push_back past cap 4 → a new, larger block; the elements move,</text>
+  <text class="dim" x="20" y="368" font-size="18">data changes, and the old addresses are stale.</text>
+</svg>`;
+
 // Extra authored companions per lecture: keyed by the authored slide they
 // follow, inserted before that slide's quiz and meme slides.
 const companionSlides = {
     10: {
         1: [{ content: pollSlide(10, 1), className: 'course-extra-slide course-poll-slide' }],
+        3: [{ content: vectorStorageSlide, className: 'course-extra-slide course-illustration-slide' }],
         4: [{ content: pollSlide(10, 2), className: 'course-extra-slide course-poll-slide' }],
         5: [{ content: arrayAddressSlide, className: 'course-extra-slide course-illustration-slide' }],
         6: [{ content: pollSlide(10, 3), className: 'course-extra-slide course-poll-slide' }]
