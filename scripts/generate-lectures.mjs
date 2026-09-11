@@ -6,6 +6,7 @@ import { lectureMemes, lectureMemeCount } from './lecture-memes.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const md = String.raw;
+const BT = '`'; // md`` cannot contain a raw backtick
 
 const lectures = [
     {
@@ -778,10 +779,10 @@ Equal row lengths give a rectangular matrix. Unequal row lengths give a jagged o
     },
     {
         id: 11,
-        title: 'Process owned text with explicit boundaries',
+        title: 'Strings and Text Processing',
         slides: [
-            md`# Lecture 11: Process owned text with explicit boundaries
-## Prefer owned text values, then study their representation`,
+            md`# Lecture 11: Strings and Text Processing
+## Owned text, positions, and character classification`,
             md`## std::string owns, sizes, and edits its character sequence
 
 ~~~cpp
@@ -817,7 +818,7 @@ unsigned char ch = static_cast<unsigned char>(text[i]);
 if (std::isdigit(ch)) ++digits;
 ~~~
 
-Character classification comes from <code>&lt;cctype&gt;</code>. Convert through <code>unsigned char</code> before calling it.`,
+Character classification comes from ${BT}<cctype>${BT}. Convert through <code>unsigned char</code> before calling it.`,
             md`## Separate predicates make text validation reliable
 
 ~~~cpp
@@ -831,8 +832,8 @@ for (std::size_t i = 2; valid && i < id.size(); ++i) {
 
 A C-style string is a character array ending at the first null character <code>'\0'</code>.
 
-Functions from <code>&lt;cstring&gt;</code> cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.`,
-            md`## Safe text processing prefers ownership, parsing rules, and bounds
+Functions from ${BT}<cstring>${BT} cannot discover the capacity of a destination buffer. Prefer <code>std::string</code>; use C strings only when an interface requires them.`,
+            md`## Summary: ownership, positions, and bounds
 
 - <code>std::string</code> is the default owned text type.
 - Check search results and index bounds.
@@ -2213,9 +2214,9 @@ int main() {
 }
 ~~~
 
-**Boundary tests:** check the empty replay, one valid character, and one invalid character.
+**Invariant:** every character of the replay is one of the four accepted moves.
 
-**Next unlock · L12:** turn a replay into a repeatable regression test.`,
+**Next lecture · L12:** turn a replay into a repeatable regression test.`,
 
     12: md`## Game evolution: A replay becomes a reproducible test
 
@@ -2592,6 +2593,36 @@ std::vector<T> <name>(<count>, <value>);  // <count> copies of <value>
 
 In a built-in array declaration such as <code>int image[2][3]</code>, both bounds are positive compile-time constants. A vector can change size during execution, but every element access must still use a valid index.`;
 
+// Keep the Lecture 11 syntax reference when regenerating its deck. Angle-bracket
+// placeholders inside a table cell are backticked; bare ones are swallowed.
+const lectureElevenSyntaxSlide = md`## std::string syntax
+
+~~~cpp
+std::string <name>;                    // empty, size 0
+std::string <name> = "<text>";
+std::string <name>(<count>, '<ch>');   // <count> copies of one character
+
+<name>.size()                  // number of characters
+<name>.empty()                 // true exactly when size() == 0
+<name>[<i>]                    // 0 <= <i> < size(), unchecked
+<name>.at(<i>)                 // checked: throws std::out_of_range
+<name>.substr(<pos>, <length>) // <pos> must satisfy <pos> <= size()
+<name>.find("<needle>")        // returns std::string::npos when not found
+
+std::cin >> <name>;                 // one whitespace-delimited word
+std::getline(std::cin, <name>);     // the rest of the line, spaces included
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| ${BT}<i>${BT} | Zero-based, so the last character is at <code>size() - 1</code>. An empty string has no valid position. |
+| ${BT}substr(<pos>, <length>)${BT} | Takes a position and a <em>length</em>, not two positions. A short tail is truncated, not an error. |
+| <code>find</code> | Compare the result against <code>std::string::npos</code>. It is not <code>-1</code>, and it is unsigned. |
+| <code>[]</code> vs <code>at()</code> | Both read a character. In C++17, <code>[]</code> is unchecked; <code>at()</code> checks the position and throws <code>std::out_of_range</code> if it is invalid. |
+| <code>&gt;&gt;</code> vs <code>getline</code> | <code>&gt;&gt;</code> stops at the first space and leaves the newline behind; <code>getline</code> consumes the whole line. |
+
+A <code>std::string</code> owns and sizes its own characters, so length is a question you ask the object rather than compute. A C-style string has no size of its own: its end is the first <code>'\0'</code>.`;
+
 // Lecture 10 companion: one program that grows step by step. `highlight`
 // lists the lines (1-based, ranges allowed) that this step added or changed;
 // the focus editor marks them so the diff from the previous step is visible.
@@ -2685,6 +2716,97 @@ int main() {
     }
 ];
 
+// Lecture 11 companion: one program that grows step by step, in the same
+// shape as the Lecture 10 progression. `highlight` lists the lines (1-based,
+// ranges allowed) that this step added or changed.
+const lectureElevenProgression = [
+    {
+        title: 'Step 1: Read one word — >> stops at the first space',
+        highlight: '5-6',
+        code: `#include <iostream>
+#include <string>
+
+int main() {
+    std::string word;
+    std::cin >> word;
+    std::cout << word << '\\n';
+}`,
+        note: 'One word in, one word out. The string sizes itself to whatever arrives, so nothing here fixes a length in advance. <code>&gt;&gt;</code> stops at the first whitespace and leaves the rest of the line unread.'
+    },
+    {
+        title: 'Step 2: Swap >> for getline — keep the spaces',
+        highlight: '6',
+        code: `#include <iostream>
+#include <string>
+
+int main() {
+    std::string line;
+    std::getline(std::cin, line);
+    std::cout << line << '\\n';
+}`,
+        note: 'Replaced: <code>&gt;&gt;</code> with <code>getline</code>. The whole line arrives, spaces included. A preceding <code>&gt;&gt;</code> leaves its newline pending, and the next <code>getline</code> would read an empty line until that newline is consumed.'
+    },
+    {
+        title: 'Step 3: Ask the string for its size — visit every position',
+        highlight: '1,8-11',
+        code: `#include <cctype>
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string line;
+    std::getline(std::cin, line);
+    int digits = 0;
+    for (std::size_t i = 0; i < line.size(); ++i) {
+        if (std::isdigit(static_cast<unsigned char>(line[i]))) ++digits;
+    }
+    std::cout << digits << '\\n';
+}`,
+        note: 'Added: <code>size()</code> as the loop bound and a classification test. The string knows its own length, so there is no terminator to hunt for. <code>isdigit</code> is handed an <code>unsigned char</code> because a negative <code>char</code> value is undefined behavior there.'
+    },
+    {
+        title: 'Step 4: Swap [] for at() — make an invalid position fail loudly',
+        highlight: '8-11,14',
+        code: `#include <cctype>
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string line;
+    std::getline(std::cin, line);
+    if (line.empty()) {
+        std::cout << "no text\\n";
+        return 0;
+    }
+    int digits = 0;
+    for (std::size_t i = 0; i < line.size(); ++i) {
+        if (std::isdigit(static_cast<unsigned char>(line.at(i)))) ++digits;
+    }
+    std::cout << digits << '\\n';
+}`,
+        note: 'Added: an empty check and <code>at(i)</code>. An empty string has no valid position; <code>at</code> throws <code>std::out_of_range</code> instead of causing undefined behavior.'
+    },
+    {
+        title: 'Step 5: Split on a delimiter — check find before slicing',
+        highlight: '7-12',
+        code: `#include <iostream>
+#include <string>
+
+int main() {
+    std::string line;
+    std::getline(std::cin, line);
+    std::size_t dash = line.find('-');
+    if (dash == std::string::npos) {
+        std::cout << "no delimiter\\n";
+        return 0;
+    }
+    std::cout << line.substr(0, dash) << '\\n';
+    std::cout << line.substr(dash + 1) << '\\n';
+}`,
+        note: 'Added: a search and two slices. <code>find</code> reports failure as <code>std::string::npos</code>, not <code>-1</code>. <code>substr</code> takes a position and a length, so <code>substr(dash + 1)</code> runs to the end.'
+    }
+];
+
 function progressionSection({ title, code, note, highlight }) {
     return `    <section class="course-extra-slide course-progression-slide">
 <h2>${title}</h2>
@@ -2695,7 +2817,7 @@ function progressionSection({ title, code, note, highlight }) {
 
 // Live polls live in sli.do; the slide only says "vote now". Keyed by
 // lecture id, then by the authored slide the poll follows.
-const slidoEvents = { 10: '3016463' };
+const slidoEvents = { 10: '3016463', 11: '3016463' };
 
 function pollSlide(lectureId, number) {
     return md`## Poll ${number}
@@ -2786,6 +2908,115 @@ const vectorStorageSlide = md`## Memory is a numbered strip; a vector keeps its 
   <text class="dim" x="20" y="368" font-size="18">data changes, and the old addresses are stale.</text>
 </svg>`;
 
+// A string as positions: size() is the count, size() - 1 the last position,
+// and npos the "not found" answer that must never be used as a position.
+const stringPositionsSlide = md`## A string is a numbered run of characters
+
+<svg class="course-array-address-figure course-string-positions-figure" viewBox="0 0 900 330" role="img" aria-label="The nine characters of BT2601034 in numbered boxes from position 0 to 8, with size() equal to 9, a bracket over positions 0 and 1 marking substr(0, 2), and a dashed box showing npos as not a position." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-string-positions-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-string-positions-figure .cell { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-string-positions-figure .cell.hit { fill: rgba(255, 214, 102, 0.28); }
+    .course-string-positions-figure .cell.bad { stroke-dasharray: 6 5; opacity: 0.55; }
+    .course-string-positions-figure .rule { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-string-positions-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="34" font-size="24">std::string id = "BT2601034";</text>
+  <rect class="cell hit" x="20" y="58" width="70" height="66"/>
+  <rect class="cell hit" x="90" y="58" width="70" height="66"/>
+  <rect class="cell" x="160" y="58" width="70" height="66"/>
+  <rect class="cell" x="230" y="58" width="70" height="66"/>
+  <rect class="cell" x="300" y="58" width="70" height="66"/>
+  <rect class="cell" x="370" y="58" width="70" height="66"/>
+  <rect class="cell" x="440" y="58" width="70" height="66"/>
+  <rect class="cell" x="510" y="58" width="70" height="66"/>
+  <rect class="cell" x="580" y="58" width="70" height="66"/>
+  <text x="55" y="103" font-size="30" text-anchor="middle">B</text>
+  <text x="125" y="103" font-size="30" text-anchor="middle">T</text>
+  <text x="195" y="103" font-size="30" text-anchor="middle">2</text>
+  <text x="265" y="103" font-size="30" text-anchor="middle">6</text>
+  <text x="335" y="103" font-size="30" text-anchor="middle">0</text>
+  <text x="405" y="103" font-size="30" text-anchor="middle">1</text>
+  <text x="475" y="103" font-size="30" text-anchor="middle">0</text>
+  <text x="545" y="103" font-size="30" text-anchor="middle">3</text>
+  <text x="615" y="103" font-size="30" text-anchor="middle">4</text>
+  <text class="dim" x="55" y="146" font-size="18" text-anchor="middle">0</text>
+  <text class="dim" x="125" y="146" font-size="18" text-anchor="middle">1</text>
+  <text class="dim" x="195" y="146" font-size="18" text-anchor="middle">2</text>
+  <text class="dim" x="265" y="146" font-size="18" text-anchor="middle">3</text>
+  <text class="dim" x="335" y="146" font-size="18" text-anchor="middle">4</text>
+  <text class="dim" x="405" y="146" font-size="18" text-anchor="middle">5</text>
+  <text class="dim" x="475" y="146" font-size="18" text-anchor="middle">6</text>
+  <text class="dim" x="545" y="146" font-size="18" text-anchor="middle">7</text>
+  <text x="615" y="146" font-size="18" text-anchor="middle">8</text>
+  <text x="670" y="98" font-size="20">size() == 9</text>
+  <text class="dim" x="670" y="126" font-size="16">positions 0 … 8</text>
+  <text class="dim" x="615" y="170" font-size="16" text-anchor="middle">last</text>
+  <path class="rule" d="M20 160 V172 H160 V160"/>
+  <text x="20" y="196" font-size="18">substr(0, 2) == "BT"</text>
+  <text x="20" y="240" font-size="18">id.size() is a count, not a position: the last position is size() - 1.</text>
+  <rect class="cell bad" x="20" y="262" width="270" height="44"/>
+  <text class="dim" x="155" y="291" font-size="18" text-anchor="middle">find('-') == npos</text>
+  <text x="305" y="282" font-size="17">npos means “not found”. It is not a position,</text>
+  <text x="305" y="305" font-size="17">and it is not −1: it is the largest std::size_t.</text>
+</svg>
+
+Every operation is stated in positions and lengths. A search that fails answers <code>std::string::npos</code>, so check the result before you pass it anywhere that expects a position.`;
+
+// std::string carries its own size; a C string carries a terminator instead.
+const stringStorageSlide = md`## A string knows its size; a C string ends at a terminator
+
+<svg class="course-array-address-figure course-string-storage-figure" viewBox="0 0 900 360" role="img" aria-label="Top: a std::string object holding a pointer, size 3 and capacity, with an arrow to a separate block containing I, I, T. Bottom: a char array of four cells containing I, I, T and a null terminator, where strlen must walk the cells to find the end." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-string-storage-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-string-storage-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-string-storage-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-string-storage-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-string-storage-figure .cell.term { fill: rgba(255, 138, 138, 0.24); }
+    .course-string-storage-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-string-arrow); }
+    .course-string-storage-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-string-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="20" y="30" font-size="21" font-weight="700">std::string s = "IIT";</text>
+  <rect class="cell obj" x="20" y="46" width="130" height="50"/>
+  <rect class="cell obj" x="150" y="46" width="90" height="50"/>
+  <rect class="cell obj" x="240" y="46" width="90" height="50"/>
+  <text x="85" y="77" font-size="18" text-anchor="middle">data → 5000</text>
+  <text x="195" y="77" font-size="18" text-anchor="middle">size 3</text>
+  <text x="285" y="77" font-size="18" text-anchor="middle">cap …</text>
+  <text class="dim" x="20" y="118" font-size="15">the object s: fixed size, stores the length</text>
+  <path class="arrow" d="M330 71 H460"/>
+  <rect class="cell heap" x="470" y="46" width="80" height="50"/>
+  <rect class="cell heap" x="550" y="46" width="80" height="50"/>
+  <rect class="cell heap" x="630" y="46" width="80" height="50"/>
+  <text x="510" y="82" font-size="28" text-anchor="middle">I</text>
+  <text x="590" y="82" font-size="28" text-anchor="middle">I</text>
+  <text x="670" y="82" font-size="28" text-anchor="middle">T</text>
+  <text class="dim" x="470" y="116" font-size="15" text-anchor="middle">5000</text>
+  <text class="dim" x="550" y="116" font-size="15" text-anchor="middle">5001</text>
+  <text class="dim" x="630" y="116" font-size="15" text-anchor="middle">5002</text>
+  <text x="470" y="142" font-size="16">s.size() → 3, read off the object</text>
+  <text x="20" y="186" font-size="21" font-weight="700">char c[4] = "IIT";</text>
+  <rect class="cell" x="20" y="202" width="80" height="55"/>
+  <rect class="cell" x="100" y="202" width="80" height="55"/>
+  <rect class="cell" x="180" y="202" width="80" height="55"/>
+  <rect class="cell term" x="260" y="202" width="80" height="55"/>
+  <text x="60" y="240" font-size="28" text-anchor="middle">I</text>
+  <text x="140" y="240" font-size="28" text-anchor="middle">I</text>
+  <text x="220" y="240" font-size="28" text-anchor="middle">T</text>
+  <text x="300" y="240" font-size="24" text-anchor="middle">\0</text>
+  <text class="dim" x="60" y="278" font-size="16" text-anchor="middle">0</text>
+  <text class="dim" x="140" y="278" font-size="16" text-anchor="middle">1</text>
+  <text class="dim" x="220" y="278" font-size="16" text-anchor="middle">2</text>
+  <text class="dim" x="300" y="278" font-size="16" text-anchor="middle">3</text>
+  <text x="360" y="228" font-size="18">4 chars for 3 letters: the</text>
+  <text x="360" y="252" font-size="18">terminator needs a slot too</text>
+  <text x="20" y="312" font-size="17">strlen(c) walks from position 0 until it meets the \0 — the length is not stored.</text>
+  <text class="dim" x="20" y="340" font-size="17">Lose the terminator and the walk runs past the array: undefined behavior.</text>
+</svg>
+
+Prefer <code>std::string</code>: it owns its characters and answers <code>size()</code> in constant time. Reach for a C string only when an interface demands one.`;
+
 // Extra authored companions per lecture: keyed by the authored slide they
 // follow, inserted before that slide's quiz and meme slides.
 const companionSlides = {
@@ -2795,6 +3026,13 @@ const companionSlides = {
         4: [{ content: pollSlide(10, 2), className: 'course-extra-slide course-poll-slide' }],
         5: [{ content: arrayAddressSlide, className: 'course-extra-slide course-illustration-slide' }],
         6: [{ content: pollSlide(10, 3), className: 'course-extra-slide course-poll-slide' }]
+    },
+    11: {
+        1: [{ content: stringStorageSlide, className: 'course-extra-slide course-illustration-slide' },
+            { content: pollSlide(11, 1), className: 'course-extra-slide course-poll-slide' }],
+        3: [{ content: stringPositionsSlide, className: 'course-extra-slide course-illustration-slide' }],
+        4: [{ content: pollSlide(11, 2), className: 'course-extra-slide course-poll-slide' }],
+        6: [{ content: pollSlide(11, 3), className: 'course-extra-slide course-poll-slide' }]
     }
 };
 
@@ -2904,6 +3142,10 @@ Explain today’s idea to a partner without opening the code:
 If the explanation needs “and then another unrelated thing,” split the design before you code.`;
 }
 
+const styledDecks = new Set([10, 11]);
+const deckSyntaxSlides = { 10: lectureTenSyntaxSlide, 11: lectureElevenSyntaxSlide };
+const deckProgressions = { 10: lectureTenProgression, 11: lectureElevenProgression };
+
 function page({ id, title, slides }) {
     const extra = lectureExtras[id];
     const instructorByline = '**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)';
@@ -2958,11 +3200,11 @@ function page({ id, title, slides }) {
     }
     const generatedContext = [
         markdownSection(practicalExampleSlide(extra), 'course-extra-slide practical-example-slide'),
-        ...(id === 10 ? [markdownSection(lectureTenSyntaxSlide, 'course-extra-slide course-syntax-slide', 'data-course-syntax="10"'), ...lectureTenProgression.map(progressionSection)] : []),
+        ...(styledDecks.has(id) ? [markdownSection(deckSyntaxSlides[id], 'course-extra-slide course-syntax-slide', `data-course-syntax="${id}"`), ...deckProgressions[id].map(progressionSection)] : []),
         ...(id === 1 ? lectureOneShowcase.map((slide) => markdownSection(slide, 'course-extra-slide course-showcase-slide')) : [])
     ];
     const studio = markdownSection(
-        id === 10 ? studioSlide(studioBriefs[id]).replace('**Studio thread:**', '**Application:**').replace('**Technique lens:**', '**Technique:**') : studioSlide(studioBriefs[id]),
+        styledDecks.has(id) ? studioSlide(studioBriefs[id]).replace('**Studio thread:**', '**Application:**').replace('**Technique lens:**', '**Technique:**') : studioSlide(studioBriefs[id]),
         'course-extra-slide course-algorithmic-studio'
     );
     const practice = markdownSection(
