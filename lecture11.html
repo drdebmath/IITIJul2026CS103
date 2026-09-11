@@ -27,14 +27,14 @@ An institute address is a department code, a nine-digit roll number, and one fix
 #include <string>
 
 bool validEmail(const std::string& address) {
-    std::size_t at = address.find('@');
-    if (at == std::string::npos || address.substr(at) != "@iiti.ac.in") return false;
+    std::size_t sep = address.find('@');
+    if (sep == std::string::npos || address.substr(sep) != "@iiti.ac.in") return false;
 
     std::size_t roll = 0;
-    while (roll < at && std::islower(static_cast<unsigned char>(address[roll]))) ++roll;
-    if (roll == 0 || at - roll != 9) return false;
+    while (roll < sep && std::islower(static_cast<unsigned char>(address[roll]))) ++roll;
+    if (roll == 0 || sep - roll != 9) return false;
 
-    for (std::size_t i = roll; i < at; ++i)
+    for (std::size_t i = roll; i < sep; ++i)
         if (!std::isdigit(static_cast<unsigned char>(address[i]))) return false;
     return true;
 }
@@ -74,7 +74,7 @@ std::getline(std::cin, <name>);     // the rest of the line, spaces included
 | `<i>` | Zero-based, so the last character is at <code>size() - 1</code>. An empty string has no valid position. |
 | `substr(<pos>, <length>)` | Takes a position and a <em>length</em>, not two positions. A short tail is truncated, not an error. |
 | <code>find</code> | Compare the result against <code>std::string::npos</code>. It is not <code>-1</code>, and it is unsigned. |
-| <code>[]</code> vs <code>at()</code> | Both read a character. In C++17, <code>[]</code> is unchecked; <code>at()</code> checks the position and throws <code>std::out_of_range</code> if it is invalid. |
+| <code>[]</code> vs <code>at()</code> | Both read a character. <code>[]</code> is unchecked; <code>at()</code> checks the position and throws <code>std::out_of_range</code> if it is invalid. |
 | <code>&gt;&gt;</code> vs <code>getline</code> | <code>&gt;&gt;</code> stops at the first space and leaves the newline behind; <code>getline</code> consumes the whole line. |
 
 A <code>std::string</code> owns and sizes its own characters, so length is a question you ask the object rather than compute. A C-style string has no size of its own: its end is the first <code>'\0'</code>.
@@ -142,7 +142,7 @@ int main() {
 <p>Added: an empty check and <code>at(i)</code>. An empty string has no valid position; <code>at</code> throws <code>std::out_of_range</code> instead of causing undefined behavior.</p>
     </section>
     <section class="course-extra-slide course-progression-slide">
-<h2>Step 5: Split on a delimiter — check find before slicing</h2>
+<h2>Step 5: Split on a delimiter — check find before taking a substring</h2>
 <pre data-course-highlight="7-12"><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;string&gt;
 
@@ -157,7 +157,7 @@ int main() {
     std::cout &lt;&lt; line.substr(0, dash) &lt;&lt; &#39;\n&#39;;
     std::cout &lt;&lt; line.substr(dash + 1) &lt;&lt; &#39;\n&#39;;
 }</code></pre>
-<p>Added: a search and two slices. <code>find</code> reports failure as <code>std::string::npos</code>, not <code>-1</code>. <code>substr</code> takes a position and a length, so <code>substr(dash + 1)</code> runs to the end.</p>
+<p>Added: a search and two substrings. <code>find</code> reports failure as <code>std::string::npos</code>, not <code>-1</code>. <code>substr</code> takes a position and a length, so <code>substr(dash + 1)</code> runs to the end.</p>
     </section>
     <section data-markdown><textarea data-template>
 ## std::string owns, sizes, and edits its character sequence
@@ -217,7 +217,7 @@ std::cout << name.size() << '\n';
   <text class="dim" x="140" y="278" font-size="16" text-anchor="middle">1</text>
   <text class="dim" x="220" y="278" font-size="16" text-anchor="middle">2</text>
   <text class="dim" x="300" y="278" font-size="16" text-anchor="middle">3</text>
-  <text x="360" y="228" font-size="18">4 chars for 3 letters: the</text>
+  <text x="360" y="228" font-size="18">4 characters for 3 letters: the</text>
   <text x="360" y="252" font-size="18">terminator needs a slot too</text>
   <text x="20" y="312" font-size="17">strlen(c) walks from position 0 until it meets the \0 — the length is not stored.</text>
   <text class="dim" x="20" y="340" font-size="17">Lose the terminator and the walk runs past the array: undefined behavior.</text>
@@ -243,7 +243,7 @@ std::getline(std::cin, sentence);
 <code>getline</code> preserves spaces. When mixing formatted extraction and line input, consume the pending newline deliberately.
     </textarea></section>
     <section class="course-extra-slide course-meme-slide" data-course-meme="string-ownership" data-markdown><textarea data-template>
-## The text wants a home, not a loose pile of letters
+## The text wants a home, not a loose pile of characters
 
 <figure class="course-meme-figure">
 <img src="assets/lecture-memes/l11/string-ownership.png" alt="A friendly string-shaped container keeps its characters together, measures its length, and safely carries them through a program — visual point: One owned container tracks the storage and the size for you." width="900" height="506" loading="lazy">
@@ -348,13 +348,13 @@ Always check whether a search succeeded.
   <text class="dim" x="837" y="130" font-size="12" text-anchor="middle">21</text>
   <path class="rule" d="M20 144 V156 H438 V144"/>
   <path class="rule" d="M438 144 V156 H856 V144"/>
-  <text x="20" y="180" font-size="17">substr(0, at) == "ce260004001"</text>
-  <text x="438" y="180" font-size="17">substr(at) == "@iiti.ac.in"</text>
+  <text x="20" y="180" font-size="17">a.substr(0, 11) == "ce260004001"</text>
+  <text x="438" y="180" font-size="17">a.substr(11) == "@iiti.ac.in"</text>
   <text x="20" y="220" font-size="18">a.find('@') == 11 — a real position, so substr may use it.</text>
   <rect class="cell bad" x="20" y="240" width="280" height="44"/>
   <text class="dim" x="160" y="269" font-size="17" text-anchor="middle">a.find('#') == npos</text>
   <text x="315" y="261" font-size="17">npos means “not found”. It is not a position,</text>
-  <text x="315" y="284" font-size="17">and it is not −1: it is the largest std::size_t.</text>
+  <text x="315" y="284" font-size="17">and it is not -1: it is the largest std::size_t.</text>
 </svg>
 
 Every operation is stated in positions and lengths. A search that fails answers <code>std::string::npos</code>, so check the result before you pass it anywhere that expects a position.
@@ -444,7 +444,7 @@ Answer on your phone; results appear on screen.
 <img src="assets/lecture-memes/l11/find-boundary.png" alt="A student searches a character sequence; a found marker is safe to use, while a missing marker is stopped before it becomes an invalid position — visual point: Check the search result before slicing anything." width="900" height="506" loading="lazy">
 <figcaption>
 <p class="course-meme-setup"><strong>Setup</strong> The delimiter may be there. It may also be taking the day off.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Check the search result before slicing anything.</p>
+<p class="course-meme-punchline"><strong>Punchline</strong> Check the search result before taking a substring.</p>
 </figcaption>
 </figure>
     </textarea></section>
@@ -460,7 +460,7 @@ Answer on your phone; results appear on screen.
     <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
 ## Feedback
 
-<span class="course-extra-kicker">\ud83d\udcca Head to sli.do \u2014 event code 3541881</span>
+<span class="course-extra-kicker">📊 Head to sli.do — event code 3541881</span>
 
 Three quick questions: how clear the lecture was, the pace, and what to revisit.
     </textarea></section>
