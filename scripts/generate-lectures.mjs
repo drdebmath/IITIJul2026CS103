@@ -2817,7 +2817,18 @@ function progressionSection({ title, code, note, highlight }) {
 
 // Live polls live in sli.do; the slide only says "vote now". Keyed by
 // lecture id, then by the authored slide the poll follows.
-const slidoEvents = { 10: '3016463', 11: '3016463' };
+const slidoEvents = { 10: '3016463', 11: '3454400' };
+// End-of-lecture feedback runs in its own slido, so its three questions do not
+// count against the per-event poll limit.
+const slidoFeedbackEvents = { 11: '3541881' };
+
+function feedbackSlide(lectureId) {
+    return md`## Feedback
+
+<span class="course-extra-kicker">\ud83d\udcca Head to sli.do \u2014 event code ${slidoFeedbackEvents[lectureId]}</span>
+
+Three quick questions: how clear the lecture was, the pace, and what to revisit.`;
+}
 
 function pollSlide(lectureId, number) {
     return md`## Poll ${number}
@@ -2912,53 +2923,93 @@ const vectorStorageSlide = md`## Memory is a numbered strip; a vector keeps its 
 // and npos the "not found" answer that must never be used as a position.
 const stringPositionsSlide = md`## A string is a numbered run of characters
 
-<svg class="course-array-address-figure course-string-positions-figure" viewBox="0 0 900 330" role="img" aria-label="The nine characters of BT2601034 in numbered boxes from position 0 to 8, with size() equal to 9, a bracket over positions 0 and 1 marking substr(0, 2), and a dashed box showing npos as not a position." xmlns="http://www.w3.org/2000/svg">
+<svg class="course-array-address-figure course-string-positions-figure" viewBox="0 0 900 320" role="img" aria-label="The twenty-two characters of ce260004001@iiti.ac.in in numbered boxes from position 0 to 21. Positions 0 to 10 are the local part, position 11 is the at sign found by find, and the rest is the domain. A dashed box shows that a search for a character that is absent answers npos, which is not a position." xmlns="http://www.w3.org/2000/svg">
   <style>
     .course-string-positions-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
-    .course-string-positions-figure .cell { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-string-positions-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
     .course-string-positions-figure .cell.hit { fill: rgba(255, 214, 102, 0.28); }
+    .course-string-positions-figure .cell.at { fill: rgba(142, 232, 216, 0.35); }
     .course-string-positions-figure .cell.bad { stroke-dasharray: 6 5; opacity: 0.55; }
     .course-string-positions-figure .rule { fill: none; stroke: currentColor; stroke-width: 2; }
     .course-string-positions-figure .dim { opacity: 0.65; }
   </style>
-  <text x="20" y="34" font-size="24">std::string id = "BT2601034";</text>
-  <rect class="cell hit" x="20" y="58" width="70" height="66"/>
-  <rect class="cell hit" x="90" y="58" width="70" height="66"/>
-  <rect class="cell" x="160" y="58" width="70" height="66"/>
-  <rect class="cell" x="230" y="58" width="70" height="66"/>
-  <rect class="cell" x="300" y="58" width="70" height="66"/>
-  <rect class="cell" x="370" y="58" width="70" height="66"/>
-  <rect class="cell" x="440" y="58" width="70" height="66"/>
-  <rect class="cell" x="510" y="58" width="70" height="66"/>
-  <rect class="cell" x="580" y="58" width="70" height="66"/>
-  <text x="55" y="103" font-size="30" text-anchor="middle">B</text>
-  <text x="125" y="103" font-size="30" text-anchor="middle">T</text>
-  <text x="195" y="103" font-size="30" text-anchor="middle">2</text>
-  <text x="265" y="103" font-size="30" text-anchor="middle">6</text>
-  <text x="335" y="103" font-size="30" text-anchor="middle">0</text>
-  <text x="405" y="103" font-size="30" text-anchor="middle">1</text>
-  <text x="475" y="103" font-size="30" text-anchor="middle">0</text>
-  <text x="545" y="103" font-size="30" text-anchor="middle">3</text>
-  <text x="615" y="103" font-size="30" text-anchor="middle">4</text>
-  <text class="dim" x="55" y="146" font-size="18" text-anchor="middle">0</text>
-  <text class="dim" x="125" y="146" font-size="18" text-anchor="middle">1</text>
-  <text class="dim" x="195" y="146" font-size="18" text-anchor="middle">2</text>
-  <text class="dim" x="265" y="146" font-size="18" text-anchor="middle">3</text>
-  <text class="dim" x="335" y="146" font-size="18" text-anchor="middle">4</text>
-  <text class="dim" x="405" y="146" font-size="18" text-anchor="middle">5</text>
-  <text class="dim" x="475" y="146" font-size="18" text-anchor="middle">6</text>
-  <text class="dim" x="545" y="146" font-size="18" text-anchor="middle">7</text>
-  <text x="615" y="146" font-size="18" text-anchor="middle">8</text>
-  <text x="670" y="98" font-size="20">size() == 9</text>
-  <text class="dim" x="670" y="126" font-size="16">positions 0 … 8</text>
-  <text class="dim" x="615" y="170" font-size="16" text-anchor="middle">last</text>
-  <path class="rule" d="M20 160 V172 H160 V160"/>
-  <text x="20" y="196" font-size="18">substr(0, 2) == "BT"</text>
-  <text x="20" y="240" font-size="18">id.size() is a count, not a position: the last position is size() - 1.</text>
-  <rect class="cell bad" x="20" y="262" width="270" height="44"/>
-  <text class="dim" x="155" y="291" font-size="18" text-anchor="middle">find('-') == npos</text>
-  <text x="305" y="282" font-size="17">npos means “not found”. It is not a position,</text>
-  <text x="305" y="305" font-size="17">and it is not −1: it is the largest std::size_t.</text>
+  <text x="20" y="34" font-size="22">std::string a = "ce260004001@iiti.ac.in";</text>
+  <text x="700" y="34" font-size="19">size() == 22</text>
+  <rect class="cell hit" x="20" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="58" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="96" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="134" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="172" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="210" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="248" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="286" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="324" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="362" y="56" width="38" height="56"/>
+  <rect class="cell hit" x="400" y="56" width="38" height="56"/>
+  <rect class="cell at" x="438" y="56" width="38" height="56"/>
+  <rect class="cell" x="476" y="56" width="38" height="56"/>
+  <rect class="cell" x="514" y="56" width="38" height="56"/>
+  <rect class="cell" x="552" y="56" width="38" height="56"/>
+  <rect class="cell" x="590" y="56" width="38" height="56"/>
+  <rect class="cell" x="628" y="56" width="38" height="56"/>
+  <rect class="cell" x="666" y="56" width="38" height="56"/>
+  <rect class="cell" x="704" y="56" width="38" height="56"/>
+  <rect class="cell" x="742" y="56" width="38" height="56"/>
+  <rect class="cell" x="780" y="56" width="38" height="56"/>
+  <rect class="cell" x="818" y="56" width="38" height="56"/>
+  <text x="39" y="95" font-size="19" text-anchor="middle">c</text>
+  <text x="77" y="95" font-size="19" text-anchor="middle">e</text>
+  <text x="115" y="95" font-size="19" text-anchor="middle">2</text>
+  <text x="153" y="95" font-size="19" text-anchor="middle">6</text>
+  <text x="191" y="95" font-size="19" text-anchor="middle">0</text>
+  <text x="229" y="95" font-size="19" text-anchor="middle">0</text>
+  <text x="267" y="95" font-size="19" text-anchor="middle">0</text>
+  <text x="305" y="95" font-size="19" text-anchor="middle">4</text>
+  <text x="343" y="95" font-size="19" text-anchor="middle">0</text>
+  <text x="381" y="95" font-size="19" text-anchor="middle">0</text>
+  <text x="419" y="95" font-size="19" text-anchor="middle">1</text>
+  <text x="457" y="95" font-size="19" text-anchor="middle">@</text>
+  <text x="495" y="95" font-size="19" text-anchor="middle">i</text>
+  <text x="533" y="95" font-size="19" text-anchor="middle">i</text>
+  <text x="571" y="95" font-size="19" text-anchor="middle">t</text>
+  <text x="609" y="95" font-size="19" text-anchor="middle">i</text>
+  <text x="647" y="95" font-size="19" text-anchor="middle">.</text>
+  <text x="685" y="95" font-size="19" text-anchor="middle">a</text>
+  <text x="723" y="95" font-size="19" text-anchor="middle">c</text>
+  <text x="761" y="95" font-size="19" text-anchor="middle">.</text>
+  <text x="799" y="95" font-size="19" text-anchor="middle">i</text>
+  <text x="837" y="95" font-size="19" text-anchor="middle">n</text>
+  <text class="dim" x="39" y="130" font-size="12" text-anchor="middle">0</text>
+  <text class="dim" x="77" y="130" font-size="12" text-anchor="middle">1</text>
+  <text class="dim" x="115" y="130" font-size="12" text-anchor="middle">2</text>
+  <text class="dim" x="153" y="130" font-size="12" text-anchor="middle">3</text>
+  <text class="dim" x="191" y="130" font-size="12" text-anchor="middle">4</text>
+  <text class="dim" x="229" y="130" font-size="12" text-anchor="middle">5</text>
+  <text class="dim" x="267" y="130" font-size="12" text-anchor="middle">6</text>
+  <text class="dim" x="305" y="130" font-size="12" text-anchor="middle">7</text>
+  <text class="dim" x="343" y="130" font-size="12" text-anchor="middle">8</text>
+  <text class="dim" x="381" y="130" font-size="12" text-anchor="middle">9</text>
+  <text class="dim" x="419" y="130" font-size="12" text-anchor="middle">10</text>
+  <text x="457" y="130" font-size="12" text-anchor="middle">11</text>
+  <text class="dim" x="495" y="130" font-size="12" text-anchor="middle">12</text>
+  <text class="dim" x="533" y="130" font-size="12" text-anchor="middle">13</text>
+  <text class="dim" x="571" y="130" font-size="12" text-anchor="middle">14</text>
+  <text class="dim" x="609" y="130" font-size="12" text-anchor="middle">15</text>
+  <text class="dim" x="647" y="130" font-size="12" text-anchor="middle">16</text>
+  <text class="dim" x="685" y="130" font-size="12" text-anchor="middle">17</text>
+  <text class="dim" x="723" y="130" font-size="12" text-anchor="middle">18</text>
+  <text class="dim" x="761" y="130" font-size="12" text-anchor="middle">19</text>
+  <text class="dim" x="799" y="130" font-size="12" text-anchor="middle">20</text>
+  <text class="dim" x="837" y="130" font-size="12" text-anchor="middle">21</text>
+  <path class="rule" d="M20 144 V156 H438 V144"/>
+  <path class="rule" d="M438 144 V156 H856 V144"/>
+  <text x="20" y="180" font-size="17">substr(0, at) == "ce260004001"</text>
+  <text x="438" y="180" font-size="17">substr(at) == "@iiti.ac.in"</text>
+  <text x="20" y="220" font-size="18">a.find('@') == 11 — a real position, so substr may use it.</text>
+  <rect class="cell bad" x="20" y="240" width="280" height="44"/>
+  <text class="dim" x="160" y="269" font-size="17" text-anchor="middle">a.find('#') == npos</text>
+  <text x="315" y="261" font-size="17">npos means “not found”. It is not a position,</text>
+  <text x="315" y="284" font-size="17">and it is not −1: it is the largest std::size_t.</text>
 </svg>
 
 Every operation is stated in positions and lengths. A search that fails answers <code>std::string::npos</code>, so check the result before you pass it anywhere that expects a position.`;
@@ -3032,7 +3083,8 @@ const companionSlides = {
             { content: pollSlide(11, 1), className: 'course-extra-slide course-poll-slide' }],
         3: [{ content: stringPositionsSlide, className: 'course-extra-slide course-illustration-slide' }],
         4: [{ content: pollSlide(11, 2), className: 'course-extra-slide course-poll-slide' }],
-        6: [{ content: pollSlide(11, 3), className: 'course-extra-slide course-poll-slide' }]
+        6: [{ content: pollSlide(11, 3), className: 'course-extra-slide course-poll-slide' }],
+        7: [{ content: feedbackSlide(11), className: 'course-extra-slide course-poll-slide' }]
     }
 };
 

@@ -170,12 +170,12 @@ export const lectureExtras = {
         ]
     },
     "11": {
-        "title": "Validate an institute enrollment ID",
-        "context": "A useful text rule combines string length, fixed prefixes, and character classification.",
-        "code": "#include <cctype>\n#include <iostream>\n#include <string>\n\nbool validId(const std::string& id) {\n    if (id.size() != 9 || id.substr(0, 2) != \"BT\") return false;\n    for (std::size_t i = 2; i < id.size(); ++i)\n        if (!std::isdigit(static_cast<unsigned char>(id[i]))) return false;\n    return true;\n}\n\nint main() {\n    std::cout << std::boolalpha << validId(\"BT2601034\");\n}",
+        "title": "Validate an institute email address",
+        "context": "An institute address is a department code, a nine-digit roll number, and one fixed domain \u2014 three rules checked in order.",
+        "code": "#include <cctype>\n#include <iostream>\n#include <string>\n\nbool validEmail(const std::string& address) {\n    std::size_t at = address.find('@');\n    if (at == std::string::npos || address.substr(at) != \"@iiti.ac.in\") return false;\n\n    std::size_t roll = 0;\n    while (roll < at && std::islower(static_cast<unsigned char>(address[roll]))) ++roll;\n    if (roll == 0 || at - roll != 9) return false;\n\n    for (std::size_t i = roll; i < at; ++i)\n        if (!std::isdigit(static_cast<unsigned char>(address[i]))) return false;\n    return true;\n}\n\nint main() {\n    std::cout << std::boolalpha << validEmail(\"che260008041@iiti.ac.in\");\n}",
         "takeaways": [
             "std::string owns and sizes text safely.",
-            "Validation is a sequence of explicit predicates.",
+            "find reports failure as npos, never as a position.",
             "cctype functions require careful character conversion."
         ],
         "problems": [
