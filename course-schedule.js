@@ -3,7 +3,7 @@
 
     const timeZone = 'Asia/Kolkata';
     const lectureTime = 'Tuesday 10:30–11:25 · Friday 11:30–12:25 IST';
-    const { sessions, academicEvents } = window.CS103Data;
+    const { sessions, academicEvents, labBatches } = window.CS103Data;
 
     function sessionDate(session, boundary) {
         const value = boundary === 'end' ? session.end : session.start;
@@ -83,8 +83,24 @@
     function fillQuizDates() {
         sessions.filter((session) => session.kind === 'quiz').forEach((session) => {
             const target = document.getElementById(`quiz${session.quizNumber}-date`);
-            if (target) target.textContent = `${formatSessionDate(session)} · ${session.quizNumber === 1 ? 'before' : 'after'} mid-semester`;
+            if (target) target.textContent = `Quiz ${session.quizNumber} · ${formatSessionDate(session)}`;
         });
+    }
+
+    // The lab component drops each student's weakest lab, so the announced weight per
+    // lab follows the scheduled count rather than a number written into the page.
+    function fillLabWeight() {
+        const note = document.getElementById('lab-weight-note');
+        if (!note) return;
+        const counts = new Set(Object.values(labBatches).map((data) => data.dates.length));
+        // Batches only ever differ mid-revision; then state the rule instead of a wrong number.
+        if (counts.size !== 1) {
+            note.textContent = 'Best n−1 of the labs scheduled for your batch';
+            return;
+        }
+        const scheduled = [...counts][0];
+        const counted = scheduled - 1;
+        note.textContent = `${scheduled} labs scheduled · best ${counted} count · ${Math.round((72 / counted) * 10) / 10}% each`;
     }
 
     function updateContinueCard() {
@@ -143,6 +159,7 @@
         if (!document.getElementById('upcoming-lecture') && !document.getElementById('lecture-schedule-body')) return;
         renderScheduleTable();
         fillQuizDates();
+        fillLabWeight();
         updateContinueCard();
         window.addEventListener('cs103:progresschange', updateContinueCard);
 
