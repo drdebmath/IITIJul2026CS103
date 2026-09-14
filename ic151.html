@@ -18,6 +18,7 @@
         }
     </script>
     <script defer src="ic151.js"></script>
+    <script defer src="nav-menu.js"></script>
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to lab instructions</a>
@@ -28,13 +29,14 @@
                 <span class="brand-mark" aria-hidden="true">IC</span>
                 <span class="brand-copy"><strong>IC151</strong><span>Programming Laboratory</span></span>
             </a>
-            <div class="nav-links">
+            <div class="nav-links" id="nav-links">
                 <a href="#schedule">Schedule</a>
                 <a href="#setup">Lab setup</a>
                 <a href="#assignments">Assignments</a>
                 <a href="#local-run">Run locally</a>
                 <a href="index.html">CS103 home</a>
             </div>
+            <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu"><span aria-hidden="true">☰</span></button>
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme"><span id="theme-icon" aria-hidden="true">◐</span></button>
         </nav>
     </header>

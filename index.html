@@ -15,6 +15,7 @@
     <script defer src="course-progress.js"></script>
     <script defer src="course-schedule.js"></script>
     <script defer src="grade-curve.js"></script>
+    <script defer src="nav-menu.js"></script>
     <script>
         try {
             const savedTheme = localStorage.getItem('cs103-theme');
@@ -142,6 +143,7 @@
         }
 
         .nav {
+            position: relative;
             min-height: 56px;
             display: flex;
             align-items: center;
@@ -206,6 +208,10 @@
         }
 
         .nav-label-compact {
+            display: none;
+        }
+
+        .nav-toggle {
             display: none;
         }
 
@@ -962,10 +968,43 @@
                 padding-block: 6px;
             }
 
+            .nav-toggle {
+                margin-left: auto;
+                width: 34px;
+                height: 34px;
+                display: grid;
+                place-items: center;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                color: var(--ink);
+                background: var(--surface);
+                font-size: 0.95rem;
+                cursor: pointer;
+            }
+
             .nav-links {
-                min-width: 0;
-                flex: 1;
-                justify-content: flex-end;
+                position: absolute;
+                top: calc(100% + 6px);
+                right: 0;
+                left: 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                margin-left: 0;
+                padding: 8px;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                background: var(--page);
+                box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+            }
+
+            .nav-links:not([data-open]) {
+                display: none;
+            }
+
+            .nav-links a {
+                padding: 11px 12px;
+                font-size: 0.88rem;
             }
 
             .theme-toggle {
@@ -1978,21 +2017,6 @@
                 display: none;
             }
 
-            .nav-links {
-                justify-content: flex-end;
-            }
-
-            .nav-links > a {
-                white-space: nowrap;
-            }
-
-            .nav-label-full {
-                display: none;
-            }
-
-            .nav-label-compact {
-                display: inline;
-            }
 
             .vision-loop,
             .vision-principles,
@@ -2046,7 +2070,7 @@
                 </span>
             </a>
 
-            <div class="nav-links">
+            <div class="nav-links" id="nav-links">
                 <a href="#announcements">Announcements</a>
                 <a href="#schedule">Schedule</a>
                 <a class="nav-studio" href="studio.html" aria-label="Algorithm Studio">
@@ -2063,6 +2087,10 @@
                     <span class="nav-label-compact" aria-hidden="true">Code</span>
                 </a>
             </div>
+
+            <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+                <span aria-hidden="true">☰</span>
+            </button>
 
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch theme">
                 <span id="theme-icon" aria-hidden="true">◐</span>
