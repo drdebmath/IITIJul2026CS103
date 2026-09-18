@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lectureExtras } from './lecture-extras.mjs';
 import { lectureMemes, lectureMemeCount } from './lecture-memes.mjs';
+import { lectureTrivia } from './lecture-trivia.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const md = String.raw;
@@ -3269,7 +3270,10 @@ function page({ id, title, slides }) {
     const orderedSections = id === 3
         ? [courseSections[0], ...courseSections.slice(1, -1), ...generatedContext, courseSections.at(-1)]
         : [courseSections[0], ...generatedContext, ...courseSections.slice(1)];
-    const sections = [...orderedSections, verification, handoff, practice, studio].join('\n');
+    const trivia = lectureTrivia[String(id)]
+        ? [markdownSection(`## Did you know?\n\n${lectureTrivia[String(id)].map((fact) => `- ${fact}`).join('\n')}`, 'course-extra-slide course-trivia-slide')]
+        : [];
+    const sections = [...orderedSections, verification, handoff, practice, ...trivia, studio].join('\n');
     return `<!doctype html>
 <html lang="en">
 <head>

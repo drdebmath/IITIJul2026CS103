@@ -1841,3 +1841,9 @@ body.course-modern .reveal .course-quiz-answered .is-chosen:not(.is-correct) {
     margin: 0.2em auto;
     color: var(--course-ink, currentColor);
 }
+
+/* "Did you know" trivia slide: three short facts, read as a light closing note. */
+.course-trivia-slide h2 { margin-bottom: 0.6em; }
+.course-trivia-slide ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7em; }
+.course-trivia-slide li { padding: 0.75em 1em; border-left: 4px solid var(--course-accent, #b45309); background: rgba(180, 83, 9, 0.07); border-radius: 0 10px 10px 0; line-height: 1.45; }
+html[data-course-theme="dark"] .course-trivia-slide li { background: rgba(255, 190, 120, 0.1); }
