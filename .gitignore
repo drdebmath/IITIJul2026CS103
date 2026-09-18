@@ -11,3 +11,7 @@ strassen.html
 
 # LaTeX build output for the quiz papers; quiz.tex is the source.
 /output/
+
+# Phone lecture recordings (large binaries) and local Whisper models.
+/Recordings/
+/notes/whisper-models/

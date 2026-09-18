@@ -89,7 +89,7 @@
     applyTheme(document.documentElement.dataset.courseTheme || preferredTheme());
 
     function icon(name, label) {
-        const glyphs = { home: '⌂', previous: '←', next: '→', complete: '✓', graph: '◇', fullscreen: '⛶', theme: document.documentElement.dataset.courseTheme === 'dark' ? '☀' : '◐' };
+        const glyphs = { home: '⌂', previous: '←', next: '→', complete: '✓', graph: '◇', transcript: '❝', fullscreen: '⛶', theme: document.documentElement.dataset.courseTheme === 'dark' ? '☀' : '◐' };
         return `<span class="course-control-icon" aria-hidden="true">${glyphs[name]}</span><span class="course-control-label">${label}</span>`;
     }
 
@@ -108,6 +108,7 @@
             <button class="deck-complete-button" id="deck-complete-button" type="button">${icon('complete', 'Mark studied')}</button>
             <a class="course-speedrun-link" href="speedrun.html">${icon('graph', 'Graph')}</a>
             <button class="course-theme-button" id="course-theme-button" type="button">${icon('theme', 'Theme')}</button>
+            <button class="course-transcript-button" id="course-transcript-button" type="button" hidden>${icon('transcript', 'Transcript')}</button>
             <button class="course-fullscreen-button" id="course-fullscreen-button" type="button">${icon('fullscreen', 'Full screen')}</button>
         `;
         revealElement.appendChild(bar);
@@ -121,12 +122,171 @@
         bar.querySelector('#course-slide-prev').addEventListener('click', () => navigateSlide(-1));
         bar.querySelector('#course-slide-next').addEventListener('click', () => navigateSlide(1));
         bar.querySelector('#course-theme-button').addEventListener('click', () => applyTheme(document.documentElement.dataset.courseTheme === 'dark' ? 'light' : 'dark', true));
+        bar.querySelector('#course-transcript-button').addEventListener('click', toggleSpokenTranscript);
         bar.querySelector('#course-fullscreen-button').addEventListener('click', toggleFullscreen);
         applyTheme(document.documentElement.dataset.courseTheme || preferredTheme());
 
         const fullscreenSupported = Boolean(revealElement.requestFullscreen || revealElement.webkitRequestFullscreen);
         if (!fullscreenSupported) bar.querySelector('#course-fullscreen-button').hidden = true;
     }
+
+    function spokenSourceUrl() {
+        if (onSupplement) return null;
+        if (lectureId === null || lectureId < 1 || lectureId > 11) return null;
+        return `notes/spoken/L${String(lectureId).padStart(2, '0')}.md`;
+    }
+
+    function stampSpokenSlideIds() {
+        const root = revealElement && revealElement.querySelector(':scope > .slides');
+        if (!root) return;
+        // build-spoken.py numbers every <section> in source order, stacks
+        // included, so walk the same set rather than only the top level.
+        root.querySelectorAll('section').forEach((section, index) => {
+            section.dataset.spokenSlide = String(index + 1);
+        });
+    }
+
+    function parseSpokenMarkdown(text) {
+        const map = new Map();
+        String(text).split(/^## /m).slice(1).forEach((part) => {
+            const lines = part.split('\n');
+            const header = (lines.shift() || '').trim();
+            const match = header.match(/^(\d+)\.\s*(.*)$/);
+            if (!match) return;
+            let shown = '';
+            let status = 'taught';
+            let kind = '';
+            const body = [];
+            lines.forEach((line) => {
+                if (/^Shown:\s*/i.test(line)) shown = line.replace(/^Shown:\s*/i, '').trim();
+                else if (/^Status:\s*/i.test(line)) status = line.replace(/^Status:\s*/i, '').trim().toLowerCase();
+                else if (/^Kind:\s*/i.test(line)) kind = line.replace(/^Kind:\s*/i, '').trim();
+                else body.push(line);
+            });
+            map.set(match[1], {
+                title: match[2].trim(),
+                shown,
+                status,
+                kind,
+                body: body.join('\n').trim()
+            });
+        });
+        return map;
+    }
+
+    function escapeSpoken(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Markdown links in the transcript point at the course pages the class was
+    // actually looking at, so they have to survive escaping as real links.
+    function linkSpoken(html) {
+        return html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|[\w./#?=&;-]+)\)/g, (match, label, href) => {
+            const external = /^https?:/i.test(href);
+            return `<a href="${href}"${external ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
+        });
+    }
+
+    function formatSpokenBody(text) {
+        return text.split(/\n\s*\n/).map((paragraph) => {
+            // {+ ... +} marks reasoning the transcript supplies that was not said
+            // explicitly in class; it renders in its own colour.
+            const html = linkSpoken(escapeSpoken(paragraph.trim()).replace(/`([^`]+)`/g, '<code>$1</code>'))
+                .replace(/\{\+([\s\S]*?)\+\}/g, '<span class="course-spoken-added">$1</span>')
+                // Student speech: any bracket that reports a student, e.g. "[A student: ASCII.]".
+                .replace(/(\[(?!To a student)[^\]]*[Ss]tudent[^\]]*\])/g, '<span class="course-spoken-student">$1</span>');
+            return `<p>${html}</p>`;
+        }).join('');
+    }
+
+    function renderSpokenEntry(entry) {
+        if (!entry || !entry.body) return '';
+        const shown = entry.shown && entry.shown !== '—' ? ` · ${escapeSpoken(entry.shown)}` : '';
+        return `<p class="course-spoken-kicker">What was said · ${escapeSpoken(entry.status || 'taught')}${shown}</p>${formatSpokenBody(entry.body)}`;
+    }
+
+    function ensureSpokenAside(section) {
+        let aside = section.querySelector(':scope > .course-spoken-aside');
+        if (aside) return aside;
+        aside = document.createElement('aside');
+        aside.className = 'course-spoken-aside';
+        aside.setAttribute('aria-label', 'Classroom transcript for this slide');
+        section.appendChild(aside);
+        return aside;
+    }
+
+    function fillSpokenAsides() {
+        if (!spokenBySlide) return;
+        leafSlides().forEach((section) => {
+            const entry = spokenBySlide.get(section.dataset.spokenSlide);
+            const html = section.matches('[data-course-continuation]') ? '' : renderSpokenEntry(entry);
+            const existing = section.querySelector(':scope > .course-spoken-aside');
+            if (!html) {
+                if (existing) existing.remove();
+                return;
+            }
+            const aside = existing || ensureSpokenAside(section);
+            aside.dataset.spokenStatus = entry.status || 'taught';
+            aside.innerHTML = html;
+        });
+    }
+
+    function setSpokenOpen(open) {
+        spokenOpen = Boolean(open) && Boolean(spokenBySlide);
+        document.body.classList.toggle('course-spoken-open', spokenOpen);
+        const button = document.getElementById('course-transcript-button');
+        if (button) {
+            button.hidden = !spokenBySlide;
+            button.setAttribute('aria-pressed', String(spokenOpen));
+            button.innerHTML = icon('transcript', spokenOpen ? 'Hide transcript' : 'Transcript');
+            button.setAttribute('aria-label', spokenOpen ? 'Hide classroom transcript' : 'Show classroom transcript beside the slides');
+        }
+        try {
+            window.sessionStorage.setItem('cs103-spoken', spokenOpen ? '1' : '0');
+        } catch (error) {
+            /* ignore quota / private-mode failures */
+        }
+        if (spokenOpen) fillSpokenAsides();
+    }
+
+    function toggleSpokenTranscript() {
+        setSpokenOpen(!spokenOpen);
+    }
+
+    function loadSpokenMarkdown() {
+        const url = spokenSourceUrl();
+        const button = document.getElementById('course-transcript-button');
+        if (!url) {
+            if (button) button.hidden = true;
+            return;
+        }
+        fetch(url).then((response) => {
+            if (!response.ok) throw new Error('spoken markdown missing');
+            return response.text();
+        }).then((text) => {
+            spokenBySlide = parseSpokenMarkdown(text);
+            if (button) button.hidden = false;
+            fillSpokenAsides();
+            let restore = false;
+            try {
+                restore = window.sessionStorage.getItem('cs103-spoken') === '1';
+            } catch (error) {
+                restore = false;
+            }
+            setSpokenOpen(restore);
+        }).catch(() => {
+            spokenBySlide = null;
+            if (button) button.hidden = true;
+            setSpokenOpen(false);
+        });
+    }
+
+    let spokenBySlide = null;
+    let spokenOpen = false;
 
     function authoredLeafSlides() {
         return leafSlides().filter((section) => !section.matches('.course-extra-slide, [data-course-context], [data-course-continuation]'));
@@ -220,6 +380,7 @@
         window.Reveal.sync();
         window.Reveal.layout();
         exposeReaderSlides();
+        fillSpokenAsides();
         updateSlideUI(currentSlide());
     }
 
@@ -735,6 +896,7 @@
         const stage = createMeasureStage();
         const host = stage.querySelector('.slides');
         const clone = section.cloneNode(true);
+        clone.querySelectorAll('.course-spoken-aside').forEach((aside) => aside.remove());
         clone.classList.remove('present', 'past', 'future');
         clone.removeAttribute('hidden');
         clone.removeAttribute('aria-hidden');
@@ -753,7 +915,7 @@
     }
 
     function pageContentCount(section) {
-        return Array.from(section.children).filter((child) => !child.matches('h1, h2, h3, .course-extra-kicker, .course-continuation-label, aside.notes, script, style')).length;
+        return Array.from(section.children).filter((child) => !child.matches('h1, h2, h3, .course-extra-kicker, .course-continuation-label, aside.notes, .course-spoken-aside, script, style')).length;
     }
 
     // A bare label such as `**Takeaways**` or an h4 introduces the block that
@@ -880,7 +1042,7 @@
         const heading = directHeading(section);
         const directChildren = Array.from(section.children);
         const headingIndex = heading ? directChildren.indexOf(heading) : -1;
-        const movable = directChildren.filter((child, index) => index > headingIndex && !child.matches('aside.notes, script, style'));
+        const movable = directChildren.filter((child, index) => index > headingIndex && !child.matches('aside.notes, .course-spoken-aside, script, style'));
         if (!movable.length) {
             section.classList.add('course-slide-dense');
             if (!measureSlide(section).fits) section.classList.add('course-slide-ultra-dense');
@@ -1117,6 +1279,7 @@
         paginateDeck();
         window.Reveal.sync();
         window.Reveal.layout();
+        fillSpokenAsides();
         updateSlideUI(window.Reveal.getCurrentSlide());
         applyDisplayMode();
         watchPracticeSlide();
@@ -1165,12 +1328,14 @@
         });
     }
 
+    stampSpokenSlideIds();
     annotateAuthoredSlides();
     markReferenceSlides();
     setReferenceVisibility(showReferenceSlides);
     injectNoviceOnboardingSlides();
     injectCheckpoints();
     createDeckBar();
+    loadSpokenMarkdown();
     updateProgressUI();
 
     if (window.Reveal && typeof window.Reveal.on === 'function') {
