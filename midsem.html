@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 mid-semester examination: the six question types on the paper, one worked sample of each">
+    <title>Mid-semester: sample questions</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Mid-semester examination: sample questions
+## Six question types, one worked sample of each
+
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## The paper has six sections
+
+| Section | Type | Marks | What you write |
+| --- | --- | --- | --- |
+| A | True or false | 10 | The verdict **and** a one-line reason naming the C++ rule |
+| B | Match the concepts | 10 | The letter from Column B for each term in Column A |
+| C | Complete the code | 20 | Only the missing fragment in each numbered blank |
+| D | Does it compile, and what happens? | 10 | **Y** or **N**, and if it compiles: the exact output, *infinite loop*, or *stops with an exception* |
+| E | Determine the output or final value | 10 | The exact value or output |
+| F | Bonus trivia | 10 | A short answer; counts towards the total, but the paper is capped at 60 |
+
+Two hours. Assume C++17, all needed headers present, valid input. The samples below are **not** on the paper; each one shows the format and what a full-marks answer looks like.
+    </textarea></section>
+    <section class="course-extra-slide course-quiz-slide" data-markdown><textarea data-template>
+## Section A sample · True or false, with a reason
+
+"A <code>for</code> loop whose condition is false the first time it is tested still runs its body once."
+
+<ol class="course-quiz-options">
+<li><button class="course-quiz-option" type="button">True</button></li>
+<li><button class="course-quiz-option" type="button" data-course-quiz-correct>False</button></li>
+</ol>
+
+<p class="course-quiz-explanation"><strong>False</strong> — a <code>for</code> loop tests its condition <em>before</em> every pass, including the first, so a false condition means zero passes. Only <code>do-while</code> runs its body before testing.</p>
+
+The reason carries the mark. "False, it does not work like that" earns nothing; name the rule.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Section B sample · Match the concepts
+
+| | Column A | | Column B |
+| --- | --- | --- | --- |
+| 1 | `std::size_t` | A | Reads one whitespace-separated token |
+| 2 | Sentinel value | B | Unsigned type returned by `size()` |
+| 3 | `std::cin >>` | C | Input value that means "stop", never treated as data |
+| 4 | Loop invariant | D | Statement that stays true after every iteration |
+
+**Answers:** 1 = B, 2 = C, 3 = A, 4 = D
+
+Every description in Column B is used exactly once, so a doubtful pair can be settled by elimination after the certain ones are placed.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Section C sample · Complete the code
+
+*`countAbove` must return how many elements of `a` are strictly greater than `limit`. `main` prints that count followed by a newline and returns the value that signals success.*
+
+~~~cpp
+int countAbove(const array<int,4>& a, int limit) {
+    int count = 0;
+    for (int value : a) {
+        if (______________) {        // 1
+            ______________;          // 2
+        }
+    }
+    return ______________;           // 3
+}
+
+int main() {
+    array<int,4> a{3, 9, 12, 5};
+    cout << countAbove(______________) << '\n';  // 4
+    return ______________;           // 5
+}
+~~~
+
+**Expected output, exactly:** `2` followed by a newline.
+
+**Blanks:** 1 `value > limit` · 2 `++count` · 3 `count` · 4 `a, 8` (any limit that leaves 9 and 12 above it and 3 and 5 below) · 5 `0`
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Section D sample · Does it compile, and what happens?
+
+Each snippet sits inside `main` with the headers present. Write **Y** or **N**; if it compiles, also write what happens.
+
+| | Snippet | Compiles | Then |
+| --- | --- | --- | --- |
+| 1 | `int k = 3; k++; cout << k;` | **Y** | `4` |
+| 2 | `double d = 2.5; switch (d) { case 2: break; }` | **N** | `switch` needs an integral value |
+| 3 | `vector<int> v{7}; cout << v.at(1);` | **Y** | stops with an exception: `at(1)` on a one-element vector |
+| 4 | `int i = 0; while (i < 3) { cout << i; }` | **Y** | infinite loop printing `0` |
+
+Both parts must be right for the mark: **Y** alone, or the right output with the wrong verdict, earns nothing.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Section E sample · Determine the output or final value
+
+~~~cpp
+int a = 4;
+int b = a++ * 2;      // b = ?
+~~~
+
+~~~cpp
+int f(int n) { if (n == 1) return 1; return n + f(n - 1); }
+// f(4) = ?
+~~~
+
+~~~cpp
+string s = "programming";
+cout << s.substr(3, 4);   // prints ?
+~~~
+
+**Answers:** `b` = 8 and `a` = 5 (postfix hands back the old value, then increments) · `f(4)` = 10 · prints `gram`
+
+Write exactly what the program produces: `8`, not "eight"; `gram` with no quotes and no extra spaces.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Section F sample · Bonus trivia
+
+"Which mathematician's name is on the machine model that every modern computer is compared against, proposed in 1936?"
+
+**Answer:** Alan Turing (the Turing machine).
+
+Ten such questions, one mark each. They are added to your total, but the paper is recorded out of 60: a total above 60 counts as 60. Answer them last.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## How to spend the two hours
+
+1. **Sections A, B and E first** (30 marks): short, one line each, and they warm you up on the rules the rest of the paper uses.
+2. **Section C** (20 marks): read the task statement and the expected output before touching a blank; every blank is checked against that output.
+3. **Section D** (10 marks): decide "does it compile" first, then trace only the ones that do.
+4. **Section F** last: it cannot lift you above 60, so it should never cost time from the other sections.
+
+Syllabus: everything on the slides of Lectures 1 to 11 and everything taught in class. The classroom transcript is beside every slide, in reader mode, under **Transcript**.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>

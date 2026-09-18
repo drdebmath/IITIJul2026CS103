@@ -8,7 +8,7 @@
     const allConcepts = conceptTree.flatMap((phase) => phase.modules.flatMap((module) => module.concepts));
     // A supplement deck (lecture5-5.html) has no integer id, so match it by file name.
     const deckFile = window.location.pathname.split('/').pop();
-    const isQuizDeck = deckFile === 'quiz.html';
+    const isQuizDeck = deckFile === 'quiz.html' || deckFile === 'midsem.html';
     const lectureConcepts = allConcepts.filter((concept) => (lectureId === null
         ? concept.href.split('?')[0] === deckFile
         : concept.lecture === lectureId));
