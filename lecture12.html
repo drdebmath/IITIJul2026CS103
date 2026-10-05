@@ -547,6 +547,19 @@ int main() {
 | 9 | Rust |
 | 10 | Go |
     </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="12" data-markdown><textarea data-template>
+## Solve five problems to transfer Average marks without dividing by zero
+
+**IC151 lab practice · 5 problems**
+
+1. **Safe division.** Write `int safeDivide(int a, int b)` with `assert(b != 0)`. Read pairs until `0 0`; check `b == 0` with `if` and print `undefined`. Input `7 2` `5 0` `-7 2` `0 0` → `3`, `undefined`, `-3`.
+1. **Test driver.** Write `int largest(const std::vector<int>& v)` with an asserted pre-condition, and `testLargest()` with four boundary values: one element, all negative, largest first, largest last. Which test fails if `largest` starts at 0?
+1. **Trace and fix.** `for (int i = 1; i <= 3; ++i) sum += a.at(i);` should total `{3, 1, 4}` to 8. Trace `i` and `sum`: it reaches 1, then 5, then throws `std::out_of_range`. Name both errors and their kinds, then fix the loop.
+1. **Four kinds of error.** Write four tiny programs: one compile-time, one link-time, one run-time, and one logic error. Record the exact message each produces (or the wrong output), then fix each with one change.
+1. **Validated marks.** Read marks until `-1`. Print `ignored: <mark>` for any mark outside 0–100, using `if`. Average the rest with an `average` that asserts a non-empty vector. Input `72 140 65 -1` → `ignored: 140`, `average: 68.5`.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
+    </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
 <script src="lecture-modern.js"></script>
