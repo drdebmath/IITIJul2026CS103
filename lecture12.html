@@ -3,275 +3,549 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 12: Repair programs with evidence and tests">
-    <title>Lecture 12: Repair programs with evidence and tests</title>
+    <meta name="description" content="CS103 Lecture 12: Errors, Debugging, and Testing">
+    <title>Lecture 12: Errors, Debugging, and Testing</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 12: Repair programs with evidence and tests
-## Turn feedback into a repair strategy
+# Lecture 12: Errors, Debugging, and Testing
+## Find, fix, and prevent errors, then review the midsem
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## State preconditions explicitly. · Debug a safe average function
-
-Most exam bugs are contract violations: an empty range, a wrong bound, an uninitialized accumulator, or integer division.
+    <section data-markdown><textarea data-template>
+## Example: assert a pre-condition of divide
 
 ~~~cpp
 #include <cassert>
-#include <vector>
+#include <iostream>
 
-bool average(const std::vector<int>& values, double& result) {
-    if (values.empty()) return false;
-    long long sum = 0;
-    for (int value : values) sum += value;
-    result = static_cast<double>(sum) / values.size();
-    return true;
+// pre-condition: denominator != 0
+int divide(int numerator, int denominator) {
+    assert(denominator != 0);
+    return numerator / denominator;
+}
+
+void testDivide() {               // test driver
+    assert(divide(7, 2) == 3);    // integer division
+    assert(divide(-7, 2) == -3);  // truncates toward zero
+    assert(divide(0, 5) == 0);    // zero numerator is fine
 }
 
 int main() {
-    double result = 0.0;
-    assert(average({1, 2}, result) && result == 1.5);
-    assert(!average({}, result));
+    testDivide();
+    std::cout << "all tests passed\n";
+    std::cout << divide(10, 0) << '\n';   // violates the pre-condition
 }
 ~~~
 
-**Takeaways**
+~~~text
+all tests passed
+Assertion failed: (denominator != 0), function divide, file div.cpp, line 6.
+~~~
 
-- State preconditions explicitly.
-- Initialize every accumulator.
-- Test empty, one-element, and boundary cases.
+The program aborts at the violated pre-condition instead of dividing by zero. On Linux, g++ prints <code>Assertion &#96;denominator != 0' failed</code> with the same file and line.
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="12" data-markdown><textarea data-template>
-## The general form of a precondition and a test
+## The assert macro and a test driver
 
 ~~~cpp
 #include <cassert>
 
 <return type> <name>(<parameters>) {
-    assert(<precondition>);      // states what the caller must already guarantee
-    // body may now rely on <precondition> being true
+    assert(<pre-condition>);     // what the caller must already guarantee
+    // body may now rely on <pre-condition> being true
 }
 
-void <test name>() {                                  // one test = one named claim
+void <test name>() {                                  // one test = one claim
     assert(<name>(<known input>) == <expected result>);
-    assert(<name>(<boundary input>) == <expected result>);
+    assert(<name>(<boundary value>) == <expected result>);
 }
 
-// main() calls each test; reaching the end means every assert held
+// test driver: main() calls each test; reaching the end means every assert held
 ~~~
 
 | Part | Meaning |
 | --- | --- |
-| `assert(<precondition>)` | Documents and checks a caller obligation. It aborts on failure, so it reports the defect at its source. |
+| `assert(<pre-condition>)` | Checks a caller obligation at run time. It aborts on failure, so the error is reported where it was detected. |
 | `<known input>` | An input whose correct answer you worked out by hand, independently of the code. |
-| `<boundary input>` | The empty, smallest, largest, or just-invalid case — where off-by-one and precision defects live. |
-| failure | An assert names the file and line. That location is evidence, not yet the cause. |
+| `<boundary value>` | The empty, smallest, largest, or just-invalid input, where off-by-one and precision errors live. |
+| failure | An assert prints the expression, file, and line, then aborts. That location is where the error was detected, not necessarily its cause. |
+| `NDEBUG` | Defined (e.g. `-DNDEBUG`), it removes every assert. Never put work the program needs inside one. |
 
 A test that cannot fail proves nothing: write the input whose expected answer you knew before you ran the program.
     </textarea></section>
-    <section data-markdown><textarea data-template>
-## Classifying the defect narrows the repair
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Check pre-conditions with assert, user input with if · Average marks without dividing by zero
 
-- Compile-time: the source violates a language rule.
-- Link-time: a required definition is missing or duplicated.
-- Run-time: execution fails or reports an exception.
-- Logic: the program runs but produces the wrong result.
+~~~cpp
+#include <cassert>
+#include <iostream>
+#include <vector>
 
-Classification determines the next useful observation.
+// pre-condition: values is not empty
+// post-condition: returns the mean of values
+double average(const std::vector<int>& values) {
+    assert(!values.empty());                 // empty would divide by zero
+    long long sum = 0;
+    for (int value : values) sum += value;
+    return static_cast<double>(sum) / values.size();
+}
+
+void testAverage() {                         // test driver
+    assert(average({1, 2}) == 1.5);          // catches integer division
+    assert(average({90}) == 90.0);           // one value
+}
+
+int main() {
+    testAverage();
+    std::vector<int> marks;
+    int mark = 0;
+    while (std::cin >> mark && mark != -1) marks.push_back(mark);
+    if (marks.empty()) {                     // user input: check with if
+        std::cout << "no marks entered\n";
+        return 1;
+    }
+    std::cout << "average: " << average(marks) << '\n';
+}
+~~~
+
+| Input | Output |
+|---|---|
+| <code>72 65 88 -1</code> | <code>average: 75</code> |
+| <code>-1</code> | <code>no marks entered</code> |
+
+**Takeaways**
+
+- <code>assert</code> catches programmer errors: a caller that breaks the pre-condition.
+- Check user input with <code>if</code>: the user did nothing wrong, and <code>NDEBUG</code> would remove an assert.
+- <code>main</code> checks the pre-condition before calling <code>average</code>, so the assert never fires on real input.
+- The test driver runs first, on inputs whose answers were worked out by hand.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## The first compiler or test diagnostic narrows the search
+## Compile-time, link-time, run-time, and logic errors
 
-For a compiler message:
+| Kind of error | Example | Who reports it |
+|---|---|---|
+| Compile-time (syntax or type) | `int x = "5";` | the compiler, with a file and line |
+| Link-time | `int area(int);` is declared and called, never defined | the linker: `undefined reference to area(int)` |
+| Run-time | `v.at(0)` on an empty vector | the running program: `std::out_of_range` exception |
+| Logic | `double avg = sum / count;` with two `int`s | nobody: the program prints a wrong value |
 
-1. Open the first referenced source line.
+The kind of error tells you where to look next.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Reading compiler error messages
+
+1. Go to the first error message and the line it names.
 2. Read the complete message, not only “error.”
 3. Inspect the line immediately before it too.
 4. Make one small change.
 5. Recompile before changing anything else.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="classify-defect" data-markdown><textarea data-template>
-## Every bug looks like "the program is broken"
 
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l12/classify-defect.png" alt="A student sorts four bug-shaped clues into compile, link, runtime, and logic lanes before touching the code — visual point: Name the defect class first; the right tool follows." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Every bug looks like "the program is broken."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Name the defect class first; the right tool follows.</p>
-</figcaption>
-</figure>
+Fix the first error first: later messages are often caused by it.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A state trace shows where behavior first diverges
+## Tracing variables
 
 ~~~cpp
+std::vector<int> values{4, 7, 2};   // expected total: 13
 int total = 0;
-for (int i = 0; i < 3; ++i) {
+for (int i = 1; i < 3; ++i) {       // prints 9
     total += values[i];
 }
 ~~~
 
-Record <code>i</code>, <code>values[i]</code>, and <code>total</code> after every iteration.
+Record <code>i</code>, <code>values[i]</code>, and <code>total</code> after every iteration, by hand or with output statements.
+
+| Iteration | Expected <code>i</code>, <code>values[i]</code>, <code>total</code> | Observed |
+|---|---|---|
+| 1 | 0, 4, 4 | **1, 7, 7** ← first difference |
+| 2 | 1, 7, 11 | 2, 2, 9 |
+| 3 | 2, 2, 13 | loop already ended |
+
+The first wrong row locates the logic error: the loop starts at index 1, not 0.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Boundary cases expose empty, off-by-one, and precision defects
+## Testing with boundary values
 
 For an average function, test:
 
-| Case | Why |
+| Test case | Error it can expose |
 |---|---|
-| empty input | invalid precondition |
+| empty input | violated pre-condition: no average exists |
 | one value | smallest valid size |
-| two unequal integers | reveals integer division |
-| <code>assert(condition)</code> | stops a debug run at the first false expectation |
-| maximum expected count | stresses the bound |
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="first-diagnostic" data-markdown><textarea data-template>
-## Ten error messages arrive at once
+| two unequal integers | integer division |
+| values near <code>INT_MAX</code> | overflow in an <code>int</code> sum |
+| maximum expected count | wrong loop bound |
 
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l12/first-diagnostic.png" alt="A trail of warning lights leads a student to the first cracked tile, while later symptoms fade into the background — visual point: Start with the first signal; the rest may just be echoes." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Ten error messages arrive at once.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Start with the first signal; the rest may just be echoes.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: A replay becomes a reproducible test
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| tracing, boundary cases, and assert | replay one move and stop at the first broken expectation |
-
-~~~cpp
-#include <cassert>
-bool step(int& row, int& column, char move) {
-    if (move=='d' && column<4) { ++column; return true; }
-    return false;
-}
-int main() {
-    int row=2, column=3;
-    assert(step(row,column,'d'));
-    assert(row==2 && column==4);
-    assert(!step(row,column,'d'));
-}
-~~~
-
-**Debugging rule:** keep this smallest failing replay before repairing a larger game.
-
-**Next unlock · L13:** group each cell's related fields into one record.
+Write each test case as an <code>assert</code>: a debug run stops at the first one that fails.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A safe average checks emptiness and preserves precision
+## The corrected average function
 
 ~~~cpp
-bool average(const std::vector<int>& values, double& result) {
-    if (values.empty()) return false;
+double average(const std::vector<int>& values) {
+    assert(!values.empty());
     long long sum = 0;
     for (int value : values) sum += value;
-    result = static_cast<double>(sum) / values.size();
-    return true;
+    return static_cast<double>(sum) / values.size();
 }
 ~~~
+
+- <code>assert</code> states the pre-condition, so an empty vector is reported instead of divided by.
+- <code>long long</code> keeps a large sum from overflowing <code>int</code>.
+- The cast makes the division floating-point, so 1 and 2 average to 1.5.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Assessment evidence becomes a repair plan
+## Debugging your midsem: record each error and retest
 
 For each lost mark, write:
 
-- the concept reference;
+- the concept and the lecture that taught it;
 - the incorrect assumption;
-- one smallest counterexample;
+- the smallest input that shows the error;
 - one new practice problem;
 - the date you will retry it without notes.
 
 Revisit prerequisites in the dependency graph instead of memorizing one answer.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="state-trace" data-markdown><textarea data-template>
-## The final answer is wrong — but where did it go wrong first?
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l12/state-trace.png" alt="A student compares two parallel timelines and circles the first point where the program’s state leaves the expected path — visual point: The earliest fork matters more than the loudest crash." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The final answer is wrong, but the first wrong turn is the real evidence.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> The earliest fork matters more than the loudest crash.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
-## Repair by classifying, tracing, testing, and documenting
+## Summary: errors, debugging, and testing
 
-- Classify before editing.
-- Trace changing state explicitly.
-- Test the smallest valid and invalid boundaries.
-- Repair one assumption at a time.
-- Assessment feedback is a map for deliberate practice.
+- Identify the kind of error before editing.
+- Fix the first compiler error first.
+- Trace variables to find the first wrong value.
+- Test boundary values with <code>assert</code> and a test driver.
+- Check pre-conditions; state post-conditions.
+- Change one thing at a time, then retest.
+
+**Reading:** Stroustrup, *Programming: Principles and Practice Using C++*, chapter “Errors!”; Savitch, *Problem Solving with C++*, “Testing and Debugging Functions.”
     </textarea></section>
+    <section>
+        <h2>Midsem recap video: Lectures 1–11</h2>
+        <iframe src="https://www.youtube-nocookie.com/embed/7JqWeqbx_XQ" title="Semicolon — Midsem recap music video" style="width: 80%; aspect-ratio: 16 / 9; border: 0;" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <p><a href="https://youtu.be/7JqWeqbx_XQ" target="_blank" rel="noopener noreferrer">Semicolon: Midsem recap music video on YouTube</a></p>
+    </section>
     <section data-markdown><textarea data-template>
-## Verify Debug a safe average function with a claim, trace, boundary, and improvement
+## Section D: which kind of error?
 
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
+Each Section D answer names a kind of error:
 
-- **Claim:** State preconditions explicitly.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Repair five off-by-one errors in supplied loop fragments.
-- Write tests that expose integer division in an average function.
-- Find and fix a null-pointer dereference in a list traversal.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Debug a safe average function without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="12" data-markdown><textarea data-template>
-## Solve five problems to transfer Debug a safe average function
-
-**IC151 lab practice · 5 problems**
-
-1. Repair five off-by-one errors in supplied loop fragments.
-1. Write tests that expose integer division in an average function.
-1. Find and fix a null-pointer dereference in a list traversal.
-1. Explain assignment-versus-comparison and design a warning example.
-1. Create a ten-case test plan for binary search.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Find why a program compiles or runs yet violates its promised behavior.
-
-**Studio thread:** Repair the simulator from evidence
-
-| Ask | Today’s answer |
+| Key says | Kind of error |
 |---|---|
-| **Problem** | Find why a program compiles or runs yet violates its promised behavior. |
-| **Model** | A defect is the earliest point where observed state diverges from expected state. |
-| **Represent** | A minimal failing input and trace table capture reproducible evidence. |
-| **Solve** | Classify, minimize, trace, change one assumption, and retest. |
-| **Verify** | Run the failing case plus the boundary and regression cases after repair. |
-| **Improve** | Turn every lost mark or discovered defect into a reusable test. |
+| Compiles: N | compile-time error |
+| Compiles: Y, then an exception | run-time error |
+| Compiles: Y, then an unintended loop or value | logic error |
 
-**Technique lens:** systematic debugging
+For every lost mark, write the concept, the incorrect assumption, and the smallest input that shows the error before reading the next answer.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section A: True or False
 
-**Compare:** evidence-guided repair versus editing several guesses at once
+| Q | Answer | Reason |
+|---|---|---|
+| 1 | T | `int / int` is integer division, so `7 / 2` is the `int` 3. |
+| 2 | F | A name declared in a block goes out of scope at the closing brace. |
+| 3 | T | `&&` short-circuits: when `a != 0` is false, `20 / a` is never evaluated. |
+| 4 | T | The condition is tested after the body, so the body runs before the first test. |
+| 5 | F | Pass by value copies the argument; the parameter is a separate local variable. |
+| 6 | F | Overloads must differ in their parameter lists; the return type alone cannot tell two calls apart. |
+| 7 | F | Valid indices are 0 to 4; index 5 is one past the end. |
+| 8 | T | A default-constructed vector is empty: `v.size()` is 0. |
+| 9 | T | `find` returns `std::string::npos` when there is no match. |
+| 10 | T | Without a base case, or without progress toward it, no call ever returns: the recursion runs until the stack overflows. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section B: Match the concepts
+
+| Term | Match | Description |
+|---|---|---|
+| 1 · `const T&` parameter | B | Read-only alias; avoids copying |
+| 2 · Function prototype | D | Declares a function before its definition |
+| 3 · `while` loop | A | Repeats while a condition remains true |
+| 4 · `break` in `switch` | E | Prevents fall-through to the next case |
+| 5 · Range-based `for` | F | Visits each element of a sequence |
+| 6 · `std::string::npos` | C | Reports search failure in a string |
+| 7 · Reference parameter | H | Alias that can modify the caller's object |
+| 8 · `std::vector` | G | Dynamically sized contiguous sequence |
+| 9 · Base case | I | Stops recursive expansion |
+| 10 · Short-circuit `&&` | J | May skip evaluation of the right operand |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · C1: Array statistics through references
+
+~~~cpp
+double summarize(const array<int,5>& a, int& lo, int& hi) {
+    lo = a[0];                                   // 1
+    hi = a[0];                                   // 2
+    int sum = 0;
+    for (int value : a) {
+        sum += value;                            // 3
+        if (value < lo) lo = value;              // 4
+        if (value > hi) hi = value;              // 5
+    }
+    return static_cast<double>(sum) / a.size();  // 6
+}
+
+int main() {
+    array<int,5> a{8, 3, 11, 6, 2};
+    int lo, hi;
+    double mean = summarize(a, lo, hi);          // 7
+    cout << lo << ' ' << hi << ' ' << mean;      // 8
+}
+~~~
+
+- Blanks 1 and 2 start from a real element. Starting `lo` at 0 gives the wrong minimum, because no value here is below 0.
+- Blank 6 may also be `5`. Blank 7 passes `lo` and `hi` themselves; the reference parameters bind to them.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · C2: Recursive sum of the first n numbers
+
+~~~cpp
+int sumTo(int n) {
+    if (n == 0) return 0;          // 1
+    return n + sumTo(n - 1);       // 2
+}
+
+int main() {
+    int n = 5;
+    int answer = sumTo(n);         // 3
+    if (answer > 10) {
+        cout << answer;            // 4
+    } else {
+        cout << 0;
+    }
+    cout << '\n';                  // 5
+    return 0;                      // 6
+}
+~~~
+
+- The base case returns 0, the sum of no numbers. Each call adds `n` and recurses on `n - 1`, which moves toward the base case.
+- Blank 5 may also be `endl` or `"\n"`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · C3: String validation and counting
+
+~~~cpp
+int main() {
+    string s = "CS103-A7";
+    size_t dash = s.find('-');                         // 1
+    if (dash == string::npos) {                        // 2
+        cout << "bad\n";
+        return 0;
+    }
+    string left = s.substr(0, dash);                   // 3
+    int digits = 0;
+    for (size_t i = dash + 1; i < s.size(); ++i) {     // 4
+        if (isdigit(static_cast<unsigned char>(s[i])))
+            ++digits;                                  // 5
+    }
+    cout << left << ' ' << digits;                     // 6
+}
+~~~
+
+- `substr(0, dash)` takes `dash` characters, which is exactly the part before the dash.
+- Blank 4 may also be `length`. Blank 5 may be `digits++` or `digits += 1`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section D: Does it compile, and what happens?
+
+| Q | Compiles | Then |
+|---|---|---|
+| 1 | N | A `const` variable cannot be assigned after initialization. |
+| 2 | Y | Prints `3`. |
+| 3 | Y | Infinite loop: `n` never changes, so it prints `0` forever. |
+| 4 | N | `area` is called before any declaration of it is visible. |
+| 5 | Y | Prints `01234`. |
+| 6 | N | `array<double,7>` and `array<double,5>` are different types; the size is part of the type. |
+| 7 | Y | Stops with an exception: `at(0)` on an empty vector throws `std::out_of_range`. |
+| 8 | Y | Prints `45` (1 + 2 + ... + 9). |
+| 9 | N | A `switch` condition must be an integer or enumeration, not a `double`. |
+| 10 | Y | Prints `bc`: start at index 1, take 2 characters. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section E: Output and final values
+
+| Q | Answer | Why |
+|---|---|---|
+| 1 | a = 6, b = 7 | `a++` yields the old value 5, then `a` becomes 6. |
+| 2 | x = 2 | `9 / 4` is integer division (2); it becomes 2.0 only when stored. |
+| 3 | out = 5 | Execution enters at `case 2` and falls through into `case 3`: 3 + 2. |
+| 4 | sum = 9 | The odd values: 1 + 3 + 5. |
+| 5 | a = 7 | The reference makes `x` an alias of `a`. |
+| 6 | 24 | 4 × 3 × 2 × 1. |
+| 7 | s = 20 | 2 + 4 + 6 + 8. |
+| 8 | 6 | Row 1, column 2, both counted from zero. |
+| 9 | 3 | `push_back` appends a third element. |
+| 10 | `dor` | From index 2, take 3 characters of `indore`. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section F: Bonus trivia
+
+| Q | Answer |
+|---|---|
+| 1 | Bell Labs (AT&T Bell Laboratories) |
+| 2 | C with Classes |
+| 3 | *The C Programming Language*, by Brian Kernighan and Dennis Ritchie |
+| 4 | Brian Kernighan |
+| 5 | The increment operator `++`: C++ is "one more than C" |
+| 6 | Python, named after Monty Python |
+| 7 | Bug, and so debugging |
+| 8 | Ada Lovelace |
+| 9 | Assembler: `a.out` is short for "assembler output" |
+| 10 | 1998 |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section A: True or False
+
+| Q | Answer | Reason |
+|---|---|---|
+| 1 | F | `7 / 2` is integer division (3), so `x` stores 3.0. |
+| 2 | F | `++i` yields the new value; `i++` yields the old value. |
+| 3 | T | The first true condition's branch runs and the rest are skipped. |
+| 4 | T | The condition is tested first; if it is false, the body never runs. |
+| 5 | T | A reference is an alias, so assigning through it changes the caller's variable. |
+| 6 | T | A declaration makes the name and parameter types known before the definition. |
+| 7 | T | `for (int x : a)` visits each element in order with no index. |
+| 8 | F | `r` is checked against the row count and `c` against the column count; a built-in array checks neither at run time. |
+| 9 | T | `getline` reads up to the newline, spaces included, unlike `>>`. |
+| 10 | F | A call that moves away from every base case never reaches one: the recursion runs until the stack overflows. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section B: Match the concepts
+
+| Term | Match | Description |
+|---|---|---|
+| 1 · `do-while` | B | Executes the body before testing the condition |
+| 2 · Pass by value | A | Copies an argument into a local parameter |
+| 3 · Function overload | C | Same name with distinguishable parameter lists |
+| 4 · `std::array` | D | Fixed-size sequence whose size is part of its type |
+| 5 · `push_back` | E | Appends one element to a vector |
+| 6 · `at(i)` | F | Checked element access |
+| 7 · Nested loops | G | Natural traversal tool for rows and columns |
+| 8 · `getline` | H | Reads a full line including spaces |
+| 9 · `substr(pos,len)` | I | Extracts part of a string |
+| 10 · Stack frame | J | Stores one active function call's locals and parameters |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · C1: Search an array using a function
+
+~~~cpp
+int firstIndex(const array<int,6>& a, int key) {
+    for (size_t i = 0; i < a.size(); ++i) {  // 1
+        if (a[i] == key) {                   // 2
+            return static_cast<int>(i);      // 3
+        }
+    }
+    return -1;                               // 4
+}
+
+int main() {
+    array<int,6> a{4, 9, 2, 9, 7, 1};
+    int p = firstIndex(a, 9);                // 5
+    if (p != -1) cout << p;                  // 6
+    else cout << "missing";
+    cout << '\n';                            // 7
+    return 0;                                // 8
+}
+~~~
+
+- Returning at the first match gives index 1, not the later 9 at index 3.
+- `return -1` belongs after the loop. Inside the loop, it would give up after checking only `a[0]`.
+- Blank 1 may also be `6`. Blank 7 may be `endl` or `"\n"`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · C2: Recursive power
+
+~~~cpp
+int power(int base, int exp) {
+    if (exp == 0) return 1;                  // 1
+    return base * power(base, exp - 1);      // 2, 3
+}
+
+int main() {
+    int value = power(3, 3);                 // 4
+    cout << value << '\n';                   // 5
+    return 0;                                // 6
+}
+~~~
+
+- The base case returns 1, because any base to the power 0 is 1. Returning 0 would make every product 0.
+- `exp - 1` moves each call toward the base case.
+- Blank 5 may also be `value << endl`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · C3: Vector totals and a string length
+
+~~~cpp
+int main() {
+    vector<int> marks;
+    marks.push_back(72);                              // 1
+    marks.push_back(65);                              // 2
+    int total = 0;
+    for (size_t i = 0; i < marks.size(); ++i) {       // 3
+        total += marks[i];                            // 4
+    }
+    string label = "Total";
+    cout << label.size() << ' ' << total << '\n';     // 5
+    return 0;                                         // 6
+}
+~~~
+
+- `marks` starts empty, so `push_back` is the only way to add 72 and then 65.
+- Blank 5 may also be `length`; `"Total"` has 5 characters.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section D: Does it compile, and what happens?
+
+| Q | Compiles | Then |
+|---|---|---|
+| 1 | N | A string literal cannot initialize an `int`. |
+| 2 | Y | Prints `5`. |
+| 3 | Y | Prints `6`: 1 × 1 × 2 × 3, and the loop stops before 4. |
+| 4 | Y | Prints `3`: `bump` takes a reference. |
+| 5 | N | The two `f` functions differ only in return type, so the second is a redefinition. |
+| 6 | Y | Stops with an exception: `at(5)` on a 3-character string throws `std::out_of_range`. |
+| 7 | Y | Prints `12345`. |
+| 8 | Y | Prints `2`. |
+| 9 | N | `rows` is not a constant expression, so `m[rows][3]` is not standard C++17. g++ and clang accept it only as a compiler extension. |
+| 10 | Y | Prints `abc`: the 3 characters before the dash. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section E: Output and final values
+
+| Q | Answer | Why |
+|---|---|---|
+| 1 | a = 6, b = 8 | `++a` yields the new value 6. |
+| 2 | y = 2 | 17 = 3 × 5 + 2. |
+| 3 | n = 3 | The body runs before each test: `n` goes 1, 2, 3, then the test fails. |
+| 4 | s = 3 | 0 + 1 + 2; `break` at `i == 3` happens before 3 is added. |
+| 5 | a = 2, b = 7 | `x` is a copy; only the returned value carries the change. |
+| 6 | 6 | 3 + 2 + 1 + 0. |
+| 7 | m = 1 | The running minimum of 5, 1, 4. |
+| 8 | 5 | `m[0][1]` is 2 and `m[1][0]` is 3. |
+| 9 | 4 | Index 0 holds 2 and index 1 holds 4. |
+| 10 | `2` | `'1'` is at index 2 of `CS103`. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section F: Bonus trivia
+
+| Q | Answer |
+|---|---|
+| 1 | Unix |
+| 2 | B |
+| 3 | Guido van Rossum |
+| 4 | Java |
+| 5 | Alan Turing (the Turing machine) |
+| 6 | GNU Compiler Collection (originally the GNU C Compiler) |
+| 7 | Linus Torvalds |
+| 8 | American Standard Code for Information Interchange |
+| 9 | Rust |
+| 10 | Go |
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
