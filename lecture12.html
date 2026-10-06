@@ -227,6 +227,37 @@ double average(const std::vector<int>& values) {
 - The cast makes the division floating-point, so 1 and 2 average to 1.5.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## Questions about assert (1)
+
+| Question | Answer |
+|---|---|
+| Why not write `if (denominator == 0)` instead? | `if` handles situations the program should expect, such as bad input. `assert` checks what can never happen in correct code: a caller broke the contract. It stops where the bug was detected, and `NDEBUG` removes it. |
+| What does `divide(10, 0)` do when asserts are removed? | Undefined behaviour. On x86 Linux it usually crashes with `Floating point exception`; on ARM (Apple Silicon) it quietly returns 0. Never rely on either. |
+| How does `assert` know the file and line? | It is a macro, expanded where you wrote it, so it records `__FILE__`, `__LINE__`, and the condition as text. |
+| Can an assert carry a message? | Yes: `assert(denominator != 0 && "denominator must be nonzero");`. A string literal is always true, so the check is unchanged and the message appears in the failure. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about assert (2)
+
+| Question | Answer |
+|---|---|
+| In my IDE the assertion message appeared before `all tests passed`. Why? | `std::cout` buffers output when it is not writing to a terminal, and `abort()` does not flush that buffer, while the assertion message is written at once. Use `std::endl`, or `std::cerr` for diagnostics. |
+| Why is `-7 / 2` equal to −3, not −4? | Integer division truncates toward zero (since C++11). Likewise `-7 % 2` is `-1`: the remainder takes the sign of the dividend. |
+| Is `average({1, 2}) == 1.5` safe with `==`? | Here, yes: 1.5 is stored exactly. In general compare with a tolerance, e.g. `std::abs(x - expected) < 1e-9`. |
+| How do I test that `average({})` fails? | Not with an assert: the program aborts. An empty vector violates the pre-condition, so it is not a test case. |
+| Is there a check that runs at compile time? | Yes, `static_assert` checks a constant expression while compiling. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about the examples
+
+| Question | Answer |
+|---|---|
+| Why does `main` return 1 when no marks are entered? | A nonzero exit status tells the shell or a calling script that the program failed. Check it with `echo $?`. |
+| Why use `long long` for the sum? | Adding `int` values near `INT_MAX` overflows, and signed overflow is undefined behaviour. The wider type leaves room. |
+| Is `at()` throwing an exception like an assert? | Similar in spirit: both detect a bad index or value at run time. An exception can be caught and handled; exceptions come later in the course. |
+| Isn't an infinite loop a run-time error? | In this classification it is a logic error: nothing crashes or reports a problem, the program just does not do what you meant. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## Debugging your midsem: record each error and retest
 
 For each lost mark, write:
@@ -572,6 +603,26 @@ int main() {
 | 8 | American Standard Code for Information Interchange |
 | 9 | Rust |
 | 10 | Go |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about the midsem (1)
+
+| Question | Answer |
+|---|---|
+| Set B D9 (`int m[rows][3]`) compiles with my g++. Why N? | The paper assumes C++17, and standard C++ requires array sizes to be compile-time constants. g++ and clang accept it only as an extension; `-pedantic-errors` rejects it. |
+| Set A D4: isn't calling `area` before its definition a link error? | No. The compiler rejects the call because no declaration of `area` is visible there. A link error is something declared but never defined. |
+| Set A D6: both are arrays of `double`. Why no compile? | For `std::array` the size is part of the type: `array<double,7>` and `array<double,5>` are unrelated types, and neither converts to the other. |
+| Set B D5: two `f` functions return different types. Isn't that overloading? | No. Overloads must differ in their parameter lists. A call `f(3)` cannot be resolved by return type, so the second definition is an error. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about the midsem (2)
+
+| Question | Answer |
+|---|---|
+| Set A E2: I wrote 2.0, not 2. | Both are accepted. The point is that `9 / 4` is integer division, done before the result is stored in a `double`. |
+| Set A C1 blank 6: I wrote `a.size()`, not `5`. | Both are accepted. For Set A C3 blank 5, `++digits`, `digits++`, and `digits += 1` all count. |
+| Set B A8: the reason is confusing. | The second index ranges over columns, not rows, so the statement is false. A built-in array checks neither index at run time. |
+| Set A F9: why does `a.out` mean "assembler output"? | It was the assembler's output file in early Unix, where the assembler produced the executable. The name stayed after compilers took over. |
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="12" data-markdown><textarea data-template>
 ## Lab practice: errors, debugging, and testing
