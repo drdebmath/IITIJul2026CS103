@@ -16,65 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## The structure supplies the ordering guarantee. · Dispatch print jobs with a queue
-
-FIFO order is a property of the queue structure; the scheduling algorithm simply consumes that interface.
-
-~~~cpp
-#include <iostream>
-#include <queue>
-#include <string>
-
-int main() {
-    std::queue<std::string> jobs;
-    jobs.push("report.pdf");
-    jobs.push("diagram.png");
-    jobs.push("notes.txt");
-
-    while (!jobs.empty()) {
-        std::cout << "Printing " << jobs.front() << std::endl;
-        jobs.pop();
-    }
-}
-~~~
-
-**Takeaways**
-
-- The structure supplies the ordering guarantee.
-- The algorithm uses only front, push, and pop.
-- Choosing a structure simplifies the application.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="15" data-markdown><textarea data-template>
-## The general form of a stack, a queue, and a linear search
-
-~~~cpp
-#include <stack>
-#include <queue>
-
-std::stack<T> <s>;
-<s>.push(<value>);   <s>.top();     <s>.pop();   <s>.empty();   <s>.size();
-
-std::queue<T> <q>;
-<q>.push(<value>);   <q>.front();   <q>.pop();   <q>.empty();   <q>.size();
-
-int <search>(const <T> <a>[], int <n>, const <T>& <target>) {
-    for (int <i> = 0; <i> < <n>; ++<i>)
-        if (<a>[<i>] == <target>) return <i>;
-    return -1;                      // one agreed value meaning "absent"
-}
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| <code>push</code> | Adds one element. Both containers grow at the end they own. |
-| <code>top</code> vs <code>front</code> | A stack exposes the most recent element, a queue the earliest. That difference is the whole abstraction. |
-| <code>pop</code> | Removes, and returns nothing. Read the element first, then pop it. |
-| <code>empty()</code> | Calling <code>top</code>, <code>front</code>, or <code>pop</code> on an empty container is undefined — test first. |
-| linear search | Needs no ordering, examines at most `<n>` elements, and is the baseline every faster search must beat. |
-
-Choose the structure from the ordering guarantee the problem needs, then let that choice decide which operations are cheap.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## An abstract data type specifies operations before representation
 
@@ -94,17 +35,6 @@ for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
 ~~~
 
 Worst case: inspect every element.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="adt-operations" data-markdown><textarea data-template>
-## What does the data structure look like?
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l15/adt-operations.png" alt="A student writes a small set of action tokens for a container, while the container’s internal shape remains behind a curtain — visual point: What it promises to do comes first; the costume can wait." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The student asks what the data structure looks like.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> What it promises to do comes first; the costume can wait.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Bubble sort trades simplicity for quadratic time
@@ -132,48 +62,12 @@ With an array representation, keep one integer <code>top</code>:
 
 An undo history and function calls are stack applications.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="linear-search" data-markdown><textarea data-template>
-## The shelf is unsorted and gives no hints
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l15/linear-search.png" alt="A careful student checks items one by one along an unsorted shelf and finds the target without making assumptions about where it should be — visual point: Check each item — boring is a reliable baseline." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The shelf is unsorted and the target refuses to give hints.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Check each item — boring is a reliable baseline.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A queue returns the earliest enqueued item first
 
 A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</code>. A linked queue keeps pointers to the first and last nodes.
 
 Print jobs and breadth-first exploration are queue applications.
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: A queue orders cleaning work
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| queue behavior on a linear structure | clean dirty cell IDs in first-discovered, first-served order |
-
-~~~cpp
-#include <iostream>
-#include <vector>
-int main() {
-    std::vector<int> pending{8,13,21};
-    std::size_t front=0;
-    while (front<pending.size()) {
-        int targetCell=pending[front];
-        ++front;
-        std::cout << "clean " << targetCell << '\n';
-    }
-}
-~~~
-
-**Queue invariant:** indices below <code>front</code> are cleaned; indices from <code>front</code> onward are pending.
-
-**Next unlock · L16:** explore choices recursively and undo dead ends.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Compare structures by operation costs, not names
@@ -185,17 +79,6 @@ int main() {
 | serve arrival order | queue |
 | repeatedly exchange adjacent inversions | array + bubble sort |
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="bubble-quadratic" data-markdown><textarea data-template>
-## Every neighbor on the shelf has an opinion
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l15/bubble-quadratic.png" alt="A patient student repeatedly swaps neighboring out-of-order tiles along a row, one small adjacent trip at a time, never skipping ahead — visual point: Only adjacent swaps, over and over — simple, patient, and quadratic." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The list is almost sorted, except every neighbor disagrees with the one beside it.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Only adjacent swaps, over and over — simple, patient, and quadratic.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Match operations, invariants, and cost before choosing a structure
 
@@ -204,66 +87,6 @@ int main() {
 - Linear search needs no ordering.
 - Stack means LIFO; queue means FIFO.
 - Bubble sort is simple but performs quadratic work.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Dispatch print jobs with a queue with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** The structure supplies the ordering guarantee.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Implement a stack using a fixed array and test overflow and underflow.
-- Implement a circular queue using an array.
-- Check balanced brackets using a stack.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Dispatch print jobs with a queue without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="15" data-markdown><textarea data-template>
-## Solve five problems to transfer Dispatch print jobs with a queue
-
-**IC151 lab practice · 5 problems**
-
-1. Implement a stack using a fixed array and test overflow and underflow.
-1. Implement a circular queue using an array.
-1. Check balanced brackets using a stack.
-1. Use linear search to find all overdue jobs in an array.
-1. Sort student records by score using bubble sort and a comparator.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Remember pending dirty cells and service them in a deliberate order.
-
-**Studio thread:** Queue the cells that still need cleaning
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Remember pending dirty cells and service them in a deliberate order. |
-| **Model** | A stored target is waiting, active, or already cleaned. |
-| **Represent** | A vector plus a front index acts as a FIFO queue; an array can act as a stack. |
-| **Solve** | Scan once to collect dirty indices, then process them in stored order. |
-| **Verify** | Test no dirt, one target, repeated targets, and full capacity. |
-| **Improve** | Compare FIFO, LIFO, and direct linear search from the operations each needs. |
-
-**Technique lens:** linear structures, search, and elementary sorting
-
-**Compare:** FIFO service order versus LIFO service order
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

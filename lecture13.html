@@ -16,67 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## A struct models one domain record. · Represent and filter sensor records
-
-A struct keeps each reading coherent; passing by const reference lets a function inspect records efficiently.
-
-~~~cpp
-#include <iostream>
-#include <string>
-
-struct Reading {
-    std::string sensor;
-    double value;
-    bool valid;
-};
-
-void printIfValid(const Reading& r) {
-    if (r.valid) std::cout << r.sensor << ": " << r.value << std::endl;
-}
-
-int main() {
-    Reading sample{"pressure-2", 101.7, true};
-    printIfValid(sample);
-}
-~~~
-
-**Takeaways**
-
-- A struct models one domain record.
-- Member names replace parallel loose variables.
-- References avoid unnecessary record copies.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="13" data-markdown><textarea data-template>
-## The general form of a struct, a record array, and a pointer
-
-~~~cpp
-struct <Name> {
-    <T> <field>;
-    <U> <field>;
-};                                  // the semicolon is part of the declaration
-
-<Name> <object>{ <value>, <value> };   // members initialized in declaration order
-<object>.<field>                       // select through an object
-
-<Name> <records>[<size>];            // many values of one shape, kept together
-
-<T>* <p> = &<object>;      // <p> holds the address of <object>
-*<p>                       // the object stored at that address
-<p>-><field>               // shorthand for (*<p>).<field>
-<p> = nullptr;             // holds no address; dereferencing it is undefined
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| <code>struct</code> | Groups the fields of one record so they travel and stay consistent together. |
-| trailing <code>;</code> | Omitting it is one of the most common compile errors in this lecture. |
-| `&<object>` | Yields the address. A pointer stores where a value lives, not the value. |
-| <code>.</code> vs <code>-&gt;</code> | <code>.</code> selects through an object, <code>-&gt;</code> through a pointer to one. |
-| <code>nullptr</code> | The one address value you can safely test for. Check before you dereference. |
-
-One array of records beats several parallel arrays: the fields of a record cannot drift out of step if they never live apart.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A struct keeps the fields of one record coherent
 
@@ -105,17 +44,6 @@ for (const Reading& reading : samples) {
 }
 ~~~
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="struct-coherent-record" data-markdown><textarea data-template>
-## Three parallel arrays try to walk into the lab together
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l13/struct-coherent-record.png" alt="A student clips an identity card, measurement dial, and validity switch into one sturdy record folder instead of carrying them separately — visual point: One folder, one record — nothing has to march in formation." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Three parallel arrays try to walk into the lab together.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> One folder, one record — nothing has to march in formation.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A pointer stores where an object lives
 
@@ -137,17 +65,6 @@ if (scorePointer != nullptr) {
 
 Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="array-records" data-markdown><textarea data-template>
-## The lab has many readings with the same shape
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l13/array-records.png" alt="Several matching record folders line up in a tray, and a scanner visits only the valid ones — visual point: Repeat the record, not the confusion between its fields." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The lab has many readings, all the same shape.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Repeat the record, not the confusion between its fields.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Dot selects through an object; arrow selects through a pointer
 
@@ -159,45 +76,12 @@ reading.value = 32.0;
 pointer->value = 32.5;  // same as (*pointer).value
 ~~~
     </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: Records keep cells and entities coherent
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| structs and pointers | keep a cell's coordinate and dirt together, then refer to one target |
-
-~~~cpp
-#include <array>
-struct Cell { int row; int column; bool dirty; };
-int main() {
-    std::array<Cell,3> cells{{{0,0,false},{0,1,true},{0,2,false}}};
-    Cell* target=nullptr;
-    for (Cell& cell:cells) if (cell.dirty) target=&cell;
-    if (target!=nullptr) target->dirty=false;
-}
-~~~
-
-**Invariant:** <code>target</code> is either null or points to a live element of <code>cells</code>.
-
-**Next unlock · L14:** make each Snake segment own the next segment dynamically.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Layout, alignment, and pointer arithmetic affect safety
 
 Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
 
 Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="pointer-address" data-markdown><textarea data-template>
-## The pointer arrives with a location, not a duplicate score
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l13/pointer-address.png" alt="A small arrow-shaped pointer points from a separate token to the one real score object located on a desk — visual point: One object, one address — the arrow just knows where to look." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The pointer arrives with a location, not a duplicate score.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> One object, one address — the arrow just knows where to look.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Safe memory reasoning groups state and validates addresses
@@ -207,66 +91,6 @@ Pointer arithmetic is valid only within one array object (or one-past its end). 
 - A pointer stores an address; dereferencing requires validity.
 - Check for <code>nullptr</code> before access.
 - Layout is implementation-specific and pointer arithmetic has strict bounds.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Represent and filter sensor records with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** A struct models one domain record.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Model a book and sort an array of books by price.
-- Calculate and print the padding of three alternate struct layouts.
-- Update a student record through a pointer and the arrow operator.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Represent and filter sensor records without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="13" data-markdown><textarea data-template>
-## Solve five problems to transfer Represent and filter sensor records
-
-**IC151 lab practice · 5 problems**
-
-1. Model a book and sort an array of books by price.
-1. Calculate and print the padding of three alternate struct layouts.
-1. Update a student record through a pointer and the arrow operator.
-1. Use a lambda to filter employees above a salary threshold.
-1. Build a singly linked list node and insert at the front.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Keep each sampled cell and its related properties coherent.
-
-**Studio thread:** Model cells, components, and entities
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Keep each sampled cell and its related properties coherent. |
-| **Model** | One entity has identity, value, validity, and possibly a location. |
-| **Represent** | A struct groups fields; a pointer can refer to an existing entity. |
-| **Solve** | Traverse records and follow only valid, non-null relationships. |
-| **Verify** | Check member invariants, null pointers, and first/last record access. |
-| **Improve** | Prefer IDs or references when ownership does not need to move. |
-
-**Technique lens:** record-based modeling
-
-**Compare:** parallel arrays versus an array of coherent records
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

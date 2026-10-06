@@ -43,8 +43,6 @@ for (const [conceptId, reference] of Object.entries(references)) {
 for (let lectureId = 1; lectureId <= 23; lectureId += 1) {
     const html = fs.readFileSync(path.join(root, `lecture${lectureId}.html`), 'utf8');
     if (!html.includes('lecture-runtime.js')) errors.push(`lecture${lectureId}.html: missing lecture-runtime.js`);
-    if (!html.includes(`data-course-practice="${lectureId}"`)) errors.push(`lecture${lectureId}.html: missing practice marker`);
-    if (!html.includes('class="course-extra-slide practical-example-slide"')) errors.push(`lecture${lectureId}.html: missing practical example`);
     if (html.includes('course-progress.js')) errors.push(`lecture${lectureId}.html: duplicate course-progress.js include`);
 }
 

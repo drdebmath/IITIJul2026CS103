@@ -421,6 +421,9 @@
 
     function injectCheckpoints() {
         if (isQuizDeck || document.querySelector('[data-course-minute]')) return;
+        // Lectures 12 onward carry no generated checkpoint slides; the frozen
+        // decks keep theirs.
+        if (lectureId !== null && lectureId >= 12) return;
         const coreSlides = Array.from(document.querySelectorAll('[data-course-authored-slide]'))
             .filter((slide) => !slide.classList.contains('course-reference-slide'));
         if (!coreSlides.length) return;

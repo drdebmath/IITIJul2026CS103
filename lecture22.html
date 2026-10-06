@@ -16,63 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## Domain objects are the data structure’s elements. · Search and rank available flights
-
-The object model supplies flight records; standard algorithms filter and rank those records for a real booking workflow.
-
-~~~cpp
-#include <algorithm>
-#include <iostream>
-#include <string>
-#include <vector>
-
-struct Flight { std::string code, from, to; double fare; };
-
-int main() {
-    std::vector<Flight> flights{{"AI1", "IDR", "DEL", 5100}, {"AI2", "IDR", "DEL", 4600}};
-    std::sort(flights.begin(), flights.end(),
-              [](const Flight& a, const Flight& b) { return a.fare < b.fare; });
-    auto match = std::find_if(flights.begin(), flights.end(),
-              [](const Flight& f) { return f.from == "IDR" && f.to == "DEL"; });
-    if (match != flights.end()) std::cout << match->code << " " << match->fare;
-}
-~~~
-
-**Takeaways**
-
-- Domain objects are the data structure’s elements.
-- Comparators encode a user-facing ranking rule.
-- Algorithms compose with the object model.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="22" data-markdown><textarea data-template>
-## The general form of a predicate, a comparator, and their algorithms
-
-~~~cpp
-auto <predicate> = [](const <T>& <x>) {
-    return <condition>;          // must yield bool: one question about one element
-};
-
-auto <comparator> = [](const <T>& <a>, const <T>& <b>) {
-    return <a>.<key> < <b>.<key>;   // true means "<a> comes strictly before <b>"
-};
-
-std::sort(<first>, <last>, <comparator>);
-std::stable_sort(<first>, <last>, <comparator>);    // keeps the order of equal elements
-std::count_if(<first>, <last>, <predicate>);
-std::copy_if(<first>, <last>, std::back_inserter(<out>), <predicate>);
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| `<predicate>` | Names one domain question, so it can be tested on its own and reused by several algorithms. |
-| `<comparator>` | Names one ordering policy. Changing how results rank becomes a change in one place. |
-| strict weak ordering | `<comparator>(a, a)` must be false. Using <code>&lt;=</code> here lets <code>std::sort</code> run past the end of the range. |
-| <code>[]</code> | The capture list. Empty means the lambda uses only its parameters, which keeps it reusable. |
-| <code>stable_sort</code> | Preserves the previous order among equal elements, which is what makes ranking by two keys in turn work. |
-
-Give the question and the ordering their own names: a filter and a rank you can test separately are what keep the search readable.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## One component owns one reason to change
 
@@ -93,17 +36,6 @@ struct Booking { std::size_t flightIndex; std::size_t passengerIndex; };
 ~~~
 
 Indices express associations without ambiguous ownership.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="single-responsibility" data-markdown><textarea data-template>
-## One giant object volunteers for every responsibility
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l22/single-responsibility.png" alt="A student sorts route, passenger, booking, and policy pieces into separate focused workstations instead of one overloaded desk — visual point: Split the reasons to change before the desk collapses." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> One giant object volunteers for every responsibility.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Split the reasons to change before the desk collapses.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## A predicate turns a domain question into reusable selection
@@ -130,43 +62,6 @@ std::sort(flights.begin(), flights.end(),
 
 The comparator defines one consistent ordering relation.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="domain-model" data-markdown><textarea data-template>
-## The real world arrives with too many details
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l22/domain-model.png" alt="A student turns a real-world scene into a small set of coherent object cards connected by clear association lines — visual point: Keep what affects the decision; leave the wallpaper out." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The real world arrives with too many details.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Keep what affects the decision; leave the wallpaper out.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: A comparator chooses the next target
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| domain object | one Task records a dirty cell and its route length |
-| comparator and sorting | the Cleaner ranks shorter routes first |
-| deterministic tie-break | equal routes use row, then column |
-
-~~~cpp
-struct Task { int row; int column; int steps; };
-std::vector<Task> dirt{{0,4,4},{2,1,3},{4,4,8}};
-std::sort(dirt.begin(),dirt.end(),
-    [](const Task& a,const Task& b) {
-        if (a.steps!=b.steps) return a.steps<b.steps;
-        if (a.row!=b.row) return a.row<b.row;
-        return a.column<b.column;
-    });
-Task next{-1,-1,0};
-if (!dirt.empty()) next=dirt[0];
-~~~
-
-**Invariant/test:** route lengths are nonnegative; after sorting, <code>next</code> is no worse than every remaining task. Test empty, one-task, and equal-distance cases.
-
-**Next unlock · L23:** integrate body, policy, routes, collision rules, and visualization into one verified capstone.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Route planning applies graph algorithms to domain constraints
 
@@ -182,17 +77,6 @@ State the objective before choosing an algorithm.
 
 Use a design pattern only after the recurring responsibility problem is visible.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="predicate-selection" data-markdown><textarea data-template>
-## "Does this object match the route?"
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l22/predicate-selection.png" alt="A small yes-or-no filter checks each flight-shaped object and sends matching ones down a chosen lane — visual point: Make the question callable, and the filter is reusable everywhere." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The question is "does this object match the route?"</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Make the question callable, and the filter is reusable everywhere.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Compose domain objects with explicit predicates, comparators, and policies
 
@@ -201,66 +85,6 @@ Use a design pattern only after the recurring responsibility problem is visible.
 - Predicates select; comparators order.
 - Routing applies graph structure to a stated objective.
 - Patterns name reusable responsibility arrangements.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Search and rank available flights with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** Domain objects are the data structure’s elements.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Design classes for passengers, flights, and bookings with clear ownership.
-- Filter flights by route, date, and remaining capacity.
-- Sort matching flights by fare and then departure time.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Search and rank available flights without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="22" data-markdown><textarea data-template>
-## Solve five problems to transfer Search and rank available flights
-
-**IC151 lab practice · 5 problems**
-
-1. Design classes for passengers, flights, and bookings with clear ownership.
-1. Filter flights by route, date, and remaining capacity.
-1. Sort matching flights by fare and then departure time.
-1. Model airports as a graph and find a minimum-hop route.
-1. Apply one design pattern to make payment processing extensible.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Separate actors, tasks, relationships, and the policy that ranks candidates.
-
-**Studio thread:** Rank tasks and model routes
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Separate actors, tasks, relationships, and the policy that ranks candidates. |
-| **Model** | A task has constraints and a measurable key; a route has vertices and edges. |
-| **Represent** | Domain records, index associations, predicates, comparators, and a strategy interface. |
-| **Solve** | Filter with a predicate, rank with a comparator, and isolate policy selection. |
-| **Verify** | Test empty collections, invalid indices, equal keys, and comparator consistency. |
-| **Improve** | Swap ranking policies without changing the stored domain objects. |
-
-**Technique lens:** applied object modeling, collection algorithms, and policy separation
-
-**Compare:** hard-coded selection versus an explicit replaceable policy
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

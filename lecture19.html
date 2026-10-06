@@ -16,69 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## Inheritance reuses a stable base abstraction. · Calibrate inherited energy meters
-
-A friend calibration function has one narrow privilege; a derived meter reuses the protected correction operation without introducing dynamic dispatch yet.
-
-~~~cpp
-#include <iostream>
-
-class Meter {
-    double offset_ = 0;
-    friend void calibrate(Meter&, double);
-protected:
-    double corrected(double raw) const { return raw + offset_; }
-public:
-    double read(double raw) const { return corrected(raw); }
-};
-
-void calibrate(Meter& meter, double offset) { meter.offset_ = offset; }
-
-class EnergyMeter : public Meter {
-public:
-    double kilowattHours(double raw) const { return corrected(raw); }
-};
-~~~
-
-**Takeaways**
-
-- Inheritance reuses a stable base abstraction.
-- protected exposes only what derived classes need.
-- Friend access remains narrow and purposeful.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="19" data-markdown><textarea data-template>
-## The general form of a base, a derived class, and a friend
-
-~~~cpp
-class <Base> {
-public:
-    <return type> <operation>();
-    friend <return type> <function>(<parameters>);   // one named exception
-protected:
-    <T> <field>;          // reachable by derived classes, not by outside code
-private:
-    <U> <hidden>;         // not even derived classes may touch this
-};
-
-class <Derived> : public <Base> {      // "<Derived> is-a <Base>"
-public:
-    <Derived>(<parameters>)
-        : <Base>(<base arguments>),    // the base is constructed first
-          <field>(<value>) {}
-};
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| `: public <Base>` | Promises substitutability: a `<Derived>` must work anywhere a `<Base>` is expected. |
-| <code>protected</code> | The interface offered to derived classes only. Wider than <code>private</code>, narrower than <code>public</code>. |
-| construction order | Base subobject first, then members in declaration order, then the derived body. |
-| destruction order | Exactly the reverse, so a derived part is never torn down after the base it relies on. |
-| <code>friend</code> | Grants one named function or class access. It is a targeted exception, not a way to open the class up. |
-
-Inheritance is for reusing a promise, not for reusing code: if a `<Derived>` cannot honour every `<Base>` guarantee, it is not one.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Friend access is a narrow exception, not an interface
 
@@ -99,17 +36,6 @@ A friend is a non-member granted narrow access. Friendship is not inheritance or
 If <code>ElectricCar</code> publicly inherits <code>Vehicle</code>, every operation promised by <code>Vehicle</code> must remain meaningful for <code>ElectricCar</code>.
 
 This is an **is-a** relationship, not merely code reuse.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="friend-narrow-access" data-markdown><textarea data-template>
-## A helper asks for the master key to the whole workshop
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l19/friend-narrow-access.png" alt="A class workshop opens one small side hatch to a trusted helper while the main public door remains the normal entrance — visual point: One narrow hatch, not a second front door." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> A helper asks for the master key to the whole workshop.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> One narrow hatch, not a second front door.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## A class hierarchy makes shared promises and specialization explicit
@@ -140,17 +66,6 @@ public:
 
 A <code>protected</code> member would be hidden from ordinary callers but accessible inside derived members. Prefer a small function over exposing raw state. Passing a derived object to a base reference tests substitutability.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="substitutability" data-markdown><textarea data-template>
-## The specialized vehicle calls itself an "is-a" version
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l19/substitutability.png" alt="A smaller specialized vehicle safely takes the same marked route and fulfills the same stops as the base vehicle it replaces — visual point: Then it has to keep every stop the original route promised." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The specialized vehicle calls itself an "is-a" version of the base.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Then it has to keep every stop the original route promised.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Base construction completes before derived construction
 
@@ -168,40 +83,6 @@ A <code>Car</code> has an <code>Engine</code>; it is not an engine.
 
 Composition usually exposes fewer dependencies and is easier to change. Inheritance is appropriate only when substitutability is defensible.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="hierarchy-promises" data-markdown><textarea data-template>
-## The family tree wants to share what is genuinely common
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l19/hierarchy-promises.png" alt="A clear family tree branches from one shared base promise into two specialized but compatible shapes — visual point: Trunk carries the shared promise; branches earn their specialty." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The family tree wants to share what is genuinely common.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Trunk carries the shared promise; branches earn their specialty.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: Snake and Cleaner can share a world
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| friend, inheritance, and composition | compare two occupants while only Cleaner has a dirt sensor |
-
-~~~cpp
-struct DirtSensor { bool dirty=false; };
-class GridOccupant {
-    unsigned cell_;
-    friend bool sameCell(const GridOccupant&,const GridOccupant&);
-public: explicit GridOccupant(unsigned cell):cell_(cell) {}
-};
-bool sameCell(const GridOccupant& a,const GridOccupant& b){ return a.cell_==b.cell_; }
-class SnakeHead:public GridOccupant { public: explicit SnakeHead(unsigned c):GridOccupant(c){} };
-class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner(unsigned c):GridOccupant(c){} };
-~~~
-
-**Design test:** both derived objects substitute for <code>const GridOccupant&amp;</code>; the sensor remains a has-a member.
-
-**Next unlock · L20:** select different actor behavior through one virtual interface.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Use inheritance for is-a contracts and composition for owned parts
 
@@ -210,66 +91,6 @@ class Cleaner:public GridOccupant { DirtSensor sensor_; public: explicit Cleaner
 - A hierarchy shares a justified base abstraction.
 - Base construction precedes derived construction.
 - Prefer composition for has-a relationships.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Calibrate inherited energy meters with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** Inheritance reuses a stable base abstraction.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Build a Vehicle base class with Car and Bicycle specializations.
-- Demonstrate public, protected, and private member accessibility.
-- Use a friend function to compare private measurements from two objects.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Calibrate inherited energy meters without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="19" data-markdown><textarea data-template>
-## Solve five problems to transfer Calibrate inherited energy meters
-
-**IC151 lab practice · 5 problems**
-
-1. Build a Vehicle base class with Car and Bicycle specializations.
-1. Demonstrate public, protected, and private member accessibility.
-1. Use a friend function to compare private measurements from two objects.
-1. Explain why a polymorphic base class needs a virtual destructor.
-1. Refactor duplicated derived-class behavior into a base class.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Share genuine agent behavior without claiming false is-a relationships.
-
-**Studio thread:** Design a family of cleaning agents
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Share genuine agent behavior without claiming false is-a relationships. |
-| **Model** | Specialized agents must remain usable wherever the base contract is expected. |
-| **Represent** | A shallow hierarchy models is-a; member objects model has-a. |
-| **Solve** | Extract only the common promise and compose independent capabilities. |
-| **Verify** | Substitute each derived type in base-level scenarios. |
-| **Improve** | Replace inheritance with composition when substitutability is hard to defend. |
-
-**Technique lens:** object-oriented abstraction
-
-**Compare:** inheritance versus composition
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

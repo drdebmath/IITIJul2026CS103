@@ -16,68 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## A constructor establishes invariants. · Encapsulate a bank account
-
-The class protects its invariant—balance cannot become negative—while constructors establish a valid starting state.
-
-~~~cpp
-#include <string>
-
-class Account {
-    std::string owner_;
-    double balance_;
-public:
-    Account(const std::string& owner, double opening)
-        : owner_(owner), balance_(0.0) {
-        if (opening > 0.0) balance_ = opening;
-    }
-    bool withdraw(double amount) {
-        if (amount <= 0 || amount > balance_) return false;
-        balance_ -= amount;
-        return true;
-    }
-    double balance() const { return balance_; }
-};
-~~~
-
-**Takeaways**
-
-- A constructor establishes invariants.
-- Private state changes through controlled operations.
-- Methods express domain rules, not just setters.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="18" data-markdown><textarea data-template>
-## The general form of a class, its constructor, and its lifetime operations
-
-~~~cpp
-class <Name> {
-public:
-    <Name>(<parameters>);                        // establishes the invariant
-    <Name>(const <Name>& <other>);               // copy: makes a new object
-    <Name>& operator=(const <Name>& <other>);    // assignment: replaces an existing one
-    ~<Name>();                                   // releases what the object owns
-    <return type> <query>() const;               // const: promises not to modify
-private:
-    <T> <field>;                                 // the invariant lives here
-};
-
-<Name>::<Name>(<parameters>)
-    : <field>(<value>) {          // member initializer list, runs before the body
-    // reject arguments that would break the invariant
-}
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| <code>private</code> | Outside code cannot reach the field, so it cannot put the object into an invalid state. |
-| constructor | The only way in. If it refuses invalid arguments, no valid-looking object is ever invalid. |
-| initializer list | Initializes members before the body runs. Assigning in the body initializes twice. |
-| <code>const</code> member | Callable on a <code>const</code> object, and the compiler enforces the promise. |
-| destructor | Runs automatically at end of scope, which is what ties resource release to lifetime (RAII). |
-
-An invariant is a statement true of the object from the end of its constructor to the start of its destructor — name it before writing the class.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## A class protects state by combining data, behavior, and access control
 
@@ -92,17 +30,6 @@ public:
 ~~~
 
 The invariant is: <code>value &gt;= 0</code>. The public interface preserves it because it can only increment.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="class-invariant" data-markdown><textarea data-template>
-## The caller asks to reach inside and "just change the value"
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l18/class-invariant.png" alt="A sturdy class-shaped workshop keeps its internal gauge behind a wall and exposes only a safe control that maintains the gauge rule — visual point: Use the safe control — the invariant lives behind that wall." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The caller asks to reach inside and "just change the value."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Use the safe control — the invariant lives behind that wall.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Constructors establish valid initial state before use
@@ -134,43 +61,6 @@ assigned = first;          // copy assignment: existing object
 
 Value members such as numbers and strings usually support the Rule of Zero.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="constructor-state" data-markdown><textarea data-template>
-## The object wants in before anyone checks it
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l18/constructor-state.png" alt="A constructor caretaker checks and sets a new object’s gauges before rolling it onto the program floor — visual point: Construction is the entrance inspection, not a formality." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The object wants to enter the program before it has been checked.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Construction is the entrance inspection, not a formality.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: A class protects a valid Cleaner
-
-| Today's concept | Exact game part enabled |
-|---|---|
-| class invariants, construction, and copying | prevent arbitrary coordinate mutation and copy a replay state |
-
-~~~cpp
-#include <cassert>
-class Cleaner {
-    int row_, column_;
-public:
-    Cleaner(int row,int column):row_(0),column_(0) {
-        if (row>=0) row_=row; if (column>=0) column_=column;
-    }
-    void moveRight(int columns) { if (column_+1<columns) ++column_; }
-    int cell(int columns) const { return row_*columns+column_; }
-};
-int main(){ Cleaner first(1,1); Cleaner replay=first;
-    replay.moveRight(5); assert(first.cell(5)==6 && replay.cell(5)==7); }
-~~~
-
-**Value test:** changing the copied replay does not change the original Cleaner.
-
-**Next unlock · L19:** model genuine is-a actors and has-a capabilities.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## RAII binds resource release to object lifetime
 
@@ -190,17 +80,6 @@ Useful value-type operations include:
 
 Do not change an operator's expected meaning.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="copy-assignment" data-markdown><textarea data-template>
-## Two operations both look like "put this value there"
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l18/copy-assignment.png" alt="One workshop builds a new duplicate object while another swaps the contents of an already existing object, making the two actions visibly different — visual point: One workshop builds a newcomer; the other renovates a resident." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> Two operations both look like "put this value there."</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> One workshop builds a newcomer; the other renovates a resident.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Value types depend on invariants, ownership, and predictable lifetime
 
@@ -209,66 +88,6 @@ Do not change an operator's expected meaning.
 - Destruction ends lifetime and releases owned resources.
 - Prefer Rule-of-Zero member types.
 - Overloads must keep interfaces unsurprising.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Encapsulate a bank account with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** A constructor establishes invariants.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Design a Temperature class that rejects values below absolute zero.
-- Implement default, parameterized, and copy constructors for a Matrix class.
-- Overload + and == for a Fraction class.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Encapsulate a bank account without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="18" data-markdown><textarea data-template>
-## Solve five problems to transfer Encapsulate a bank account
-
-**IC151 lab practice · 5 problems**
-
-1. Design a Temperature class that rejects values below absolute zero.
-1. Implement default, parameterized, and copy constructors for a Matrix class.
-1. Overload + and == for a Fraction class.
-1. Overload stream input and output for a Time value.
-1. Implement a dynamic Buffer class using the rule of three.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Prevent any caller from creating or leaving an invalid robot state.
-
-**Studio thread:** Turn the robot into a reliable object
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Prevent any caller from creating or leaving an invalid robot state. |
-| **Model** | A robot owns state and exposes only invariant-preserving operations. |
-| **Represent** | A class, constructor, private members, and Rule-of-Zero value members. |
-| **Solve** | Move responsibility beside the state it governs. |
-| **Verify** | Test construction, copied values, assignment, destruction, and invalid inputs. |
-| **Improve** | Prefer composition and library-owned resources over handwritten ownership. |
-
-**Technique lens:** object-oriented modeling and RAII
-
-**Compare:** public record mutation versus a small invariant-preserving interface
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

@@ -16,60 +16,6 @@
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
-## A heap encodes priority as a structural invariant. · Prioritize emergency maintenance
-
-A heap makes the highest-priority request available immediately while preserving efficient insertion.
-
-~~~cpp
-#include <iostream>
-#include <queue>
-
-int main() {
-    std::priority_queue<int> severity;
-    severity.push(2);
-    severity.push(5);
-    severity.push(3);
-    std::cout << "Next severity: " << severity.top();
-}
-~~~
-
-**Takeaways**
-
-- A heap encodes priority as a structural invariant.
-- The largest stored severity is exposed first.
-- The application inherits logarithmic insertion.
-    </textarea></section>
-    <section class="course-extra-slide course-syntax-slide" data-course-syntax="17" data-markdown><textarea data-template>
-## The general form of binary search, a BST node, and a priority queue
-
-~~~cpp
-int <lo> = 0, <hi> = <n>;                       // search the half-open range [<lo>, <hi>)
-while (<lo> < <hi>) {
-    int <mid> = <lo> + (<hi> - <lo>) / 2;       // this form cannot overflow
-    if (<a>[<mid>] == <target>) return <mid>;
-    if (<a>[<mid>] < <target>) <lo> = <mid> + 1;   // discard the left half
-    else                       <hi> = <mid>;       // discard the right half
-}
-return -1;
-
-struct <Node> { <T> <key>; <Node>* <left>; <Node>* <right>; };
-// invariant: every key in <left> < <key> < every key in <right>
-
-std::priority_queue<T> <pq>;
-<pq>.push(<value>);   <pq>.top();   <pq>.pop();   // top() is the largest
-~~~
-
-| Part | Meaning |
-| --- | --- |
-| sorted input | Binary search is defined only on a sorted range. On unsorted data it returns a wrong answer, not an error. |
-| `<lo> + (<hi> - <lo>) / 2` | Equals the midpoint but never forms `<lo> + <hi>`, which can overflow <code>int</code>. |
-| half-open `[<lo>, <hi>)` | One convention throughout: `<hi>` is past the end, and the loop ends when the range is empty. |
-| BST invariant | Holds for every node, not just the root. It is what makes a lookup a sequence of comparisons. |
-| heap | Keeps only the top element in a known place — enough for priority, too little for sorted traversal. |
-
-Each structure is an invariant plus the operations that preserve it; break the invariant and every operation built on it becomes wrong.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## Binary search halves a sorted range without overflow
 
@@ -95,17 +41,6 @@ For every node:
 
 Choose and document one policy for duplicate keys.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="binary-search-halves" data-markdown><textarea data-template>
-## One middle question at a time on a very long shelf
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l17/binary-search-halves.png" alt="A student checks the middle of a sorted row and calmly shades away half the impossible tiles after each comparison — visual point: One comparison deletes half the search space." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The sorted shelf is long, but the target gets one middle-question at a time.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> One comparison deletes half the search space.</p>
-</figcaption>
-</figure>
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## BST insertion preserves order by following comparisons
 
@@ -126,17 +61,6 @@ Node* insert(Node* root, int key) {
 A max heap is a complete binary tree where every parent is at least its children.
 
 In a zero-based array, children of index <code>i</code> are `2*i+1` and `2*i+2`.
-    </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="bst-order" data-markdown><textarea data-template>
-## The tree has one rule and refuses to break it
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l17/bst-order.png" alt="A branching tree arranges smaller abstract tokens to the left and larger tokens to the right, with the same rule repeated below — visual point: Every subtree keeps the same ordering promise, no exceptions." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The tree has one rule and refuses to break it locally.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> Every subtree keeps the same ordering promise, no exceptions.</p>
-</figcaption>
-</figure>
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## heapify restores parent-child order after one local violation
@@ -160,44 +84,6 @@ void heapify(std::vector<int>& a, int size, int root) {
 
 Merge sort is **stable**: records with equal keys keep their original relative order. It is O(n log n), and its array implementation uses additional storage. Heap sort is in-place but not stable.
     </textarea></section>
-    <section class="course-extra-slide course-meme-slide" data-course-meme="heap-priority" data-markdown><textarea data-template>
-## The queue has many tasks and one needs attention first
-
-<figure class="course-meme-figure">
-<img src="assets/lecture-memes/l17/heap-priority.png" alt="A pyramid-shaped heap places the most urgent glowing token at the top while lower-priority tokens settle beneath it — visual point: The root stays visible; everyone else waits their turn." width="900" height="506" loading="lazy">
-<figcaption>
-<p class="course-meme-setup"><strong>Setup</strong> The queue has many tasks and one needs attention first.</p>
-<p class="course-meme-punchline"><strong>Punchline</strong> The root stays visible; everyone else waits their turn.</p>
-</figcaption>
-</figure>
-    </textarea></section>
-    <section class="course-extra-slide course-game-evolution-slide" data-markdown><textarea data-template>
-## Game evolution: Invariants make grid decisions faster
-
-| L17 tool | Exact game part enabled |
-|---|---|
-| binary search | test sorted occupied cell IDs for collision |
-| BST | update occupied IDs as the body changes |
-| max heap | select the highest-priority dirt target |
-| stable merge sort | order equal-priority targets without changing discovery order |
-
-~~~cpp
-bool occupied(const int cells[], int count, int id) {
-    int left=0, right=count-1;
-    while (left<=right) {
-        int middle=left+(right-left)/2;
-        if (cells[middle]==id) return true;
-        if (cells[middle]<id) left=middle+1;
-        else right=middle-1;
-    }
-    return false;
-}
-~~~
-
-**Invariant:** if <code>id</code> exists, it remains inside the current [left,right] interval.
-
-**Next unlock · L18:** package state and operations inside a reliably constructed game object.
-    </textarea></section>
     <section data-markdown><textarea data-template>
 ## State the invariant before choosing a search or sort
 
@@ -206,66 +92,6 @@ bool occupied(const int cells[], int count, int id) {
 - A heap encodes priority in a complete tree.
 - heapify repairs a local invariant.
 - Merge sort applies recursive decomposition to sequences.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Verify Prioritize emergency maintenance with a claim, trace, boundary, and improvement
-
-Use the practical example as a small experiment. Before you leave, make the reasoning visible:
-
-- **Claim:** A heap encodes priority as a structural invariant.
-- **Trace:** name the state that changes and the observation that would confirm it.
-- **Boundary:** choose one smallest, largest, empty, or invalid input that could expose a defect.
-- **Improvement:** explain one change that would make the solution clearer or safer.
-
-### Exit ticket
-
-Choose one problem to solve now and two to attempt in the lab:
-
-- Implement iterative binary search and count comparisons.
-- Insert, search, and print an inorder traversal of a BST.
-- Build a min-heap without using priority_queue.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Explain Prioritize emergency maintenance without opening the code
-
-Explain today’s idea to a partner without opening the code:
-
-1. State the input, output, and one rule the solution must preserve.
-2. Point to the operation that makes progress or changes the state.
-3. Name the first test you would run after changing the implementation.
-
-If the explanation needs “and then another unrelated thing,” split the design before you code.
-    </textarea></section>
-    <section class="course-extra-slide lab-practice-slide" data-course-practice="17" data-markdown><textarea data-template>
-## Solve five problems to transfer Prioritize emergency maintenance
-
-**IC151 lab practice · 5 problems**
-
-1. Implement iterative binary search and count comparisons.
-1. Insert, search, and print an inorder traversal of a BST.
-1. Build a min-heap without using priority_queue.
-1. Implement merge sort and measure its comparisons.
-1. Choose the best structure for a dictionary, task scheduler, and undo history.
-
-Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
-    </textarea></section>
-    <section class="course-extra-slide course-algorithmic-studio" data-markdown><textarea data-template>
-## Find ordered data or repeatedly select the most promising route candidate.
-
-**Studio thread:** Rank routes and accelerate search
-
-| Ask | Today’s answer |
-|---|---|
-| **Problem** | Find ordered data or repeatedly select the most promising route candidate. |
-| **Model** | An invariant rules out impossible regions or keeps the best priority at the front. |
-| **Represent** | Sorted array, BST, or array-backed heap supports different operations. |
-| **Solve** | Use binary search, heap repair, or divide–solve–merge as the operation demands. |
-| **Verify** | Check the ordering/heap invariant before and after every update. |
-| **Improve** | Compare asymptotic growth, stability, storage, and worst-case shape. |
-
-**Technique lens:** divide and conquer, ordered search, and priority-based greedy choice
-
-**Compare:** linear baseline versus binary search; bubble sort versus merge sort
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
