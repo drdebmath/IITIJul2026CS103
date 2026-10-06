@@ -303,18 +303,38 @@ For every lost mark, write the concept, the incorrect assumption, and the smalle
     <section data-markdown><textarea data-template>
 ## Set A · Section A: True or False
 
-| Q | Answer | Reason |
-|---|---|---|
-| 1 | T | `int / int` is integer division, so `7 / 2` is the `int` 3. |
-| 2 | F | A name declared in a block goes out of scope at the closing brace. |
-| 3 | T | `&&` short-circuits: when `a != 0` is false, `20 / a` is never evaluated. |
-| 4 | T | The condition is tested after the body, so the body runs before the first test. |
-| 5 | F | Pass by value copies the argument; the parameter is a separate local variable. |
-| 6 | F | Overloads must differ in their parameter lists; the return type alone cannot tell two calls apart. |
-| 7 | F | Valid indices are 0 to 4; index 5 is one past the end. |
-| 8 | T | A default-constructed vector is empty: `v.size()` is 0. |
-| 9 | T | `find` returns `std::string::npos` when there is no match. |
-| 10 | T | Without a base case, or without progress toward it, no call ever returns: the recursion runs until the stack overflows. |
+*Write T or F, with a one-line reason naming the C++ rule.*
+
+| Q | Statement | Answer | Reason |
+|---|---|---|---|
+| 1 | The expression `7 / 2` has type `int` when both operands are `int`. | T | `int / int` is integer division, so `7 / 2` is the `int` 3. |
+| 2 | A variable declared inside a pair of braces remains in scope after the closing brace. | F | A name declared in a block goes out of scope at the closing brace. |
+| 3 | In `a != 0 && 20 / a > 2`, the division is not evaluated when `a` is zero. | T | `&&` short-circuits: when `a != 0` is false, `20 / a` is never evaluated. |
+| 4 | A `do-while` loop always executes its body at least once. | T | The condition is tested after the body, so the body runs before the first test. |
+| 5 | If a function receives an `int` by value, changing the parameter changes the caller's variable. | F | Pass by value copies the argument; the parameter is a separate local variable. |
+| 6 | Two functions can be overloaded when they have the same parameter list but different return types. | F | Overloads must differ in their parameter lists; the return type alone cannot tell two calls apart. |
+| 7 | For an array of size 5, index 5 is the last valid index. | F | Valid indices are 0 to 4; index 5 is one past the end. |
+| 8 | `std::vector<int> v;` initially contains zero elements. | T | A default-constructed vector is empty: `v.size()` is 0. |
+| 9 | `std::string::find` returns `std::string::npos` when the requested text is absent. | T | `find` returns `std::string::npos` when there is no match. |
+| 10 | A recursive function needs a base case and recursive calls that make progress toward it. | T | Without a base case, or without progress toward it, no call ever returns: the recursion runs until the stack overflows. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · Section B question: Match the concepts
+
+*Match each term in Column A with the most appropriate description in Column B.*
+
+| # | Column A | | Column B |
+|---|---|---|---|
+| 1 | `const T&` parameter | A | Repeats while a condition remains true |
+| 2 | Function prototype | B | Read-only alias; avoids copying |
+| 3 | `while` loop | C | Reports search failure in a string |
+| 4 | `break` in `switch` | D | Declares a function before its definition |
+| 5 | Range-based `for` | E | Prevents fall-through to the next case |
+| 6 | `std::string::npos` | F | Visits each element of a sequence |
+| 7 | Reference parameter | G | Dynamically sized contiguous sequence |
+| 8 | `std::vector` | H | Alias that can modify the caller's object |
+| 9 | Base case | I | Stops recursive expansion |
+| 10 | Short-circuit `&&` | J | May skip evaluation of the right operand |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set A · Section B: Match the concepts
@@ -331,6 +351,38 @@ For every lost mark, write the concept, the incorrect assumption, and the smalle
 | 8 · `std::vector` | G | Dynamically sized contiguous sequence |
 | 9 · Base case | I | Stops recursive expansion |
 | 10 · Short-circuit `&&` | J | May skip evaluation of the right operand |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · C1 question: Array statistics through functions and references (8 marks)
+
+Complete `summarize` so that it returns the mean of the five values and, through its two reference parameters, hands back the smallest value in `lo` and the largest in `hi`. Complete `main` so that it prints the minimum, the maximum and the mean on one line, separated by single spaces.
+
+~~~cpp
+#include <array>
+#include <iostream>
+using namespace std;
+
+double summarize(const array<int,5>& a, int& lo, int& hi) {
+    lo = _________________________________;      // 1
+    hi = _________________________________;      // 2
+    int sum = 0;
+    for (int value : a) {
+        sum += ___________________________;       // 3
+        if (value < lo) lo = ______________;     // 4
+        if (value > hi) hi = ______________;     // 5
+    }
+    return static_cast<double>(sum) / _________; // 6
+}
+
+int main() {
+    array<int,5> a{8, 3, 11, 6, 2};
+    int lo, hi;
+    double mean = summarize(__________________); // 7
+    cout << lo << ' ' << hi << ' ' << _______;  // 8
+}
+~~~
+
+Expected output, exactly: `2 11 6` (the mean 6.0 prints as `6`; no newline is required).
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set A · C1: Array statistics through references
@@ -360,6 +412,32 @@ int main() {
 - Blank 6 may also be `5`. Blank 7 passes `lo` and `hi` themselves; the reference parameters bind to them.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## Set A · C2 question: Recursive sum of the first n numbers (6 marks)
+
+Complete `sumTo` so that `sumTo(n)` returns 1 + 2 + ... + n using recursion. Complete `main` so that it prints the answer when it is greater than 10 and `0` otherwise, then prints one newline and returns the value that signals success.
+
+~~~cpp
+int sumTo(int n) {
+    if (n == 0) return _______________________;     // 1
+    return __________________ + sumTo(n - 1);      // 2
+}
+
+int main() {
+    int n = 5;
+    int answer = _____________________________;    // 3
+    if (answer > 10) {
+        cout << _____________________________;     // 4
+    } else {
+        cout << 0;
+    }
+    cout << _________________________________;    // 5
+    return __________________________________;    // 6
+}
+~~~
+
+Expected output, exactly: `15` followed by a newline. `main` returns `0`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## Set A · C2: Recursive sum of the first n numbers
 
 ~~~cpp
@@ -383,6 +461,32 @@ int main() {
 
 - The base case returns 0, the sum of no numbers. Each call adds `n` and recurses on `n - 1`, which moves toward the base case.
 - Blank 5 may also be `endl` or `"\n"`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set A · C3 question: String validation and counting (6 marks)
+
+`s` holds a course code and a section tag separated by a dash. If `s` has no dash, the program prints `bad` and stops. Otherwise `left` must hold the part of `s` before the dash, and `digits` the number of decimal digits after the dash. Print `left`, a space, and `digits`.
+
+~~~cpp
+// Assume <cctype>, <iostream>, <string> and using namespace std.
+int main() {
+    string s = "CS103-A7";
+    size_t dash = s.________________________('-'); // 1
+    if (dash == string::____________________) {    // 2
+        cout << "bad\n";
+        return 0;
+    }
+    string left = s.________________(0, dash);     // 3
+    int digits = 0;
+    for (size_t i = dash + 1; i < s.________(); ++i) { // 4
+        if (isdigit(static_cast<unsigned char>(s[i])))
+            ________________________________;      // 5
+    }
+    cout << left << ' ' << __________________;     // 6
+}
+~~~
+
+Expected output for `s = "CS103-A7"`, exactly: `CS103 1` (no newline is required).
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set A · C3: String validation and counting
@@ -411,66 +515,92 @@ int main() {
     <section data-markdown><textarea data-template>
 ## Set A · Section D: Does it compile, and what happens?
 
-| Q | Compiles | Then |
-|---|---|---|
-| 1 | N | A `const` variable cannot be assigned after initialization. |
-| 2 | Y | Prints `3`. |
-| 3 | Y | Infinite loop: `n` never changes, so it prints `0` forever. |
-| 4 | N | `area` is called before any declaration of it is visible. |
-| 5 | Y | Prints `01234`. |
-| 6 | N | `array<double,7>` and `array<double,5>` are different types; the size is part of the type. |
-| 7 | Y | Stops with an exception: `at(0)` on an empty vector throws `std::out_of_range`. |
-| 8 | Y | Prints `45` (1 + 2 + ... + 9). |
-| 9 | N | A `switch` condition must be an integer or enumeration, not a `double`. |
-| 10 | Y | Prints `bc`: start at index 1, take 2 characters. |
+*Each snippet sits inside `main` with the needed headers. Write Y or N; if it compiles, give the exact output, “infinite loop”, or “stops with an exception”.*
+
+| Q | Snippet | Compiles | Then |
+|---|---|---|---|
+| 1 | `const int limit = 5; limit = 7; cout << limit;` | N | A `const` variable cannot be assigned after initialization. |
+| 2 | `int a[3]{1,2,3}; cout << a[2];` | Y | Prints `3`. |
+| 3 | `int n = 0; while (n < 5) { cout << n; }` | Y | Infinite loop: `n` never changes, so it prints `0` forever. |
+| 4 | `cout << area(2.0, 3.0);` where `double area(double w, double h)` is defined below `main` and not declared above it. | N | `area` is called before any declaration of it is visible. |
+| 5 | `for (int i = 0; i < 5; ++i) cout << i;` | Y | Prints `01234`. |
+| 6 | `array<double,7> b{}; cout << mean(b);` where `double mean(const array<double,5>& a)` is defined above `main`. | N | `array<double,7>` and `array<double,5>` are different types; the size is part of the type. |
+| 7 | `vector<int> v; cout << v.at(0);` | Y | Stops with an exception: `at(0)` on an empty vector throws `std::out_of_range`. |
+| 8 | `int sum = 0; for (int i = 1; i < 10; ++i) sum += i; cout << sum;` | Y | Prints `45` (1 + 2 + ... + 9). |
+| 9 | `switch (2.5) { case 2: break; }` | N | A `switch` condition must be an integer or enumeration, not a `double`. |
+| 10 | `string s = "abc"; cout << s.substr(1, 2);` | Y | Prints `bc`: start at index 1, take 2 characters. |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set A · Section E: Output and final values
 
-| Q | Answer | Why |
-|---|---|---|
-| 1 | a = 6, b = 7 | `a++` yields the old value 5, then `a` becomes 6. |
-| 2 | x = 2 | `9 / 4` is integer division (2); it becomes 2.0 only when stored. |
-| 3 | out = 5 | Execution enters at `case 2` and falls through into `case 3`: 3 + 2. |
-| 4 | sum = 9 | The odd values: 1 + 3 + 5. |
-| 5 | a = 7 | The reference makes `x` an alias of `a`. |
-| 6 | 24 | 4 × 3 × 2 × 1. |
-| 7 | s = 20 | 2 + 4 + 6 + 8. |
-| 8 | 6 | Row 1, column 2, both counted from zero. |
-| 9 | 3 | `push_back` appends a third element. |
-| 10 | `dor` | From index 2, take 3 characters of `indore`. |
+*Give the requested result.*
+
+| Q | Code and value asked | Answer | Why |
+|---|---|---|---|
+| 1 | `int a=5; int b=a++ + 2;` → `a`, `b` | a = 6, b = 7 | `a++` yields the old value 5, then `a` becomes 6. |
+| 2 | `double x = 9 / 4;` → `x` | x = 2 | `9 / 4` is integer division (2); it becomes 2.0 only when stored. |
+| 3 | `int out=0; switch(2){case 1: out+=4; case 2: out+=3; case 3: out+=2; break;}` → `out` | out = 5 | Execution enters at `case 2` and falls through into `case 3`: 3 + 2. |
+| 4 | `int sum=0; for(int i=1;i<=5;++i) if(i%2==1) sum+=i;` → `sum` | sum = 9 | The odd values: 1 + 3 + 5. |
+| 5 | `void f(int& x){x+=3;} int a=4; f(a);` → `a` | a = 7 | The reference makes `x` an alias of `a`. |
+| 6 | `int f(int n){if(n<=1)return 1; return n*f(n-1);}` → `f(4)` | 24 | 4 × 3 × 2 × 1. |
+| 7 | `int a[4]{2,4,6,8}; int s=0; for(int x:a)s+=x;` → `s` | s = 20 | 2 + 4 + 6 + 8. |
+| 8 | `int m[2][3]{{1,2,3},{4,5,6}};` → `m[1][2]` | 6 | Row 1, column 2, both counted from zero. |
+| 9 | `vector<int> v{3,5}; v.push_back(7);` → `v.size()` | 3 | `push_back` appends a third element. |
+| 10 | `string s="indore"; cout << s.substr(2,3);` → output | `dor` | From index 2, take 3 characters of `indore`. |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set A · Section F: Bonus trivia
 
-| Q | Answer |
-|---|---|
-| 1 | Bell Labs (AT&T Bell Laboratories) |
-| 2 | C with Classes |
-| 3 | *The C Programming Language*, by Brian Kernighan and Dennis Ritchie |
-| 4 | Brian Kernighan |
-| 5 | The increment operator `++`: C++ is "one more than C" |
-| 6 | Python, named after Monty Python |
-| 7 | Bug, and so debugging |
-| 8 | Ada Lovelace |
-| 9 | Assembler: `a.out` is short for "assembler output" |
-| 10 | 1998 |
+*Bonus: one mark each; the paper is capped at 60.*
+
+| Q | Question | Answer |
+|---|---|---|
+| 1 | At which research laboratory did Bjarne Stroustrup create C++? | Bell Labs (AT&T Bell Laboratories) |
+| 2 | What was C++ called before it got its present name? | C with Classes |
+| 3 | Which classic C book is known by its authors' initials, K&R? | *The C Programming Language*, by Brian Kernighan and Dennis Ritchie |
+| 4 | Whose 1970s tutorial made `hello, world` the traditional first program? | Brian Kernighan |
+| 5 | The name C++ is a pun on which C operator, and what does the pun mean? | The increment operator `++`: C++ is "one more than C" |
+| 6 | Which programming language is named after a British comedy troupe? | Python, named after Monty Python |
+| 7 | Grace Hopper's team found a moth inside a relay in 1947; which everyday programming word did that popularise? | Bug, and so debugging |
+| 8 | Who wrote the first published algorithm meant to be run by a machine, in the 1840s? | Ada Lovelace |
+| 9 | In the default executable name `a.out`, what does the `a` stand for? | Assembler: `a.out` is short for "assembler output" |
+| 10 | In which year did C++ get its first ISO standard? | 1998 |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · Section A: True or False
 
-| Q | Answer | Reason |
-|---|---|---|
-| 1 | F | `7 / 2` is integer division (3), so `x` stores 3.0. |
-| 2 | F | `++i` yields the new value; `i++` yields the old value. |
-| 3 | T | The first true condition's branch runs and the rest are skipped. |
-| 4 | T | The condition is tested first; if it is false, the body never runs. |
-| 5 | T | A reference is an alias, so assigning through it changes the caller's variable. |
-| 6 | T | A declaration makes the name and parameter types known before the definition. |
-| 7 | T | `for (int x : a)` visits each element in order with no index. |
-| 8 | F | The first index ranges over rows and the second over columns; a built-in array checks neither at run time. |
-| 9 | T | `getline` reads up to the newline, spaces included, unlike `>>`. |
-| 10 | F | A call that moves away from every base case never reaches one: the recursion runs until the stack overflows. |
+*Write T or F, with a one-line reason naming the C++ rule.*
+
+| Q | Statement | Answer | Reason |
+|---|---|---|---|
+| 1 | After `double x = 7 / 2;`, `x` stores `3.5`. | F | `7 / 2` is integer division (3), so `x` stores 3.0. |
+| 2 | `++i` and `i++` always produce the same value when used inside a larger expression. | F | `++i` yields the new value; `i++` yields the old value. |
+| 3 | In an `if`–`else if`–`else` chain, at most one branch executes. | T | The first true condition's branch runs and the rest are skipped. |
+| 4 | A `while` loop can execute zero times. | T | The condition is tested first; if it is false, the body never runs. |
+| 5 | A reference parameter can modify the caller's variable. | T | A reference is an alias, so assigning through it changes the caller's variable. |
+| 6 | A function declaration allows a call to appear before the function definition. | T | A declaration makes the name and parameter types known before the definition. |
+| 7 | A range-based `for` can visit every element of an array without manually writing an index. | T | `for (int x : a)` visits each element in order with no index. |
+| 8 | In a two-dimensional array `a[r][c]`, both indices are checked against the row count. | F | The first index ranges over rows and the second over columns; a built-in array checks neither at run time. |
+| 9 | `getline(cin, s)` can read spaces into `s`. | T | `getline` reads up to the newline, spaces included, unlike `>>`. |
+| 10 | A recursive call that moves away from every base case can still be guaranteed to terminate. | F | A call that moves away from every base case never reaches one: the recursion runs until the stack overflows. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · Section B question: Match the concepts
+
+*Match each term in Column A with the most appropriate description in Column B.*
+
+| # | Column A | | Column B |
+|---|---|---|---|
+| 1 | `do-while` | A | Copies an argument into a local parameter |
+| 2 | Pass by value | B | Executes the body before testing the condition |
+| 3 | Function overload | C | Same name with distinguishable parameter lists |
+| 4 | `std::array` | D | Fixed-size sequence whose size is part of its type |
+| 5 | `push_back` | E | Appends one element to a vector |
+| 6 | `at(i)` | F | Checked element access |
+| 7 | Nested loops | G | Natural traversal tool for rows and columns |
+| 8 | `getline` | H | Reads a full line including spaces |
+| 9 | `substr(pos,len)` | I | Extracts part of a string |
+| 10 | Stack frame | J | Stores one active function call's locals and parameters |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · Section B: Match the concepts
@@ -487,6 +617,37 @@ int main() {
 | 8 · `getline` | H | Reads a full line including spaces |
 | 9 · `substr(pos,len)` | I | Extracts part of a string |
 | 10 · Stack frame | J | Stores one active function call's locals and parameters |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · C1 question: Search an array using a function (8 marks)
+
+Complete `firstIndex` so that it returns the index of the first element of `a` equal to `key`, or `-1` when no element matches. Complete `main` so that it searches for `9`, prints the index it gets back (or `missing` when the result is `-1`), then prints one newline and returns the value that signals success.
+
+~~~cpp
+#include <array>
+#include <iostream>
+using namespace std;
+
+int firstIndex(const array<int,6>& a, int key) {
+    for (size_t i = 0; i < __________________; ++i) { // 1
+        if (a[i] == ________________________) {       // 2
+            return static_cast<int>(________);       // 3
+        }
+    }
+    return __________________________________;       // 4
+}
+
+int main() {
+    array<int,6> a{4, 9, 2, 9, 7, 1};
+    int p = firstIndex(________________________);     // 5
+    if (p != -1) cout << ______________________;      // 6
+    else cout << "missing";
+    cout << _________________________________;       // 7
+    return __________________________________;       // 8
+}
+~~~
+
+Expected output, exactly: `1` followed by a newline (9 first appears at index 1). `main` returns `0`.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · C1: Search an array using a function
@@ -516,6 +677,26 @@ int main() {
 - Blank 1 may also be `6`. Blank 7 may be `endl` or `"\n"`.
     </textarea></section>
     <section data-markdown><textarea data-template>
+## Set B · C2 question: Recursive power (6 marks)
+
+Complete `power` so that `power(base, exp)` returns <code>base<sup>exp</sup></code> for `exp` ≥ 0 using recursion. Complete `main` so that it prints 3<sup>3</sup>, then one newline, and returns the value that signals success.
+
+~~~cpp
+int power(int base, int exp) {
+    if (exp == 0) return ______________________;      // 1
+    return __________________ * power(base, ______); // 2, 3
+}
+
+int main() {
+    int value = power(3, _____________________);      // 4
+    cout << _________________________________;       // 5
+    return __________________________________;       // 6
+}
+~~~
+
+Expected output, exactly: `27` followed by a newline. `main` returns `0`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
 ## Set B · C2: Recursive power
 
 ~~~cpp
@@ -534,6 +715,33 @@ int main() {
 - The base case returns 1, because any base to the power 0 is 1. Returning 0 would make every product 0.
 - `exp - 1` moves each call toward the base case.
 - Blank 5 may also be `value << endl`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Set B · C3 question: Vector totals and a string length (6 marks)
+
+Complete `main` so that `marks` holds `72` and then `65`, `total` holds the sum of all its elements, and the program prints the number of characters in `label`, a space, `total`, and a newline, then returns the value that signals success.
+
+~~~cpp
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> marks;
+    marks.________________________(72);              // 1
+    marks.________________________(65);              // 2
+    int total = 0;
+    for (size_t i = 0; i < marks.________(); ++i) {  // 3
+        total += marks[_________________________];   // 4
+    }
+    string label = "Total";
+    cout << label.________() << ' ' << total << '\n'; // 5
+    return _________________________________;         // 6
+}
+~~~
+
+Expected output, exactly: `5 137` followed by a newline. `main` returns `0`.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · C3: Vector totals and a string length
@@ -559,50 +767,56 @@ int main() {
     <section data-markdown><textarea data-template>
 ## Set B · Section D: Does it compile, and what happens?
 
-| Q | Compiles | Then |
-|---|---|---|
-| 1 | N | A string literal cannot initialize an `int`. |
-| 2 | Y | Prints `5`. |
-| 3 | Y | Prints `6`: 1 × 1 × 2 × 3, and the loop stops before 4. |
-| 4 | Y | Prints `3`: `bump` takes a reference. |
-| 5 | N | The two `f` functions differ only in return type, so the second is a redefinition. |
-| 6 | Y | Stops with an exception: `at(5)` on a 3-character string throws `std::out_of_range`. |
-| 7 | Y | Prints `12345`. |
-| 8 | Y | Prints `2`. |
-| 9 | N | `rows` is not a constant expression, so `m[rows][3]` is not standard C++17. g++ and clang accept it only as a compiler extension. |
-| 10 | Y | Prints `abc`: the 3 characters before the dash. |
+*Each snippet sits inside `main` with the needed headers. Write Y or N; if it compiles, give the exact output, “infinite loop”, or “stops with an exception”.*
+
+| Q | Snippet | Compiles | Then |
+|---|---|---|---|
+| 1 | `int x = "hello"; cout << x;` | N | A string literal cannot initialize an `int`. |
+| 2 | `int a[2]{4,5}; cout << a[1];` | Y | Prints `5`. |
+| 3 | `int f = 1; for (int i = 1; i < 4; ++i) f *= i; cout << f;` | Y | Prints `6`: 1 × 1 × 2 × 3, and the loop stops before 4. |
+| 4 | `int a = 2; bump(a); cout << a;` where `void bump(int& x) { ++x; }` is defined above `main`. | Y | Prints `3`: `bump` takes a reference. |
+| 5 | `cout << f(3);` where `int f(int n) { return n; }` and `double f(int n) { return n; }` are both defined above `main`. | N | The two `f` functions differ only in return type, so the second is a redefinition. |
+| 6 | `string s = "abc"; cout << s.at(5);` | Y | Stops with an exception: `at(5)` on a 3-character string throws `std::out_of_range`. |
+| 7 | `int a[5]{1,2,3,4,5}; for (int i = 0; i < 5; ++i) cout << a[i];` | Y | Prints `12345`. |
+| 8 | `vector<int> v{1,2}; cout << v.at(1);` | Y | Prints `2`. |
+| 9 | `int rows = 2; int m[rows][3]; cout << rows;` | N | `rows` is not a constant expression, so `m[rows][3]` is not standard C++17. g++ and clang accept it only as a compiler extension. |
+| 10 | `string s = "abc-def"; size_t p = s.find('-'); cout << s.substr(0, p);` | Y | Prints `abc`: the 3 characters before the dash. |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · Section E: Output and final values
 
-| Q | Answer | Why |
-|---|---|---|
-| 1 | a = 6, b = 8 | `++a` yields the new value 6. |
-| 2 | y = 2 | 17 = 3 × 5 + 2. |
-| 3 | n = 3 | The body runs before each test: `n` goes 1, 2, 3, then the test fails. |
-| 4 | s = 3 | 0 + 1 + 2; `break` at `i == 3` happens before 3 is added. |
-| 5 | a = 2, b = 7 | `x` is a copy; only the returned value carries the change. |
-| 6 | 6 | 3 + 2 + 1 + 0. |
-| 7 | m = 1 | The running minimum of 5, 1, 4. |
-| 8 | 5 | `m[0][1]` is 2 and `m[1][0]` is 3. |
-| 9 | 4 | Index 0 holds 2 and index 1 holds 4. |
-| 10 | `2` | `'1'` is at index 2 of `CS103`. |
+*Give the requested result.*
+
+| Q | Code and value asked | Answer | Why |
+|---|---|---|---|
+| 1 | `int a=5; int b=++a + 2;` → `a`, `b` | a = 6, b = 8 | `++a` yields the new value 6. |
+| 2 | `int x=17; int y=x%5;` → `y` | y = 2 | 17 = 3 × 5 + 2. |
+| 3 | `int n=0; do{++n;}while(n<3);` → `n` | n = 3 | The body runs before each test: `n` goes 1, 2, 3, then the test fails. |
+| 4 | `int s=0; for(int i=0;i<5;++i){if(i==3)break; s+=i;}` → `s` | s = 3 | 0 + 1 + 2; `break` at `i == 3` happens before 3 is added. |
+| 5 | `int f(int x){x+=5;return x;} int a=2; int b=f(a);` → `a`, `b` | a = 2, b = 7 | `x` is a copy; only the returned value carries the change. |
+| 6 | `int f(int n){if(n==0)return 0; return n+f(n-1);}` → `f(3)` | 6 | 3 + 2 + 1 + 0. |
+| 7 | `array<int,3> a{5,1,4}; int m=a[0]; for(int x:a)if(x<m)m=x;` → `m` | m = 1 | The running minimum of 5, 1, 4. |
+| 8 | `int m[2][2]{{1,2},{3,4}};` → `m[0][1]+m[1][0]` | 5 | `m[0][1]` is 2 and `m[1][0]` is 3. |
+| 9 | `vector<int> v; v.push_back(2); v.push_back(4);` → `v[1]` | 4 | Index 0 holds 2 and index 1 holds 4. |
+| 10 | `string s="CS103"; cout << s.find('1');` → output | `2` | `'1'` is at index 2 of `CS103`. |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Set B · Section F: Bonus trivia
 
-| Q | Answer |
-|---|---|
-| 1 | Unix |
-| 2 | B |
-| 3 | Guido van Rossum |
-| 4 | Java |
-| 5 | Alan Turing (the Turing machine) |
-| 6 | GNU Compiler Collection (originally the GNU C Compiler) |
-| 7 | Linus Torvalds |
-| 8 | American Standard Code for Information Interchange |
-| 9 | Rust |
-| 10 | Go |
+*Bonus: one mark each; the paper is capped at 60.*
+
+| Q | Question | Answer |
+|---|---|---|
+| 1 | C was created at Bell Labs to write which operating system? | Unix |
+| 2 | C took its name from its predecessor; what was that language called? | B |
+| 3 | Who designed the Python language? | Guido van Rossum |
+| 4 | Which widely used language is named after a kind of coffee? | Java |
+| 5 | Who proposed the abstract machine, in 1936, that every modern computer is measured against? | Alan Turing (the Turing machine) |
+| 6 | What do the letters GCC stand for? | GNU Compiler Collection (originally the GNU C Compiler) |
+| 7 | Who wrote the first version of the Linux kernel, as a student in 1991? | Linus Torvalds |
+| 8 | What does the acronym ASCII stand for? | American Standard Code for Information Interchange |
+| 9 | Which 2010s language, sponsored by Mozilla, has a crab as its mascot? | Rust |
+| 10 | Ken Thompson and Rob Pike, both of Unix fame, designed which language at Google in 2009? | Go |
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## Questions about the midsem (1)
