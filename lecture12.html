@@ -29,25 +29,18 @@ int divide(int numerator, int denominator) {
     return numerator / denominator;
 }
 
-void testDivide() {               // test driver
-    assert(divide(7, 2) == 3);    // integer division
-    assert(divide(-7, 2) == -3);  // truncates toward zero
-    assert(divide(0, 5) == 0);    // zero numerator is fine
-}
-
 int main() {
-    testDivide();
-    std::cout << "all tests passed\n";
+    std::cout << divide(7, 2) << '\n';    // pre-condition holds: prints 3
     std::cout << divide(10, 0) << '\n';   // violates the pre-condition
 }
 ~~~
 
 ~~~text
-all tests passed
+3
 Assertion failed: (denominator != 0), function divide, file div.cpp, line 6.
 ~~~
 
-The program aborts at the violated pre-condition instead of dividing by zero. On Linux, glibc prints <code>div: div.cpp:6: int divide(int, int): Assertion &#96;denominator != 0' failed.</code> When output goes to an IDE panel or a pipe, the assertion message may appear before <code>all tests passed</code>.
+The program aborts at the violated pre-condition instead of dividing by zero. On Linux, glibc prints <code>div: div.cpp:6: int divide(int, int): Assertion &#96;denominator != 0' failed.</code>
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="12" data-markdown><textarea data-template>
 ## The assert macro and a test driver
@@ -77,6 +70,39 @@ void <test name>() {                                  // one test = one claim
 | `NDEBUG` | Defined (e.g. `-DNDEBUG`), it removes every assert. Never put work the program needs inside one. |
 
 A test that cannot fail proves nothing: write the input whose expected answer you knew before you ran the program.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Test divide with a test driver
+
+~~~cpp
+#include <cassert>
+#include <iostream>
+
+// pre-condition: denominator != 0
+int divide(int numerator, int denominator) {
+    assert(denominator != 0);
+    return numerator / denominator;
+}
+
+void testDivide() {               // test driver
+    assert(divide(7, 2) == 3);    // integer division
+    assert(divide(-7, 2) == -3);  // truncates toward zero
+    assert(divide(0, 5) == 0);    // zero numerator is fine
+}
+
+int main() {
+    testDivide();
+    std::cout << "all tests passed\n";
+    std::cout << divide(10, 0) << '\n';   // violates the pre-condition
+}
+~~~
+
+~~~text
+all tests passed
+Assertion failed: (denominator != 0), function divide, file div.cpp, line 6.
+~~~
+
+The program aborts at the violated pre-condition instead of dividing by zero. When output goes to an IDE panel or a pipe, the assertion message may appear before <code>all tests passed</code>.
     </textarea></section>
     <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
 ## Check pre-conditions with assert, user input with if · Average marks without dividing by zero
