@@ -47,7 +47,7 @@ all tests passed
 Assertion failed: (denominator != 0), function divide, file div.cpp, line 6.
 ~~~
 
-The program aborts at the violated pre-condition instead of dividing by zero. On Linux, g++ prints <code>Assertion &#96;denominator != 0' failed</code> with the same file and line.
+The program aborts at the violated pre-condition instead of dividing by zero. On Linux, glibc prints <code>div: div.cpp:6: int divide(int, int): Assertion &#96;denominator != 0' failed.</code> When output goes to an IDE panel or a pipe, the assertion message may appear before <code>all tests passed</code>.
     </textarea></section>
     <section class="course-extra-slide course-syntax-slide" data-course-syntax="12" data-markdown><textarea data-template>
 ## The assert macro and a test driver
@@ -72,7 +72,7 @@ void <test name>() {                                  // one test = one claim
 | --- | --- |
 | `assert(<pre-condition>)` | Checks a caller obligation at run time. It aborts on failure, so the error is reported where it was detected. |
 | `<known input>` | An input whose correct answer you worked out by hand, independently of the code. |
-| `<boundary value>` | The empty, smallest, largest, or just-invalid input, where off-by-one and precision errors live. |
+| `<boundary value>` | The smallest, largest, or just-valid input, where off-by-one and precision errors live. Invalid input belongs to the pre-condition, not to a test. |
 | failure | An assert prints the expression, file, and line, then aborts. That location is where the error was detected, not necessarily its cause. |
 | `NDEBUG` | Defined (e.g. `-DNDEBUG`), it removes every assert. Never put work the program needs inside one. |
 
@@ -154,7 +154,7 @@ Fix the first error first: later messages are often caused by it.
 ~~~cpp
 std::vector<int> values{4, 7, 2};   // expected total: 13
 int total = 0;
-for (int i = 1; i < 3; ++i) {       // prints 9
+for (int i = 1; i < 3; ++i) {       // total ends at 9
     total += values[i];
 }
 ~~~
@@ -176,13 +176,13 @@ For an average function, test:
 
 | Test case | Error it can expose |
 |---|---|
-| empty input | violated pre-condition: no average exists |
+| empty input | violated pre-condition: the assert aborts, so this is not a test case |
 | one value | smallest valid size |
 | two unequal integers | integer division |
 | values near <code>INT_MAX</code> | overflow in an <code>int</code> sum |
 | maximum expected count | wrong loop bound |
 
-Write each test case as an <code>assert</code>: a debug run stops at the first one that fails.
+Write each valid test case as an <code>assert</code>: a debug run stops at the first one that fails.
     </textarea></section>
     <section data-markdown><textarea data-template>
 ## The corrected average function
@@ -237,7 +237,7 @@ Each Section D answer names a kind of error:
 
 | Key says | Kind of error |
 |---|---|
-| Compiles: N | compile-time error |
+| Compiles: N | compile-time error (Set A D4, a call with no declaration, is compile-time, not link-time) |
 | Compiles: Y, then an exception | run-time error |
 | Compiles: Y, then an unintended loop or value | logic error |
 
@@ -411,7 +411,7 @@ int main() {
 | 5 | T | A reference is an alias, so assigning through it changes the caller's variable. |
 | 6 | T | A declaration makes the name and parameter types known before the definition. |
 | 7 | T | `for (int x : a)` visits each element in order with no index. |
-| 8 | F | `r` is checked against the row count and `c` against the column count; a built-in array checks neither at run time. |
+| 8 | F | The first index ranges over rows and the second over columns; a built-in array checks neither at run time. |
 | 9 | T | `getline` reads up to the newline, spaces included, unlike `>>`. |
 | 10 | F | A call that moves away from every base case never reaches one: the recursion runs until the stack overflows. |
     </textarea></section>
@@ -548,7 +548,7 @@ int main() {
 | 10 | Go |
     </textarea></section>
     <section class="course-extra-slide lab-practice-slide" data-course-practice="12" data-markdown><textarea data-template>
-## Solve five problems to transfer Average marks without dividing by zero
+## Lab practice: errors, debugging, and testing
 
 **IC151 lab practice · 5 problems**
 
