@@ -950,7 +950,10 @@
         label.className = 'course-continuation-label';
         label.textContent = `Part ${part}`;
         const heading = document.createElement(sourceHeading ? sourceHeading.tagName : 'h2');
-        const sourceTitle = sourceHeading ? (sourceHeading.querySelector('.course-heading-subtitle') ? sourceHeading.firstChild.textContent : sourceHeading.textContent) : lectureMeta.title;
+        // Title text only: drop the subtitle, an earlier suffix, and defined-term tooltips.
+        const titleOnly = sourceHeading?.cloneNode(true);
+        titleOnly?.querySelectorAll('.course-heading-subtitle, .course-heading-suffix, .course-term-tooltip').forEach((node) => node.remove());
+        const sourceTitle = titleOnly ? titleOnly.textContent : lectureMeta.title;
         heading.textContent = sourceTitle.replace(/\s+· continued.*$/i, '').trim();
         const suffix = document.createElement('span');
         suffix.className = 'course-heading-suffix';

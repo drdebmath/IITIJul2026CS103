@@ -1847,3 +1847,60 @@ body.course-modern .reveal .course-quiz-answered .is-chosen:not(.is-correct) {
 .course-trivia-slide ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7em; }
 .course-trivia-slide li { padding: 0.75em 1em; border-left: 4px solid var(--course-accent, #b45309); background: rgba(180, 83, 9, 0.07); border-radius: 0 10px 10px 0; line-height: 1.45; }
 html[data-course-theme="dark"] .course-trivia-slide li { background: rgba(255, 190, 120, 0.1); }
+
+/* Story slide: text beside a portrait photo, one block so pagination keeps them together. */
+.course-story-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30%);
+    gap: 1.4em;
+    align-items: start;
+}
+
+.course-story-figure {
+    margin: 0;
+}
+
+body.course-modern .course-story-figure img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 440px !important;
+    object-fit: contain;
+    border: 1px solid var(--course-line) !important;
+}
+
+.course-story-figure figcaption {
+    margin-top: 0.4em;
+    color: var(--course-muted);
+    font-size: 0.5em;
+    line-height: 1.35;
+}
+
+/* Slido join QR with the event code, bottom-right of a poll slide, beside the short options list;
+   absolute so it never moves the poll onto a second page. */
+body.course-modern .reveal .course-slido-qr {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 220px;
+    margin: 0;
+    padding: 10px 10px 6px;
+    border-radius: 12px;
+    background: #fff;
+    color: #182033;
+    text-align: center;
+}
+
+body.course-modern .reveal .course-slido-qr img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 0;
+    box-shadow: none !important;
+}
+
+.course-slido-qr figcaption {
+    margin-top: 4px;
+    font-size: 0.5em;
+    font-weight: 800;
+}

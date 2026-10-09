@@ -3,94 +3,767 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 13: Group state and validate addresses">
-    <title>Lecture 13: Group state and validate addresses</title>
+    <meta name="description" content="CS103 Lecture 13: Structures and Pointers">
+    <title>Lecture 13: Structures and Pointers</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 13: Group state and validate addresses
-## Group related state and inspect addresses safely
+# Lecture 13: Structures and Pointers
+## Define a struct type, and check a pointer before you dereference it
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A struct keeps the fields of one record coherent
+## Example: a struct · One record, several named data members
 
 ~~~cpp
+#include <iostream>
+
 struct Reading {
     int sensorId;
     double value;
     bool valid;
 };
 
-Reading sample{7, 31.5, true};
-~~~
-
-Member names keep related values coherent.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## An array of records keeps repeated domain objects together
-
-~~~cpp
-std::array<Reading, 3> samples{{
-    {1, 30.1, true}, {2, 29.8, true}, {3, 0.0, false}
-}};
-
-for (const Reading& reading : samples) {
-    if (reading.valid) std::cout << reading.value << '\n';
+int main() {
+    Reading sample{7, 31.5, true};
+    std::cout << "sensor " << sample.sensorId << ": " << sample.value << '\n';
+    sample.value = 32.0;                       // change one member
+    std::cout << "now " << sample.value << '\n';
 }
 ~~~
+
+~~~text
+sensor 7: 31.5
+now 32
+~~~
+
+One <code>Reading</code> object holds three data members. The dot operator accesses a member by name.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A pointer stores where an object lives
+## An array of structs · Many records of one type, stored together
+
+~~~cpp
+#include <array>
+#include <iostream>
+
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+int main() {
+    std::array<Reading, 3> samples{{
+        {1, 30.1, true}, {2, 29.8, true}, {3, 0.0, false}
+    }};
+    for (const Reading& reading : samples) {
+        if (reading.valid) std::cout << reading.sensorId << ": " << reading.value << '\n';
+    }
+}
+~~~
+
+~~~text
+1: 30.1
+2: 29.8
+~~~
+
+<svg class="course-array-address-figure course-struct-array-figure" viewBox="0 0 900 250" role="img" aria-label="An array of three Reading records stored contiguously. samples[0] starts at byte 0, samples[1] at byte 24, samples[2] at byte 48, each record 24 bytes, ending at byte 72." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-struct-array-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-struct-array-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-struct-array-figure .r0 { fill: rgba(142, 232, 216, 0.18); }
+    .course-struct-array-figure .r1 { fill: rgba(255, 214, 102, 0.22); }
+    .course-struct-array-figure .m { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: 0.6; }
+    .course-struct-array-figure .dim { opacity: 0.65; }
+  </style>
+  <rect class="cell r0" x="30" y="60" width="280" height="80"/>
+  <rect class="m" x="38" y="88" width="64" height="44"/><rect class="m" x="106" y="88" width="104" height="44"/><rect class="m" x="214" y="88" width="88" height="44"/>
+  <text x="170" y="80" font-size="17" font-weight="700" text-anchor="middle">samples[0]</text>
+  <text x="70" y="116" font-size="15" text-anchor="middle">int</text><text x="158" y="116" font-size="15" text-anchor="middle">double</text><text x="258" y="116" font-size="15" text-anchor="middle">bool</text>
+  <text class="dim" x="30" y="168" font-size="16" text-anchor="middle">0</text>
+  <rect class="cell r1" x="310" y="60" width="280" height="80"/>
+  <rect class="m" x="318" y="88" width="64" height="44"/><rect class="m" x="386" y="88" width="104" height="44"/><rect class="m" x="494" y="88" width="88" height="44"/>
+  <text x="450" y="80" font-size="17" font-weight="700" text-anchor="middle">samples[1]</text>
+  <text x="350" y="116" font-size="15" text-anchor="middle">int</text><text x="438" y="116" font-size="15" text-anchor="middle">double</text><text x="538" y="116" font-size="15" text-anchor="middle">bool</text>
+  <text class="dim" x="310" y="168" font-size="16" text-anchor="middle">24</text>
+  <rect class="cell r0" x="590" y="60" width="280" height="80"/>
+  <rect class="m" x="598" y="88" width="64" height="44"/><rect class="m" x="666" y="88" width="104" height="44"/><rect class="m" x="774" y="88" width="88" height="44"/>
+  <text x="730" y="80" font-size="17" font-weight="700" text-anchor="middle">samples[2]</text>
+  <text x="630" y="116" font-size="15" text-anchor="middle">int</text><text x="718" y="116" font-size="15" text-anchor="middle">double</text><text x="818" y="116" font-size="15" text-anchor="middle">bool</text>
+  <text class="dim" x="590" y="168" font-size="16" text-anchor="middle">48</text>
+  <text class="dim" x="870" y="168" font-size="16" text-anchor="middle">72</text>
+  <text x="450" y="30" font-size="18" font-weight="700" text-anchor="middle">std::array&lt;Reading, 3&gt; samples: 3 x 24 = 72 bytes</text>
+  <text class="dim" x="450" y="205" font-size="16" text-anchor="middle">each record is one whole Reading, padding included</text>
+  <text class="dim" x="450" y="232" font-size="16" text-anchor="middle">byte offset of each record = index x sizeof(Reading)</text>
+</svg>
+
+Each element is a whole <code>Reading</code>. The <code>const</code> reference reads each one without copying it, and the <code>valid</code> member decides which to print.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A pointer holds an address · The address-of operator &amp; gives an object's address
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int score = 95;
+    int* scorePointer = &score;          // holds the address of score
+    *scorePointer += 5;                  // dereference: reach score through the pointer
+    std::cout << score << '\n';
+    std::cout << (scorePointer == &score) << '\n';
+    int* none = nullptr;                 // points to no object
+    std::cout << (none == nullptr) << '\n';
+}
+~~~
+
+~~~text
+100
+1
+1
+~~~
+
+<svg class="course-array-address-figure course-pointer-address-figure" viewBox="0 0 900 240" role="img" aria-label="Two separate boxes. The box scorePointer, at illustrative address 2000, holds the value 1000. An arrow from it points to the box score, at address 1000, which holds 100. The address-of operator &amp;score produces 1000; dereferencing *scorePointer reaches score." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-pointer-address-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-pointer-address-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-pointer-address-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-pointer-address-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-pointer-address-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-pointer-arrow-addr); }
+    .course-pointer-address-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-pointer-address-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-pointer-arrow-addr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="120" y="66" font-size="18" font-weight="700">scorePointer</text>
+  <text x="590" y="66" font-size="18" font-weight="700">score</text>
+  <rect class="cell heap" x="120" y="80" width="180" height="70"/>
+  <rect class="cell obj" x="590" y="80" width="180" height="70"/>
+  <text x="210" y="124" font-size="26" text-anchor="middle">1000</text>
+  <text x="680" y="124" font-size="26" text-anchor="middle">100</text>
+  <path class="arrow" d="M300 115 H584"/>
+  <text x="442" y="100" font-size="18" text-anchor="middle">*scorePointer</text>
+  <text x="442" y="142" font-size="16" text-anchor="middle" class="dim">dereference</text>
+  <text x="210" y="176" font-size="16" text-anchor="middle" class="dim">at 2000</text>
+  <text x="680" y="176" font-size="16" text-anchor="middle" class="dim">at 1000</text>
+  <text x="120" y="212" font-size="18">&amp;score is 1000: the address stored in the pointer</text>
+  <text x="780" y="30" font-size="15" text-anchor="end" class="dim">addresses are illustrative</text>
+</svg>
+
+The pointer is a separate object. <code>&score</code> obtains the address of <code>score</code>; <code>*scorePointer</code> is the object at that address.
+    </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="13" data-markdown><textarea data-template>
+## Structs and pointers: the general forms
+
+~~~cpp
+struct <TypeName> {                    // define a record type
+    <type> <member>;                   // one member per line
+    <type> <member>;
+};
+
+<TypeName> <object>{<value>, <value>}; // members initialized in order
+<object>.<member>                      // access a member of an object
+
+<type>* <pointer> = &<object>;         // pointer to an object of <type>
+<type>* <pointer> = nullptr;           // pointer to no object
+*<pointer>                             // dereference: the object pointed to
+<pointer>-><member>                    // same as (*<pointer>).<member>
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| `struct` | Defines a new type from members. The closing `;` is required. |
+| `.` | Member access through an object (or a reference). |
+| `&<object>` | Address-of: the address where the object lives. |
+| `*<pointer>` | Dereference: access the pointed-to object. Valid only when the pointer holds the address of a live object. |
+| `->` | Member access through a pointer. |
+| `nullptr` | The null pointer: it points to no object. Never dereference it. |
+
+A pointer that might be null must be checked before it is dereferenced.
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hamilton" data-markdown><textarea data-template>
+## Margaret Hamilton · She led the Apollo on-board flight software
+
+<div class="course-story-layout">
+<div>
+
+- Director of the Software Engineering Division at the MIT Instrumentation Laboratory.
+- She led the team that wrote the on-board flight software for Apollo.
+- She coined the term “software engineering”.
+- Presidential Medal of Freedom, 22 November 2016.
+
+Software that flies a spacecraft must survive surprises.
+
+</div>
+<figure class="course-story-figure">
+<img src="assets/lecture-stories/margaret-hamilton-1969.jpg" alt="Margaret Hamilton in 1969, standing beside printed listings of the Apollo flight software." width="960" height="1194" loading="lazy">
+<figcaption>Hamilton beside listings of the Apollo flight software, 1969. Photo: MIT Instrumentation Laboratory (Draper), public domain.</figcaption>
+</figure>
+</div>
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hamilton" data-markdown><textarea data-template>
+## Apollo 11, 20 July 1969 · Program alarms 1202 and 1201 during the descent
+
+- During the descent the guidance computer raised program alarms 1202 and 1201: “executive overflow”.
+- The computer had more jobs than it could finish in real time. A radar switch position made it process rendezvous radar data it did not need, “stealing” computer cycles.
+- The software was built to cope: it dropped lower-priority jobs and restarted the important ones, so landing guidance kept running.
+- Mission Control said “go”, and Eagle landed.
+
+The software detected the overload and recovered instead of continuing blindly.
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hamilton" data-markdown><textarea data-template>
+## Check input before you use it · The P01 story
+
+- Hamilton's daughter Lauren, playing in the flight simulator, keyed the prelaunch program P01 during a simulated flight. It wiped the navigation data.
+- Hamilton asked for a check that would stop this. NASA declined to add it, so she added a program note: “Do not select P01 during flight.”
+- On Apollo 8, in December 1968, Jim Lovell selected P01 in flight and erased the navigation data. Houston uploaded new navigation data.
+
+**Lesson:** check input before you use it. For a pointer, that means checking for <code>nullptr</code> before you dereference it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Check before you dereference · A pointer must point to an object
 
 ~~~cpp
 int score = 95;
 int* scorePointer = &score;
-~~~
+int* none = nullptr;
 
-The pointer is a separate object. <code>&score</code> obtains the address of <code>score</code>.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Dereference only a pointer proved valid
-
-~~~cpp
 if (scorePointer != nullptr) {
-    *scorePointer += 5;
+    *scorePointer += 5;           // safe: it points to score
+}
+
+if (none != nullptr) {
+    *none = 0;                    // skipped: no object to reach
+} else {
+    std::cout << "no object\n";
 }
 ~~~
 
-Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object.”
+<svg class="course-array-address-figure course-null-pointer-figure" viewBox="0 0 900 250" role="img" aria-label="Top: a pointer box holding an address with an arrow to the object score; dereferencing is allowed. Bottom: a pointer box named none holding nullptr with no arrow, ending in a ground symbol; it points to no object, so it must not be dereferenced." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-null-pointer-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-null-pointer-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-null-pointer-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-null-pointer-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-null-pointer-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-pointer-arrow-null); }
+    .course-null-pointer-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-null-pointer-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-pointer-arrow-null" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <rect class="cell heap" x="20" y="30" width="170" height="60"/>
+  <text x="105" y="67" font-size="18" text-anchor="middle">scorePointer</text>
+  <path class="arrow" d="M190 60 H330"/>
+  <rect class="cell obj" x="336" y="30" width="110" height="60"/>
+  <text x="391" y="67" font-size="20" text-anchor="middle">score</text>
+  <text x="480" y="60" font-size="18">points to an object:</text><text x="480" y="86" font-size="18">*scorePointer is allowed</text>
+  <rect class="cell heap" x="20" y="140" width="170" height="60"/>
+  <text x="105" y="177" font-size="18" text-anchor="middle">none</text>
+  <text x="210" y="177" font-size="18">nullptr</text>
+  <path class="line" d="M330 170 H370 M370 150 V190 M382 157 V183 M394 164 V176"/>
+  <text x="480" y="170" font-size="18">points to no object:</text>
+  <text x="480" y="196" font-size="18">do not dereference</text>
+</svg>
+
+- Dereferencing accesses the pointed-to object. <code>nullptr</code> explicitly means “no object”.
+- Dereferencing a null pointer is undefined behavior. On a typical desktop system it crashes, but the language does not promise that.
+- Initialize every pointer: to the address of an object, or to <code>nullptr</code>.
     </textarea></section>
-    <section data-markdown><textarea data-template>
-## Dot selects through an object; arrow selects through a pointer
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Return a pointer when “not found” is an answer · Look up a sensor
 
 ~~~cpp
-Reading reading{7, 31.5, true};
-Reading* pointer = &reading;
+#include <array>
+#include <iostream>
 
-reading.value = 32.0;
-pointer->value = 32.5;  // same as (*pointer).value
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+// returns a pointer to the matching reading, or nullptr when there is none
+const Reading* findSensor(const std::array<Reading, 3>& readings, int id) {
+    for (const Reading& reading : readings) {
+        if (reading.sensorId == id) return &reading;
+    }
+    return nullptr;
+}
+
+int main() {
+    std::array<Reading, 3> samples{{
+        {1, 30.1, true}, {2, 29.8, true}, {3, 0.0, false}
+    }};
+    for (int id : {2, 3, 9}) {
+        const Reading* found = findSensor(samples, id);
+        if (found == nullptr) {
+            std::cout << "sensor " << id << ": not found\n";
+        } else if (!found->valid) {
+            std::cout << "sensor " << id << ": invalid reading\n";
+        } else {
+            std::cout << "sensor " << id << ": " << found->value << '\n';
+        }
+    }
+}
 ~~~
+
+| Sensor | Output |
+|---|---|
+| 2 | <code>sensor 2: 29.8</code> |
+| 3 | <code>sensor 3: invalid reading</code> |
+| 9 | <code>sensor 9: not found</code> |
+
+**Takeaways**
+
+- “Not found” is a normal outcome of a search, so the caller checks the result with <code>if</code>.
+- The pointer points into <code>samples</code>, which outlives the call, so it stays valid.
+- Check <code>nullptr</code> before <code>found-&gt;valid</code>: the <code>else if</code> is reached only when <code>found</code> is not null.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Layout, alignment, and pointer arithmetic affect safety
+## Member access · Dot through an object, arrow through a pointer
 
-Compilers may insert padding so members satisfy alignment constraints. Use <code>sizeof</code> and <code>offsetof</code> to inspect a specific implementation.
+~~~cpp
+#include <iostream>
 
-Pointer arithmetic is valid only within one array object (or one-past its end). Prefer indexed or range-based traversal.
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+int main() {
+    Reading reading{7, 31.5, true};
+    Reading* pointer = &reading;
+
+    reading.value = 32.0;       // dot: through the object
+    pointer->value = 32.5;      // arrow: through the pointer
+    (*pointer).value += 0.5;    // the same thing, spelled out
+    std::cout << reading.value << '\n';
+}
+~~~
+
+~~~text
+33
+~~~
+
+<svg class="course-array-address-figure course-member-access-figure" viewBox="0 0 900 320" role="img" aria-label="An object reading with three member cells: sensorId 7, value 31.5, valid true. The dot operator reading.value selects the value cell directly from the object. A separate box pointer holds the address of reading and has an arrow to it; the arrow operator pointer->value reaches the same value cell and equals (*pointer).value." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-member-access-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-member-access-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-member-access-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-member-access-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-member-access-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; marker-end: url(#course-pointer-arrow-member); }
+    .course-member-access-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-member-access-figure .dim { opacity: 0.65; }
+  </style>
+  <defs><marker id="course-pointer-arrow-member" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+  <text x="20" y="143" font-size="18" font-weight="700">reading</text>
+  <rect class="cell obj" x="140" y="115" width="140" height="50"/>
+  <rect class="cell obj" x="280" y="115" width="140" height="50"/>
+  <rect class="cell obj" x="420" y="115" width="140" height="50"/>
+  <text x="210" y="146" font-size="17" text-anchor="middle">sensorId 7</text>
+  <text x="350" y="146" font-size="17" text-anchor="middle">value 31.5</text>
+  <text x="490" y="146" font-size="17" text-anchor="middle">valid true</text>
+  <path class="arrow" d="M350 62 V108"/>
+  <text x="350" y="46" font-size="18" text-anchor="middle">reading.value</text>
+  <text x="440" y="86" font-size="16" class="dim">dot: through the object</text>
+  <rect class="cell heap" x="280" y="250" width="140" height="50"/>
+  <text x="350" y="281" font-size="18" text-anchor="middle">pointer</text>
+  <text x="20" y="281" font-size="16" class="dim">holds the address</text>
+  <path class="arrow" d="M350 250 V172"/>
+  <text x="372" y="204" font-size="18">pointer->value</text>
+  <text x="372" y="228" font-size="18">(*pointer).value</text>
+  <text x="590" y="281" font-size="16" class="dim">arrow: through the pointer</text>
+</svg>
+
+`pointer->value` is shorthand for `(*pointer).value`. The parentheses are needed because `.` binds tighter than `*`.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 1: What is printed?
+
+<figure class="course-slido-qr"><img src="assets/slido-lecture13.svg" alt="QR code that opens the Lecture 13 Slido event." width="200" height="200"><figcaption>📊 sli.do · #2535743</figcaption></figure>
+
+~~~cpp
+int a = 4;
+int* p = &a;
+*p = *p + 1;
+std::cout << a;
+~~~
+
+- **A)** 4
+- **B)** 5
+- **C)** An address
+- **D)** Compile error
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Safe memory reasoning groups state and validates addresses
+## Passing a struct to a function · By value, by const reference, or by pointer
 
-- A struct creates one coherent record type.
-- An array of records stores repeated entities.
-- A pointer stores an address; dereferencing requires validity.
-- Check for <code>nullptr</code> before access.
-- Layout is implementation-specific and pointer arithmetic has strict bounds.
+~~~cpp
+void print(const Reading& reading) {            // read-only, no copy
+    std::cout << reading.sensorId << ": " << reading.value << '\n';
+}
+
+void scale(Reading& reading, double factor) {   // may change the caller's object
+    reading.value *= factor;
+}
+
+int main() {
+    Reading a{7, 31.5, true};
+    Reading b = a;                // copies every member
+    scale(b, 2.0);
+    print(a);
+    print(b);
+}
+~~~
+
+~~~text
+7: 31.5
+7: 63
+~~~
+
+- Assigning a struct copies every member, so <code>b</code> is independent of <code>a</code>.
+- Pass by <code>const</code> reference to read and by reference to modify, as in Lecture 8.
+- Use a pointer parameter only when “no object” is a legal argument: the function must then check for <code>nullptr</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A pointer parameter has a pre-condition · The pointer must not be null
+
+~~~cpp
+#include <cassert>
+#include <iostream>
+
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+// pre-condition: reading != nullptr
+void invalidate(Reading* reading) {
+    assert(reading != nullptr);
+    reading->valid = false;
+}
+
+int main() {
+    Reading r{7, 31.5, true};
+    invalidate(&r);
+    std::cout << r.valid << std::endl;
+    Reading* missing = nullptr;
+    invalidate(missing);                // violates the pre-condition
+}
+~~~
+
+~~~text
+0
+Assertion failed: (reading != nullptr), function invalidate, file reading.cpp, line 12.
+~~~
+
+The program aborts where the pre-condition is violated, instead of writing through a null pointer. The file name in the message is that of the compiled file. As in Lecture 12: <code>assert</code> for a caller's mistake, <code>if</code> for a situation the program expects.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Alignment and padding · A struct can be larger than the sum of its members
+
+~~~cpp
+#include <cstddef>
+#include <iostream>
+
+struct Reading {
+    int sensorId;
+    double value;
+    bool valid;
+};
+
+int main() {
+    std::cout << "sizeof(int) = " << sizeof(int) << '\n';
+    std::cout << "sizeof(double) = " << sizeof(double) << '\n';
+    std::cout << "sizeof(bool) = " << sizeof(bool) << '\n';
+    std::cout << "sizeof(Reading) = " << sizeof(Reading) << '\n';
+    std::cout << "offsetof sensorId = " << offsetof(Reading, sensorId) << '\n';
+    std::cout << "offsetof value = " << offsetof(Reading, value) << '\n';
+    std::cout << "offsetof valid = " << offsetof(Reading, valid) << '\n';
+}
+~~~
+
+~~~text
+sizeof(int) = 4
+sizeof(double) = 8
+sizeof(bool) = 1
+sizeof(Reading) = 24
+offsetof sensorId = 0
+offsetof value = 8
+offsetof valid = 16
+~~~
+
+<svg class="course-array-address-figure course-padding-figure" viewBox="0 0 900 400" role="img" aria-label="Byte layout of struct Reading on a typical 64-bit platform. Declared order int sensorId, double value, bool valid: sensorId at bytes 0 to 3, padding at 4 to 7, value at 8 to 15, valid at byte 16, padding at 17 to 23, total 24 bytes. Reordered double value, int sensorId, bool valid: value at 0 to 7, sensorId at 8 to 11, valid at 12, padding at 13 to 15, total 16 bytes." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-padding-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-padding-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-padding-figure .id { fill: rgba(142, 232, 216, 0.18); }
+    .course-padding-figure .dbl { fill: rgba(255, 214, 102, 0.22); }
+    .course-padding-figure .bl { fill: rgba(150, 170, 255, 0.22); }
+    .course-padding-figure .pad { fill: rgba(150, 150, 150, 0.3); stroke-dasharray: 5 4; opacity: 0.8; }
+    .course-padding-figure .edge { stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 4 4; opacity: 0.55; }
+    .course-padding-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="18" y="30" font-size="18" font-weight="700">int sensorId; double value; bool valid;  (declared order)</text>
+  <rect class="cell id" x="18" y="78" width="34" height="46"/>
+  <rect class="cell id" x="52" y="78" width="34" height="46"/>
+  <rect class="cell id" x="86" y="78" width="34" height="46"/>
+  <rect class="cell id" x="120" y="78" width="34" height="46"/>
+  <text x="86" y="70" font-size="16" text-anchor="middle">sensorId</text>
+  <rect class="cell pad" x="154" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="188" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="222" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="256" y="78" width="34" height="46"/>
+  <text x="222" y="70" font-size="16" text-anchor="middle" class="dim">padding</text>
+  <rect class="cell dbl" x="290" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="324" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="358" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="392" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="426" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="460" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="494" y="78" width="34" height="46"/>
+  <rect class="cell dbl" x="528" y="78" width="34" height="46"/>
+  <text x="426" y="70" font-size="16" text-anchor="middle">value</text>
+  <rect class="cell bl" x="562" y="78" width="34" height="46"/>
+  <text x="579" y="70" font-size="16" text-anchor="middle">valid</text>
+  <rect class="cell pad" x="596" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="630" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="664" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="698" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="732" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="766" y="78" width="34" height="46"/>
+  <rect class="cell pad" x="800" y="78" width="34" height="46"/>
+  <text x="715" y="70" font-size="16" text-anchor="middle" class="dim">padding</text>
+  <text class="dim" x="35" y="146" font-size="15" text-anchor="middle">0</text>
+  <text class="dim" x="69" y="146" font-size="15" text-anchor="middle">1</text>
+  <text class="dim" x="103" y="146" font-size="15" text-anchor="middle">2</text>
+  <text class="dim" x="137" y="146" font-size="15" text-anchor="middle">3</text>
+  <text class="dim" x="171" y="146" font-size="15" text-anchor="middle">4</text>
+  <text class="dim" x="205" y="146" font-size="15" text-anchor="middle">5</text>
+  <text class="dim" x="239" y="146" font-size="15" text-anchor="middle">6</text>
+  <text class="dim" x="273" y="146" font-size="15" text-anchor="middle">7</text>
+  <text class="dim" x="307" y="146" font-size="15" text-anchor="middle">8</text>
+  <text class="dim" x="341" y="146" font-size="15" text-anchor="middle">9</text>
+  <text class="dim" x="375" y="146" font-size="15" text-anchor="middle">10</text>
+  <text class="dim" x="409" y="146" font-size="15" text-anchor="middle">11</text>
+  <text class="dim" x="443" y="146" font-size="15" text-anchor="middle">12</text>
+  <text class="dim" x="477" y="146" font-size="15" text-anchor="middle">13</text>
+  <text class="dim" x="511" y="146" font-size="15" text-anchor="middle">14</text>
+  <text class="dim" x="545" y="146" font-size="15" text-anchor="middle">15</text>
+  <text class="dim" x="579" y="146" font-size="15" text-anchor="middle">16</text>
+  <text class="dim" x="613" y="146" font-size="15" text-anchor="middle">17</text>
+  <text class="dim" x="647" y="146" font-size="15" text-anchor="middle">18</text>
+  <text class="dim" x="681" y="146" font-size="15" text-anchor="middle">19</text>
+  <text class="dim" x="715" y="146" font-size="15" text-anchor="middle">20</text>
+  <text class="dim" x="749" y="146" font-size="15" text-anchor="middle">21</text>
+  <text class="dim" x="783" y="146" font-size="15" text-anchor="middle">22</text>
+  <text class="dim" x="817" y="146" font-size="15" text-anchor="middle">23</text>
+  <line class="edge" x1="18" y1="74" x2="18" y2="158"/>
+  <line class="edge" x1="290" y1="74" x2="290" y2="158"/>
+  <line class="edge" x1="562" y1="74" x2="562" y2="158"/>
+  <line class="edge" x1="834" y1="74" x2="834" y2="158"/>
+  <text x="844" y="108" font-size="18" font-weight="700">24 B</text>
+  <text x="18" y="210" font-size="18" font-weight="700">double value; int sensorId; bool valid;  (reordered)</text>
+  <rect class="cell dbl" x="18" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="52" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="86" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="120" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="154" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="188" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="222" y="258" width="34" height="46"/>
+  <rect class="cell dbl" x="256" y="258" width="34" height="46"/>
+  <text x="154" y="250" font-size="16" text-anchor="middle">value</text>
+  <rect class="cell id" x="290" y="258" width="34" height="46"/>
+  <rect class="cell id" x="324" y="258" width="34" height="46"/>
+  <rect class="cell id" x="358" y="258" width="34" height="46"/>
+  <rect class="cell id" x="392" y="258" width="34" height="46"/>
+  <text x="358" y="250" font-size="16" text-anchor="middle">sensorId</text>
+  <rect class="cell bl" x="426" y="258" width="34" height="46"/>
+  <text x="443" y="250" font-size="16" text-anchor="middle">valid</text>
+  <rect class="cell pad" x="460" y="258" width="34" height="46"/>
+  <rect class="cell pad" x="494" y="258" width="34" height="46"/>
+  <rect class="cell pad" x="528" y="258" width="34" height="46"/>
+  <text x="511" y="250" font-size="16" text-anchor="middle" class="dim">padding</text>
+  <text class="dim" x="35" y="326" font-size="15" text-anchor="middle">0</text>
+  <text class="dim" x="69" y="326" font-size="15" text-anchor="middle">1</text>
+  <text class="dim" x="103" y="326" font-size="15" text-anchor="middle">2</text>
+  <text class="dim" x="137" y="326" font-size="15" text-anchor="middle">3</text>
+  <text class="dim" x="171" y="326" font-size="15" text-anchor="middle">4</text>
+  <text class="dim" x="205" y="326" font-size="15" text-anchor="middle">5</text>
+  <text class="dim" x="239" y="326" font-size="15" text-anchor="middle">6</text>
+  <text class="dim" x="273" y="326" font-size="15" text-anchor="middle">7</text>
+  <text class="dim" x="307" y="326" font-size="15" text-anchor="middle">8</text>
+  <text class="dim" x="341" y="326" font-size="15" text-anchor="middle">9</text>
+  <text class="dim" x="375" y="326" font-size="15" text-anchor="middle">10</text>
+  <text class="dim" x="409" y="326" font-size="15" text-anchor="middle">11</text>
+  <text class="dim" x="443" y="326" font-size="15" text-anchor="middle">12</text>
+  <text class="dim" x="477" y="326" font-size="15" text-anchor="middle">13</text>
+  <text class="dim" x="511" y="326" font-size="15" text-anchor="middle">14</text>
+  <text class="dim" x="545" y="326" font-size="15" text-anchor="middle">15</text>
+  <line class="edge" x1="18" y1="254" x2="18" y2="338"/>
+  <line class="edge" x1="290" y1="254" x2="290" y2="338"/>
+  <line class="edge" x1="562" y1="254" x2="562" y2="338"/>
+  <text x="572" y="288" font-size="18" font-weight="700">16 B</text>
+  <text class="dim" x="18" y="388" font-size="15">byte offsets, typical 64-bit layout; dashed lines mark multiples of 8, where a double must start</text>
+</svg>
+
+This output is implementation-specific (here: 64-bit Apple clang). The members add up to 13 bytes, but the compiler inserts padding so each member meets its alignment: <code>value</code> starts at offset 8, and the total is rounded up to a multiple of 8. Never assume a struct's size from its members.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Pointer arithmetic · It moves by whole elements, inside one array
+
+~~~cpp
+#include <iostream>
+
+int main() {
+    int a[4]{10, 20, 30, 40};
+    int* p = a;                       // the array name converts to &a[0]
+    std::cout << *p << ' ' << *(p + 2) << ' ' << p[3] << '\n';
+    ++p;                              // move to the next int
+    std::cout << *p << '\n';
+    int* end = a + 4;                 // one past the end: may be compared, never dereferenced
+    std::cout << (end - p) << '\n';   // elements between p and end
+    for (int* q = a; q != end; ++q) std::cout << *q << ' ';
+    std::cout << '\n';
+}
+~~~
+
+~~~text
+10 30 40
+20
+3
+10 20 30 40 
+~~~
+
+<svg class="course-array-address-figure course-pointer-arith-figure" viewBox="0 0 900 330" role="img" aria-label="Array a of four ints 10, 20, 30, 40 at byte offsets 0, 4, 8, 12. Pointer p equals a points at a[0]; p+1, p+2, p+3 point at the next elements. end equals a+4 points one past the end, drawn dashed: it may be compared but never dereferenced." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-pointer-arith-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-pointer-arith-figure .cell { fill: rgba(142, 232, 216, 0.18); stroke: currentColor; stroke-width: 2; }
+    .course-pointer-arith-figure .past { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 6 5; opacity: 0.7; }
+    .course-pointer-arith-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-pointer-arith-figure .head { fill: currentColor; }
+    .course-pointer-arith-figure .dim { opacity: 0.65; }
+  </style>
+  <rect class="cell" x="40" y="120" width="160" height="60"/>
+  <text x="120" y="158" font-size="22" text-anchor="middle">10</text>
+  <text class="dim" x="120" y="205" font-size="16" text-anchor="middle">a[0]</text>
+  <text class="dim" x="40" y="228" font-size="16" text-anchor="middle">0</text>
+  <path class="arrow" d="M40 62 V104"/><polygon class="head" points="33,102 47,102 40,116"/>
+  <text x="40" y="48" font-size="18" font-weight="700" text-anchor="middle">p = a</text>
+  <rect class="cell" x="200" y="120" width="160" height="60"/>
+  <text x="280" y="158" font-size="22" text-anchor="middle">20</text>
+  <text class="dim" x="280" y="205" font-size="16" text-anchor="middle">a[1]</text>
+  <text class="dim" x="200" y="228" font-size="16" text-anchor="middle">4</text>
+  <path class="arrow" d="M200 62 V104"/><polygon class="head" points="193,102 207,102 200,116"/>
+  <text x="200" y="48" font-size="18" font-weight="700" text-anchor="middle">p + 1</text>
+  <rect class="cell" x="360" y="120" width="160" height="60"/>
+  <text x="440" y="158" font-size="22" text-anchor="middle">30</text>
+  <text class="dim" x="440" y="205" font-size="16" text-anchor="middle">a[2]</text>
+  <text class="dim" x="360" y="228" font-size="16" text-anchor="middle">8</text>
+  <path class="arrow" d="M360 62 V104"/><polygon class="head" points="353,102 367,102 360,116"/>
+  <text x="360" y="48" font-size="18" font-weight="700" text-anchor="middle">p + 2</text>
+  <rect class="cell" x="520" y="120" width="160" height="60"/>
+  <text x="600" y="158" font-size="22" text-anchor="middle">40</text>
+  <text class="dim" x="600" y="205" font-size="16" text-anchor="middle">a[3]</text>
+  <text class="dim" x="520" y="228" font-size="16" text-anchor="middle">12</text>
+  <path class="arrow" d="M520 62 V104"/><polygon class="head" points="513,102 527,102 520,116"/>
+  <text x="520" y="48" font-size="18" font-weight="700" text-anchor="middle">p + 3</text>
+  <rect class="past" x="680" y="120" width="160" height="60"/>
+  <text class="dim" x="760" y="158" font-size="18" text-anchor="middle">no int</text>
+  <text class="dim" x="680" y="228" font-size="16" text-anchor="middle">16</text>
+  <path class="arrow" d="M680 62 V104"/><polygon class="head" points="673,102 687,102 680,116"/>
+  <text x="680" y="48" font-size="16" font-weight="700" text-anchor="middle">end = a + 4</text>
+  <text class="dim" x="760" y="205" font-size="16" text-anchor="middle">one past the end</text>
+  <text x="730" y="270" font-size="16" text-anchor="middle">may compare, never dereference</text>
+  <text class="dim" x="40" y="310" font-size="16">each step of 1 adds sizeof(int) = 4 bytes; offsets are bytes from a</text>
+</svg>
+
+<code>p + 1</code> advances by <code>sizeof(int)</code> bytes, not one byte. Arithmetic is valid only within one array object, or one past its end. Anything else is undefined behavior. Prefer indexed or range-based traversal.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 2: Which line is an error?
+
+<figure class="course-slido-qr"><img src="assets/slido-lecture13.svg" alt="QR code that opens the Lecture 13 Slido event." width="200" height="200"><figcaption>📊 sli.do · #2535743</figcaption></figure>
+
+~~~cpp
+int  x = 5;
+int* p = &x;       // line 1
+int* q;            // line 2
+q = p;             // line 3
+*q = 7;            // line 4
+int* r;            // line 5
+std::cout << *r;   // line 6
+~~~
+
+- **A)** Line 2: a pointer must be initialized when declared
+- **B)** Line 4: <code>*q</code> is not the same object as <code>x</code>
+- **C)** Line 6: <code>r</code> was never given an address
+- **D)** Line 3: pointers cannot be assigned
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Common pointer errors
+
+| Error | Example | Result |
+|---|---|---|
+| Null dereference | `int* p = nullptr; *p = 1;` | undefined behavior |
+| Uninitialized pointer | `int* r; *r = 1;` | undefined behavior: it holds no valid address |
+| Dangling pointer | `int* bad() { int local = 1; return &local; }` | undefined behavior once used: `local` is gone when `bad` returns |
+| Out-of-range arithmetic | `a + 5` for `int a[4]` | undefined behavior, even before dereferencing |
+| Address vs value | `p == q` compares addresses; `*p == *q` compares values | a logic error |
+| `int* a, b;` | only `a` is a pointer; `b` is an `int` | a logic error: write one declaration per line |
+
+The compiler often warns about the dangling case: <code>address of stack memory associated with local variable 'local' returned</code> (clang; g++ words it differently). Compile with <code>-Wall</code> and read the warnings.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about structs and pointers (1)
+
+| Question | Answer |
+|---|---|
+| Why does `&` appear in `int& r` and in `&score`? | In a declaration, `int&` means a reference. In an expression, `&score` is the address-of operator. Likewise `*` declares a pointer in `int* p` and dereferences in `*p`. |
+| Reference or pointer? | A reference is an alias that always refers to an object. A pointer can be null and can be reassigned to point elsewhere. Prefer a reference unless "no object" is a valid argument. |
+| Is `nullptr` the same as `0` or `NULL`? | `nullptr` is the null pointer literal, of its own type, `std::nullptr_t`, so it cannot be mistaken for an integer. Use it. |
+| What does `std::cout << p` print? | An address, in an implementation-specific form such as `0x16f2b3c9c`. It changes between runs, so never depend on it. |
+| Does `int* a, b;` declare two pointers? | No. `a` is an `int*` and `b` is an `int`. Write one declaration per line. |
+| Does dereferencing `nullptr` always crash? | No. It is undefined behavior. Desktop systems usually stop the program, but the language promises nothing. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about structs and pointers (2)
+
+| Question | Answer |
+|---|---|
+| Can I compare two structs with `==`? | Not in C++17: `a == b` does not compile for a struct. Compare the members, or write a function. |
+| Why is `sizeof(Reading)` 24, not 13? | Padding for alignment. The exact value depends on the implementation. |
+| Does `assert(p != nullptr)` catch a dangling pointer? | No. A dangling pointer is not null, so the assert passes. It catches only the null case. |
+| Can I print a struct with `cout << sample`? | Not unless you write the `operator<<` for it. Print the members. |
+| What does `p + 1` do for a pointer to a struct? | It advances by `sizeof` of the struct, to the next element of the array. |
+| Does `sample.value` work if `sample` is a pointer? | No: a pointer has no members. Use `p->value` or `(*p).value`. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Summary: structures and pointers
+
+- A struct creates one coherent record type; its members are selected with <code>.</code>.
+- An array of structs stores many records of one type.
+- A pointer stores an address; <code>&amp;</code> takes one and <code>*</code> dereferences it.
+- Check for <code>nullptr</code> before access: <code>if</code> for expected absence, <code>assert</code> for a pre-condition.
+- Use <code>-&gt;</code> through a pointer, <code>.</code> through an object.
+- Layout is implementation-specific, and pointer arithmetic has strict bounds.
+
+**Reading:** Stroustrup, *Programming: Principles and Practice Using C++*, chapters “Vectors and Free Store” (pointers) and “Technicalities: Classes, etc.” (structs); Savitch, *Problem Solving with C++*, “Structures” (in “Defining Classes”) and “Pointers and Dynamic Arrays”.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="13" data-markdown><textarea data-template>
+## Lab practice: structs and pointers
+
+**IC151 lab practice · 5 problems**
+
+1. **Struct basics.** Define `struct Student { int roll; double marks; };`. Read three students into a `std::array<Student, 3>` and print the roll number of the one with the highest marks.
+1. **Find or nullptr.** Write `const Student* findRoll(const std::array<Student, 3>& s, int roll)` that returns `nullptr` when the roll is absent. Print `not found` when it is.
+1. **Dot or arrow.** Take `Student* p = &s[1];` and set the marks to 90 through `p`, then print them through `s[1]`. Write the update both as `p->marks` and as `(*p).marks`.
+1. **Pre-condition.** Write `void curve(Student* s)` that adds 5 marks. Guard it with `assert(s != nullptr)`. Which call aborts: `curve(&s[0])` or `curve(nullptr)`?
+1. **Layout.** Print `sizeof(Student)` and `offsetof(Student, marks)`. Add `char grade;` at the end and again at the start. Does the size change? Why?
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
