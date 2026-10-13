@@ -1876,8 +1876,8 @@ body.course-modern .course-story-figure img {
     line-height: 1.35;
 }
 
-/* Slido join QR with the event code, bottom-right of a poll slide, beside the short options list;
-   absolute so it never moves the poll onto a second page. */
+/* Slido join QR with the event code, bottom-right of a poll slide; absolute so it never
+   moves the poll onto a second page (the Lecture 13 layout). */
 body.course-modern .reveal .course-slido-qr {
     position: absolute;
     right: 0;
@@ -1889,6 +1889,26 @@ body.course-modern .reveal .course-slido-qr {
     background: #fff;
     color: #182033;
     text-align: center;
+}
+
+/* Poll slide from Lecture 14 on: question and options beside a large QR, one grid block
+   so pagination keeps them on one page. */
+.course-poll-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(360px, 30%);
+    gap: 1.2em;
+    align-items: start;
+}
+
+.course-poll-layout .course-slido-qr figcaption {
+    font-size: 0.62em;
+}
+
+body.course-modern .reveal .course-poll-layout .course-slido-qr {
+    position: static;
+    width: auto;
+    padding: 14px 14px 8px;
+    border-radius: 14px;
 }
 
 body.course-modern .reveal .course-slido-qr img {

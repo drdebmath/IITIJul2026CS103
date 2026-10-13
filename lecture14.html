@@ -3,97 +3,758 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 14: Make dynamic ownership explicit">
-    <title>Lecture 14: Make dynamic ownership explicit</title>
+    <meta name="description" content="CS103 Lecture 14: Dynamic Memory and Linked Lists">
+    <title>Lecture 14: Dynamic Memory and Linked Lists</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 14: Make dynamic ownership explicit
-## Make ownership and lifetime explicit
+# Lecture 14: Dynamic Memory and Linked Lists
+## Allocate on the free store with new, release with delete, and link nodes
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section data-markdown><textarea data-template>
-## Automatic storage follows scope; dynamic storage follows ownership
-
-Automatic local objects are destroyed when their scope ends. Dynamic storage can outlive the creating scope, so ownership must state who releases it.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## new and delete must match the allocated type and ownership
+    <section class="course-extra-slide course-bridge-slide" data-markdown><textarea data-template>
+## Where Lecture 13 ended · Every pointer reached an object that already existed
 
 ~~~cpp
-int* value = new int{42};
-std::cout << *value << '\n';
-delete value;
-value = nullptr;
+std::array<Reading, 3> samples{{
+    {1, 30.1, true}, {2, 29.8, true}, {3, 0.0, false}
+}};                                          // three records, fixed when you compile
+
+const Reading* found = findSensor(samples, 2);
+if (found != nullptr) std::cout << found->value << '\n';
 ~~~
 
-Use <code>delete[]</code> only for storage obtained with <code>new[]</code>.
+- A struct groups data members; an array of structs stores many records.
+- A pointer holds an address, and we check for `nullptr` before we dereference.
+- Every object those pointers reached was declared in the code: it was created when its declaration ran and destroyed at its closing brace.
     </textarea></section>
-    <section data-markdown><textarea data-template>
-## unique_ptr makes exclusive ownership and release explicit
+    <section class="course-extra-slide course-bridge-slide" data-markdown><textarea data-template>
+## Two questions Lecture 13 left open · How many records, and for how long?
+
+**How many?** Readings arrive while the program runs. `std::array<Reading, 3>` cannot grow, and you do not know the count when you compile. (Lecture 10's `std::vector` can grow: it keeps its elements on the free store. Today you see how.)
+
+**For how long?** A function that builds a record cannot return the address of a local:
 
 ~~~cpp
-auto value = std::make_unique<int>(42);
-std::cout << *value << '\n';
-~~~
-
-A smart pointer releases its owned resource automatically. It prevents ownership leaks, but unrelated non-owning pointers can still dangle.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Leaks, dangling pointers, double deletion, and bad allocation are different defects
-
-- Memory leak: owned storage becomes unreachable without release.
-- Dangling pointer: an address remains after the object has died.
-- Double deletion: the same allocation is released twice.
-- Allocation failure: <code>new</code> normally throws <code>std::bad_alloc</code>.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## A linked list represents a sequence through separately stored nodes
-
-~~~cpp
-#include <memory>
-
-struct Node {
-    int value;
-    std::unique_ptr<Node> next;
-};
-
-auto head = std::make_unique<Node>();
-head->value = 42;
-head->next = std::make_unique<Node>();
-head->next->value = 57;
-~~~
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Traversal stops at nullptr after visiting each reachable node
-
-~~~cpp
-for (Node* current = head.get(); current != nullptr;
-     current = current->next.get()) {
-    std::cout << current->value << ' ';
+Reading* makeReading(int id, double v) {
+    Reading r{id, v, true};
+    return &r;                      // dangling: r is destroyed here
 }
 ~~~
 
-The invariant states that every node before <code>current</code> has been processed.
+~~~text
+warning: address of stack memory associated with local variable 'r' returned
+~~~
+
+**Today's answer: the free store.** `new` creates an object that lives until `delete`, and a pointer is how you reach it. That is why pointers came first.
+
+~~~cpp
+Reading* makeReading(int id, double v) {
+    return new Reading{id, v, true};  // lives until the owner calls delete
+}
+~~~
+
+Plan: `new` and `delete` → who owns the object (`unique_ptr`) → a linked list that grows one node at a time.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## C allocation exposes bytes, so its ownership contract must be explicit
+## Example: two lifetimes · A local object and a free-store object
 
-<code>malloc</code>, <code>calloc</code>, and <code>realloc</code> manage untyped bytes and must be paired with <code>free</code>.
+~~~cpp
+#include <iostream>
 
-They do not construct or destroy C++ objects. Use them only when a C interface requires them.
+int* makeOnHeap() {
+    int* p = new int{42};        // dynamic: lives until delete
+    return p;
+}
+
+int main() {
+    int local = 7;               // automatic: destroyed at the closing brace
+    int* heap = makeOnHeap();    // the function ended, the object did not
+    std::cout << local << ' ' << *heap << '\n';
+    delete heap;                 // the owner releases it
+    heap = nullptr;
+}
+~~~
+
+~~~text
+7 42
+~~~
+
+<svg class="course-array-address-figure course-stack-store-figure" viewBox="0 0 900 300" role="img" aria-label="Two regions. Left, automatic storage (the stack): a box local holding 7 and a pointer box heap holding an illustrative address; this region ends at the closing brace. Right, the free store: an int object holding 42 created by new. An arrow from heap points to the free-store object; the free-store object ends at delete." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-stack-store-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-stack-store-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-stack-store-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-stack-store-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-stack-store-figure .region { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .course-stack-store-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-stack-store-figure .head { fill: currentColor; }
+    .course-stack-store-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-stack-store-figure .dim { opacity: 0.65; }
+  </style>
+  <rect class="region" x="20" y="15" width="380" height="228" rx="10"/>
+  <rect class="region" x="500" y="15" width="380" height="228" rx="10"/>
+  <text x="210" y="46" font-size="18" font-weight="700" text-anchor="middle">automatic storage (stack)</text>
+  <text x="690" y="46" font-size="18" font-weight="700" text-anchor="middle">free store</text>
+  <text x="40" y="115" font-size="18">local</text>
+  <rect class="cell obj" x="130" y="85" width="110" height="50"/>
+  <text x="185" y="119" font-size="24" text-anchor="middle">7</text>
+  <text x="40" y="190" font-size="18">heap</text>
+  <rect class="cell heap" x="130" y="160" width="110" height="50"/>
+  <text x="185" y="192" font-size="18" text-anchor="middle">0x5a10</text>
+  <rect class="cell obj" x="640" y="160" width="100" height="50"/>
+  <text x="690" y="194" font-size="24" text-anchor="middle">42</text>
+  <text x="690" y="148" font-size="16" text-anchor="middle" class="dim">int from new</text>
+  <path class="arrow" d="M240 185 H624"/>
+  <polygon class="head" points="636,185 622,178 622,192"/>
+  <text x="690" y="232" font-size="16" text-anchor="middle" class="dim">at 0x5a10 (illustrative)</text>
+  <text x="210" y="276" font-size="18" text-anchor="middle">ends at the closing brace</text>
+  <text x="690" y="276" font-size="18" text-anchor="middle">ends at delete</text>
+</svg>
+
+An automatic object is destroyed when its scope ends. A free-store (dynamic) object lives until <code>delete</code>, so the code that owns it must release it exactly once. The pointer is the one from Lecture 13, now pointing at storage we control.
+    </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="14" data-markdown><textarea data-template>
+## Dynamic memory: the general forms
+
+~~~cpp
+<type>* <pointer> = new <type>{<value>};         // one object, initialized
+<type>* <pointer> = new <type>[<count>]{...};    // an array of <count> objects
+delete <pointer>;                                // release one object
+delete[] <pointer>;                              // release an array
+~~~
+
+| Part | Meaning |
+| --- | --- |
+| `new <type>{...}` | Allocates storage on the free store, constructs an object there, and returns its address. |
+| `new <type>[n]` | Allocates and constructs `n` objects in one block. The count may be a run-time value. |
+| `delete p` | Destroys the object `p` points to and releases its storage. Use it only for storage from `new`. |
+| `delete[] p` | The same for an array. Use it only for storage from `new[]`. |
+| `p = nullptr;` | After the release, say "no object". Deleting a null pointer is harmless. |
+
+Every `new` needs exactly one matching `delete`. Mixing the two forms is undefined behavior.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Make ownership explicit before allocating or linking
+## new and delete · One object, or an array of objects
 
-- Dynamic storage requires an ownership rule.
-- Prefer <code>unique_ptr</code> for exclusive ownership and automatic release.
-- Smart ownership prevents leaks, not every possible dangling observer.
-- Linked lists trade contiguous access for explicit links.
+~~~cpp
+#include <iostream>
+
+int main() {
+    int* one = new int{42};              // one int, initialized
+    int* many = new int[3]{10, 20, 30};  // three ints
+    std::cout << *one << ' ' << many[0] + many[1] + many[2] << '\n';
+    delete one;                          // matches new
+    delete[] many;                       // matches new[]
+    one = nullptr;
+    many = nullptr;
+}
+~~~
+
+~~~text
+42 60
+~~~
+
+- The free store is separate from the stack: its objects are not destroyed when a scope ends.
+- <code>delete[]</code> for <code>new[]</code>, <code>delete</code> for <code>new</code>. The compiler does not check the pairing.
+- Set the pointer to <code>nullptr</code> after <code>delete</code>, so a later check can tell that it owns nothing.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## unique_ptr · Exclusive ownership, released automatically
+
+~~~cpp
+#include <iostream>
+#include <memory>
+#include <utility>
+
+int main() {
+    auto first = std::make_unique<int>(42);
+    std::cout << *first << '\n';
+    std::unique_ptr<int> second = std::move(first);   // ownership moves
+    std::cout << (first == nullptr) << ' ' << *second << '\n';
+}   // second releases the int here
+~~~
+
+~~~text
+42
+1 42
+~~~
+
+<svg class="course-array-address-figure course-unique-ptr-figure" viewBox="0 0 900 380" role="img" aria-label="Before and after std::move. Before: the unique_ptr first owns the int 42 and second is empty, holding nullptr. After second = std::move(first): second owns the int 42 and first is nullptr. At the closing brace the owner, second, runs its destructor and frees the int." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-unique-ptr-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-unique-ptr-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-unique-ptr-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-unique-ptr-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-unique-ptr-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-unique-ptr-figure .region { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .course-unique-ptr-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-unique-ptr-figure .head { fill: currentColor; }
+    .course-unique-ptr-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-unique-ptr-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="30" font-size="18" font-weight="700">before the move</text>
+  <text x="20" y="72" font-size="18">first</text>
+  <rect class="cell heap" x="120" y="45" width="150" height="40"/>
+  <text x="195" y="71" font-size="16" text-anchor="middle">owner</text>
+  <path class="arrow" d="M270 65 H686"/>
+  <polygon class="head" points="698,65 684,58 684,72"/>
+  <rect class="cell obj" x="700" y="45" width="100" height="40"/>
+  <text x="750" y="73" font-size="22" text-anchor="middle">42</text>
+  <text x="20" y="132" font-size="18">second</text>
+  <rect class="cell heap" x="120" y="105" width="150" height="40"/>
+  <text x="195" y="131" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="line" d="M270 125 H296 M296 111 V139 M306 116 V134 M316 121 V129"/>
+  <path class="region" d="M20 175 H880"/>
+  <text x="20" y="208" font-size="18" font-weight="700">after second = std::move(first)</text>
+  <text x="20" y="250" font-size="18">first</text>
+  <rect class="cell heap" x="120" y="223" width="150" height="40"/>
+  <text x="195" y="249" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="line" d="M270 243 H296 M296 229 V257 M306 234 V252 M316 239 V247"/>
+  <text x="20" y="310" font-size="18">second</text>
+  <rect class="cell heap" x="120" y="283" width="150" height="40"/>
+  <text x="195" y="309" font-size="16" text-anchor="middle">owner</text>
+  <path class="arrow" d="M270 303 H686"/>
+  <polygon class="head" points="698,303 684,296 684,310"/>
+  <rect class="cell obj" x="700" y="283" width="100" height="40"/>
+  <text x="750" y="311" font-size="22" text-anchor="middle">42</text>
+  <text x="450" y="362" font-size="18" text-anchor="middle">at the closing brace, the owner second frees the int</text>
+</svg>
+
+- A smart pointer (<code>std::unique_ptr</code>) owns one object and runs <code>delete</code> in its destructor, so no <code>delete</code> is written.
+- There is exactly one owner. Copying is not allowed; <code>std::move</code> transfers ownership and leaves the source null.
+- It prevents ownership leaks, but a separate non-owning raw pointer can still dangle.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Ownership errors · Leak, dangling pointer, double deletion
+
+| Error | Example | Result |
+|---|---|---|
+| Memory leak | `p = new int{7};` while `p` still owns another `int` | the first object is unreachable and never released |
+| Dangling pointer | `int* q = p; delete p; *q` | undefined behavior: `q` still holds the address of a dead object |
+| Double deletion | `delete p; delete p;` | undefined behavior |
+| Mismatched form | `delete` on `new[]` storage, or `delete[]` on `new` | undefined behavior |
+| Allocation failure | `new int[huge]` | `new` throws `std::bad_alloc` |
+
+<svg class="course-array-address-figure course-dangling-figure" viewBox="0 0 900 330" role="img" aria-label="Two pointers p and q point to the same free-store int 42 at an illustrative address. After delete p, p is set to nullptr, but q still holds the address of the freed object, drawn dashed and marked dangling; dereferencing q is undefined behavior." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-dangling-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-dangling-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-dangling-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-dangling-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-dangling-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-dangling-figure .region { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .course-dangling-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-dangling-figure .head { fill: currentColor; }
+    .course-dangling-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-dangling-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="30" font-size="18" font-weight="700">before delete p</text>
+  <text x="20" y="72" font-size="18">p</text>
+  <rect class="cell heap" x="60" y="45" width="110" height="40"/>
+  <text x="115" y="71" font-size="16" text-anchor="middle">0x5a10</text>
+  <path class="arrow" d="M170 65 H686"/>
+  <polygon class="head" points="698,65 684,58 684,72"/>
+  <text x="20" y="127" font-size="18">q</text>
+  <rect class="cell heap" x="60" y="100" width="110" height="40"/>
+  <text x="115" y="126" font-size="16" text-anchor="middle">0x5a10</text>
+  <path class="arrow" d="M170 120 H686"/>
+  <polygon class="head" points="698,120 684,113 684,127"/>
+  <rect class="cell obj" x="700" y="45" width="100" height="95"/>
+  <text x="750" y="98" font-size="22" text-anchor="middle">42</text>
+  <text x="750" y="162" font-size="16" text-anchor="middle" class="dim">at 0x5a10</text>
+  <path class="region" d="M20 182 H880"/>
+  <text x="20" y="212" font-size="18" font-weight="700">after delete p; p = nullptr;</text>
+  <text x="20" y="254" font-size="18">p</text>
+  <rect class="cell heap" x="60" y="227" width="110" height="40"/>
+  <text x="115" y="253" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="line" d="M170 247 H196 M196 233 V261 M206 238 V256 M216 243 V251"/>
+  <text x="20" y="309" font-size="18">q</text>
+  <rect class="cell heap" x="60" y="282" width="110" height="40"/>
+  <text x="115" y="308" font-size="16" text-anchor="middle">0x5a10</text>
+  <path class="arrow" d="M170 302 H686"/>
+  <polygon class="head" points="698,302 684,295 684,309"/>
+  <rect class="cell dead" x="700" y="260" width="100" height="62"/>
+  <text x="750" y="298" font-size="16" text-anchor="middle">freed</text>
+  <text x="400" y="284" font-size="18" text-anchor="middle" font-weight="700">q is dangling</text>
+</svg>
+
+Each error breaks the rule "one owner, one release". <code>unique_ptr</code> removes the leak and the double deletion; it cannot remove a dangling observer.
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hoare" data-markdown><textarea data-template>
+## Tony Hoare · He introduced the null reference
+
+<div class="course-story-layout">
+<div>
+
+- British computer scientist, 1934–2026.
+- Discovered Quicksort in 1959–60.
+- In 1969 he showed how to prove a program correct with pre-conditions and post-conditions, the reasoning behind Lecture 12's <code>assert</code>.
+- Turing Award, 1980. Knighted, 2000.
+
+</div>
+<figure class="course-story-figure">
+<img src="assets/lecture-stories/tony-hoare-2011.jpg" alt="Tony Hoare speaking at a lecture in 2011." width="960" height="960" loading="lazy">
+<figcaption>Tony Hoare lecturing at EPFL, 2011. Photo: Rama, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/2.0/fr/deed.en">CC BY-SA 2.0 FR</a>.</figcaption>
+</figure>
+</div>
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hoare" data-markdown><textarea data-template>
+## ALGOL W, 1965 · A reference that refers to no object
+
+- Designing references for the language ALGOL W in 1965, Hoare added the null reference: a value that means "no object".
+- He later said he added it "simply because it was so easy to implement".
+- C and C++ have the same idea. In C++ it is the null pointer, `nullptr` (Lecture 13).
+
+Following a null reference is an error that the compiler cannot catch for you.
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="hoare" data-markdown><textarea data-template>
+## "My billion-dollar mistake" · Null marks the end of a list
+
+- In a 2009 talk at QCon London, "Null References: The Billion Dollar Mistake", Hoare called the null reference "my billion-dollar mistake": a rough figure for the damage done by programs that follow a null reference.
+- Null is still useful when it has one clear meaning. In a linked list, `next == nullptr` marks the last node.
+
+**Lesson:** check for `nullptr` before you dereference. The loop condition `while (p != nullptr)` does exactly that.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A linked list · Nodes connected by next pointers
+
+~~~cpp
+#include <iostream>
+
+struct Node {
+    int value;
+    Node* next;              // address of the next node, or nullptr
+};
+
+int main() {
+    Node* second = new Node{20, nullptr};   // the last node: next is nullptr
+    Node* head = new Node{10, second};      // head holds the first node's address
+    std::cout << head->value << ' ' << head->next->value << '\n';
+    std::cout << (head->next->next == nullptr) << '\n';
+    delete head;
+    delete second;
+}
+~~~
+
+~~~text
+10 20
+1
+~~~
+
+<svg class="course-array-address-figure course-list-nodes-figure" viewBox="0 0 900 230" role="img" aria-label="A linked list of two nodes. The pointer head holds the address of the first node, value 10. Its next member points to the second node, value 20. The next member of the second node is nullptr, drawn with a ground symbol, marking the end of the list." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-list-nodes-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-list-nodes-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-list-nodes-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-list-nodes-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-list-nodes-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-list-nodes-figure .region { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .course-list-nodes-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-list-nodes-figure .head { fill: currentColor; }
+    .course-list-nodes-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-list-nodes-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="48" font-size="18">head</text>
+  <rect class="cell heap" x="20" y="60" width="110" height="50"/>
+  <text x="75" y="91" font-size="16" text-anchor="middle">address</text>
+  <path class="arrow" d="M130 85 H266"/>
+  <polygon class="head" points="278,85 264,78 264,92"/>
+  <text x="290" y="48" font-size="16" class="dim">node</text>
+  <rect class="cell obj" x="280" y="60" width="130" height="50"/>
+  <rect class="cell heap" x="410" y="60" width="110" height="50"/>
+  <text x="345" y="92" font-size="22" text-anchor="middle">10</text>
+  <text x="465" y="92" font-size="16" text-anchor="middle">next</text>
+  <path class="arrow" d="M520 85 H586"/>
+  <polygon class="head" points="598,85 584,78 584,92"/>
+  <text x="610" y="48" font-size="16" class="dim">node</text>
+  <rect class="cell obj" x="600" y="60" width="130" height="50"/>
+  <rect class="cell heap" x="730" y="60" width="110" height="50"/>
+  <text x="665" y="92" font-size="22" text-anchor="middle">20</text>
+  <text x="785" y="92" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="line" d="M785 110 V136 M765 136 H805 M772 147 H798 M779 158 H791"/>
+  <text x="345" y="140" font-size="16" text-anchor="middle" class="dim">value</text>
+  <text x="465" y="140" font-size="16" text-anchor="middle" class="dim">next</text>
+  <text x="20" y="215" font-size="18">the last next is nullptr: the end of the list</text>
+</svg>
+
+A linked list stores a sequence in separate nodes. Each node holds a value and a pointer to its successor. The pointer <code>head</code> gives access to the first node, and <code>nullptr</code> marks the end. An empty list is <code>head == nullptr</code>.
+    </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## Build and summarize a list · Readings inserted at the head
+
+~~~cpp
+#include <iostream>
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+Node* pushFront(Node* head, int value) {
+    return new Node{value, head};           // the new node points at the old head
+}
+
+int sum(const Node* head) {
+    int total = 0;
+    for (const Node* current = head; current != nullptr; current = current->next) {
+        total += current->value;            // every node before current has been added
+    }
+    return total;
+}
+
+void release(Node* head) {
+    while (head != nullptr) {
+        Node* rest = head->next;            // save the link before the node dies
+        delete head;
+        head = rest;
+    }
+}
+
+int main() {
+    Node* head = nullptr;
+    for (int reading : {31, 29, 33, 30}) {
+        head = pushFront(head, reading);
+    }
+    for (const Node* n = head; n != nullptr; n = n->next) std::cout << n->value << ' ';
+    std::cout << '\n';
+    std::cout << "sum " << sum(head) << '\n';
+    release(head);
+    head = nullptr;
+    std::cout << "empty sum " << sum(head) << '\n';
+}
+~~~
+
+~~~text
+30 33 29 31
+sum 123
+empty sum 0
+~~~
+
+**Takeaways**
+
+- Insertion at the head takes the same few steps for any length, but it reverses the order: the last reading inserted is the first in the list.
+- <code>sum</code> works for the empty list without a special case, because the loop condition fails at once when <code>head</code> is <code>nullptr</code>.
+- The caller owns the list and calls <code>release</code> once. Each <code>new</code> in <code>pushFront</code> has one matching <code>delete</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Traversal and insertion · Follow next until nullptr, add at the head
+
+~~~cpp
+for (Node* current = head; current != nullptr; current = current->next) {
+    std::cout << current->value << ' ';    // process one node
+}
+
+head = new Node{value, head};              // insert at the head
+~~~
+
+<svg class="course-array-address-figure course-insert-head-figure" viewBox="0 0 900 460" role="img" aria-label="Inserting at the head in two steps. Step 1: new Node{value, head} creates the node 5 whose next points at the old head, the node 10; head still points at node 10, which points to node 20, whose next is nullptr. Step 2: head is reassigned to the new node 5; the old chain 10 then 20 then nullptr is unchanged." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-insert-head-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-insert-head-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-insert-head-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-insert-head-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-insert-head-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-insert-head-figure .region { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 8 6; opacity: 0.6; }
+    .course-insert-head-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-insert-head-figure .head { fill: currentColor; }
+    .course-insert-head-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-insert-head-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="28" font-size="18" font-weight="700">1. new Node{value, head}: the new node's next is the old head</text>
+  <rect class="cell heap" x="330" y="45" width="90" height="36"/>
+  <text x="375" y="70" font-size="18" text-anchor="middle">head</text>
+  <text x="20" y="69" font-size="16" class="dim">head is unchanged</text>
+  <path class="arrow" d="M375 81 V96"/>
+  <polygon class="head" points="375,108 368,94 382,94"/>
+  <rect class="cell obj" x="20" y="110" width="70" height="44"/>
+  <rect class="cell heap" x="90" y="110" width="80" height="44"/>
+  <text x="55" y="140" font-size="22" text-anchor="middle">5</text>
+  <text x="130" y="139" font-size="16" text-anchor="middle">next</text>
+  <rect class="cell obj" x="330" y="110" width="70" height="44"/>
+  <rect class="cell heap" x="400" y="110" width="80" height="44"/>
+  <text x="365" y="140" font-size="22" text-anchor="middle">10</text>
+  <text x="440" y="139" font-size="16" text-anchor="middle">next</text>
+  <rect class="cell obj" x="600" y="110" width="70" height="44"/>
+  <rect class="cell heap" x="670" y="110" width="80" height="44"/>
+  <text x="635" y="140" font-size="22" text-anchor="middle">20</text>
+  <text x="710" y="139" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="arrow" d="M170 132 H318"/>
+  <polygon class="head" points="330,132 316,125 316,139"/>
+  <path class="arrow" d="M480 132 H588"/>
+  <polygon class="head" points="600,132 586,125 586,139"/>
+  <path class="line" d="M710 154 V170 M690 170 H730 M697 181 H723 M704 192 H716"/>
+  <path class="region" d="M20 215 H880"/>
+  <text x="20" y="245" font-size="18" font-weight="700">2. head = the new node</text>
+  <rect class="cell heap" x="20" y="262" width="90" height="36"/>
+  <text x="65" y="287" font-size="18" text-anchor="middle">head</text>
+  <path class="arrow" d="M65 298 V313"/>
+  <polygon class="head" points="65,325 58,311 72,311"/>
+  <rect class="cell obj" x="20" y="327" width="70" height="44"/>
+  <rect class="cell heap" x="90" y="327" width="80" height="44"/>
+  <text x="55" y="357" font-size="22" text-anchor="middle">5</text>
+  <text x="130" y="356" font-size="16" text-anchor="middle">next</text>
+  <rect class="cell obj" x="330" y="327" width="70" height="44"/>
+  <rect class="cell heap" x="400" y="327" width="80" height="44"/>
+  <text x="365" y="357" font-size="22" text-anchor="middle">10</text>
+  <text x="440" y="356" font-size="16" text-anchor="middle">next</text>
+  <rect class="cell obj" x="600" y="327" width="70" height="44"/>
+  <rect class="cell heap" x="670" y="327" width="80" height="44"/>
+  <text x="635" y="357" font-size="22" text-anchor="middle">20</text>
+  <text x="710" y="356" font-size="16" text-anchor="middle">nullptr</text>
+  <path class="arrow" d="M170 349 H318"/>
+  <polygon class="head" points="330,349 316,342 316,356"/>
+  <path class="arrow" d="M480 349 H588"/>
+  <polygon class="head" points="600,349 586,342 586,356"/>
+  <path class="line" d="M710 371 V387 M690 387 H730 M697 398 H723 M704 409 H716"/>
+  <text x="540" y="290" font-size="16" text-anchor="middle" class="dim">the old chain is unchanged</text>
+  <text x="450" y="440" font-size="18" text-anchor="middle">link the new node first, then move head</text>
+</svg>
+
+- Invariant: every node before <code>current</code> has been processed.
+- The loop stops at <code>nullptr</code>. It reaches the end of the list without knowing the length.
+- In <code>new Node{value, head}</code> the right-hand <code>head</code> is the old head. The order matters: link the new node first, then move <code>head</code>.
+- Access by position is not constant time: to reach the n-th node, follow n links.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Releasing a list · Save the next link before you delete
+
+~~~cpp
+while (head != nullptr) {
+    Node* rest = head->next;     // save the link first
+    delete head;                 // the node is gone
+    head = rest;                 // continue with the saved link
+}
+~~~
+
+- Reading <code>head->next</code> after <code>delete head</code> is a use after free: undefined behavior.
+- Deleting only <code>head</code> leaks every other node, because their addresses were stored in the deleted node.
+- If the links are <code>std::unique_ptr&lt;Node&gt;</code>, destroying the head destroys the whole chain, so no loop is written. A very long chain destroys recursively and can exhaust the stack, so a loop is safer for long lists.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## A list function has a pre-condition · The list must not be empty
+
+~~~cpp
+#include <cassert>
+#include <iostream>
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+// pre-condition: head != nullptr
+int front(const Node* head) {
+    assert(head != nullptr);
+    return head->value;
+}
+
+int main() {
+    Node a{5, nullptr};
+    std::cout << front(&a) << std::endl;
+    Node* empty = nullptr;
+    std::cout << front(empty) << std::endl;   // violates the pre-condition
+}
+~~~
+
+~~~text
+5
+Assertion failed: (head != nullptr), function front, file b3.cpp, line 11.
+~~~
+
+The empty list is a normal case for <code>sum</code> and for traversal, so those use a loop condition. <code>front</code> has no answer for an empty list, so the caller must not ask: that is a pre-condition, and <code>assert</code> checks it, as in Lecture 12. The file name in the message is that of the compiled file.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 1: What is printed?
+
+<div class="course-poll-layout">
+<div>
+
+~~~cpp
+Node* head = nullptr;
+head = new Node{3, head};
+head = new Node{2, head};
+head = new Node{1, head};
+for (Node* n = head; n != nullptr; n = n->next)
+    std::cout << n->value;
+~~~
+
+- **A)** 321
+- **B)** 123
+- **C)** 1
+- **D)** Undefined behavior: the loop never reaches <code>nullptr</code>
+
+</div>
+<figure class="course-slido-qr"><img src="assets/slido-lecture14.svg" alt="QR code that opens the Lecture 14 Slido event." width="360" height="360"><figcaption>📊 sli.do · #4055022</figcaption></figure>
+</div>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## C allocation · malloc and free manage bytes, not objects
+
+~~~cpp
+#include <cstdlib>
+#include <iostream>
+
+int main() {
+    int* values = static_cast<int*>(std::malloc(3 * sizeof(int)));  // 12 untyped bytes
+    if (values == nullptr) return 1;                                // malloc reports failure with nullptr
+    for (int i = 0; i < 3; ++i) values[i] = (i + 1) * 10;
+    std::cout << values[0] + values[1] + values[2] << '\n';
+    std::free(values);                                              // free pairs with malloc, not delete
+    values = nullptr;
+}
+~~~
+
+~~~text
+60
+~~~
+
+- <code>malloc</code> takes a size in bytes and returns <code>void*</code>, so C++ needs a cast. <code>calloc</code> also zeroes the bytes; <code>realloc</code> resizes a block.
+- It does not construct or destroy C++ objects, and it never throws: it returns <code>nullptr</code> on failure.
+- Pair <code>malloc</code> with <code>free</code>, and <code>new</code> with <code>delete</code>. Never mix them. Use <code>malloc</code> only where a C interface requires it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Allocation failure · new throws bad_alloc, nothrow returns nullptr
+
+~~~cpp
+#include <cstddef>
+#include <iostream>
+#include <new>
+
+int main() {
+    std::size_t count = static_cast<std::size_t>(-1) / 8;   // far more ints than any machine has
+    try {
+        int* huge = new int[count];
+        delete[] huge;
+    } catch (const std::bad_alloc& e) {
+        std::cout << "allocation failed: " << e.what() << '\n';
+    }
+    int* maybe = new (std::nothrow) int[count];
+    if (maybe == nullptr) std::cout << "nothrow: nullptr\n";
+    delete[] maybe;
+}
+~~~
+
+~~~text
+allocation failed: std::bad_alloc
+nothrow: nullptr
+~~~
+
+By default <code>new</code> does not return <code>nullptr</code>: when storage cannot be provided it throws <code>std::bad_alloc</code>. The <code>std::nothrow</code> form returns <code>nullptr</code> instead, and then the Lecture 13 rule applies: check before you dereference. The text of <code>what()</code> is implementation-specific (here: Apple clang).
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Let a tool find the error · AddressSanitizer on a dangling pointer
+
+~~~cpp
+int* p = new int{42};
+int* q = p;              // a second pointer to the same object
+delete p;                // the object dies here
+std::cout << *q << '\n'; // q dangles: undefined behavior
+~~~
+
+Compiled with <code>g++ -std=c++17 -g -fsanitize=address</code>, the run stops and reports (lines shortened, addresses vary):
+
+~~~text
+ERROR: AddressSanitizer: heap-use-after-free on address 0x6020000000f0
+READ of size 4 at 0x6020000000f0 thread T0
+    #0 ... in main a4.cpp:7
+freed by thread T0 here:
+    #1 ... in main a4.cpp:6
+~~~
+
+- The report names the read of freed memory (line 7) and the line that freed it (line 6).
+- Without the sanitizer, the same program ran here and printed <code>4</code>, a value that was not <code>42</code>. The result of such code is undefined: it may print the old value, a different value, or crash.
+- A second <code>delete p;</code> is reported the same way as <code>attempting double-free</code>. A leak is found by a leak checker, which this platform's sanitizer does not provide, so no leak report is shown here.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 2: What is true afterwards?
+
+<div class="course-poll-layout">
+<div>
+
+~~~cpp
+int* p = new int{5};
+int* q = p;
+delete p;
+p = nullptr;
+~~~
+
+- **A)** <code>q</code> is also <code>nullptr</code>
+- **B)** <code>q</code> still holds the old address, which is now dangling
+- **C)** <code>*q</code> is guaranteed to still be 5
+- **D)** <code>delete p</code> was an error, because <code>q</code> also points to the object
+
+</div>
+<figure class="course-slido-qr"><img src="assets/slido-lecture14.svg" alt="QR code that opens the Lecture 14 Slido event." width="360" height="360"><figcaption>📊 sli.do · #4055022</figcaption></figure>
+</div>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Common dynamic-memory errors
+
+| Error | Example | Result |
+|---|---|---|
+| Missing `delete` | `new int{1};` with no release | memory leak |
+| Losing the only pointer | `p = new int{2};` while `p` owns an object | memory leak |
+| Use after delete | `delete p; *p = 3;` | undefined behavior: dangling pointer |
+| Double deletion | `delete p; delete p;` | undefined behavior |
+| Wrong form | `delete[] p` for `new int{1}`; `delete p` for `new int[3]` | undefined behavior |
+| `malloc` with `delete` | `int* p = (int*)std::malloc(4); delete p;` | undefined behavior: pair `malloc` with `free` |
+| Reading `next` after `delete` | `delete head; head = head->next;` | undefined behavior: save `next` first |
+| Unchecked `nothrow` result | `new (std::nothrow) int[n]` used without a check | null dereference |
+
+Reach for <code>unique_ptr</code> first: it removes the leak, the double deletion, and the wrong form. Compile with <code>-Wall -Wextra</code> and test with <code>-fsanitize=address</code>.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about dynamic memory (1)
+
+| Question | Answer |
+|---|---|
+| Why not just use a local variable? | A local object ends with its scope and its size is fixed at compile time. Use the free store when the object must outlive the function or its size is known only at run time. |
+| Is "heap" the same as "free store"? | In everyday use, yes. The standard says free store for `new`/`delete` and reserves "heap" for the C-style allocator, but both name memory obtained at run time. |
+| Does `delete p` set `p` to `nullptr`? | No. It releases the object and leaves `p` holding the old address. Assign `nullptr` yourself. |
+| What happens if I forget `delete`? | A memory leak. The storage is returned to the system when the program ends, but a long-running program keeps growing. |
+| Can I `delete` a local variable's address? | No. Only storage obtained from `new` may be passed to `delete`. This is undefined behavior. |
+| What does `new int` (no braces) contain? | An uninitialized `int`. Write `new int{}` or `new int{42}` so the value is defined. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about dynamic memory (2)
+
+| Question | Answer |
+|---|---|
+| Why can't I copy a `unique_ptr`? | Two owners would both release the object. Use `std::move` to transfer ownership, or pass the object by reference to share access without ownership. |
+| Does `unique_ptr` make dangling impossible? | No. It releases its own object. A raw pointer copied from it with `get()` can still outlive it. |
+| Why `make_unique` and not `new`? | It states ownership in one expression and leaves no `new` without an owner. Prefer it. |
+| Why a linked list and not an array? | Insertion at the head is cheap and the list grows one node at a time. But the n-th element takes n steps to reach, and each node carries an extra pointer. |
+| Can a list be circular? | Yes, if the last `next` points back to the first. Then traversal to `nullptr` never ends, so such a list needs a different stopping rule. |
+| Is `malloc` ever correct in C++? | Only when a C interface hands you or demands a `malloc`ed block. For your own objects use `new` or `make_unique`. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Summary: dynamic memory and linked lists
+
+- Automatic objects end with their scope; free-store objects end at <code>delete</code>, so every one needs an owner.
+- <code>new</code> pairs with <code>delete</code>, and <code>new[]</code> with <code>delete[]</code>; <code>malloc</code> pairs with <code>free</code>.
+- <code>unique_ptr</code> gives exclusive ownership and automatic release; it cannot stop a dangling observer.
+- Leak, dangling pointer, double deletion: each breaks "one owner, one release". By default <code>new</code> throws <code>std::bad_alloc</code>.
+- A linked list is nodes joined by <code>next</code> pointers, ending at <code>nullptr</code>; traverse until <code>nullptr</code> and save <code>next</code> before deleting a node.
+
+**Reading:** Stroustrup, *Programming: Principles and Practice Using C++* (2nd ed.), chapters “Vectors and Free Store” and “Vectors and Arrays”; Savitch, *Problem Solving with C++*, “Pointers and Dynamic Arrays” and “Pointers and Linked Lists”.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="14" data-markdown><textarea data-template>
+## Lab practice: dynamic memory and linked lists
+
+**IC151 lab practice · 5 problems**
+
+1. **new and delete.** Read `n`, allocate `int* a = new int[n]`, fill it with the squares `1, 4, 9, ...`, print the sum, and release it. Use the correct `delete` form.
+1. **unique_ptr.** Rewrite problem 1 with `std::make_unique<int[]>(n)`. Which `delete` disappeared?
+1. **Build a list.** With `struct Node { int value; Node* next; };`, read integers until `-1` and insert each at the head. Print the list, then print its length.
+1. **Release.** Write `void release(Node* head)` that saves `next` before each `delete`. Compile with `-fsanitize=address` and confirm the run is clean. Then deliberately read `head->next` after `delete head` and read the report.
+1. **Find or nullptr.** Write `Node* find(Node* head, int value)` that returns `nullptr` when the value is absent. Add `int front(const Node* head)` guarded by `assert(head != nullptr)`.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
