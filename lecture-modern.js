@@ -1273,6 +1273,53 @@
         });
     }
 
+    // A figure marked data-course-stepper shows one [data-step] frame at a time, with
+    // Play / Step / Reset. Runs before pagination so the controls count toward page height.
+    function setupSteppers() {
+        document.querySelectorAll('.reveal [data-course-stepper]').forEach((figure) => {
+            const frames = Array.from(figure.querySelectorAll('[data-step]'))
+                .sort((left, right) => Number(left.dataset.step) - Number(right.dataset.step));
+            if (!frames.length || figure.querySelector('.course-stepper-controls')) return;
+            let current = 0;
+            let timer = null;
+            const controls = document.createElement('div');
+            controls.className = 'course-stepper-controls';
+            controls.innerHTML = '<button type="button" data-action="play">Play</button>'
+                + '<button type="button" data-action="step">Step</button>'
+                + '<button type="button" data-action="reset">Reset</button>'
+                + '<span class="course-stepper-count" aria-live="polite"></span>';
+            const play = controls.querySelector('[data-action="play"]');
+            const count = controls.querySelector('.course-stepper-count');
+            const show = (index) => {
+                current = index;
+                frames.forEach((frame, i) => frame.classList.toggle('is-current', i === index));
+                count.textContent = `Step ${index + 1} of ${frames.length}`;
+            };
+            const stop = () => {
+                window.clearInterval(timer);
+                timer = null;
+                play.textContent = 'Play';
+            };
+            const advance = () => {
+                if (current < frames.length - 1) show(current + 1);
+                else stop();
+            };
+            controls.addEventListener('click', (event) => {
+                const action = event.target.closest('button')?.dataset.action;
+                if (action === 'step') { stop(); advance(); }
+                if (action === 'reset') { stop(); show(0); }
+                if (action === 'play') {
+                    if (timer) { stop(); return; }
+                    if (current === frames.length - 1) show(0);
+                    play.textContent = 'Pause';
+                    timer = window.setInterval(advance, 1400);
+                }
+            });
+            figure.append(controls);
+            show(0);
+        });
+    }
+
     function prepareDeck() {
         if (deckPrepared || !revealReady || !window.Reveal) return;
         deckPrepared = true;
@@ -1282,6 +1329,7 @@
         decorateTechnicalTerms();
         enhanceCodeBlocks();
         stageMemePunchlines();
+        setupSteppers();
         paginateDeck();
         window.Reveal.sync();
         window.Reveal.layout();

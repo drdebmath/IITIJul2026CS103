@@ -119,6 +119,12 @@ they change, update that lecture's pins and `sessionPlans` entry in
 - Avoid `<defs>` markers and patterns (they do not follow the theme colour);
   draw arrowheads as inline polygons. Give every id a figure-specific prefix.
 - One idea per figure; add one only where a picture beats the code and table.
+- For a process that changes over time (insertion, traversal, deletion), use a
+  step-through figure: `<figure class="course-stepper" data-course-stepper>`
+  around one SVG whose direct children are full frames
+  `<g data-step="0">`, `<g data-step="1">`, …, each with its own caption.
+  `lecture-modern.js` shows one frame at a time and adds Play, Step, and Reset
+  (see "Insert, traverse, release" in `lecture14.html`).
 
 ### Stories
 

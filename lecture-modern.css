@@ -1924,3 +1924,40 @@ body.course-modern .reveal .course-slido-qr img {
     font-size: 0.5em;
     font-weight: 800;
 }
+
+/* Step-through figure (data-course-stepper): one frame visible, controls underneath. */
+.course-stepper {
+    margin: 0.2em 0 0;
+}
+
+.course-stepper [data-step]:not(.is-current) {
+    display: none;
+}
+
+body.course-modern .reveal .course-stepper-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 0.35em;
+    font-size: 0.55em;
+}
+
+body.course-modern .reveal .course-stepper-controls button {
+    min-height: 44px;
+    padding: 8px 20px;
+    border: 1px solid var(--course-line);
+    border-radius: 10px;
+    color: var(--course-ink) !important;
+    background: var(--course-surface-soft);
+    font: inherit;
+    font-weight: 760;
+    cursor: pointer;
+}
+
+.course-stepper-count {
+    min-width: 7.5em;
+    margin-left: 6px;
+    color: var(--course-muted);
+    font-variant-numeric: tabular-nums;
+}
