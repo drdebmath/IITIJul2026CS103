@@ -3,90 +3,491 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="CS103 Lecture 15: Choose structures from operations and cost">
-    <title>Lecture 15: Choose structures from operations and cost</title>
+    <meta name="description" content="CS103 Lecture 15: Stacks, Queues, and Abstract Data Types">
+    <title>Lecture 15: Stacks, Queues, and Abstract Data Types</title>
     <script src="lecture-runtime.js"></script>
     <link rel="stylesheet" href="lecture-modern.css">
 </head>
 <body>
 <div class="reveal"><div class="slides">
     <section data-markdown><textarea data-template>
-# Lecture 15: Choose structures from operations and cost
-## Choose operations before representation
+# Lecture 15: Stacks, Queues, and Abstract Data Types
+## Choose a structure from the operations the program needs, and what they cost
 
 **Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
     </textarea></section>
-    <section data-markdown><textarea data-template>
-## An abstract data type specifies operations before representation
-
-A stack promises <code>push</code>, <code>pop</code>, and <code>top</code>. A queue promises <code>enqueue</code>, <code>dequeue</code>, and <code>front</code>.
-
-The contract does not require a class or one specific representation.
-    </textarea></section>
-    <section data-markdown><textarea data-template>
-## Linear search is the trustworthy baseline when only traversal is known
+    <section class="course-extra-slide course-bridge-slide" data-markdown><textarea data-template>
+## Where Lecture 14 ended · Insertion at the head is a stack
 
 ~~~cpp
-std::vector<int> values{8, 3, 5, 3};
-int target = 5;
-std::size_t found = values.size();
-for (std::size_t i = 0; i < values.size() && found == values.size(); ++i)
-    if (values[i] == target) found = i;
+Node* head = nullptr;
+for (int reading : {31, 29, 33, 30}) head = new Node{reading, head};   // insert at the head
+// list: 30 33 29 31  -- the last reading inserted is the first in the list
 ~~~
 
-Worst case: inspect every element.
+<svg class="course-array-address-figure course-list-as-stack-figure" viewBox="0 0 900 290" role="img" aria-label="A linked list beside a vertical stack. Left: head points to the node 30, then 33, then 29, then 31, whose next is nullptr. Right: a vertical stack with 30 on top, then 33, 29, and 31 at the bottom. push is insertion at the head, pop is removal of the head, and top is head->value, so the head of the list is the top of the stack." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-list-as-stack-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-list-as-stack-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-list-as-stack-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-list-as-stack-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-list-as-stack-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-list-as-stack-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-list-as-stack-figure .head { fill: currentColor; }
+    .course-list-as-stack-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-list-as-stack-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="48" font-size="18">head</text>
+  <rect class="cell heap" x="20" y="60" width="80" height="50"/>
+  <text x="60" y="91" font-size="16" text-anchor="middle">address</text>
+  <path class="arrow" d="M100 85 H118"/>
+  <polygon class="head" points="130,85 116,78 116,92"/>
+  <rect class="cell obj" x="130" y="60" width="56" height="50"/>
+  <rect class="cell heap" x="186" y="60" width="44" height="50"/>
+  <text x="158" y="92" font-size="20" text-anchor="middle">30</text>
+  <path class="arrow" d="M208 85 H242"/>
+  <polygon class="head" points="254,85 240,78 240,92"/>
+  <rect class="cell obj" x="254" y="60" width="56" height="50"/>
+  <rect class="cell heap" x="310" y="60" width="44" height="50"/>
+  <text x="282" y="92" font-size="20" text-anchor="middle">33</text>
+  <path class="arrow" d="M332 85 H366"/>
+  <polygon class="head" points="378,85 364,78 364,92"/>
+  <rect class="cell obj" x="378" y="60" width="56" height="50"/>
+  <rect class="cell heap" x="434" y="60" width="44" height="50"/>
+  <text x="406" y="92" font-size="20" text-anchor="middle">29</text>
+  <path class="arrow" d="M456 85 H490"/>
+  <polygon class="head" points="502,85 488,78 488,92"/>
+  <rect class="cell obj" x="502" y="60" width="56" height="50"/>
+  <rect class="cell heap" x="558" y="60" width="44" height="50"/>
+  <text x="530" y="92" font-size="20" text-anchor="middle">31</text>
+  <path class="arrow" d="M602 85 H626"/>
+  <polygon class="head" points="638,85 624,78 624,92"/>
+  <text x="644" y="91" font-size="16">nullptr</text>
+  <text x="20" y="150" font-size="18">push = insert at the head</text>
+  <text x="20" y="185" font-size="18">pop = remove the head</text>
+  <text x="20" y="220" font-size="18">top = head-&gt;value</text>
+  <text x="20" y="270" font-size="16" class="dim">the head of the list is the top of the stack</text>
+  <text x="880" y="40" font-size="18" text-anchor="end">stack, top = 30</text>
+  <rect class="cell obj" x="790" y="60" width="80" height="44"/>
+  <rect class="cell obj" x="790" y="104" width="80" height="44"/>
+  <rect class="cell obj" x="790" y="148" width="80" height="44"/>
+  <rect class="cell obj" x="790" y="192" width="80" height="44"/>
+  <text x="830" y="89" font-size="20" text-anchor="middle">30</text>
+  <text x="830" y="133" font-size="20" text-anchor="middle">33</text>
+  <text x="830" y="177" font-size="20" text-anchor="middle">29</text>
+  <text x="830" y="221" font-size="20" text-anchor="middle">31</text>
+</svg>
+
+- Insert at the head and remove from the head: the last item in is the first item out. That is a **stack**, and the list already implements it.
+- The program using it needs only three operations, not the nodes: `push`, `pop`, `top`.
+- **Today's question:** which operations does the program need, and what does each cost? Plan: a stack, a queue, the interface that hides the representation, then a cost table.
+    </textarea></section>
+        <section class="course-extra-slide course-story-slide" data-course-story="bauer" data-markdown><textarea data-template>
+## Bauer and Samelson · The cellar principle, 1955
+
+<div class="course-story-layout">
+<div>
+
+- At the Technical University of Munich in 1955, Friedrich L. Bauer (1924–2015) and Klaus Samelson proposed the *Kellerprinzip*, the "cellar principle", for translating formulas.
+- Reading a formula left to right, an operator that cannot be applied yet waits in the cellar. The last one put in is the first taken out.
+- They filed a German patent on 30 March 1957 and published "Sequential Formula Translation" in *Communications of the ACM* in 1960.
+
+</div>
+<figure class="course-story-figure">
+<img src="assets/lecture-stories/friedrich-bauer-1995.jpg" alt="Friedrich L. Bauer in 1995." width="700" height="537" loading="lazy">
+<figcaption>Friedrich L. Bauer, 1995. Photo: Rolf Kickuth, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">CC BY-SA 4.0</a>.</figcaption>
+</figure>
+</div>
+    </textarea></section>
+    <section class="course-extra-slide course-story-slide" data-course-story="bauer" data-markdown><textarea data-template>
+## One idea, found more than once · Last in, first out
+
+- Charles Hamblin in Australia reached the same idea independently around the same time.
+- In 1988 Bauer received the IEEE Computer Pioneer Award, with the citation "For computer stacks".
+- Today's bracket-matching example is the cellar principle: an opening bracket waits on the stack until its closing bracket arrives.
+
+**Lesson:** choose the structure from the operation you need. Here it is "take back the most recent one".
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Bubble sort trades simplicity for quadratic time
+## Check brackets with a stack · The last one opened closes first
 
 ~~~cpp
-for (std::size_t end = values.size(); end > 1; --end) {
-    for (std::size_t i = 1; i < end; ++i) {
-        if (values[i] < values[i - 1]) {
-            int temporary = values[i];
-            values[i] = values[i - 1];
-            values[i - 1] = temporary;
+#include <iostream>
+#include <stack>
+#include <string>
+
+bool balanced(const std::string& text) {
+    std::stack<char> open;
+    for (char c : text) {
+        if (c == '(' || c == '[' || c == '{') {
+            open.push(c);
+        } else if (c == ')' || c == ']' || c == '}') {
+            if (open.empty()) return false;          // nothing to close
+            char o = open.top();
+            open.pop();
+            bool ok = (o == '(' && c == ')') || (o == '[' && c == ']') || (o == '{' && c == '}');
+            if (!ok) return false;                   // wrong kind of closer
         }
     }
+    return open.empty();                             // anything left is unclosed
+}
+
+int main() {
+    for (std::string s : {"a[i] = (b + c) * {d}", "(]", "((x)", "x)"})
+        std::cout << s << " -> " << (balanced(s) ? "balanced" : "not balanced") << '\n';
 }
 ~~~
+
+~~~text
+a[i] = (b + c) * {d} -> balanced
+(] -> not balanced
+((x) -> not balanced
+x) -> not balanced
+~~~
+
+An opener waits on the stack. The next closer must match the **most recent** opener, which is exactly what `top()` returns. The invariant: the stack holds the openers not yet closed, innermost on top.
+    </textarea></section>
+    <section class="course-extra-slide course-syntax-slide" data-course-syntax="15" data-markdown><textarea data-template>
+## Stack and queue: the general forms
+
+~~~cpp
+#include <stack>
+#include <queue>
+
+std::stack<T> s;          // LIFO: last in, first out
+s.push(x);   s.top();   s.pop();   s.empty();   s.size();
+
+std::queue<T> q;          // FIFO: first in, first out
+q.push(x);   q.front();   q.back();   q.pop();   q.empty();   q.size();
+~~~
+
+| Operation | Meaning |
+| --- | --- |
+| `push(x)` | Add `x`: on top of the stack, or at the back of the queue. |
+| `top()` | The most recently pushed item of a stack, left in place. |
+| `front()` | The earliest pushed item of a queue, left in place. |
+| `pop()` | Remove that item. It returns nothing: read it first with `top()` or `front()`. |
+| `empty()` | `true` when there is nothing to read or remove. |
+| `size()` | The number of items stored. |
+
+`pop()` removes and `top()`/`front()` reads: two separate calls. Both require a non-empty container.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A stack returns the most recently pushed item first
+## An abstract data type · It specifies operations, not representation
 
-With an array representation, keep one integer <code>top</code>:
+- The **interface** is the set of operations and what each promises: `push`, `pop`, `top`, `empty`.
+- The **implementation** is how the data is stored: nodes and `head` (Lecture 14), a `std::vector`, or a `std::deque`.
+- The **invariant** is the rule every operation keeps true. For the bracket checker: the stack holds the openers not yet closed.
+- Code that uses only the interface keeps working when the implementation changes.
 
-- push: check capacity, then advance and store;
-- pop: check emptiness, read, then retreat;
-- top: inspect without removing.
-
-An undo history and function calls are stack applications.
+The abstract data type (ADT) says what a stack does; a linked list, a vector, and a deque are three ways to do it.
     </textarea></section>
     <section data-markdown><textarea data-template>
-## A queue returns the earliest enqueued item first
+## Stack · Last in, first out (LIFO)
 
-A circular array keeps <code>front</code>, <code>rear</code>, and <code>count</code>. A linked queue keeps pointers to the first and last nodes.
+<svg class="course-array-address-figure course-stack-push-pop-figure" viewBox="0 0 900 300" role="img" aria-label="A stack in four steps. After push 1 the stack holds 1. After push 2 it holds 1 then 2 on top. After push 3 it holds 1, 2, and 3 on top, and top() reads 3 without removing it. After pop() the 3 is removed from the top, leaving 1 and 2, with 2 now on top. Last in, first out." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-stack-push-pop-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-stack-push-pop-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-stack-push-pop-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-stack-push-pop-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-stack-push-pop-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-stack-push-pop-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-stack-push-pop-figure .head { fill: currentColor; }
+    .course-stack-push-pop-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-stack-push-pop-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="110" y="40" font-size="18" text-anchor="middle">push(1)</text>
+  <text x="340" y="40" font-size="18" text-anchor="middle">push(2)</text>
+  <text x="570" y="40" font-size="18" text-anchor="middle">push(3)</text>
+  <text x="800" y="40" font-size="18" text-anchor="middle">pop()</text>
+  <text x="570" y="72" font-size="16" text-anchor="middle" class="dim">top() reads 3</text>
+  <rect class="cell obj" x="60" y="210" width="100" height="40"/>
+  <text x="110" y="237" font-size="20" text-anchor="middle">1</text>
+  <rect class="cell obj" x="290" y="210" width="100" height="40"/>
+  <rect class="cell obj" x="290" y="170" width="100" height="40"/>
+  <text x="340" y="237" font-size="20" text-anchor="middle">1</text>
+  <text x="340" y="197" font-size="20" text-anchor="middle">2</text>
+  <rect class="cell obj" x="520" y="210" width="100" height="40"/>
+  <rect class="cell obj" x="520" y="170" width="100" height="40"/>
+  <rect class="cell heap" x="520" y="130" width="100" height="40"/>
+  <text x="570" y="237" font-size="20" text-anchor="middle">1</text>
+  <text x="570" y="197" font-size="20" text-anchor="middle">2</text>
+  <text x="570" y="157" font-size="20" text-anchor="middle">3</text>
+  <rect class="cell obj" x="750" y="210" width="100" height="40"/>
+  <rect class="cell obj" x="750" y="170" width="100" height="40"/>
+  <rect class="cell dead" x="750" y="130" width="100" height="40"/>
+  <text x="800" y="237" font-size="20" text-anchor="middle">1</text>
+  <text x="800" y="197" font-size="20" text-anchor="middle">2</text>
+  <text x="800" y="157" font-size="20" text-anchor="middle" class="dim">3</text>
+  <text x="800" y="115" font-size="16" text-anchor="middle">3 removed</text>
+  <text x="44" y="237" font-size="18" text-anchor="end">top</text>
+  <path class="arrow" d="M46 232 H50"/>
+  <polygon class="head" points="58,230 48,224 48,236"/>
+  <text x="274" y="197" font-size="18" text-anchor="end">top</text>
+  <polygon class="head" points="288,190 278,184 278,196"/>
+  <text x="504" y="157" font-size="18" text-anchor="end">top</text>
+  <polygon class="head" points="518,150 508,144 508,156"/>
+  <text x="734" y="197" font-size="18" text-anchor="end">top</text>
+  <polygon class="head" points="748,190 738,184 738,196"/>
+  <path class="line" d="M40 256 H870"/>
+  <text x="450" y="287" font-size="16" text-anchor="middle" class="dim">LIFO: the last item pushed is the first item popped</text>
+</svg>
 
-Print jobs and breadth-first exploration are queue applications.
+- `push` puts an item on top; `top` reads the item on top; `pop` removes it. Only the top is reachable.
+- Function calls behave this way: the function called last returns first (Lecture 16 shows the call stack).
+- An undo history is a stack: each edit is pushed, and Undo pops the most recent one.
+- With a linked list, `push` is insertion at the head and `pop` is removal of the head, so each takes the same few steps for any length: O(1).
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Compare structures by operation costs, not names
+## Queue · First in, first out (FIFO)
 
-| Requirement | Useful choice |
+<svg class="course-array-address-figure course-queue-flow-figure" viewBox="0 0 900 270" role="img" aria-label="A queue of three print jobs drawn left to right: report.pdf at the front, notes.txt, and lab3.cpp at the back. New items are enqueued (push) at the back on the right. Items are dequeued (pop) from the front on the left. front() reads report.pdf and back() reads lab3.cpp. First in, first out." xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .course-queue-flow-figure text { font-family: ui-monospace, Menlo, Consolas, monospace; fill: currentColor; }
+    .course-queue-flow-figure .cell { fill: none; stroke: currentColor; stroke-width: 2; }
+    .course-queue-flow-figure .cell.obj { fill: rgba(142, 232, 216, 0.18); }
+    .course-queue-flow-figure .cell.heap { fill: rgba(255, 214, 102, 0.22); }
+    .course-queue-flow-figure .cell.dead { fill: rgba(255, 120, 120, 0.22); stroke-dasharray: 6 5; }
+    .course-queue-flow-figure .arrow { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-queue-flow-figure .head { fill: currentColor; }
+    .course-queue-flow-figure .line { fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .course-queue-flow-figure .dim { opacity: 0.65; }
+  </style>
+  <text x="20" y="75" font-size="18">dequeue</text>
+  <text x="20" y="100" font-size="16" class="dim">pop()</text>
+  <path class="arrow" d="M232 120 H46"/>
+  <polygon class="head" points="34,120 48,113 48,127"/>
+  <rect class="cell obj" x="240" y="90" width="130" height="60"/>
+  <rect class="cell obj" x="370" y="90" width="130" height="60"/>
+  <rect class="cell obj" x="500" y="90" width="130" height="60"/>
+  <text x="305" y="126" font-size="16" text-anchor="middle">report.pdf</text>
+  <text x="435" y="126" font-size="16" text-anchor="middle">notes.txt</text>
+  <text x="565" y="126" font-size="16" text-anchor="middle">lab3.cpp</text>
+  <path class="arrow" d="M870 120 H654"/>
+  <polygon class="head" points="642,120 656,113 656,127"/>
+  <text x="870" y="75" font-size="18" text-anchor="end">enqueue</text>
+  <text x="870" y="100" font-size="16" text-anchor="end" class="dim">push(job)</text>
+  <path class="arrow" d="M305 190 V162"/>
+  <polygon class="head" points="305,152 298,166 312,166"/>
+  <text x="305" y="215" font-size="18" text-anchor="middle">front</text>
+  <text x="305" y="238" font-size="16" text-anchor="middle" class="dim">front() reads it</text>
+  <path class="arrow" d="M565 190 V162"/>
+  <polygon class="head" points="565,152 558,166 572,166"/>
+  <text x="565" y="215" font-size="18" text-anchor="middle">back</text>
+  <text x="565" y="238" font-size="16" text-anchor="middle" class="dim">back() reads it</text>
+  <text x="450" y="40" font-size="16" text-anchor="middle" class="dim">FIFO: first in, first out</text>
+</svg>
+
+- `push` adds at the back; `front` reads the earliest item; `pop` removes it from the front.
+- Waiting lines are queues: print jobs, network requests, tasks served in arrival order.
+- A linked queue keeps pointers to the first and last nodes; a circular array keeps `front`, `rear`, and `count`. Either gives O(1) `push` and `pop`.
+- Textbooks name the operations enqueue and dequeue; `std::queue` calls them `push` and `pop`.
+    </textarea></section>
+    <section class="course-extra-slide practical-example-slide" data-markdown><textarea data-template>
+## A print queue · Jobs served in arrival order
+
+~~~cpp
+#include <iostream>
+#include <queue>
+#include <string>
+
+int main() {
+    std::queue<std::string> jobs;
+    jobs.push("report.pdf");
+    jobs.push("notes.txt");
+    jobs.push("lab3.cpp");
+    std::cout << "waiting: " << jobs.size() << ", next: " << jobs.front() << '\n';
+    while (!jobs.empty()) {
+        std::cout << "printing " << jobs.front() << '\n';
+        jobs.pop();                                  // remove the job just served
+    }
+    std::cout << "waiting: " << jobs.size() << '\n';
+}
+~~~
+
+~~~text
+waiting: 3, next: report.pdf
+printing report.pdf
+printing notes.txt
+printing lab3.cpp
+waiting: 0
+~~~
+
+**Takeaways**
+
+- The loop condition `!jobs.empty()` guards both `front()` and `pop()`, so neither runs on an empty queue.
+- Read with `front()` before `pop()`: `pop()` returns nothing.
+- Fairness is the invariant: a job never overtakes one that arrived earlier.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## One interface, three implementations · The container is a template argument
+
+~~~cpp
+std::stack<int> a;                               // default container: std::deque<int>
+std::stack<int, std::vector<int>> b;             // same interface, vector inside
+std::stack<int, std::list<int>> c;               // same interface, list inside
+for (int x : {1, 2, 3}) { a.push(x); b.push(x); c.push(x); }
+std::cout << a.top() << ' ' << b.top() << ' ' << c.top() << '\n';
+a.pop(); b.pop(); c.pop();
+std::cout << a.top() << ' ' << b.top() << ' ' << c.top() << ' ' << a.size() << '\n';
+~~~
+
+~~~text
+3 3 3
+2 2 2 2
+~~~
+
+`std::stack` and `std::queue` are container adaptors: they restrict an underlying container to the stack or queue operations. The program cannot index into a stack or insert in its middle, so the invariant cannot be broken from outside.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Cost decides the representation · A queue on a vector
+
+~~~cpp
+std::vector<int> v(100000, 1);
+std::deque<int> d(100000, 1);
+while (!v.empty()) v.erase(v.begin());           // dequeue from the front: shifts the rest
+while (!d.empty()) d.pop_front();                // dequeue from the front
+~~~
+
+~~~text
+vector erase(begin): 563 ms
+deque pop_front:     1 ms
+~~~
+
+Timings are implementation- and machine-specific; the gap is the point. Removing the first element of a `std::vector` moves all the others down one place: O(n) per removal, O(n²) for the whole loop. A `std::deque` removes at either end in O(1). That is why `std::queue` uses a `std::deque` by default.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Compare structures by operation cost
+
+| Operation | `std::vector` | linked list | stack | queue |
+|---|---|---|---|---|
+| add at the end | O(1) amortized | O(n) with `head` only | `push`: O(1) | `push`: O(1) |
+| add at the front | O(n) | O(1) | n/a | n/a |
+| remove at the front | O(n) | O(1) | `pop`: O(1) | `pop`: O(1) |
+| read the n-th item | O(1) | O(n) | not allowed | not allowed |
+| search an unsorted collection | O(n) | O(n) | not allowed | not allowed |
+
+- Lecture 10's linear search inspects every element in the worst case: O(n). Bubble sort (Lecture 10) does O(n²) work; merge sort (Lecture 11) does O(n log n).
+- A stack and a queue give up indexing and searching on purpose, so every operation they allow is O(1).
+- Choose the structure whose cheap operations are the ones the program performs most.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 1: What is printed?
+
+<div class="course-poll-layout">
+<div>
+
+~~~cpp
+std::stack<int> s;
+s.push(1);
+s.push(2);
+s.push(3);
+s.pop();
+s.push(4);
+while (!s.empty()) {
+    std::cout << s.top();
+    s.pop();
+}
+~~~
+
+- **A)** 421
+- **B)** 124
+- **C)** 431
+- **D)** Undefined behavior: <code>top</code> is called on an empty stack
+
+</div>
+<figure class="course-slido-qr"><img src="assets/slido-lecture15.svg" alt="QR code that opens the Lecture 15 Slido event." width="360" height="360"><figcaption>📊 sli.do · #2393872</figcaption></figure>
+</div>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Common errors · Reading or removing from an empty container
+
+~~~cpp
+std::stack<int> s;
+s.push(7);
+s.pop();
+if (!s.empty()) std::cout << s.top() << '\n'; else std::cout << "empty: no top\n";
+assert(!s.empty() && "pop requires a non-empty stack");
+s.pop();                                         // pre-condition violated
+~~~
+
+~~~text
+empty: no top
+Assertion failed: (!s.empty() && "pop requires a non-empty stack"), function main, file a5.cpp, line 10.
+~~~
+
+The assertion text is implementation-specific (here: Apple clang), and it appears on standard error.
+
+| Error | Example | Result |
+|---|---|---|
+| `top()` on an empty stack | `std::stack<int> s; s.top();` | undefined behavior |
+| `pop()` on an empty stack or queue | `q.pop();` with nothing queued | undefined behavior |
+| `front()` or `back()` on an empty queue | `q.front();` | undefined behavior |
+| Expecting `pop()` to return the item | `int x = s.pop();` | does not compile: `pop` returns `void` |
+
+Non-empty is the **pre-condition** of `top`, `front`, and `pop` (Lecture 12). Check `empty()` first, or `assert` it where the caller guarantees it.
+    </textarea></section>
+    <section class="course-extra-slide course-poll-slide" data-markdown><textarea data-template>
+## Poll 2: What are front() and size()?
+
+<div class="course-poll-layout">
+<div>
+
+~~~cpp
+std::queue<int> q;
+q.push(1);
+q.push(2);
+q.push(3);
+q.pop();
+q.push(4);
+std::cout << q.front() << ' ' << q.size();
+~~~
+
+- **A)** 1 and 3
+- **B)** 2 and 3
+- **C)** 2 and 4
+- **D)** 4 and 3
+
+</div>
+<figure class="course-slido-qr"><img src="assets/slido-lecture15.svg" alt="QR code that opens the Lecture 15 Slido event." width="360" height="360"><figcaption>📊 sli.do · #2393872</figcaption></figure>
+</div>
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Questions about stacks and queues
+
+| Question | Answer |
 |---|---|
-| scan unsorted readings | array + linear search |
-| undo most recent action | stack |
-| serve arrival order | queue |
-| repeatedly exchange adjacent inversions | array + bubble sort |
+| Why does `pop()` not return the item? | Returning by value could throw while copying, after the item is already removed, and the item would be lost. So you read with `top()`, then remove with `pop()`. |
+| Can I loop over a stack or queue? | Not directly: there are no iterators. Drain it with `while (!s.empty())`, or keep a `std::vector` if you need to traverse. |
+| Is `std::stack` a container? | It is a container adaptor: it wraps a container (`std::deque` by default) and exposes only the stack operations. |
+| Stack or queue: how do I choose? | Ask which item must come out next. The newest (undo, matching brackets): stack. The oldest (print jobs, requests): queue. |
+| Is O(1) always faster than O(n)? | Not for tiny inputs. It says how the cost grows with n, so it matters as n gets large. |
+| Where does a stack appear besides `std::stack`? | Function calls form a call stack, which Lecture 16 uses to explain recursion. |
     </textarea></section>
     <section data-markdown><textarea data-template>
-## Match operations, invariants, and cost before choosing a structure
+## Summary: stacks, queues, and abstract data types
 
-- An ADT is defined by valid operations and behavior.
-- Algorithms are applications of the representation's operations.
-- Linear search needs no ordering.
-- Stack means LIFO; queue means FIFO.
-- Bubble sort is simple but performs quadratic work.
+- An abstract data type is defined by its operations and invariant; the interface hides the implementation.
+- A stack is LIFO (`push`, `top`, `pop`); a queue is FIFO (`push`, `front`, `pop`). A linked list with head insertion is a stack.
+- `std::stack` and `std::queue` adapt `std::deque` (or `std::vector`, `std::list`); the interface stays the same.
+- Removing the front of a `std::vector` is O(n); `std::deque` and a linked list do it in O(1).
+- `top`, `front`, and `pop` on an empty container are undefined behavior: check `empty()`.
+
+**Reading:** Stroustrup, *Programming: Principles and Practice Using C++* (2nd ed.), chapter “Containers and Iterators”; Savitch, *Problem Solving with C++*, “Stacks and Queues”.
+    </textarea></section>
+    <section class="course-extra-slide lab-practice-slide" data-course-practice="15" data-markdown><textarea data-template>
+## Lab practice: stacks and queues
+
+**IC151 lab practice · 5 problems**
+
+1. **Reverse.** Read integers until `-1`, push each on a `std::stack<int>`, then pop and print them. What order appears, and why?
+1. **Brackets.** Extend the bracket checker to ignore brackets inside double-quoted strings. Test on `"(" + (a)`.
+1. **Print queue.** Read job names until `done`, queue them, then serve and print each one. Print the number waiting after each job.
+1. **Two stacks.** Make `std::stack<int, std::vector<int>>` and a `std::stack<int, std::list<int>>`. Push 1 to 5 on both and show the pops are identical.
+1. **Guard.** Write `int top_or(const std::stack<int>& s, int fallback)` that returns `fallback` when empty. Then call `s.top()` on an empty stack under `-fsanitize=address` and read the report.
+
+Reaching this set marks the lecture as studied in this browser. [Open the IC151 lab setup and batch schedule](ic151.html).
     </textarea></section>
 </div></div>
 <script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>

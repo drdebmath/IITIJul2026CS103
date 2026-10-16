@@ -81,6 +81,11 @@ another lecture, and follow them unless the instructor asks otherwise.
    and a lab practice slide (`course-extra-slide lab-practice-slide`,
    `data-course-practice="N"`).
 
+From Lecture 15 on, a deck has fewer than 20 top-level `<section>` elements in
+total (authored and extra slides together; automatic "Part 2" pages do not
+count). Fit the structure above by merging: one bridge slide, one Q&A slide, a
+one- or two-slide story, and only the concept slides the topic needs.
+
 Authored slide numbers count only sections without `course-extra-slide`. When
 they change, update that lecture's pins and `sessionPlans` entry in
 `course-map.js`, and nothing else.

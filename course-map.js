@@ -31,7 +31,7 @@
         'm4-cstrings': [11, 7], 'm4-cstring-lib': [11, 7],
         'm4-std-string': [11, 2], 'm4-string-ops': [11, 4],
         'm4-string-io': [11, 3], 'm4-cctype': [11, 5], 'm4-string-safety': [11, 7],
-        'm4-linear-search': [15, 3], 'm4-bubble-sort': [15, 4],
+        'm4-linear-search': [15, 8], 'm4-bubble-sort': [15, 8],
         'm4-binary-search': [17, 2], 'm4-merge-sort': [17, 7],
 
         'm4-structs': [13, 2], 'm4-struct-layout': [13, 9],
@@ -41,8 +41,8 @@
         'm5-new-delete': [14, 3], 'm6-allocation-failure': [14, 11],
         'm5-leaks': [14, 5], 'm5-smart': [14, 4],
 
-        'm7-abstraction': [15, 2], 'm5-linked': [14, 6], 'm7-linked-ops': [14, 7],
-        'm5-stack': [15, 5], 'm5-queue': [15, 6],
+        'm7-abstraction': [15, 3], 'm5-linked': [14, 6], 'm7-linked-ops': [14, 7],
+        'm5-stack': [15, 4], 'm5-queue': [15, 5],
         'm8-bst': [17, 3], 'm7-bst-insert': [17, 4],
         'm8-heap': [17, 5], 'm7-heap-ops': [17, 6], 'm7-heap-sort': [17, 7],
         'm5-reversal': [16, 4],
@@ -315,7 +315,7 @@
         11: [1, 2, 3, 4, 5, 6, 8],
         13: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         14: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-        15: [1, 2, 3, 4, 5, 6, 7, 8],
+        15: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
         16: [1, 2, 3, 4, 5, 7, 8],
         17: [1, 2, 3, 4, 5, 6, 7, 8],
         18: [1, 2, 3, 4, 5, 6, 7],
