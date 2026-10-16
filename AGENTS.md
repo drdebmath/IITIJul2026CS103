@@ -40,8 +40,10 @@ inspect the diff and ensure that frozen lectures have not changed incidentally.
 - Lecture 11 (`lecture11.html`) is frozen.
 - Lecture 12 (`lecture12.html`) is frozen.
 - Lecture 13 (`lecture13.html`) is frozen.
+- Lecture 14 (`lecture14.html`) is frozen.
+- Lecture 15 (`lecture15.html`) is frozen.
 
-This restriction also applies to Lecture 1 through Lecture 13 entries, including
+This restriction also applies to Lecture 1 through Lecture 15 entries, including
 Lecture 3.5, in shared data, extras, concept mappings, and other
 sources whenever changing them would alter the delivered content. Concept mappings
 may still be repaired when only the link or target is wrong and the lecture itself
