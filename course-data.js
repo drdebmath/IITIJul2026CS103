@@ -20,7 +20,7 @@
         { sequence: 14, lectureId: 13, date: '2026-10-09', start: '11:30', end: '12:25', title: 'Structures and Pointers', file: 'lecture13.html', module: '6' },
         { sequence: 15, lectureId: 14, date: '2026-10-13', start: '10:30', end: '11:25', title: 'Dynamic Memory and Linked Lists', file: 'lecture14.html', module: '6–7' },
         { sequence: 16, lectureId: 15, date: '2026-10-16', start: '11:30', end: '12:25', title: 'Stacks, Queues, and Abstract Data Types', file: 'lecture15.html', module: '5 & 7' },
-        { sequence: 17, lectureId: 16, date: '2026-10-23', start: '11:30', end: '12:25', title: 'Prove recursive progress to a base case', file: 'lecture16.html', module: '4–7' },
+        { sequence: 17, lectureId: 16, date: '2026-10-23', start: '11:30', end: '12:25', title: 'Recursion and the Call Stack', file: 'lecture16.html', module: '4–7' },
         { sequence: 18, lectureId: null, date: '2026-10-27', start: '10:30', end: '11:25', title: 'Apply structures, algorithms, and object design', file: 'index.html#assessment', module: 'Quiz', kind: 'quiz', quizNumber: 2 },
         { sequence: 19, lectureId: 17, date: '2026-10-30', start: '11:30', end: '12:25', title: 'Preserve invariants to search and sort efficiently', file: 'lecture17.html', module: '5 & 7' },
         { sequence: 20, lectureId: 18, date: '2026-11-03', start: '10:30', end: '11:25', title: 'Protect object invariants across their lifetime', file: 'lecture18.html', module: '8' },

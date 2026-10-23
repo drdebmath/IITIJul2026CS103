@@ -1437,3 +1437,14 @@
         if (event.key === 'ArrowRight' && nextLecture) window.location.assign(nextLecture.file);
     });
 }());
+
+// Every lecture deck gets Semi, the course mascot (lecture-mascot.js). It is an overlay that
+// leaves slide content unchanged, so frozen decks keep their delivered content.
+(function () {
+    'use strict';
+    if (!/lecture[\d-]+\.html$/.test(window.location.pathname) || document.querySelector('script[src$="lecture-mascot.js"]')) return;
+    const runtime = document.currentScript && document.currentScript.src;
+    const script = document.createElement('script');
+    script.src = runtime ? runtime.replace(/lecture-modern\.js(\?.*)?$/, 'lecture-mascot.js') : 'lecture-mascot.js';
+    document.body.appendChild(script);
+}());

@@ -22,11 +22,11 @@
 
     <main class="shell">
         <section class="hero">
-            <p class="eyebrow">41 compile-checked programs · C++17</p>
+            <p class="eyebrow">116 compile-checked programs · C++17</p>
             <h1>Examples that follow the <em>learning path.</em></h1>
             <p>Every filename begins with its lecture reference. Each example uses only concepts taught by that lecture; motivating previews show results without exposing later syntax.</p>
             <label class="search" for="example-search"><span aria-hidden="true">⌕</span><input id="example-search" type="search" placeholder="Search arrays, pointers, heaps…" autocomplete="off"></label>
-            <p class="result-count" id="result-count" aria-live="polite">38 examples</p>
+            <p class="result-count" id="result-count" aria-live="polite">116 examples</p>
         </section>
 
         <div class="lecture-index" aria-label="Jump to lecture examples">
@@ -53,69 +53,138 @@
 
         <div class="example-groups" id="examples">
             <section class="lecture-group" id="lecture-01" data-lecture="01"><header><span>L01</span><div><h2>Programming &amp; Problem Solving</h2><p>Minimal program structure and observable output.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-01-travel-time-estimator.cpp"><strong>Travel-time estimator</strong><span>Input, process, output: distance and speed to hours.</span><code>lecture-01-travel-time-estimator.cpp</code></a>
+                <a class="example-card" href="lecture-01-main-and-output.cpp"><strong>main and observable output</strong><span>The entry point prints one visible result.</span><code>lecture-01-main-and-output.cpp</code></a>
+                <a class="example-card" href="lecture-01-game-first-world.cpp"><strong>Game evolution · first world</strong><span>Output draws one fixed Snake-and-Cleaner frame.</span><code>lecture-01-game-first-world.cpp</code></a>
                 <a class="example-card" href="lecture-01-hello-world.cpp"><strong>Hello, World</strong><span>Entry point, output stream, and successful termination.</span><code>lecture-01-hello-world.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-02" data-lecture="02"><header><span>L02</span><div><h2>Types &amp; Representation</h2><p>Range, precision, constants, inference, and conversion.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-02-sensor-packet-types.cpp"><strong>Choose types for a sensor packet</strong><span>int, double, float, bool, and char chosen by range and precision.</span><code>lecture-02-sensor-packet-types.cpp</code></a>
+                <a class="example-card" href="lecture-02-game-named-state.cpp"><strong>Game evolution · named state</strong><span>Named constants and variables give the world memory.</span><code>lecture-02-game-named-state.cpp</code></a>
                 <a class="example-card" href="lecture-02-types-and-conversions.cpp"><strong>Sensor packet types</strong><span>Fixed-width integers, floating point, bool, char, auto, and static_cast.</span><code>lecture-02-types-and-conversions.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-03" data-lecture="03"><header><span>L03</span><div><h2>Expressions, Scope &amp; Program State</h2><p>Names, visibility, storage duration, and linkage.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-03-block-scope.cpp"><strong>Block scope</strong><span>A name declared in a block is visible only inside it.</span><code>lecture-03-block-scope.cpp</code></a>
+                <a class="example-card" href="lecture-03-namespaces.cpp"><strong>Namespaces</strong><span>A qualified name keeps same-named declarations apart.</span><code>lecture-03-namespaces.cpp</code></a>
+                <a class="example-card" href="lecture-03-operator-precedence.cpp"><strong>Operators and expressions</strong><span>Precedence, grouping, and a combined condition.</span><code>lecture-03-operator-precedence.cpp</code></a>
+                <a class="example-card" href="lecture-03-game-state-transition.cpp"><strong>Game evolution · one transition</strong><span>Temporary names compute the next position in a block.</span><code>lecture-03-game-state-transition.cpp</code></a>
+                <a class="example-card" href="lecture-03-game-score-scope.cpp"><strong>Update game state without leaking temporary names</strong><span>A block-local reward updates score and then disappears.</span><code>lecture-03-game-score-scope.cpp</code></a>
+                <a class="example-card" href="lecture-03-increment-operators.cpp"><strong>Pre-increment vs post-increment</strong><span>Prefix and postfix forms in assignments, output, and conditions (Lecture 3.5).</span><code>lecture-03-increment-operators.cpp</code></a>
                 <a class="example-card" href="lecture-03-expressions-and-scope.cpp"><strong>Expressions and scope</strong><span>Namespaces, precedence, nested scope, and global state.</span><code>lecture-03-expressions-and-scope.cpp</code></a>
                 <a class="example-card" href="lecture-03-storage-and-linkage.cpp"><strong>Static and extern</strong><span>Persistent local state plus an externally defined value.</span><code>lecture-03-storage-and-linkage.cpp</code></a>
                 <a class="example-card" href="lecture-03-shared-data.cpp"><strong>Shared definition</strong><span>Translation-unit definition used by the linkage example.</span><code>lecture-03-shared-data.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-04" data-lecture="04"><header><span>L04</span><div><h2>Decisions &amp; Safe Branching</h2><p>Ordered safety rules and explicit boundaries.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-04-overcurrent-protection.cpp"><strong>Over-current protection controller</strong><span>Branches ordered from exceptional to normal, as on the slide.</span><code>lecture-04-overcurrent-protection.cpp</code></a>
+                <a class="example-card" href="lecture-04-game-legal-move.cpp"><strong>Game evolution · legal move</strong><span>A move is applied only when it is inside the board and not blocked.</span><code>lecture-04-game-legal-move.cpp</code></a>
                 <a class="example-card" href="lecture-04-overcurrent-controller.cpp"><strong>Overcurrent controller</strong><span>Short-circuit protection logic and ordered classification.</span><code>lecture-04-overcurrent-controller.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-05" data-lecture="05"><header><span>L05</span><div><h2>Iteration I · while &amp; Input Validation</h2><p>Condition-controlled repetition and progress.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-05-production-quality-scan.cpp"><strong>Production-line quality scan</strong><span>A while loop with a defect count and an early break.</span><code>lecture-05-production-quality-scan.cpp</code></a>
+                <a class="example-card" href="lecture-05-game-command-loop.cpp"><strong>Game evolution · command loop</strong><span>A do-while validates a command; a while advances turns until quit.</span><code>lecture-05-game-command-loop.cpp</code></a>
                 <a class="example-card" href="lecture-05-production-scan.cpp"><strong>Production quality scan</strong><span>A while-loop invariant with a defect-based stopping condition.</span><code>lecture-05-production-scan.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-06" data-lecture="06"><header><span>L06</span><div><h2>Iteration II · for, Nested Loops &amp; Invariants</h2><p>Counted ranges and row–column combinations.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-06-multiplication-table.cpp"><strong>Multiplication table</strong><span>A for loop with an explicit counter range.</span><code>lecture-06-multiplication-table.cpp</code></a>
+                <a class="example-card" href="lecture-06-game-render-board.cpp"><strong>Game evolution · render the board</strong><span>Nested loops turn state into a board.</span><code>lecture-06-game-render-board.cpp</code></a>
+                <a class="example-card" href="lecture-06-for-loop-forms.cpp"><strong>Counted and nested for loops</strong><span>A single loop, an exact-range loop, and row-column pairs.</span><code>lecture-06-for-loop-forms.cpp</code></a>
                 <a class="example-card" href="lecture-06-nested-loops.cpp"><strong>Calibration grid</strong><span>Two counted loops enumerate every row–column pair.</span><code>lecture-06-nested-loops.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-07" data-lecture="07"><header><span>L07</span><div><h2>Functions I · Contracts &amp; Calls</h2><p>Value parameters, return values, and decomposition.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-07-travel-estimate-function.cpp"><strong>Travel estimate behind a function interface</strong><span>A function owns one calculation; main validates input.</span><code>lecture-07-travel-estimate-function.cpp</code></a>
+                <a class="example-card" href="lecture-07-declare-then-define.cpp"><strong>Declare once, define once</strong><span>A prototype lets main call a function defined below it.</span><code>lecture-07-declare-then-define.cpp</code></a>
+                <a class="example-card" href="lecture-07-game-score-function.cpp"><strong>Game evolution · scoring function</strong><span>A value parameter leaves the caller's score unchanged.</span><code>lecture-07-game-score-function.cpp</code></a>
+                <a class="example-card" href="lecture-07-functions-and-lambdas.cpp"><strong>Value parameters, named steps, and lambdas</strong><span>Small functions and a lambda composed into one program.</span><code>lecture-07-functions-and-lambdas.cpp</code></a>
                 <a class="example-card" href="lecture-07-function-contracts.cpp"><strong>Function contracts</strong><span>Value parameters and return values for three single-purpose functions.</span><code>lecture-07-function-contracts.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-08" data-lecture="08"><header><span>L08</span><div><h2>Functions II · References &amp; Decomposition</h2><p>References, const access, and call structure.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-08-order-pair.cpp"><strong>Return two results without global variables</strong><span>Output parameters declared as references.</span><code>lecture-08-order-pair.cpp</code></a>
+                <a class="example-card" href="lecture-08-game-move-player.cpp"><strong>Game evolution · movement function</strong><span>Reference parameters let one function update the position.</span><code>lecture-08-game-move-player.cpp</code></a>
+                <a class="example-card" href="lecture-08-reference-parameters.cpp"><strong>Copy, alias, or read-only access</strong><span>Reference, const reference, and overload forms from the slides.</span><code>lecture-08-reference-parameters.cpp</code></a>
+                <a class="example-card" href="lecture-08-recursive-factorial.cpp"><strong>Recursion needs a base case</strong><span>A base case and a smaller next call.</span><code>lecture-08-recursive-factorial.cpp</code></a>
                 <a class="example-card" href="lecture-08-output-references.cpp"><strong>Order a pair</strong><span>Return two related results through reference parameters.</span><code>lecture-08-output-references.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-09" data-lecture="09"><header><span>L09</span><div><h2>Arrays I · Fixed Sequences &amp; Traversal</h2><p>Fixed extents, indices, bounds, and traversal.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-09-anomalous-temperature.cpp"><strong>Find an anomalous temperature in a week</strong><span>One pass for the mean, one for the farthest reading.</span><code>lecture-09-anomalous-temperature.cpp</code></a>
+                <a class="example-card" href="lecture-09-game-snake-collision.cpp"><strong>Game evolution · linked segments</strong><span>Parallel arrays hold the body; a loop checks for a collision.</span><code>lecture-09-game-snake-collision.cpp</code></a>
+                <a class="example-card" href="lecture-09-voltage-array.cpp"><strong>Arrays, indices, and traversal</strong><span>std::array declaration, indexing, indexed and range-for traversal, array parameter.</span><code>lecture-09-voltage-array.cpp</code></a>
                 <a class="example-card" href="lecture-09-weekly-temperatures.cpp"><strong>Weekly temperatures</strong><span>A fixed array traversed with its actual size as the bound.</span><code>lecture-09-weekly-temperatures.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-10" data-lecture="10"><header><span>L10</span><div><h2>Arrays II · Matrices &amp; std::vector</h2><p>Multiple dimensions and runtime-sized sequences.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-10" data-lecture="10"><header><span>L10</span><div><h2>Two-Dimensional Arrays &amp; std::vector</h2><p>Matrices, nested traversal, and runtime-sized vectors.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-10-score-matrix-summary.cpp"><strong>Summarize a classroom score matrix</strong><span>Row totals of a vector of vectors.</span><code>lecture-10-score-matrix-summary.cpp</code></a>
+                <a class="example-card" href="lecture-10-game-world-grid.cpp"><strong>Game evolution · 2D world</strong><span>A two-dimensional char array represents the world.</span><code>lecture-10-game-world-grid.cpp</code></a>
+                <a class="example-card" href="lecture-10-matrix-traversal.cpp"><strong>Two-dimensional arrays</strong><span>Declare a 2D array and traverse it with nested loops.</span><code>lecture-10-matrix-traversal.cpp</code></a>
+                <a class="example-card" href="lecture-10-vector-readings.cpp"><strong>std::vector push_back and at</strong><span>A dynamically sized sequence with checked access.</span><code>lecture-10-vector-readings.cpp</code></a>
                 <a class="example-card" href="lecture-10-matrix-vector.cpp"><strong>Score matrix</strong><span>Nested vector traversal with checked row and column access.</span><code>lecture-10-matrix-vector.cpp</code></a>
                 <a class="example-card" href="lecture-10-image-grid.cpp"><strong>Image grid</strong><span>A fixed two-dimensional array rendered through nested traversal.</span><code>lecture-10-image-grid.cpp</code></a>
             </div></section>
 
             <section class="lecture-group" id="lecture-11" data-lecture="11"><header><span>L11</span><div><h2>Strings &amp; Text Processing</h2><p>Owned text, input, classification, and validation.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-11-institute-email-check.cpp"><strong>Validate an institute email address</strong><span>find, substr, and character classification in one predicate.</span><code>lecture-11-institute-email-check.cpp</code></a>
+                <a class="example-card" href="lecture-11-game-replay-string.cpp"><strong>Game evolution · replay string</strong><span>A string stores commands; a loop validates each one.</span><code>lecture-11-game-replay-string.cpp</code></a>
+                <a class="example-card" href="lecture-11-string-operations.cpp"><strong>Size, find, substr, and classification</strong><span>Positions and lengths make text operations explicit.</span><code>lecture-11-string-operations.cpp</code></a>
                 <a class="example-card" href="lecture-11-enrollment-id.cpp"><strong>Enrollment ID validator</strong><span>Prefix, length, and digit predicates with safe cctype use.</span><code>lecture-11-enrollment-id.cpp</code></a>
                 <a class="example-card" href="lecture-11-cat-text.cpp"><strong>Text as a sequence</strong><span>A vector of strings rendered line by line.</span><code>lecture-11-cat-text.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-12" data-lecture="12"><header><span>L12</span><div><h2>Debugging &amp; Assessment Debrief</h2><p>Contracts, boundary cases, integration, and regression tests.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-12" data-lecture="12"><header><span>L12</span><div><h2>Errors, Debugging &amp; Testing</h2><p>Pre-conditions with assert, test drivers, and the recursion, array, and string questions from the review sets.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-12-divide-assert.cpp"><strong>Assert a pre-condition of divide</strong><span>The second call violates the pre-condition and aborts (intended).</span><code>lecture-12-divide-assert.cpp</code></a>
+                <a class="example-card" href="lecture-12-divide-test-driver.cpp"><strong>Test divide with a test driver</strong><span>Known-input tests pass; then a violated pre-condition aborts (intended).</span><code>lecture-12-divide-test-driver.cpp</code></a>
+                <a class="example-card" href="lecture-12-average-marks.cpp"><strong>Average marks without dividing by zero</strong><span>assert for a pre-condition, if for user input (reads marks ending in -1).</span><code>lecture-12-average-marks.cpp</code></a>
+                <a class="example-card" href="lecture-12-array-statistics.cpp"><strong>Set A · Array statistics through references</strong><span>Minimum, maximum, and mean through reference parameters.</span><code>lecture-12-array-statistics.cpp</code></a>
+                <a class="example-card" href="lecture-12-recursive-sum.cpp"><strong>Set A · Recursive sum of the first n numbers</strong><span>A base case and a smaller call, then a decision on the result.</span><code>lecture-12-recursive-sum.cpp</code></a>
+                <a class="example-card" href="lecture-12-string-validation.cpp"><strong>Set A · String validation and counting</strong><span>find, npos, substr, and a digit count.</span><code>lecture-12-string-validation.cpp</code></a>
+                <a class="example-card" href="lecture-12-first-index-search.cpp"><strong>Set B · Search an array using a function</strong><span>Linear search returning an index or -1.</span><code>lecture-12-first-index-search.cpp</code></a>
+                <a class="example-card" href="lecture-12-recursive-power.cpp"><strong>Set B · Recursive power</strong><span>power(base, exp) with a base case at exp == 0.</span><code>lecture-12-recursive-power.cpp</code></a>
+                <a class="example-card" href="lecture-12-vector-totals.cpp"><strong>Set B · Vector totals and a string length</strong><span>push_back, indexed traversal, and size.</span><code>lecture-12-vector-totals.cpp</code></a>
                 <a class="example-card" href="lecture-12-rainfall-integration.cpp"><strong>Rainfall analyzer</strong><span>Functions, vector traversal, accumulation, and maximum-index search.</span><code>lecture-12-rainfall-integration.cpp</code></a>
                 <a class="example-card" href="lecture-12-boundary-tests.cpp"><strong>Boundary tests</strong><span>Repair average calculation and test empty and integer-division cases.</span><code>lecture-12-boundary-tests.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-13" data-lecture="13"><header><span>L13</span><div><h2>Records, Pointers &amp; Memory Layout</h2><p>Structured records, addresses, indirection, and layout.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-13" data-lecture="13"><header><span>L13</span><div><h2>Structures &amp; Pointers</h2><p>Records, the address-of and dereference operators, null pointers, member access, and layout.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-13-reading-struct.cpp"><strong>A struct: one record, several data members</strong><span>Define a struct, initialize it, and change one member.</span><code>lecture-13-reading-struct.cpp</code></a>
+                <a class="example-card" href="lecture-13-array-of-structs.cpp"><strong>An array of structs</strong><span>Many records of one type stored together.</span><code>lecture-13-array-of-structs.cpp</code></a>
+                <a class="example-card" href="lecture-13-pointer-basics.cpp"><strong>Address-of, dereference, and null pointer</strong><span>A pointer holds an address; nullptr points to no object.</span><code>lecture-13-pointer-basics.cpp</code></a>
+                <a class="example-card" href="lecture-13-null-check-before-dereference.cpp"><strong>Check before you dereference</strong><span>A pointer must point to an object before it is dereferenced.</span><code>lecture-13-null-check-before-dereference.cpp</code></a>
+                <a class="example-card" href="lecture-13-find-sensor-pointer.cpp"><strong>Return a pointer when "not found" is an answer</strong><span>Look up a sensor; nullptr means no match.</span><code>lecture-13-find-sensor-pointer.cpp</code></a>
+                <a class="example-card" href="lecture-13-member-access.cpp"><strong>Member access: dot and arrow</strong><span>Dot through an object, arrow through a pointer.</span><code>lecture-13-member-access.cpp</code></a>
+                <a class="example-card" href="lecture-13-struct-parameters.cpp"><strong>Passing a struct to a function</strong><span>Copy a struct, pass by const reference and by reference.</span><code>lecture-13-struct-parameters.cpp</code></a>
+                <a class="example-card" href="lecture-13-null-pointer-precondition.cpp"><strong>A pointer parameter has a pre-condition</strong><span>The pointer must not be null; the last call aborts (intended).</span><code>lecture-13-null-pointer-precondition.cpp</code></a>
+                <a class="example-card" href="lecture-13-struct-padding-layout.cpp"><strong>Alignment and padding</strong><span>sizeof and offsetof show the padding; values are implementation-specific.</span><code>lecture-13-struct-padding-layout.cpp</code></a>
+                <a class="example-card" href="lecture-13-pointer-arithmetic.cpp"><strong>Pointer arithmetic</strong><span>Pointers move by whole elements inside one array.</span><code>lecture-13-pointer-arithmetic.cpp</code></a>
                 <a class="example-card" href="lecture-13-sensor-records.cpp"><strong>Sensor records</strong><span>Array of structs plus null-safe pointer member access.</span><code>lecture-13-sensor-records.cpp</code></a>
                 <a class="example-card" href="lecture-13-structure-padding.cpp"><strong>Structure padding</strong><span>Compare size, alignment, and field offsets for two layouts.</span><code>lecture-13-structure-padding.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-14" data-lecture="14"><header><span>L14</span><div><h2>Dynamic Memory &amp; Linked Structures</h2><p>Ownership, allocation, smart pointers, and links.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-14" data-lecture="14"><header><span>L14</span><div><h2>Dynamic Memory &amp; Linked Lists</h2><p>Lifetimes, new and delete, unique_ptr, linked nodes, and allocation failure.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-14-two-lifetimes.cpp"><strong>A local object and a free-store object</strong><span>Automatic versus dynamic lifetime.</span><code>lecture-14-two-lifetimes.cpp</code></a>
+                <a class="example-card" href="lecture-14-new-and-delete.cpp"><strong>new and delete</strong><span>One object or an array of objects, released with matching delete forms.</span><code>lecture-14-new-and-delete.cpp</code></a>
+                <a class="example-card" href="lecture-14-unique-ptr.cpp"><strong>unique_ptr: exclusive ownership</strong><span>Ownership moves and is released automatically.</span><code>lecture-14-unique-ptr.cpp</code></a>
+                <a class="example-card" href="lecture-14-linked-nodes.cpp"><strong>A linked list of nodes</strong><span>Nodes connected by next pointers.</span><code>lecture-14-linked-nodes.cpp</code></a>
+                <a class="example-card" href="lecture-14-list-build-and-sum.cpp"><strong>Build and summarize a linked list</strong><span>Insert at the head, traverse, sum, and release.</span><code>lecture-14-list-build-and-sum.cpp</code></a>
+                <a class="example-card" href="lecture-14-list-front-precondition.cpp"><strong>A list function has a pre-condition</strong><span>front requires a non-empty list; the last call aborts (intended).</span><code>lecture-14-list-front-precondition.cpp</code></a>
+                <a class="example-card" href="lecture-14-malloc-and-free.cpp"><strong>C allocation: malloc and free</strong><span>Bytes, not objects; free pairs with malloc.</span><code>lecture-14-malloc-and-free.cpp</code></a>
+                <a class="example-card" href="lecture-14-allocation-failure.cpp"><strong>Allocation failure</strong><span>new throws bad_alloc; nothrow new returns nullptr.</span><code>lecture-14-allocation-failure.cpp</code></a>
                 <a class="example-card" href="lecture-14-dynamic-memory-and-lists.cpp"><strong>Memory and linked lists</strong><span>Raw allocation, smart pointers, failures, and list operations.</span><code>lecture-14-dynamic-memory-and-lists.cpp</code></a>
                 <a class="example-card" href="lecture-14-c-allocation.cpp"><strong>C allocation API</strong><span>malloc, calloc, realloc, free, and address tracing.</span><code>lecture-14-c-allocation.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-15" data-lecture="15"><header><span>L15</span><div><h2>Linear Structures &amp; Array Algorithms</h2><p>ADTs, search, sort, stacks, and queues.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-15" data-lecture="15"><header><span>L15</span><div><h2>Stacks, Queues &amp; Abstract Data Types</h2><p>Last-in first-out and first-in first-out containers behind one interface.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-15-insertion-is-a-stack.cpp"><strong>Insertion at the head is a stack</strong><span>The last reading inserted is the first in the list.</span><code>lecture-15-insertion-is-a-stack.cpp</code></a>
+                <a class="example-card" href="lecture-15-bracket-matching.cpp"><strong>Bracket matching with std::stack</strong><span>The last bracket opened closes first.</span><code>lecture-15-bracket-matching.cpp</code></a>
+                <a class="example-card" href="lecture-15-print-queue.cpp"><strong>A print queue with std::queue</strong><span>Jobs are served in arrival order.</span><code>lecture-15-print-queue.cpp</code></a>
+                <a class="example-card" href="lecture-15-stack-containers.cpp"><strong>One interface, three implementations</strong><span>std::stack over deque, vector, and list.</span><code>lecture-15-stack-containers.cpp</code></a>
+                <a class="example-card" href="lecture-15-queue-cost.cpp"><strong>Cost decides the representation</strong><span>Dequeue from a vector versus a deque; timings are implementation-specific.</span><code>lecture-15-queue-cost.cpp</code></a>
+                <a class="example-card" href="lecture-15-empty-container-errors.cpp"><strong>Reading or removing from an empty container</strong><span>Test empty() before top(); the last pop violates its pre-condition (aborts, intended).</span><code>lecture-15-empty-container-errors.cpp</code></a>
                 <a class="example-card" href="lecture-15-linear-search.cpp"><strong>Linear search</strong><span>First and all matching indices in an unsorted array.</span><code>lecture-15-linear-search.cpp</code></a>
                 <a class="example-card" href="lecture-15-array-stack.cpp"><strong>Array stack</strong><span>LIFO operations as free functions over a plain state record.</span><code>lecture-15-array-stack.cpp</code></a>
                 <a class="example-card" href="lecture-15-linked-queue.cpp"><strong>Linked queue</strong><span>FIFO free functions over dynamically linked nodes.</span><code>lecture-15-linked-queue.cpp</code></a>
@@ -123,7 +192,13 @@
                 <a class="example-card" href="lecture-15-elementary-sorts.cpp"><strong>Elementary sorts</strong><span>Bubble, selection, and insertion sort traces.</span><code>lecture-15-elementary-sorts.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-16" data-lecture="16"><header><span>L16</span><div><h2>Recursive Decomposition in Practice</h2><p>Base cases, progress, and linked transformations.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-16" data-lecture="16"><header><span>L16</span><div><h2>Recursion &amp; the Call Stack</h2><p>Base cases, shrinking measures, backtracking, and memoization.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-16-print-list-backward.cpp"><strong>Print a list backward</strong><span>The print after the call runs as the frames return.</span><code>lecture-16-print-list-backward.cpp</code></a>
+                <a class="example-card" href="lecture-16-print-binary.cpp"><strong>Print in binary</strong><span>A measure that halves to the base case, with an assert pre-condition.</span><code>lecture-16-print-binary.cpp</code></a>
+                <a class="example-card" href="lecture-16-recursive-reverse.cpp"><strong>Recursive list reversal</strong><span>Reverse the rest, then attach the head.</span><code>lecture-16-recursive-reverse.cpp</code></a>
+                <a class="example-card" href="lecture-16-folder-sizes.cpp"><strong>Folder sizes</strong><span>Recursion over a nested structure of folders.</span><code>lecture-16-folder-sizes.cpp</code></a>
+                <a class="example-card" href="lecture-16-permutations.cpp"><strong>Permutations by backtracking</strong><span>Choose, explore, undo over the letters of "abc".</span><code>lecture-16-permutations.cpp</code></a>
+                <a class="example-card" href="lecture-16-grid-paths-memo.cpp"><strong>Grid routes with memoization</strong><span>Naive and memoized call counts on a 12×12 grid.</span><code>lecture-16-grid-paths-memo.cpp</code></a>
                 <a class="example-card" href="lecture-16-recursive-list.cpp"><strong>Recursive list reversal</strong><span>Move unique ownership while reversing a linked chain.</span><code>lecture-16-recursive-list.cpp</code></a>
             </div></section>
 
