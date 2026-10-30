@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CS103 Quiz 2: the 27 October 2026 paper, with the answer and a short reason for every question">
+    <title>Quiz 2: questions and solutions</title>
+    <script src="lecture-runtime.js"></script>
+    <link rel="stylesheet" href="lecture-modern.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+    <section data-markdown><textarea data-template>
+# Quiz 2: questions and solutions
+## The 27 October 2026 paper · 45 marks · Lectures 12–16
+
+**Instructor:** [Dr. Debasish Pattanayak](https://drdebmath.github.io)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## How to use this page
+
+Each question appears with its code, followed by the answer and a short reason. Write your own answer first, then compare.
+
+Assume C++17 with every required header included. The paper used these declarations throughout:
+
+~~~cpp
+// A linked list
+struct Node { int value; Node* next; };
+
+// new Node{value, head}, then head points at it
+void pushFront(Node*& head, int value);
+// deletes every node of the list
+void release(Node* head);
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Also given on the paper
+
+~~~cpp
+// The standard stack and queue
+std::stack<int> s;  // s.push(x) s.top() s.pop()
+std::queue<int> q;  // q.push(x) q.front() q.back()
+                    // q.pop()
+// both: empty() size()
+// pop() removes an item and returns nothing
+~~~
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q1 · How many calls to `fib` are made? (6 marks)
+
+~~~cpp
+int fib(int n) {
+    if (n <= 2) return 1;
+    return fib(n - 1) + fib(n - 2);
+}
+
+int main() {
+    std::cout << fib(5) << '\n';
+}
+~~~
+
+(a) How many times is `fib` called in total, including `fib(5)`? (b) How many of those calls are `fib(2)`? (c) At most, how many `fib` frames are on the call stack at the same time? (d) What does the program print?
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q1 · Answer
+
+| Part | Answer | Why |
+| --- | --- | --- |
+| **(a)** | **9** | The base case is `n <= 2`, so `fib(2)` and `fib(1)` are leaves: `fib(5)` ×1, `fib(4)` ×1, `fib(3)` ×2, `fib(2)` ×3, `fib(1)` ×2. A common mistake is 15, which is the count for the `n <= 1` version. |
+| **(b)** | **3** | `fib(2)` is called three times (see the counts above). |
+| **(c)** | **4** | `fib(5)` → `fib(4)` → `fib(3)` → `fib(2)`; `fib(1)` is never deeper than that. |
+| **(d)** | **5** | `fib(5)` returns 5. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q2 · What is `total`? (3 marks)
+
+~~~cpp
+struct Item { int price; int qty; };
+
+Item cart[] = {{40, 2}, {15, 4}, {120, 1}, {5, 10}};
+int total = 0;
+for (int i = 0; i < 3; ++i)
+    if (cart[i].qty > 1)
+        total += cart[i].price * cart[i].qty;
+~~~
+
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q2 · Answer
+
+**Answer:** `total` is `140`.
+
+**Why:** The loop runs while `i < 3`, so the `{5, 10}` item is never visited, and the `120` item has `qty == 1`. Only 40·2 + 15·4 is added. A common mistake is 190, which comes from reading the loop as covering all four items.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q3 · What is the value of `s`? (3 marks)
+
+~~~cpp
+int a[] = {3, 1, 4, 1, 5, 9, 2, 6};
+int* p = a;
+int* q = a + 6;
+int s = 0;
+while (p < q) {
+    s += *q - *p;
+    ++p;
+    --q;
+}
+~~~
+
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q3 · Answer
+
+**Answer:** `s` is `8`.
+
+**Why:** `q` starts at `a[6]`, so the sum is (2−3) + (9−1) + (5−4) = −1 + 8 + 1. The pointers meet at `a[3]` and stop, so `a[3]` and `a[7]` are never used.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q4 · What is the value of `r`? (3 marks)
+
+~~~cpp
+std::stack<int> s;
+int n = 200;
+while (n > 0) {
+    s.push(n % 8);
+    n /= 8;
+}
+int r = 0;
+while (!s.empty()) {
+    r = r * 10 + s.top();
+    s.pop();
+}
+~~~
+
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q4 · Answer
+
+**Answer:** `r` is `310`.
+
+**Why:** 200 = 3·64 + 1·8 + 0. The 0 is pushed first and popped last, so it is the last digit.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q5 · Which player is left? (3 marks)
+
+~~~cpp
+std::queue<int> q;
+for (int i = 1; i <= 10; ++i) q.push(i);
+while (q.size() > 1) {
+    q.push(q.front());   // front player to the back
+    q.pop();
+    q.pop();             // next player leaves
+}
+~~~
+
+**Answer:** `q.front()` is `5`.
+
+**Why:** There are ten players and every second one is out. Players 2, 4, 6, 8, 10, 3, 7, 1, 9 leave in that order, so 5 is left.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q6 · What does the queue hold after each operation? (3 marks)
+
+The queue `q` starts empty. Row 0 is done; each other row is ½ mark.
+
+| Row | Operation | Queue afterwards (front first) | Why |
+| --- | --- | --- | --- |
+| 0 | `q.push(3);` | `3` | |
+| 1 | `q.push(8);` | `3 8` | `8` joins the back. |
+| 2 | `q.push(q.front());` | `3 8 3` | A copy of the front joins the back; nothing is removed. |
+| 3 | `q.pop();` | `8 3` | The front is removed. |
+| 4 | `q.push(q.front() * 2);` | `8 3 16` | The front is 8, and 8 · 2 = 16. |
+| 5 | `q.pop();` | `3 16` | The front is removed. |
+| 6 | `q.push(q.front() + q.back());` | `3 16 19` | The front is 3 and the back is 16, and 3 + 16 = 19. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q7 · What is left after a node is removed? (3 marks)
+
+~~~cpp
+Node* head = nullptr;
+for (int v = 1; v <= 4; ++v)
+    pushFront(head, v * 10);
+// the diagram shows memory here
+Node* p = head->next;
+head->next = p->next;
+delete p;
+head = head->next;
+~~~
+
+After line 3: `head` → 40 → 30 → 20 → 10 → null. After line 8: (a) Which values are in the list, from `head` onward? (b) Which value is in the node that is now a memory leak? (c) What is `p` now: points to a node, a null pointer, or a dangling pointer?
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q7 · Answer
+
+| Part | Answer | Why |
+| --- | --- | --- |
+| **(a)** | **20 10** | The list is 40 → 30 → 20 → 10. Line 6 sets `p` to node 30. Line 7 makes node 40 point to node 20, and line 8 deletes node 30. Line 9 moves `head` to node 20. |
+| **(b)** | **40** | After line 8, `head` points past node 40, and it was never deleted. |
+| **(c)** | **a dangling pointer** | `p` still holds the address of the deleted node 30. |
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q8 · What does `g(n)` return? (4 marks)
+
+~~~cpp
+int g(int n) {      // n >= 0
+    if (n == 0) return 0;
+    return g(n / 2) + n % 2;
+}
+~~~
+
+(a) What is `g(13)`? (b) How many calls to `g` does `g(13)` make, including itself? (c) In one sentence, what does `g(n)` compute for any `n >= 0`? (2 marks)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q8 · Answer
+
+**(a)** `g(13)` is `3`.
+
+**(b)** `5` calls: `g(13)`, `g(6)`, `g(3)`, `g(1)`, `g(0)`.
+
+**(c)** `g(n)` is the number of 1s in the binary representation of `n` (the number of 1 bits).
+
+**Why:** Each call adds the last bit, `n % 2`, and then halves `n` until it reaches 0. A line-by-line account such as "adds `n % 2` and halves `n` until 0" is correct, but the full marks go to the answer that says what it computes: the number of 1 bits.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q9 · Which `n` was passed to `f`? (3 marks)
+
+~~~cpp
+void f(int n) {
+    if (n <= 1) return;
+    std::cout << n << ' ';
+    f(n / 2);
+    std::cout << n * 10 << ' ';
+}
+~~~
+
+The call `f(n)` printed this, with a space after each value:
+
+~~~
+9 4 2 20 40 90 
+~~~
+
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q9 · Answer
+
+**Answer:** `n` is `9`.
+
+**Why:** The first value printed is `n` itself. Then `9 / 2` is 4 (integer division), then 2, then `f(1)` stops. The `n * 10` values print as the calls return, ending with 90.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q10 · Which test case shows the error? (4 marks)
+
+~~~cpp
+// pre-condition: the list is not empty
+int largest(Node* head) {
+    int best = 0;
+    for (Node* cur = head; cur != nullptr;
+         cur = cur->next)
+        if (cur->value > best)
+            best = cur->value;
+    return best;
+}
+~~~
+
+For `4 9 2` it correctly returns `9`. (a) Give a test (at most three values) that returns a wrong value. (b) Which line is wrong, and what kind of error is it? (c) Correct that line.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q10 · Answer
+
+**(a)** Any list of at most three values that are **all negative**, for example `-5 -2`. It returns 0, not −2. A list such as `-3 0` gives a correct result for this code, so it does not show the error.
+
+**(b)** **Line 3**, a **logic** error.
+
+**(c)** `int best = head->value;` (the pre-condition guarantees the list is not empty). Also accepted: `int best = INT_MIN;` or `int best = std::numeric_limits<int>::min();`.
+
+**Why:** `best` starts at 0, so a list whose values are all below 0 never replaces it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q11 · Where is the error in `release`? (3 marks)
+
+~~~cpp
+void release(Node* head) {
+    while (head != nullptr) {
+        delete head;
+        head = head->next;
+    }
+}
+~~~
+
+(a) Which line uses memory that has already been released, and what kind of error is it? (b) Write the corrected code inside the `while` loop. (2 marks)
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q11 · Answer
+
+**(a)** **Line 4**, a **run-time** error. It is undefined behavior: line 4 reads `head->next` after `delete head` has released the node.
+
+**(b)**
+
+~~~cpp
+Node* next = head->next;
+delete head;
+head = next;
+~~~
+
+**Why:** Save `next` before the `delete`, then move `head` to it.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q12 · In what order do the lines of `popFront` go? (4 marks)
+
+`popFront` removes the first node, deletes it, and returns its value.
+
+~~~cpp
+int popFront(Node*& head) {
+    assert(head != nullptr);
+    // lines A to E go here
+}
+// A   delete old;
+// B   head = ______;
+// C   Node* old = head;
+// D   return value;
+// E   int value = old->value;
+~~~
+
+(a) Put A to E in a correct order. (b) Fill the blank in B so `head` moves to the second node.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q12 · Answer
+
+**(a)** **C B E A D** or **C E B A D**.
+
+**(b)** `old->next` (also accepted: `head->next`, because line B runs before line A, while `head == old`).
+
+**Why:** C must come first, because `old` has to exist before it is used. D must come last, because it returns. Both B and E must come before A, because after `delete old` you may not read `old->next` or `old->value`.
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q13 · What completes `countEven`? (3 marks)
+
+Fill the three blanks so that `countEven` returns the number of nodes with an even value.
+
+~~~cpp
+int countEven(Node* head) {
+    if (__________)
+        return 0;
+    int rest = __________;
+    return __________;
+}
+~~~
+
+    </textarea></section>
+    <section data-markdown><textarea data-template>
+## Q13 · Answer
+
+**Answer (1 mark each):**
+
+1. `head == nullptr`
+2. `countEven(head->next)`
+3. `rest + (head->value % 2 == 0 ? 1 : 0)` (also accepted: `rest + (head->value % 2 == 0)`)
+
+**Why:** The empty list has no nodes, so the answer is 0. Otherwise count the even nodes in the rest of the list, and add 1 if this node's value is even. A loop in place of the recursive call scores 0 for that blank.
+    </textarea></section>
+</div></div>
+<script>Reveal.initialize({ hash: true, plugins: [RevealMarkdown, RevealHighlight] });</script>
+<script src="lecture-modern.js"></script>
+</body>
+</html>
