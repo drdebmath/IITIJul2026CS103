@@ -42,12 +42,25 @@ inspect the diff and ensure that frozen lectures have not changed incidentally.
 - Lecture 13 (`lecture13.html`) is frozen.
 - Lecture 14 (`lecture14.html`) is frozen.
 - Lecture 15 (`lecture15.html`) is frozen.
+- Lecture 16 (`lecture16.html`) is frozen.
 
-This restriction also applies to Lecture 1 through Lecture 15 entries, including
+This restriction also applies to Lecture 1 through Lecture 16 entries, including
 Lecture 3.5, in shared data, extras, concept mappings, and other
 sources whenever changing them would alter the delivered content. Concept mappings
 may still be repaired when only the link or target is wrong and the lecture itself
 remains unchanged.
+
+## Course focus: programming concepts, not data structures and algorithms
+
+CS103 teaches programming concepts. Data structures and algorithms are not part
+of the course. Each lecture teaches a programming concept (for example classes
+and constructors, access control, `const` member functions, inheritance), and
+uses searching, sorting, lists, stacks, trees, and similar material only as the
+examples through which that concept is taught. Do not build a deck, or a slide,
+whose subject is a data structure or an algorithm itself. When a lecture draft
+or `course-data.js` title names an algorithm topic, plan the deck around the
+programming concept it should teach, and ask the instructor if that concept is
+unclear.
 
 ## Expanding a lecture draft into a full deck
 
@@ -118,7 +131,11 @@ they change, update that lecture's pins and `sessionPlans` entry in
   size 15, no blank lines inside the SVG.
 - Avoid `<defs>` markers and patterns (they do not follow the theme colour);
   draw arrowheads as inline polygons. Give every id a figure-specific prefix.
-- One idea per figure; add one only where a picture beats the code and table.
+- Animate every code example. A slide must not be only code boxes: each program
+  on a slide gets a step-through figure (below) beside or under it, showing what
+  the code does to the objects, memory, or control flow one step at a time
+  (object creation, which constructor runs, a member function call, a blocked
+  access, a compile error and why). Keep each figure to one idea.
 - For a process that changes over time (insertion, traversal, deletion), use a
   step-through figure: `<figure class="course-stepper" data-course-stepper>`
   around one SVG whose direct children are full frames

@@ -1961,3 +1961,151 @@ body.course-modern .reveal .course-stepper-controls button {
     color: var(--course-muted);
     font-variant-numeric: tabular-nums;
 }
+
+/* Code beside its step-through figure (Lecture 17 on): one grid block, so pagination
+   keeps the program, its output, and the animation on one 16:9 page. */
+.course-code-figure-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: 0.8em;
+    align-items: start;
+    font-size: 0.7em;
+    line-height: 1.4;
+}
+
+.course-code-figure-layout p,
+.course-code-figure-layout li {
+    margin: 0.4em 0 0;
+}
+
+.course-code-figure-layout > div > :first-child {
+    margin-top: 0;
+}
+
+.course-code-figure-layout .course-stepper {
+    margin-top: 0;
+}
+
+.course-code-figure-layout .course-code-editor {
+    --course-code-line-size: 18px;
+}
+
+/* Large-room legibility (Lecture 17 on): big code on its own page, and a step-through
+   figure that fills the page width on the next one. */
+.course-big-code .course-code-editor {
+    --course-code-line-size: 26px;
+}
+
+body.course-modern .course-big-figure .course-array-address-figure {
+    max-width: none;
+    width: 100%;
+    max-height: 690px;
+}
+
+/* Centered title page. */
+body.course-modern .reveal .slides > section.course-title-hero {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center !important;
+    background:
+        radial-gradient(circle at 18% 22%, rgba(99, 102, 241, 0.16), transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(236, 72, 153, 0.14), transparent 45%),
+        var(--course-surface) !important;
+}
+
+.course-title-hero h1 {
+    font-size: 2.6em !important;
+    line-height: 1.05 !important;
+    margin: 0.15em 0 0.25em !important;
+    background: linear-gradient(90deg, #4f46e5, #db2777);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+}
+
+html[data-course-theme="dark"] .course-title-hero h1 {
+    background: linear-gradient(90deg, #a5b4fc, #f9a8d4);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.course-title-hero .course-title-kicker {
+    margin: 0;
+    font-size: 0.75em;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--course-muted);
+}
+
+.course-title-hero .course-title-tagline {
+    margin: 0 auto 0.8em;
+    max-width: 30em;
+    font-size: 1.05em;
+    color: var(--course-muted);
+}
+
+.course-title-hero .course-title-instructor {
+    margin: 0;
+    padding-top: 0.6em;
+    border-top: 3px solid rgba(99, 102, 241, 0.45);
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+/* Per-slide code size, chosen so the program fills a 16:9 page. */
+.course-code-28 .course-code-editor { --course-code-line-size: 28px; }
+.course-code-32 .course-code-editor { --course-code-line-size: 32px; }
+.course-code-34 .course-code-editor { --course-code-line-size: 34px; }
+.course-code-36 .course-code-editor { --course-code-line-size: 36px; }
+
+/* Text slides with little content: larger type fills the page. */
+body.course-modern .reveal .slides > section.course-fill-text > :not(h2) {
+    font-size: 1.22em;
+    line-height: 1.45;
+}
+
+body.course-modern .reveal .slides > section.course-fill-poll .course-poll-layout {
+    font-size: 1.2em;
+}
+
+body.course-modern .reveal .slides > section.course-fill-poll .course-code-editor {
+    --course-code-line-size: 30px;
+}
+
+/* Slido join code shown in large type. */
+body.course-modern .reveal .course-slido-code {
+    text-align: center;
+}
+
+.course-slido-code p {
+    margin: 0;
+    font-size: 0.7em;
+    font-weight: 700;
+}
+
+.course-slido-code .course-slido-site {
+    font-size: 1em;
+}
+
+.course-slido-code .course-slido-number {
+    margin-top: 0.15em;
+    font-size: 1.35em;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+/* Bigger title page. */
+.course-title-hero h1 { font-size: 3.2em !important; }
+.course-title-hero .course-title-tagline { font-size: 1.3em; }
+.course-title-hero .course-title-kicker { font-size: 0.95em; }
+.course-title-hero .course-title-instructor { font-size: 1em; }
+.course-code-26 .course-code-editor { --course-code-line-size: 26px; }
+.course-code-30 .course-code-editor { --course-code-line-size: 30px; }
+
+body.course-modern .reveal .slides > section.course-fill-text-sm > :not(h2) {
+    font-size: 1.1em;
+    line-height: 1.4;
+}
