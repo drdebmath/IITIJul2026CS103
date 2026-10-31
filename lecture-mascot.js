@@ -33,8 +33,9 @@
     // Headings would be noise; only the concept itself gets the highlight ring.
     const noRing = 'h1, h2, h3';
 
+    // Off by default: the mascot appears only after a viewer presses m to show it.
     function readHidden() {
-        try { return window.localStorage.getItem(storageKey) === '1'; } catch (error) { return false; }
+        try { return window.localStorage.getItem(storageKey) !== '0'; } catch (error) { return true; }
     }
 
     function writeHidden(value) {
