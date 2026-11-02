@@ -48,9 +48,8 @@
         'm6-oop': [17, 4], 'm6-classes': [17, 4], 'm6-access': [17, 5],
         'm6-encapsulation': [17, 4], 'm6-constructors': [17, 6],
         'm8-constructor-types': [17, 6], 'm7-overload-ctor': [17, 6],
-        'm6-destructors': [18, 5], 'm8-raii': [18, 5], 'm7-copy': [18, 4],
-        'm7-operators': [18, 6], 'm7-stream': [18, 6],
-        'm7-comparison': [18, 6], 'm7-assignment': [18, 4], 'm7-friend': [19, 2],
+        'm6-destructors': [18, 2], 'm8-raii': [18, 3], 'm7-copy': [18, 4],
+        'm7-operators': [18, 4], 'm7-assignment': [18, 4], 'm7-friend': [19, 2],
 
         'm8-inheritance': [19, 3], 'm8-hierarchy': [19, 4],
         'm8-access-inheritance': [20, 2], 'm8-multiple': [20, 3], 'm8-diamond': [20, 3],
