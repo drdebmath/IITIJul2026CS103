@@ -1,4 +1,4 @@
-// Lecture 18 · Rule of Zero: members that manage themselves need no destructor or copy code
+// Lecture 18 · string and vector members manage themselves: none of the Big Three to write
 #include <iostream>
 #include <string>
 #include <vector>

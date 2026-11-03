@@ -1,4 +1,4 @@
-// Lecture 18 · The default copy copies the pointer: two owners, one array
+// Lecture 18 · Shallow copy: the generated copy copies the pointer, so two owners share one array
 #include <iostream>
 class IntArray {
 public: IntArray(int n) : data(new int[n]{}) {}
@@ -8,6 +8,6 @@ public: IntArray(int n) : data(new int[n]{}) {}
 private: int* data;   // invariant: this object alone owns the array
 };
 int main() {
-    IntArray a(3);  IntArray b = a;   // default copy: b.data == a.data
+    IntArray a(3);  IntArray b = a;   // shallow copy: b.data == a.data
     b.set(0, 99);  std::cout << a.get(0) << '\n';   // a changed too
 }   // b's destructor, then a's: the same array twice
