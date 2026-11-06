@@ -24,7 +24,7 @@
         { sequence: 18, lectureId: null, date: '2026-10-27', start: '10:30', end: '11:25', title: 'Apply structures, algorithms, and object design', scheduleLabel: 'Quiz 2 questions and worked answers', file: 'quiz2.html', module: 'Quiz', kind: 'quiz', quizNumber: 2 },
         { sequence: 19, lectureId: 17, date: '2026-10-30', start: '11:30', end: '12:25', title: 'Classes and Constructors', file: 'lecture17.html', module: '5 & 7' },
         { sequence: 20, lectureId: 18, date: '2026-11-03', start: '10:30', end: '11:25', title: 'Destructors, Copying, and RAII', file: 'lecture18.html', module: '8' },
-        { sequence: 21, lectureId: 19, date: '2026-11-06', start: '11:30', end: '12:25', title: 'Use inheritance only when substitution is safe', file: 'lecture19.html', module: '8–9' },
+        { sequence: 21, lectureId: 19, date: '2026-11-06', start: '11:30', end: '12:25', title: 'Inheritance: Base and Derived Classes', file: 'lecture19.html', module: '8–9' },
         { sequence: 22, lectureId: 20, date: '2026-11-10', start: '10:30', end: '11:25', title: 'Select runtime behavior through safe interfaces', file: 'lecture20.html', module: '9' },
         { sequence: 23, lectureId: 21, date: '2026-11-13', start: '11:30', end: '12:25', title: 'Separate polymorphism, ownership, and graph links', file: 'lecture21.html', module: '9' },
         { sequence: 24, lectureId: 22, date: '2026-11-17', start: '10:30', end: '11:25', title: 'Compose domain objects with explicit policies', file: 'lecture22.html', module: '9' },

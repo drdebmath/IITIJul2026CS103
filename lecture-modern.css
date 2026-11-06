@@ -388,6 +388,13 @@ body.course-modern .reveal table {
     font-size: 0.7em;
 }
 
+/* A short summary table that has a page to itself (Lecture 19 access levels). */
+body.course-modern .reveal div.course-access-table table {
+    width: 100%;
+    display: table;
+    font-size: 1.05em;
+}
+
 body.course-modern .reveal th,
 body.course-modern .reveal td {
     padding: 0.44em 0.58em !important;
@@ -622,7 +629,7 @@ body.course-modern .font-size-toggle {
     width: min(1420px, calc(100vw - 22px));
     min-height: var(--course-nav-height);
     display: grid;
-    grid-template-columns: auto auto auto minmax(190px, 1fr) auto auto auto auto auto auto auto;
+    grid-template-columns: auto auto auto minmax(190px, 1fr) auto auto auto auto auto auto auto auto;
     align-items: center;
     gap: 4px;
     box-sizing: border-box;
@@ -1642,7 +1649,8 @@ body.course-modern.course-reader-mode.course-spoken-open .course-spoken-aside[da
     border-style: dashed;
 }
 
-.course-deck-bar .course-transcript-button[aria-pressed="true"] {
+.course-deck-bar .course-transcript-button[aria-pressed="true"],
+.course-deck-bar .course-mascot-button[aria-pressed="true"] {
     color: var(--course-primary-strong) !important;
     background: var(--course-primary-soft);
 }
@@ -1650,7 +1658,7 @@ body.course-modern.course-reader-mode.course-spoken-open .course-spoken-aside[da
 @media (max-width: 980px) {
     .course-deck-bar {
         width: calc(100vw - 8px);
-        grid-template-columns: 42px 42px minmax(0, 1fr) 42px 42px 42px 42px 42px;
+        grid-template-columns: 42px 42px minmax(0, 1fr) 42px 42px 42px 42px 42px 42px;
         min-height: 56px;
         gap: 2px;
         padding: 3px;

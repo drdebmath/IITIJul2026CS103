@@ -33,7 +33,7 @@
     // Headings would be noise; only the concept itself gets the highlight ring.
     const noRing = 'h1, h2, h3';
 
-    // Off by default: the mascot appears only after a viewer presses m to show it.
+    // Off by default: the mascot appears only after a viewer presses m or the Mascot button.
     function readHidden() {
         try { return window.localStorage.getItem(storageKey) !== '0'; } catch (error) { return true; }
     }
@@ -303,14 +303,43 @@
             window.cancelAnimationFrame(scrollFrame);
             scrollFrame = window.requestAnimationFrame(() => (currentSlide() === shownSlide ? place() : update()));
         }, { passive: true, capture: true });
-        document.addEventListener('keydown', (event) => {
-            if (event.key !== 'm' || event.metaKey || event.ctrlKey || event.altKey) return;
-            if (event.target.closest && event.target.closest('input, textarea, [contenteditable="true"]')) return;
+        const button = addButton();
+        const toggle = () => {
             hidden = !hidden;
             writeHidden(hidden);
             mascot.hidden = hidden;
+            syncButton(button);
             update();
+        };
+        if (button) button.addEventListener('click', toggle);
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'm' || event.metaKey || event.ctrlKey || event.altKey) return;
+            if (event.target.closest && event.target.closest('input, textarea, [contenteditable="true"]')) return;
+            toggle();
         });
+    }
+
+    // A deck-bar button beside the theme button; the m key still works.
+    function addButton() {
+        const bar = document.querySelector('.course-deck-bar');
+        if (!bar) return null;
+        const button = document.createElement('button');
+        button.className = 'course-mascot-button';
+        button.id = 'course-mascot-button';
+        button.type = 'button';
+        button.innerHTML = '<span class="course-control-icon" aria-hidden="true">☺</span><span class="course-control-label">Mascot</span>';
+        const theme = bar.querySelector('#course-theme-button');
+        if (theme) bar.insertBefore(button, theme);
+        else bar.appendChild(button);
+        syncButton(button);
+        return button;
+    }
+
+    function syncButton(button) {
+        if (!button) return;
+        button.setAttribute('aria-pressed', String(!hidden));
+        button.setAttribute('aria-label', hidden ? 'Show the mascot (m)' : 'Hide the mascot (m)');
+        button.title = hidden ? 'Show the mascot (m)' : 'Hide the mascot (m)';
     }
 
     if (!window.Reveal) return;
