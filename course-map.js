@@ -52,8 +52,8 @@
         'm7-operators': [18, 4], 'm7-assignment': [18, 4], 'm7-friend': [19, 4],
 
         'm8-inheritance': [19, 2], 'm8-hierarchy': [19, 7],
-        'm8-access-inheritance': [20, 2], 'm8-multiple': [20, 3], 'm8-diamond': [20, 3],
-        'm8-virtual': [20, 4], 'm8-polymorphism': [20, 4], 'm8-factory': [20, 6],
+        'm8-access-inheritance': [20, 9], 'm8-multiple': [20, 7], 'm8-diamond': [20, 7],
+        'm8-virtual': [20, 2], 'm8-polymorphism': [20, 3], 'm8-factory': [20, 6],
         'm8-container': [21, 2], 'm8-graph': [21, 4],
         'm9-system-design': [22, 2], 'm9-flight': [22, 3], 'm9-domain-classes': [22, 3],
         'm9-search': [22, 4], 'm9-sort': [22, 5], 'm9-routing': [22, 6], 'm9-patterns': [22, 7],
@@ -317,7 +317,7 @@
         17: [1, 2, 3, 4, 5, 6, 7, 8],
         18: [1, 2, 3, 4, 5, 6, 7],
         19: [1, 2, 3, 4, 5, 6, 7, 8],
-        20: [1, 2, 4, 5, 6, 7, 8],
+        20: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         21: [1, 2, 3, 4, 5, 6, 7, 8],
         22: [1, 2, 3, 4, 5, 6, 7, 8],
         23: [1, 2, 3, 4, 5, 6, 7, 8]

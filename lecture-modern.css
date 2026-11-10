@@ -2094,6 +2094,11 @@ body.course-modern .reveal .course-slido-code {
     font-weight: 700;
 }
 
+/* The card stays white in dark mode, like the QR code, so keep its text dark. */
+body.course-modern .reveal .course-slido-qr.course-slido-code p {
+    color: #182033 !important;
+}
+
 .course-slido-code .course-slido-site {
     font-size: 1em;
 }
@@ -2110,6 +2115,7 @@ body.course-modern .reveal .course-slido-code {
 .course-title-hero .course-title-tagline { font-size: 1.3em; }
 .course-title-hero .course-title-kicker { font-size: 0.95em; }
 .course-title-hero .course-title-instructor { font-size: 1em; }
+.course-code-22 .course-code-editor { --course-code-line-size: 22px; }
 .course-code-26 .course-code-editor { --course-code-line-size: 26px; }
 .course-code-30 .course-code-editor { --course-code-line-size: 30px; }
 

@@ -230,7 +230,14 @@
                 <a class="example-card" href="lecture-19-friend-and-inheritance.cpp"><strong>Calibrated energy meter</strong><span>Friend calibration and a simple public derived class.</span><code>lecture-19-friend-and-inheritance.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-20" data-lecture="20"><header><span>L20</span><div><h2>Inheritance &amp; Runtime Polymorphism</h2><p>Virtual interfaces, safe ownership, and factories.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-20" data-lecture="20"><header><span>L20</span><div><h2>Virtual Functions &amp; Polymorphism</h2><p>Late binding, abstract classes, virtual destructors, and a factory function.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-20-virtual-add.cpp"><strong>Virtual function</strong><span>grow() calls add() through a BinaryTree&; the SearchTree object chooses its own add().</span><code>lecture-20-virtual-add.cpp</code></a>
+                <a class="example-card" href="lecture-20-late-binding.cpp"><strong>Early and late binding</strong><span>A hidden function and an overridden virtual function called through a base reference.</span><code>lecture-20-late-binding.cpp</code></a>
+                <a class="example-card" href="lecture-20-abstract-shape.cpp"><strong>Abstract class</strong><span>Shape declares pure virtual functions; Square and Circle override them.</span><code>lecture-20-abstract-shape.cpp</code></a>
+                <a class="example-card" href="lecture-20-new-shape.cpp"><strong>A new derived class</strong><span>Triangle is added and report() is not edited.</span><code>lecture-20-new-shape.cpp</code></a>
+                <a class="example-card" href="lecture-20-virtual-destructor.cpp"><strong>Virtual destructor</strong><span>A unique_ptr&lt;Shape&gt; releases a Square: derived destructor first, base last.</span><code>lecture-20-virtual-destructor.cpp</code></a>
+                <a class="example-card" href="lecture-20-factory.cpp"><strong>Factory function</strong><span>makeShape() chooses the derived class and returns a unique_ptr&lt;Shape&gt;.</span><code>lecture-20-factory.cpp</code></a>
+                <a class="example-card" href="lecture-20-multiple-inheritance.cpp"><strong>Multiple inheritance</strong><span>A virtual base class gives Copier one shared Device part.</span><code>lecture-20-multiple-inheritance.cpp</code></a>
                 <a class="example-card" href="lecture-20-employee-polymorphism.cpp"><strong>Employee polymorphism</strong><span>Virtual work behavior through base-class pointers.</span><code>lecture-20-employee-polymorphism.cpp</code></a>
             </div></section>
 

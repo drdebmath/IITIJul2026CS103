@@ -25,7 +25,7 @@
         { sequence: 19, lectureId: 17, date: '2026-10-30', start: '11:30', end: '12:25', title: 'Classes and Constructors', file: 'lecture17.html', module: '5 & 7' },
         { sequence: 20, lectureId: 18, date: '2026-11-03', start: '10:30', end: '11:25', title: 'Destructors, Copying, and RAII', file: 'lecture18.html', module: '8' },
         { sequence: 21, lectureId: 19, date: '2026-11-06', start: '11:30', end: '12:25', title: 'Inheritance: Base and Derived Classes', file: 'lecture19.html', module: '8–9' },
-        { sequence: 22, lectureId: 20, date: '2026-11-10', start: '10:30', end: '11:25', title: 'Select runtime behavior through safe interfaces', file: 'lecture20.html', module: '9' },
+        { sequence: 22, lectureId: 20, date: '2026-11-10', start: '10:30', end: '11:25', title: 'Virtual Functions and Polymorphism', file: 'lecture20.html', module: '9' },
         { sequence: 23, lectureId: 21, date: '2026-11-13', start: '11:30', end: '12:25', title: 'Separate polymorphism, ownership, and graph links', file: 'lecture21.html', module: '9' },
         { sequence: 24, lectureId: 22, date: '2026-11-17', start: '10:30', end: '11:25', title: 'Compose domain objects with explicit policies', file: 'lecture22.html', module: '9' },
         { sequence: 25, lectureId: 23, date: '2026-11-20', start: '11:30', end: '12:25', title: 'Integrate structures, algorithms, and evidence', file: 'lecture23.html', module: '5, 7 & 9' }
