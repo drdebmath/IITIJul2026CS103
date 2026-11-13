@@ -54,7 +54,7 @@
         'm8-inheritance': [19, 2], 'm8-hierarchy': [19, 7],
         'm8-access-inheritance': [20, 9], 'm8-multiple': [20, 7], 'm8-diamond': [20, 7],
         'm8-virtual': [20, 2], 'm8-polymorphism': [20, 3], 'm8-factory': [20, 6],
-        'm8-container': [21, 2], 'm8-graph': [21, 4],
+        'm8-container': [21, 5], 'm8-graph': [22, 6],
         'm9-system-design': [22, 2], 'm9-flight': [22, 3], 'm9-domain-classes': [22, 3],
         'm9-search': [22, 4], 'm9-sort': [22, 5], 'm9-routing': [22, 6], 'm9-patterns': [22, 7],
         'm4-permutations': [16, 5], 'm4-lcs': [16, 6],
@@ -293,7 +293,7 @@
         18: { module: '08 · Object Design & Value Semantics', prerequisites: ['Records, functions, and ownership', 'Construction and lifetime motivation'], outcomes: ['Protect a class invariant', 'Distinguish copy construction from assignment', 'Use RAII members instead of writing the Big Three'], unlocks: 'Inheritance' },
         19: { module: '08–09 · Inheritance', prerequisites: ['Classes, invariants, and access control', 'Destructors and unique_ptr ownership'], outcomes: ['Derive a class with public inheritance', 'Trace the order of construction and destruction', 'Choose protected, friend, or composition'], unlocks: 'Virtual functions' },
         20: { module: '09 · Runtime Polymorphism', prerequisites: ['Class hierarchy', 'Pointers and smart ownership'], outcomes: ['Use a virtual interface', 'Delete safely through a base', 'Centralize construction with a factory'], unlocks: 'Polymorphic structures' },
-        21: { module: '09 · Polymorphic Data Structures', prerequisites: ['Runtime polymorphism', 'Vectors and smart pointers'], outcomes: ['Own heterogeneous objects safely', 'Apply one algorithm through a base interface', 'Separate graph links from ownership'], unlocks: 'Applied systems' },
+        21: { module: '09 · Programming with AI Agents', prerequisites: ['Pre-conditions and assert', 'Abstract classes'], outcomes: ['Give an agent a goal, the context, and a check it can run', 'Review an agent\'s work with tests and a diff', 'Check every reply of a model behind an abstract class'], unlocks: 'Applied systems' },
         22: { module: '09 · Applied Systems', prerequisites: ['Object design and collections', 'Search, sort, and graph concepts'], outcomes: ['Assign domain responsibilities', 'Apply predicates and comparators', 'Separate policy from mechanism'], unlocks: 'Capstone integrations' },
         23: { module: '09 · Capstones', prerequisites: ['Recursion, buckets, trees, and polymorphism', 'Structure selection from operations'], outcomes: ['Trace matrix, radix, and tree transformations', 'Apply polymorphism to chess pieces', 'Write an integration checklist'], unlocks: 'Independent practice and revision' }
     };
@@ -318,7 +318,7 @@
         18: [1, 2, 3, 4, 5, 6, 7],
         19: [1, 2, 3, 4, 5, 6, 7, 8],
         20: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        21: [1, 2, 3, 4, 5, 6, 7, 8],
+        21: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         22: [1, 2, 3, 4, 5, 6, 7, 8],
         23: [1, 2, 3, 4, 5, 6, 7, 8]
     };

@@ -241,7 +241,15 @@
                 <a class="example-card" href="lecture-20-employee-polymorphism.cpp"><strong>Employee polymorphism</strong><span>Virtual work behavior through base-class pointers.</span><code>lecture-20-employee-polymorphism.cpp</code></a>
             </div></section>
 
-            <section class="lecture-group" id="lecture-21" data-lecture="21"><header><span>L21</span><div><h2>Polymorphic Data Structures</h2><p>Heterogeneous ownership behind a common interface.</p></div></header><div class="example-grid">
+            <section class="lecture-group" id="lecture-21" data-lecture="21"><header><span>L21</span><div><h2>Programming with AI Agents</h2><p>Tests judge a draft, a sanitizer finds undefined behavior, and a model sits behind an abstract class.</p></div></header><div class="example-grid">
+                <a class="example-card" href="lecture-21-median-draft.cpp"><strong>A draft that fails its tests</strong><span>median() is wrong for an even count; the third assert stops the program.</span><code>lecture-21-median-draft.cpp</code></a>
+                <a class="example-card" href="lecture-21-median.cpp"><strong>The corrected draft</strong><span>The same three tests pass; the pre-condition is checked with assert.</span><code>lecture-21-median.cpp</code></a>
+                <a class="example-card" href="lecture-21-out-of-bounds.cpp"><strong>Undefined behavior</strong><span>largest() reads one element past the array; -fsanitize=address reports it.</span><code>lecture-21-out-of-bounds.cpp</code></a>
+                <a class="example-card" href="lecture-21-median-project/median.h"><strong>Demo project: the specification</strong><span>The pre-condition and post-condition of median().</span><code>lecture-21-median-project/median.h</code></a>
+                <a class="example-card" href="lecture-21-median-project/median.cpp"><strong>Demo project: the draft</strong><span>A median() that is wrong for an even count, for an agent to correct.</span><code>lecture-21-median-project/median.cpp</code></a>
+                <a class="example-card" href="lecture-21-median-project/tests.cpp"><strong>Demo project: the tests</strong><span>Three assert tests, written before the draft.</span><code>lecture-21-median-project/tests.cpp</code></a>
+                <a class="example-card" href="lecture-21-median-project/AGENTS.md"><strong>Demo project: rules for the agent</strong><span>Five rules that a command-line agent reads at the start of a session.</span><code>lecture-21-median-project/AGENTS.md</code></a>
+                <a class="example-card" href="lecture-21-assistant-interface.cpp"><strong>A model behind an interface</strong><span>classify() checks every reply; a FakeAssistant makes it testable.</span><code>lecture-21-assistant-interface.cpp</code></a>
                 <a class="example-card" href="lecture-21-polymorphic-shapes.cpp"><strong>Owning shape container</strong><span>vector of unique_ptr, virtual area, and aggregation.</span><code>lecture-21-polymorphic-shapes.cpp</code></a>
             </div></section>
 

@@ -26,9 +26,11 @@
         { sequence: 20, lectureId: 18, date: '2026-11-03', start: '10:30', end: '11:25', title: 'Destructors, Copying, and RAII', file: 'lecture18.html', module: '8' },
         { sequence: 21, lectureId: 19, date: '2026-11-06', start: '11:30', end: '12:25', title: 'Inheritance: Base and Derived Classes', file: 'lecture19.html', module: '8–9' },
         { sequence: 22, lectureId: 20, date: '2026-11-10', start: '10:30', end: '11:25', title: 'Virtual Functions and Polymorphism', file: 'lecture20.html', module: '9' },
-        { sequence: 23, lectureId: 21, date: '2026-11-13', start: '11:30', end: '12:25', title: 'Separate polymorphism, ownership, and graph links', file: 'lecture21.html', module: '9' },
-        { sequence: 24, lectureId: 22, date: '2026-11-17', start: '10:30', end: '11:25', title: 'Compose domain objects with explicit policies', file: 'lecture22.html', module: '9' },
-        { sequence: 25, lectureId: 23, date: '2026-11-20', start: '11:30', end: '12:25', title: 'Integrate structures, algorithms, and evidence', file: 'lecture23.html', module: '5, 7 & 9' }
+        { sequence: 23, lectureId: 21, date: '2026-11-13', start: '11:30', end: '12:25', title: 'Programming with AI Agents', file: 'lecture21.html', module: '9' },
+        { sequence: 24, lectureId: null, date: '2026-11-17', start: '10:30', end: '11:25', title: 'Quiz 3', scheduleLabel: 'Quiz 3 · in the lecture slot', file: 'index.html#assessment', module: 'Quiz', kind: 'quiz', quizNumber: 3 },
+        { sequence: 25, lectureId: 22, date: '2026-11-20', start: '11:30', end: '12:25', title: 'Compose domain objects with explicit policies', file: 'lecture22.html', module: '9' },
+        // 23 November is a Monday that follows the Tuesday timetable, so it takes the Tuesday lecture slot.
+        { sequence: 26, lectureId: 23, date: '2026-11-23', start: '10:30', end: '11:25', title: 'Integrate structures, algorithms, and evidence', file: 'lecture23.html', module: '5, 7 & 9' }
     ];
 
     const academicEvents = [
